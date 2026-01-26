@@ -1,48 +1,38 @@
-"""Remove entries with a specific label from a JSON dataset and add IDs.
-
-This script processes a JSON dataset by removing entries with a specified label
-and adding unique IDs to the remaining entries. It also provides a summary of
-the number of entries removed and retained.
-"""
+"""Remove entries with a specific label from a JSON dataset and add claim IDs."""
 
 import json
 import argparse
 from typing import Tuple, List, Dict, Any
+from itertools import count
+
+# Global counter for claim IDs (per execution)
+_claim_counter = count(start=1)
 
 
-def remove_label(input_json: str, label_to_remove: str) -> Tuple[str, int, int]:
-    """Remove entries with the specified label from the JSON data and add IDs.
-
-    Args:
-        input_json (str): The JSON data as a string.
-        label_to_remove (str): The label to remove from the dataset.
+def generate_claim_id(dataset_split) -> str:
+    """
+    Generate a sequential claim ID.
 
     Returns:
-        Tuple[str, int, int]: A tuple containing:
-            - The filtered JSON data as a string.
-            - The number of entries removed.
-            - The number of entries remaining.
+        str: A sequential claim identifier (e.g., claim_000001).
     """
-    # Load the JSON data
-    data: List[Dict[str, Any]] = json.loads(input_json)
+    return f"{dataset_split}_{next(_claim_counter):06d}"
 
-    # Count total entries before filtering
+def remove_label(input_json: str, label_to_remove: str, dataset_split: str) -> Tuple[str, int, int]:
+    """Remove entries with the specified label from the JSON data and add claim_ids."""
+
+    data: List[Dict[str, Any]] = json.loads(input_json)
     total_entries: int = len(data)
 
-    # Filter out the entries with the specified label and add IDs
     filtered_data: List[Dict[str, Any]] = []
-    for idx, entry in enumerate(data):
+    for entry in data:
         if entry.get("label") != label_to_remove:
-            entry["id"] = idx  # Add ID field
+            entry["claim_id"] = generate_claim_id(dataset_split)
             filtered_data.append(entry)
 
-    # Count remaining entries after filtering
     remaining_entries: int = len(filtered_data)
-
-    # Count the number of dropped entries
     dropped_entries: int = total_entries - remaining_entries
 
-    # Return the filtered dataset and the counts
     return (
         json.dumps(filtered_data, indent=4),
         dropped_entries,
@@ -51,47 +41,32 @@ def remove_label(input_json: str, label_to_remove: str) -> Tuple[str, int, int]:
 
 
 def main() -> None:
-    """Main function to remove a specific label from a JSON dataset.
-
-    This function parses command-line arguments to specify the input JSON file,
-    the output JSON file, and the label to remove. It then processes the dataset
-    and saves the filtered results.
     """
-    # Set up argument parser
-    parser: argparse.ArgumentParser = argparse.ArgumentParser(
+    Main function to parse arguments and execute label removal.
+    """
+    parser = argparse.ArgumentParser(
         description="Remove specified label from JSON data."
     )
-    parser.add_argument(
-        "input_json", type=str, help="Path to the input JSON file."
-    )
-    parser.add_argument(
-        "output_json", type=str, help="Path to save the filtered JSON output."
-    )
-    parser.add_argument(
-        "label_to_remove",
-        type=str,
-        help="The label to remove from the dataset.",
-    )
+    parser.add_argument("input_json", type=str)
+    parser.add_argument("output_json", type=str)
+    parser.add_argument("label_to_remove", type=str)
+    parser.add_argument("dataset_split", type=str, choices=["train", "val", "test"])
 
-    # Parse the arguments
-    args: argparse.Namespace = parser.parse_args()
+    args = parser.parse_args()
 
-    # Read the input JSON file
     with open(args.input_json, "r") as f:
-        input_json: str = f.read()
+        input_json = f.read()
 
-    # Remove the specified label and get counts
     filtered_json, dropped, remaining = remove_label(
-        input_json, args.label_to_remove
+        input_json, args.label_to_remove, args.dataset_split
     )
 
-    # Write the filtered JSON data to the output file
     with open(args.output_json, "w") as f:
         f.write(filtered_json)
 
-    # Print the result message
     print(f"{dropped} elements were dropped. {remaining} elements remain.")
     print(f"Filtered JSON saved to {args.output_json}")
+    print(f"Dataset split: {args.dataset_split}")
 
 
 if __name__ == "__main__":

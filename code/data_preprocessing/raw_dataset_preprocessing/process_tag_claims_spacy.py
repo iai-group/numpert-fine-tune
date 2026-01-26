@@ -256,9 +256,6 @@ def get_target_entities() -> Set[str]:
         "TIME",
         "DATE",
         "ORDINAL",
-        "PERSON",
-        "ORG",
-        # Add more entity types if needed
     }
 
 
@@ -425,8 +422,7 @@ def main(input_json_path: str, output_json_path1: str, output_json_path2: str):
 
 
 if __name__ == "__main__":
-    # Replace with your input and output file paths
-    input_json_path = "data/raw_data/binary_data/val_binary.json"
-    output_json_path1 = "data/preprocessed/tagged/val_false_claims_tagged_normalized_numbers.json"  # noqa: E501
-    output_json_path2 = "data/preprocessed/tagged/val_true_claims_tagged_normalized_numbers.json"  # noqa: E501
+    input_json_path = ""
+    output_json_path1 = ""  # noqa: E501
+    output_json_path2 = ""  # noqa: E501
     main(input_json_path, output_json_path1, output_json_path2)
