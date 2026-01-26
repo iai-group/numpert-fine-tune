@@ -1,0 +1,21 @@
+# Ignore models directory
+models/
+
+# But don't ignore README.md
+!README.md
+
+# Ignore Python cache files
+__pycache__/
+code/data_preprocessing/__pycache__/
+
+# Ignore VS Code settings
+.vscode/
+
+
+.pytest_cache
+.mypy_cache
+__pycache__
+
+misc/
+.DS_Store
+.env

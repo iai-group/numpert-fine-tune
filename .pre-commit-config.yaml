@@ -1,0 +1,53 @@
+fail_fast: false
+repos:
+  - repo: local
+    hooks:
+      - id: black
+        name: black
+        entry: black
+        language: system
+        types: [python]
+        
+      - id: flake8
+        name: flake8
+        entry: python -m flake8
+        language: system
+        types: [python]
+
+      - id: docformatter
+        name: docformatter
+        entry: docformatter
+        language: system
+        types: [python]
+        args: 
+          - --in-place
+          - --wrap-summaries=80
+          - --wrap-descriptions=80
+
+      - id: pydocstyle
+        name: pydocstyle
+        entry: pydocstyle
+        language: system
+        types: [python]
+        args:
+          - --ignore=D101,D104,D105,D203,D213,D401,D406,D407,D413
+          - --ignore-decorators
+          - --match-dir = ^(?!tests).*
+
+      - id: mypy
+        name: mypy
+        entry: mypy
+        language: system
+        types: [python]
+        args:
+          - --no-strict-optional
+          - --ignore-missing-imports
+          - --no-incremental
+          - --disable-error-code=override
+
+      - id: pytest
+        name: run tests
+        entry: pytest -vv
+        language: system
+        always_run: true
+        pass_filenames: false
