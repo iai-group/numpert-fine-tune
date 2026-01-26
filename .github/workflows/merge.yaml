@@ -1,0 +1,62 @@
+name: Deploy
+on:
+  push:
+    branches:
+      - main
+env:
+  REPO_NAME: ${{ github.event.repository.name }}
+  
+jobs:
+  build-and-test:
+    name: "Build and Test Python 3.9"
+    runs-on: ubuntu-latest
+    if: always()
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+          cache: "pip"
+
+      - name: Install Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest-github-actions-annotate-failures
+          python -m spacy download en_core_web_trf
+        
+      - name: Install Graphviz
+        uses: tlylt/install-graphviz@v1
+
+      - name: PyTest with code coverage
+        continue-on-error: false
+        run: |
+          pytest --cov=. --cov-report=term-missing --cov-report=xml --cov-branch
+
+      - name: Get the Coverage
+        shell: bash
+        run: |
+          regex='<coverage.+line-rate="([0-9]+\.[0-9]+)".+>'
+          line=$(grep -oP "$regex" coverage.xml)
+          [[ $line =~ $regex ]]
+          coverage=$( bc <<< "${BASH_REMATCH[1]}*100" )
+          if (( $(echo "$coverage > 90" | bc -l) )); then
+            COLOR=green
+          else
+            COLOR=red
+          fi
+          echo "COVERAGE=${coverage%.*}%" >> $GITHUB_ENV
+          echo "COLOR=$COLOR" >> $GITHUB_ENV
+      
+      - name: Create Coverage Badge
+        uses: schneegans/dynamic-badges-action@v1.7.0
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: 4dc000699f87ec295368ae52250acc7a
+          filename: coverage.${{ env.REPO_NAME }}.main.json
+          label: coverage
+          message: ${{ env.COVERAGE }}
+          color: ${{ env.COLOR }}
