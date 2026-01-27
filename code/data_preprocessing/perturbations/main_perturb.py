@@ -160,8 +160,6 @@ def main() -> None:
 
     output_data_true: List[Dict[str, Any]] = range.process_json(data_true)
     output_data_false: List[Dict[str, Any]] = range.process_json(data_false)
-    # range.fix_currency_placement_in_data(output_data_true)
-    # range.fix_currency_placement_in_data(output_data_false)
 
     # Apply fail-safe for range
     output_data_true = remove_unperturbed_claims(
