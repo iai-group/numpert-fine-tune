@@ -68,24 +68,23 @@ def main() -> None:
     """Main function to execute all perturbation processes."""
     # Run each perturbation module
     data_true: List[Dict[str, Any]] = load_data(
-        "data/processed/tagged/true_claims_tagged_normalized_numbers.json"
+        "data/raw_data/binary_data/spacy_tagged/train_true_claims_tagged_normalized_numbers.json"
     )
     data_false: List[Dict[str, Any]] = load_data(
-        "data/processed/tagged/false_claims_tagged_normalized_numbers.json"
+        "data/raw_data/binary_data/spacy_tagged/train_false_claims_tagged_normalized_numbers.json"
     )
 
-    # Approximation perturbations_test
+    # Approximation perturbations_train
     approximation.process_claims(
-        "data/processed/tagged/true_claims_tagged_normalized_numbers.json",
-        "true_claims_perturbed_approximation.json",
+        "data/raw_data/binary_data/spacy_tagged/train_true_claims_tagged_normalized_numbers.json",
+        "data/perturbed_data/train_split/approximation_true.json",
     )
     approximation.process_claims(
-        "data/processed/tagged/false_claims_tagged_normalized_numbers.json",
-        "false_claims_perturbed_approximation.json",
+        "data/raw_data/binary_data/spacy_tagged/train_false_claims_tagged_normalized_numbers.json",
+        "data/perturbed_data/train_split/approximation_false.json",
     )
 
-
-    # Negative number perturbations_test
+    # Negative number perturbations_train
     neg_true: List[Dict[str, Any]] = negative.process_json(data_true)
     neg_false: List[Dict[str, Any]] = negative.process_json(data_false)
 
@@ -97,13 +96,13 @@ def main() -> None:
         neg_false, ["negative_true", "negative_false"]
     )
 
-    save_data(neg_true, "data/processed/perturbations_test/negative_true.json")
+    save_data(neg_true, "data/perturbed_data/train_split/negative_true.json")
     save_data(
-        neg_false, "data/processed/perturbations_test/negative_false.json"
+        neg_false, "data/perturbed_data/train_split/negative_false.json"
     )
-    print("Negative number perturbations_test completed.")
+    print("Negative number perturbations completed.")
 
-    # Numeration perturbations_test
+    # Numeration perturbations
     num_true: List[Dict[str, Any]] = numeration.process_json(data_true)
     num_false: List[Dict[str, Any]] = numeration.process_json(data_false)
 
@@ -116,14 +115,13 @@ def main() -> None:
     )
 
     save_data(
-        num_true, "data/processed/perturbations_test/numeration_true.json"
+        num_true, "data/perturbed_data/train_split/numeration_true.json"
     )
     save_data(
-        num_false, "data/processed/perturbations_test/numeration_false.json"
+        num_false, "data/perturbed_data/train_split/numeration_false.json"
     )
-    print("Numeration perturbations_test completed.")
+    print("Numeration perturbations completed.")
 
-    # Obfuscation perturbations_test
     # The function returns a tuple of three lists
     (
         random_data_true,
@@ -153,14 +151,13 @@ def main() -> None:
 
     # Save the combined and filtered data
     save_data(
-        obf_true, "data/processed/perturbations_test/obfuscation_true.json"
+        obf_true, "data/perturbed_data/train_split/obfuscation_true.json"
     )
     save_data(
-        obf_false, "data/processed/perturbations_test/obfuscation_false.json"
+        obf_false, "data/perturbed_data/train_split/obfuscation_false.json"
     )
-    print("Obfuscation perturbations_test completed.")
+    print("Obfuscation perturbations completed.")
 
-    # Range perturbations_test
     output_data_true: List[Dict[str, Any]] = range.process_json(data_true)
     output_data_false: List[Dict[str, Any]] = range.process_json(data_false)
     # range.fix_currency_placement_in_data(output_data_true)
@@ -175,12 +172,12 @@ def main() -> None:
     )
 
     save_data(
-        output_data_true, "data/processed/perturbations_test/range_true.json"
+        output_data_true, "data/perturbed_data/train_split/range_true.json"
     )
     save_data(
-        output_data_false, "data/processed/perturbations_test/range_false.json"
+        output_data_false, "data/perturbed_data/train_split/range_false.json"
     )
-    print("Range perturbations_test completed.")
+    print("Range perturbations completed.")
 
 
 if __name__ == "__main__":
