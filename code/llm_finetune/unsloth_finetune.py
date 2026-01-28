@@ -2,7 +2,7 @@ import json
 from typing import Optional, List, Dict, Tuple
 from sklearn.metrics import f1_score, accuracy_score, classification_report
 import torch
-from torch.utils.data import Sampler
+from torch.utils.data import Sampler, DataLoader
 from collections import defaultdict, Counter
 import numpy as np
 import random
@@ -31,6 +31,89 @@ import pandas as pd
 
 # Valid labels for fact-checking
 VALID_LABELS = ["True", "False"]
+
+
+class PerturbationAwareSFTTrainer(SFTTrainer):
+    """
+    Custom SFTTrainer that uses EnhancedPerturbationBatchSampler for training.
+    
+    This allows claim_id-aware batching where examples from the same claim
+    are grouped together to help the model learn contrasts between original
+    and perturbed versions.
+    """
+    
+    def __init__(
+        self, 
+        *args,
+        use_custom_sampler: bool = False,
+        batch_match_claim_id: bool = False,
+        split_large_claims: bool = True,
+        ensure_original_in_batch: bool = True,
+        ensure_perturbed_in_batch: bool = True,
+        sampler_seed: int = 42,
+        **kwargs
+    ):
+        """
+        Args:
+            use_custom_sampler: Whether to use EnhancedPerturbationBatchSampler
+            batch_match_claim_id: Group same claim_id in batches
+            split_large_claims: Split large claims across batches
+            ensure_original_in_batch: Ensure each batch has ≥1 original
+            ensure_perturbed_in_batch: Ensure each batch has ≥1 perturbed
+            sampler_seed: Random seed for sampler
+        """
+        super().__init__(*args, **kwargs)
+        
+        self.use_custom_sampler = use_custom_sampler
+        self.batch_match_claim_id = batch_match_claim_id
+        self.split_large_claims = split_large_claims
+        self.ensure_original_in_batch = ensure_original_in_batch
+        self.ensure_perturbed_in_batch = ensure_perturbed_in_batch
+        self.sampler_seed = sampler_seed
+    
+    def get_train_dataloader(self) -> DataLoader:
+        """
+        Override to use custom batch sampler when enabled.
+        """
+        if not self.use_custom_sampler:
+            # Use default SFTTrainer data loading
+            return super().get_train_dataloader()
+        
+        if self.train_dataset is None:
+            raise ValueError("Trainer: training requires a train_dataset.")
+        
+        print("\n" + "="*80)
+        print("🔧 Using EnhancedPerturbationBatchSampler for training")
+        print("="*80)
+        
+        # Create custom batch sampler
+        batch_sampler = EnhancedPerturbationBatchSampler(
+            dataset=self.train_dataset,
+            batch_size=self.args.per_device_train_batch_size,
+            batch_match_claim_id=self.batch_match_claim_id,
+            split_large_claims=self.split_large_claims,
+            ensure_original_in_batch=self.ensure_original_in_batch,
+            ensure_perturbed_in_batch=self.ensure_perturbed_in_batch,
+            shuffle=True,
+            seed=self.sampler_seed,
+            drop_last=self.args.dataloader_drop_last,
+        )
+        
+        # Create DataLoader with custom batch sampler
+        # Note: When using batch_sampler, we must NOT specify batch_size
+        dataloader = DataLoader(
+            self.train_dataset,
+            batch_sampler=batch_sampler,
+            collate_fn=self.data_collator,
+            num_workers=self.args.dataloader_num_workers,
+            pin_memory=self.args.dataloader_pin_memory,
+        )
+        
+        print(f"✅ Custom dataloader created with {len(batch_sampler)} batches")
+        print("="*80 + "\n")
+        
+        return dataloader
+
 
 class ValidationCallback(TrainerCallback):
     """Callback to run validation and print metrics during training"""
@@ -88,12 +171,17 @@ def finetune(
     print(f"Epoch: {epoch}")
     print(f"Batch size: {batch_size}")
     print(f"Gradient accumulation: {gradient_accumulation_steps}")
+    print(f"Effective batch size: {batch_size * gradient_accumulation_steps}")
     print(f"Max sequence length: {max_seq_length:,} tokens")
     print(f"Expand perturbations: {expand_perturbations}")
     print(f"Balance labels: {balance_labels}")
     print(f"Perturb ratio: {perturb_ratio}")
     print(f"False perturb T→F ratio: {false_perturb_t_to_f_ratio}")
     print(f"Batch match claim_id: {batch_match_claim_id}")
+    if batch_match_claim_id:
+        print(f"  - Split large claims: {split_large_claims}")
+        print(f"  - Ensure original in batch: {ensure_original_in_batch}")
+        print(f"  - Ensure perturbed in batch: {ensure_perturbed_in_batch}")
     print("="*80 + "\n")
     
     # Model configuration
@@ -213,6 +301,12 @@ def finetune(
     for p_type, count in train_perturb_dist.most_common():
         print(f"  {p_type:30s}: {count:5d} ({100*count/len(train_data):5.1f}%)")
     
+    # Show label distribution
+    train_label_dist = Counter(train_data['label'])
+    print("\nTrain label distribution:")
+    for label, count in train_label_dist.most_common():
+        print(f"  {label:30s}: {count:5d} ({100*count/len(train_data):5.1f}%)")
+    
     # Format datasets
     print("\nFormatting datasets...")
     train_data = train_data.map(formatting_prompts_func, batched=True)
@@ -244,12 +338,16 @@ def finetune(
             "epoch": epoch,
             "batch_size": batch_size,
             "gradient_accumulation": gradient_accumulation_steps,
+            "effective_batch_size": batch_size * gradient_accumulation_steps,
             "max_seq_length": max_seq_length,
             "expand_perturbations": expand_perturbations,
             "balance_labels": balance_labels,
             "perturb_ratio": perturb_ratio,
             "false_perturb_t_to_f_ratio": false_perturb_t_to_f_ratio,
             "batch_match_claim_id": batch_match_claim_id,
+            "split_large_claims": split_large_claims,
+            "ensure_original_in_batch": ensure_original_in_batch,
+            "ensure_perturbed_in_batch": ensure_perturbed_in_batch,
             "truncated_examples": truncated_count,
             "truncation_rate": truncated_count / total_count if total_count > 0 else 0,
         }
@@ -291,22 +389,42 @@ def finetune(
         return_tensors="pt",
     )
     
-    # Create trainer
-    trainer = SFTTrainer(
-        model=model,
-        tokenizer=tokenizer,
-        train_dataset=train_data,
-        eval_dataset=val_data,
-        dataset_text_field="text",
-        max_seq_length=max_seq_length,
-        data_collator=data_collator,
-        dataset_num_proc=2,
-        packing=False,
-        args=training_args,
-        callbacks=[ValidationCallback()],
-    )
-
-    
+    # Create trainer - use custom trainer if batch matching is enabled
+    if batch_match_claim_id:
+        trainer = PerturbationAwareSFTTrainer(
+            model=model,
+            tokenizer=tokenizer,
+            train_dataset=train_data,
+            eval_dataset=val_data,
+            dataset_text_field="text",
+            max_seq_length=max_seq_length,
+            data_collator=data_collator,
+            dataset_num_proc=2,
+            packing=False,
+            args=training_args,
+            callbacks=[ValidationCallback()],
+            # Custom sampler parameters
+            use_custom_sampler=True,
+            batch_match_claim_id=batch_match_claim_id,
+            split_large_claims=split_large_claims,
+            ensure_original_in_batch=ensure_original_in_batch,
+            ensure_perturbed_in_batch=ensure_perturbed_in_batch,
+            sampler_seed=3407 + epoch,
+        )
+    else:
+        trainer = SFTTrainer(
+            model=model,
+            tokenizer=tokenizer,
+            train_dataset=train_data,
+            eval_dataset=val_data,
+            dataset_text_field="text",
+            max_seq_length=max_seq_length,
+            data_collator=data_collator,
+            dataset_num_proc=2,
+            packing=False,
+            args=training_args,
+            callbacks=[ValidationCallback()],
+        )
     
     # Train on responses only
     if "llama" in model_name.lower():
@@ -322,28 +440,6 @@ def finetune(
             response_part="assistant\n",
         )
     
-    if batch_match_claim_id:
-        print("\n🔧 Setting up custom batch sampler...")
-        
-        # Create custom sampler
-        train_sampler = EnhancedPerturbationBatchSampler(
-            dataset=train_data,
-            batch_size=batch_size * gradient_accumulation_steps,  # Effective batch size
-            batch_match_claim_id=batch_match_claim_id,
-            split_large_claims=split_large_claims,
-            ensure_original_in_batch=ensure_original_in_batch,
-            ensure_perturbed_in_batch=ensure_perturbed_in_batch,
-            shuffle=True,
-            seed=3407 + epoch,
-            drop_last=False,
-        )
-        
-        # Note: SFTTrainer uses its own data loading, so we need to be careful here
-        # For now, we'll just use the default and document this limitation
-        print("⚠️  Note: Custom batch sampler with SFTTrainer requires additional integration")
-        print("   Currently using default batching. For full batch matching, consider")
-        print("   using a custom training loop instead of SFTTrainer.")
-
     # Train
     print("\nStarting training...\n")
     trainer.train()
