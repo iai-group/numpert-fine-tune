@@ -1,179 +1,36 @@
 import json
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Tuple
 from sklearn.metrics import f1_score, accuracy_score, classification_report
 import torch
 from torch.utils.data import Sampler
-from collections import defaultdict
+from collections import defaultdict, Counter
 import numpy as np
-from hf_dataset_instructions import (
+import random
+
+from code.llm_finetune.hf_dataset_instructions import (
     load_fact_checking_data,
     load_train_and_validation,
     PerturbationType
 )
+from code.llm_finetune.data_balancer import DatasetBalancer
+from code.llm_finetune.batch_sampler import EnhancedPerturbationBatchSampler
+
+
+from unsloth.chat_templates import get_chat_template
+from unsloth import FastLanguageModel
 from trl import SFTTrainer
-from transformers import TrainingArguments, DataCollatorForSeq2Seq, TrainerCallback
+from transformers import TrainingArguments, DataCollatorForSeq2Seq, TrainerCallback, AutoTokenizer
 from unsloth import is_bfloat16_supported
 from unsloth.chat_templates import train_on_responses_only
 from vllm import LLM, SamplingParams
-from transformers import AutoTokenizer
 import wandb
 import argparse
-import random
 import os
-import re
 from tqdm import tqdm
 import pandas as pd
 
 # Valid labels for fact-checking
 VALID_LABELS = ["True", "False"]
-
-
-class PerturbationBatchSampler(Sampler):
-    """
-    Custom sampler that creates batches with controlled perturbation distribution.
-    
-    Features:
-    - Can group examples with same claim_id in the same batch
-    - Controls ratio of perturbed vs non-perturbed examples
-    - Ensures diverse perturbation types in each batch
-    """
-    
-    def __init__(
-        self,
-        dataset,
-        batch_size: int,
-        group_by_claim_id: bool = False,
-        perturb_ratio: float = 0.5,  # Ratio of perturbed to non-perturbed
-        shuffle: bool = True,
-        seed: int = 42
-    ):
-        """
-        Args:
-            dataset: HuggingFace Dataset with 'claim_id' and 'perturbation_type' columns
-            batch_size: Number of examples per batch
-            group_by_claim_id: If True, tries to put same claim_id in same batch
-            perturb_ratio: Target ratio of perturbed examples (0.0 to 1.0)
-            shuffle: Whether to shuffle the data
-            seed: Random seed for reproducibility
-        """
-        self.dataset = dataset
-        self.batch_size = batch_size
-        self.group_by_claim_id = group_by_claim_id
-        self.perturb_ratio = perturb_ratio
-        self.shuffle = shuffle
-        self.rng = random.Random(seed)
-        
-        # Group indices by claim_id and perturbation type
-        self.claim_id_groups = defaultdict(list)
-        self.original_indices = []
-        self.perturbed_indices = []
-        
-        for idx in range(len(dataset)):
-            claim_id = dataset[idx]['claim_id']
-            perturb_type = dataset[idx]['perturbation_type']
-            
-            self.claim_id_groups[claim_id].append(idx)
-            
-            if perturb_type == 'original':
-                self.original_indices.append(idx)
-            else:
-                self.perturbed_indices.append(idx)
-        
-        print(f"\n{'='*80}")
-        print(f"PerturbationBatchSampler initialized:")
-        print(f"  Total examples: {len(dataset)}")
-        print(f"  Unique claim_ids: {len(self.claim_id_groups)}")
-        print(f"  Original examples: {len(self.original_indices)}")
-        print(f"  Perturbed examples: {len(self.perturbed_indices)}")
-        print(f"  Batch size: {batch_size}")
-        print(f"  Group by claim_id: {group_by_claim_id}")
-        print(f"  Target perturb ratio: {perturb_ratio}")
-        print(f"{'='*80}\n")
-    
-    def __iter__(self):
-        if self.group_by_claim_id:
-            batches = self._create_claim_grouped_batches()
-        else:
-            batches = self._create_perturbation_controlled_batches()
-        
-        if self.shuffle:
-            self.rng.shuffle(batches)
-        
-        for batch in batches:
-            yield batch
-    
-    def _create_claim_grouped_batches(self):
-        """Create batches where examples with same claim_id are grouped together"""
-        batches = []
-        claim_ids = list(self.claim_id_groups.keys())
-        
-        if self.shuffle:
-            self.rng.shuffle(claim_ids)
-        
-        current_batch = []
-        for claim_id in claim_ids:
-            indices = self.claim_id_groups[claim_id]
-            
-            # If adding this claim would exceed batch size, start new batch
-            if len(current_batch) + len(indices) > self.batch_size:
-                if current_batch:
-                    batches.append(current_batch)
-                current_batch = indices.copy()
-            else:
-                current_batch.extend(indices)
-            
-            # If batch is full, save it
-            if len(current_batch) >= self.batch_size:
-                batches.append(current_batch[:self.batch_size])
-                current_batch = current_batch[self.batch_size:]
-        
-        # Add remaining examples
-        if current_batch:
-            batches.append(current_batch)
-        
-        return batches
-    
-    def _create_perturbation_controlled_batches(self):
-        """Create batches with controlled perturbation ratio"""
-        batches = []
-        
-        original_pool = self.original_indices.copy()
-        perturbed_pool = self.perturbed_indices.copy()
-        
-        if self.shuffle:
-            self.rng.shuffle(original_pool)
-            self.rng.shuffle(perturbed_pool)
-        
-        # Calculate how many of each type per batch
-        n_perturbed = int(self.batch_size * self.perturb_ratio)
-        n_original = self.batch_size - n_perturbed
-        
-        while len(original_pool) >= n_original and len(perturbed_pool) >= n_perturbed:
-            batch = []
-            batch.extend(original_pool[:n_original])
-            batch.extend(perturbed_pool[:n_perturbed])
-            
-            original_pool = original_pool[n_original:]
-            perturbed_pool = perturbed_pool[n_perturbed:]
-            
-            if self.shuffle:
-                self.rng.shuffle(batch)
-            
-            batches.append(batch)
-        
-        # Handle remaining examples
-        remaining = original_pool + perturbed_pool
-        if remaining:
-            if self.shuffle:
-                self.rng.shuffle(remaining)
-            for i in range(0, len(remaining), self.batch_size):
-                batches.append(remaining[i:i + self.batch_size])
-        
-        return batches
-    
-    def __len__(self):
-        return (len(self.dataset) + self.batch_size - 1) // self.batch_size
-
 
 class ValidationCallback(TrainerCallback):
     """Callback to run validation and print metrics during training"""
@@ -199,29 +56,6 @@ def get_model_name_arg(model_name):
     return model_name
 
 
-def compute_metrics_for_fact_checking(eval_pred):
-    """
-    Compute metrics for fact-checking evaluation.
-    Used by Trainer for validation during training.
-    """
-    predictions, labels = eval_pred
-    
-    # If predictions are logits, get the argmax
-    if len(predictions.shape) > 1:
-        predictions = np.argmax(predictions, axis=-1)
-    
-    # Calculate metrics
-    accuracy = accuracy_score(labels, predictions)
-    f1_macro = f1_score(labels, predictions, average='macro', zero_division=0)
-    f1_weighted = f1_score(labels, predictions, average='weighted', zero_division=0)
-    
-    return {
-        'accuracy': accuracy,
-        'f1_macro': f1_macro,
-        'f1_weighted': f1_weighted
-    }
-
-
 def finetune(
     train_json_paths: List[str],
     val_json_paths: List[str],
@@ -230,30 +64,20 @@ def finetune(
     epoch: int = 1,
     batch_size: int = 2,
     gradient_accumulation_steps: int = 4,
+    max_seq_length: int = 16384,
     expand_perturbations: bool = True,
-    group_by_claim_id: bool = False,
-    perturb_ratio: float = 0.5,
-    use_custom_sampler: bool = False,
+    balance_labels: bool = False,
+    perturb_ratio: float = 1.0,
+    false_perturb_t_to_f_ratio: float = 0.67,
+    batch_match_claim_id: bool = False,
+    split_large_claims: bool = True,
+    ensure_original_in_batch: bool = True,
+    ensure_perturbed_in_batch: bool = True,
     eval_steps: int = 100,
     save_steps: int = 500,
 ):
     """
     Fine-tune a model for fact-checking with numerical perturbations.
-    
-    Args:
-        train_json_paths: List of paths to training JSON files
-        val_json_paths: List of paths to validation JSON files
-        model_name: Name of the model to fine-tune
-        rank: LoRA rank
-        epoch: Current epoch number
-        batch_size: Per-device batch size
-        gradient_accumulation_steps: Gradient accumulation steps
-        expand_perturbations: Whether to expand perturbations
-        group_by_claim_id: Whether to group same claim_ids in batches
-        perturb_ratio: Ratio of perturbed to non-perturbed in batches
-        use_custom_sampler: Whether to use custom perturbation sampler
-        eval_steps: How often to evaluate
-        save_steps: How often to save checkpoints
     """
     
     print("\n" + "="*80)
@@ -264,15 +88,15 @@ def finetune(
     print(f"Epoch: {epoch}")
     print(f"Batch size: {batch_size}")
     print(f"Gradient accumulation: {gradient_accumulation_steps}")
+    print(f"Max sequence length: {max_seq_length:,} tokens")
     print(f"Expand perturbations: {expand_perturbations}")
-    print(f"Use custom sampler: {use_custom_sampler}")
-    if use_custom_sampler:
-        print(f"  Group by claim_id: {group_by_claim_id}")
-        print(f"  Perturbation ratio: {perturb_ratio}")
+    print(f"Balance labels: {balance_labels}")
+    print(f"Perturb ratio: {perturb_ratio}")
+    print(f"False perturb T→F ratio: {false_perturb_t_to_f_ratio}")
+    print(f"Batch match claim_id: {batch_match_claim_id}")
     print("="*80 + "\n")
     
     # Model configuration
-    max_seq_length = 16_384
     dtype = None
     load_in_4bit = True
     
@@ -284,7 +108,7 @@ def finetune(
     if epoch == 1:
         model_name_arg = get_model_name_arg(model_name)
     else:
-        model_name_arg = f"{prefix}epoch-{epoch-1}/{model_name}{quant_status}/lora_numpert{rank_postfix}"
+        model_name_arg = f"epoch-{epoch-1}/{model_name}{quant_status}/lora_numpert{rank_postfix}"
     
     print(f"Loading model from: {model_name_arg}\n")
     
@@ -318,11 +142,41 @@ def finetune(
     elif "qwen" in model_name.lower():
         tokenizer = get_chat_template(tokenizer, chat_template="chatml")
     
-    # Formatting function
+    # Set padding
+    tokenizer.padding_side = 'right'
+    if tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
+    
+    # Formatting function with length monitoring
+    truncated_count = 0
+    total_count = 0
+    
     def formatting_prompts_func(examples):
+        nonlocal truncated_count, total_count
+        
         convos = examples["conversations"]
-        texts = [tokenizer.apply_chat_template(convo, tokenize=False, add_generation_prompt=False) 
-                 for convo in convos]
+        texts = []
+        
+        for convo in convos:
+            text = tokenizer.apply_chat_template(
+                convo, 
+                tokenize=False, 
+                add_generation_prompt=False
+            )
+            
+            # Check length
+            tokens = tokenizer(text, return_tensors=None, add_special_tokens=True)
+            token_count = len(tokens['input_ids'])
+            total_count += 1
+            
+            if token_count > max_seq_length:
+                truncated_count += 1
+                if truncated_count <= 5:
+                    print(f"⚠️  Example {total_count} exceeds max_seq_length: "
+                          f"{token_count:,} > {max_seq_length:,} tokens")
+            
+            texts.append(text)
+        
         return {"text": texts}
     
     # Load datasets
@@ -337,22 +191,47 @@ def finetune(
     train_data = datasets["train"]
     val_data = datasets["validation"]
     
-    print(f"Train dataset size: {len(train_data)}")
-    print(f"Validation dataset size: {len(val_data)}")
+    print(f"Loaded train dataset size: {len(train_data)}")
+    print(f"Loaded validation dataset size: {len(val_data)}")
+    
+    # Apply balancing to training data
+    if balance_labels or perturb_ratio != 1.0:
+        balancer = DatasetBalancer(
+            dataset=train_data,
+            balance_labels=balance_labels,
+            perturb_ratio=perturb_ratio,
+            false_perturb_t_to_f_ratio=false_perturb_t_to_f_ratio,
+            seed=3407 + epoch
+        )
+        train_data = balancer.balance()
+    
+    print(f"\nFinal train dataset size: {len(train_data)}")
     
     # Show perturbation distribution
-    from collections import Counter
     train_perturb_dist = Counter(train_data['perturbation_type'])
     print("\nTrain perturbation distribution:")
     for p_type, count in train_perturb_dist.most_common():
         print(f"  {p_type:30s}: {count:5d} ({100*count/len(train_data):5.1f}%)")
     
     # Format datasets
+    print("\nFormatting datasets...")
     train_data = train_data.map(formatting_prompts_func, batched=True)
     val_data = val_data.map(formatting_prompts_func, batched=True)
     
+    # Report truncation
+    if truncated_count > 0:
+        truncation_pct = 100 * truncated_count / total_count
+        print(f"\n⚠️  WARNING: {truncated_count}/{total_count} examples ({truncation_pct:.1f}%) "
+              f"exceed max_seq_length!")
+        
+        if truncation_pct > 10:
+            print(f"\n❌ ERROR: >10% of data will be truncated!")
+            raise ValueError("Too much data truncation - increase max_seq_length")
+    else:
+        print(f"\n✅ All examples fit within max_seq_length ({max_seq_length:,} tokens)")
+    
     # Create output directory
-    output_dir = f"{prefix}epoch-{epoch}/{model_name}{quant_status}/outputs/numpert{rank_postfix}"
+    output_dir = f"epoch-{epoch}/{model_name}{quant_status}/outputs/numpert{rank_postfix}"
     os.makedirs(output_dir, exist_ok=True)
     
     # Initialize wandb
@@ -365,10 +244,14 @@ def finetune(
             "epoch": epoch,
             "batch_size": batch_size,
             "gradient_accumulation": gradient_accumulation_steps,
+            "max_seq_length": max_seq_length,
             "expand_perturbations": expand_perturbations,
-            "use_custom_sampler": use_custom_sampler,
-            "group_by_claim_id": group_by_claim_id,
+            "balance_labels": balance_labels,
             "perturb_ratio": perturb_ratio,
+            "false_perturb_t_to_f_ratio": false_perturb_t_to_f_ratio,
+            "batch_match_claim_id": batch_match_claim_id,
+            "truncated_examples": truncated_count,
+            "truncation_rate": truncated_count / total_count if total_count > 0 else 0,
         }
     )
     
@@ -400,7 +283,13 @@ def finetune(
     )
     
     # Data collator
-    data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer)
+    data_collator = DataCollatorForSeq2Seq(
+        tokenizer=tokenizer,
+        padding=True,
+        max_length=max_seq_length,
+        pad_to_multiple_of=8,
+        return_tensors="pt",
+    )
     
     # Create trainer
     trainer = SFTTrainer(
@@ -416,6 +305,8 @@ def finetune(
         args=training_args,
         callbacks=[ValidationCallback()],
     )
+
+    
     
     # Train on responses only
     if "llama" in model_name.lower():
@@ -431,10 +322,32 @@ def finetune(
             response_part="assistant\n",
         )
     
+    if batch_match_claim_id:
+        print("\n🔧 Setting up custom batch sampler...")
+        
+        # Create custom sampler
+        train_sampler = EnhancedPerturbationBatchSampler(
+            dataset=train_data,
+            batch_size=batch_size * gradient_accumulation_steps,  # Effective batch size
+            batch_match_claim_id=batch_match_claim_id,
+            split_large_claims=split_large_claims,
+            ensure_original_in_batch=ensure_original_in_batch,
+            ensure_perturbed_in_batch=ensure_perturbed_in_batch,
+            shuffle=True,
+            seed=3407 + epoch,
+            drop_last=False,
+        )
+        
+        # Note: SFTTrainer uses its own data loading, so we need to be careful here
+        # For now, we'll just use the default and document this limitation
+        print("⚠️  Note: Custom batch sampler with SFTTrainer requires additional integration")
+        print("   Currently using default batching. For full batch matching, consider")
+        print("   using a custom training loop instead of SFTTrainer.")
+
     # Train
     print("\nStarting training...\n")
     trainer.train()
-    
+        
     # Final evaluation
     print("\n" + "="*80)
     print("FINAL EVALUATION")
@@ -447,7 +360,7 @@ def finetune(
     run.finish()
     
     # Save model
-    save_dir = f"{prefix}epoch-{epoch}/{model_name}{quant_status}"
+    save_dir = f"epoch-{epoch}/{model_name}{quant_status}"
     os.makedirs(save_dir, exist_ok=True)
     
     lora_path = f"{save_dir}/lora_numpert{rank_postfix}"
@@ -468,24 +381,14 @@ def finetune(
 
 
 def extract_label_from_response(text: str) -> str:
-    """
-    Extract the predicted label from model response.
-    
-    Args:
-        text: Generated text from model
-        
-    Returns:
-        Extracted label ("True" or "False")
-    """
+    """Extract the predicted label from model response"""
     text = text.strip()
     
-    # Direct match
     if "True" in text or "true" in text:
         return "True"
     if "False" in text or "false" in text:
         return "False"
     
-    # Fallback to random choice
     return random.choice(VALID_LABELS)
 
 
@@ -496,16 +399,20 @@ def inference(
     epoch: int = 0,
     use_vllm: bool = False,
     expand_perturbations: bool = True,
-    output_dir: str = "predictions/numpert",
-    max_seq_length: int = None,
+    max_seq_length: int = 16384,
+    output_dir: str = "predictions/numpert"
 ):
-    """
-    Run inference on test data with proper sequence length handling.
-    """
+    """Run inference on test data"""
     
     print("\n" + "="*80)
     print("STARTING INFERENCE")
     print("="*80)
+    print(f"Model: {model_name}")
+    print(f"Epoch: {epoch}")
+    print(f"Max sequence length: {max_seq_length:,} tokens")
+    print(f"Use vLLM: {use_vllm}")
+    print(f"Expand perturbations: {expand_perturbations}")
+    print("="*80 + "\n")
     
     # Configuration
     dtype = None
@@ -518,13 +425,7 @@ def inference(
     if epoch == 0:
         model_name_arg = get_model_name_arg(model_name)
     else:
-        model_name_arg = f"{prefix}epoch-{epoch}/{model_name}{quant_status}/lora_numpert{rank_postfix}"
-    
-    # Auto-detect max_seq_length if not provided
-    if max_seq_length is None:
-        # Use a generous default based on model
-        max_seq_length = 16_384 if "qwen" in model_name.lower() else 8192
-        print(f"Using max_seq_length: {max_seq_length:,} tokens")
+        model_name_arg = f"epoch-{epoch}/{model_name}{quant_status}/lora_numpert{rank_postfix}"
     
     print(f"Loading model from: {model_name_arg}\n")
     
@@ -535,7 +436,6 @@ def inference(
             max_model_len=max_seq_length,
             dtype="bfloat16",
             gpu_memory_utilization=0.8,
-            enforce_eager=False,
         )
         tokenizer = AutoTokenizer.from_pretrained(model_name_arg, trust_remote_code=True)
     else:
@@ -548,18 +448,18 @@ def inference(
         )
         FastLanguageModel.for_inference(model)
     
-    # Load test data - FIXED: now using "test" split
+    # Load test data
     print("Loading test data...")
     test_data = load_fact_checking_data(
         json_paths=test_json_paths,
-        split="test",  # This will be treated as "validation" internally
+        split="test",
         expand_perturbations_flag=expand_perturbations,
         include_doc=True
     )
     
     print(f"Test dataset size: {len(test_data)}")
     
-    # Check for sequences that might be too long
+    # Check sequence lengths
     print("\nChecking sequence lengths...")
     too_long = 0
     max_length_seen = 0
@@ -576,7 +476,7 @@ def inference(
         
         if token_count > max_seq_length:
             too_long += 1
-            if too_long <= 3:  # Show first 3
+            if too_long <= 3:
                 print(f"⚠️  Example {i} too long: {token_count:,} tokens "
                       f"(claim_id: {example['claim_id']})")
     
@@ -584,9 +484,8 @@ def inference(
     
     if too_long > 0:
         print(f"⚠️  WARNING: {too_long}/{len(test_data)} examples exceed max_seq_length!")
-        print(f"   These will be truncated during inference.")
     else:
-        print(f"✅ All examples fit within max_seq_length ({max_seq_length:,} tokens)")
+        print(f"✅ All examples fit within max_seq_length")
     
     # Prepare for predictions
     predictions = []
@@ -601,7 +500,6 @@ def inference(
     print("\nRunning inference...")
     
     if use_vllm:
-        # vLLM batch inference
         sampling_params = SamplingParams(temperature=0, max_tokens=512, seed=42)
         prompts = [tokenizer.apply_chat_template(
             conv, tokenize=False, add_generation_prompt=True
@@ -615,7 +513,6 @@ def inference(
             predictions.append(label)
     
     else:
-        # Regular inference
         for i in tqdm(range(len(test_data))):
             model_inputs = tokenizer.apply_chat_template(
                 test_data[i]["conversations"],
@@ -639,7 +536,7 @@ def inference(
             outputs = model.generate(
                 **model_inputs,
                 max_new_tokens=512,
-                use_cache=True,  # Changed to True for inference
+                use_cache=True,
                 temperature=0.001,
             )
             
@@ -660,11 +557,10 @@ def inference(
     print(f"F1 Macro: {f1_macro:.4f}")
     print(f"F1 Weighted: {f1_weighted:.4f}")
     
-    # Detailed classification report
     print("\nClassification Report:")
     print(classification_report(ground_truths, predictions, labels=VALID_LABELS))
     
-    # Per-perturbation type analysis
+    # Per-perturbation analysis
     print("\nPer-Perturbation Type Analysis:")
     perturb_metrics = defaultdict(lambda: {"correct": 0, "total": 0})
     
@@ -713,38 +609,66 @@ def inference(
         json.dump(metrics_dict, f, indent=2)
     print(f"Metrics saved to: {metrics_path}\n")
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Fine-tune and evaluate fact-checking models")
     
+    # Mode
     parser.add_argument("--mode", choices=["finetune", "inference"], required=True,
                        help="Mode: finetune or inference")
+    
+    # Data paths
     parser.add_argument("--train_json", nargs="+", help="Path(s) to training JSON files")
     parser.add_argument("--val_json", nargs="+", help="Path(s) to validation JSON files")
     parser.add_argument("--test_json", nargs="+", help="Path(s) to test JSON files")
+    
+    # Model configuration
     parser.add_argument("--model", default="llama-3.2-3b-instruct",
                        help="Model name")
     parser.add_argument("--rank", type=int, default=32,
                        help="LoRA rank")
     parser.add_argument("--epoch", type=int, default=1,
                        help="Epoch number")
+    
+    # Training hyperparameters
     parser.add_argument("--batch_size", type=int, default=2,
                        help="Per-device batch size")
     parser.add_argument("--grad_accum", type=int, default=4,
                        help="Gradient accumulation steps")
+    parser.add_argument("--max_seq_length", type=int, default=16384,
+                       help="Maximum sequence length in tokens")
+    
+    # Dataset configuration
     parser.add_argument("--expand_perturbations", action="store_true", default=True,
                        help="Expand perturbations in dataset")
-    parser.add_argument("--group_by_claim_id", action="store_true",
-                       help="Group same claim_ids in batches")
-    parser.add_argument("--perturb_ratio", type=float, default=0.5,
-                       help="Ratio of perturbed examples in batches")
-    parser.add_argument("--use_custom_sampler", action="store_true",
-                       help="Use custom perturbation batch sampler")
-    parser.add_argument("--use_vllm", action="store_true",
-                       help="Use vLLM for inference")
+    parser.add_argument("--balance_labels", action="store_true",
+                       help="Balance True/False label distribution")
+    parser.add_argument("--perturb_ratio", type=float, default=1.0,
+                       help="Ratio of perturbed to non-perturbed examples (1.0 = 1:1)")
+    parser.add_argument("--false_perturb_t_to_f_ratio", type=float, default=0.67,
+                       help="Among False perturbed examples, ratio that should be T→F")
+    
+    # Batch matching
+    parser.add_argument("--batch_match_claim_id", action="store_true",
+                       help="Try to group same claim_id in batches")
+    parser.add_argument("--split_large_claims", action="store_true", default=True,
+                       help="Split claims with many perturbations across batches")
+    parser.add_argument("--ensure_original_in_batch", action="store_true", default=True,
+                       help="Ensure each batch has at least one original example")
+    parser.add_argument("--ensure_perturbed_in_batch", action="store_true", default=True,
+                       help="Ensure each batch has at least one perturbed example")
+    
+    # Evaluation
     parser.add_argument("--eval_steps", type=int, default=100,
                        help="Evaluation frequency")
     parser.add_argument("--save_steps", type=int, default=500,
                        help="Checkpoint save frequency")
+    
+    # Inference
+    parser.add_argument("--use_vllm", action="store_true",
+                       help="Use vLLM for inference")
+    parser.add_argument("--output_dir", default="predictions/numpert",
+                       help="Output directory for predictions")
     
     args = parser.parse_args()
     
@@ -760,10 +684,15 @@ if __name__ == "__main__":
             epoch=args.epoch,
             batch_size=args.batch_size,
             gradient_accumulation_steps=args.grad_accum,
+            max_seq_length=args.max_seq_length,
             expand_perturbations=args.expand_perturbations,
-            group_by_claim_id=args.group_by_claim_id,
+            balance_labels=args.balance_labels,
             perturb_ratio=args.perturb_ratio,
-            use_custom_sampler=args.use_custom_sampler,
+            false_perturb_t_to_f_ratio=args.false_perturb_t_to_f_ratio,
+            batch_match_claim_id=args.batch_match_claim_id,
+            split_large_claims=args.split_large_claims,
+            ensure_original_in_batch=args.ensure_original_in_batch,
+            ensure_perturbed_in_batch=args.ensure_perturbed_in_batch,
             eval_steps=args.eval_steps,
             save_steps=args.save_steps,
         )
@@ -779,4 +708,6 @@ if __name__ == "__main__":
             epoch=args.epoch,
             use_vllm=args.use_vllm,
             expand_perturbations=args.expand_perturbations,
+            max_seq_length=args.max_seq_length,
+            output_dir=args.output_dir,
         )
