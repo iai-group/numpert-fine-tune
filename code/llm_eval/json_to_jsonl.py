@@ -10,20 +10,20 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 try:
     # Try the original import path first
-    from code.llm_eval.prompt import (
+    from code.prompt import (
         get_fact_check_system_prompt,
         get_fact_check_user_prompt,
     )
 except ImportError:
     try:
         # If that fails, try importing from the current directory
-        from prompt import (
+        from code.prompt import (
             get_fact_check_system_prompt,
             get_fact_check_user_prompt,
         )
     except ImportError:
         # If both fail, try importing from llm_eval in the same directory
-        from llm_eval.prompt import (
+        from code.prompt import (
             get_fact_check_system_prompt,
             get_fact_check_user_prompt,
         )

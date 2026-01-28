@@ -2,7 +2,7 @@
 
 from enum import Enum
 
-FACT_CHECK_SYSTEM_PROMPT = """You are a professional fact checker, your task is to classify whether the given claim is true or false based on the evidence text provided.
+FACT_CHECK_SYSTEM_PROMPT = """You are a professional fact-checker, your task is to classify whether the given claim is true or false based on the evidence text provided.
 """  # noqa: E501
 
 FEW_SHOT_EXAMPLES = """"Here are some example:
