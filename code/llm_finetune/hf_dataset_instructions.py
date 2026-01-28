@@ -166,9 +166,11 @@ def convert_to_conversations(
     return messages
 
 
+# In your data_loader.py (or hf_dataset_instructions.py)
+
 def load_fact_checking_data(
     json_paths: Union[str, List[str]],
-    split: str = "train",
+    split: str = "train",  # "train", "validation", or "test"
     expand_perturbations_flag: bool = True,
     include_doc: bool = True
 ) -> Dataset:
@@ -177,13 +179,16 @@ def load_fact_checking_data(
     
     Args:
         json_paths: Single JSON file path or list of paths
-        split: "train" or "validation"
+        split: "train", "validation", or "test"
         expand_perturbations_flag: Whether to expand perturbations into separate examples
         include_doc: Whether to include evidence document in prompts
         
     Returns:
         HuggingFace Dataset ready for SFTTrainer
     """
+    # Treat "test" the same as "validation" (no assistant response, include ground_truth)
+    effective_split = "validation" if split == "test" else split
+    
     # Load raw examples from JSON files
     raw_examples = load_json_files(json_paths)
     
@@ -207,7 +212,7 @@ def load_fact_checking_data(
     # Convert to conversation format
     conversation_data = convert_to_conversations(
         processed_examples, 
-        split=split,
+        split=effective_split,
         include_doc=include_doc
     )
     
@@ -215,7 +220,6 @@ def load_fact_checking_data(
     dataset = Dataset.from_list(conversation_data)
     
     return dataset
-
 
 def load_train_and_validation(
     train_json_paths: Union[str, List[str]],

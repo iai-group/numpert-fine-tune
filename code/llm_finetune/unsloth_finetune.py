@@ -5,10 +5,11 @@ import torch
 from torch.utils.data import Sampler
 from collections import defaultdict
 import numpy as np
-from code.llm_finetune.hf_dataset_instructions import load_train_and_validation
-from code.llm_finetune.config import prefix
-from unsloth.chat_templates import get_chat_template
-from unsloth import FastLanguageModel
+from hf_dataset_instructions import (
+    load_fact_checking_data,
+    load_train_and_validation,
+    PerturbationType
+)
 from trl import SFTTrainer
 from transformers import TrainingArguments, DataCollatorForSeq2Seq, TrainerCallback
 from unsloth import is_bfloat16_supported
@@ -271,7 +272,7 @@ def finetune(
     print("="*80 + "\n")
     
     # Model configuration
-    max_seq_length = 4096
+    max_seq_length = 16_384
     dtype = None
     load_in_4bit = True
     
@@ -495,32 +496,18 @@ def inference(
     epoch: int = 0,
     use_vllm: bool = False,
     expand_perturbations: bool = True,
-    output_dir: str = "predictions/numpert"
+    output_dir: str = "predictions/numpert",
+    max_seq_length: int = None,
 ):
     """
-    Run inference on test data.
-    
-    Args:
-        test_json_paths: List of paths to test JSON files
-        model_name: Name of the model
-        rank: LoRA rank
-        epoch: Epoch to load (0 for base model)
-        use_vllm: Whether to use vLLM for inference
-        expand_perturbations: Whether to expand perturbations
-        output_dir: Directory to save predictions
+    Run inference on test data with proper sequence length handling.
     """
     
     print("\n" + "="*80)
     print("STARTING INFERENCE")
     print("="*80)
-    print(f"Model: {model_name}")
-    print(f"Epoch: {epoch}")
-    print(f"Use vLLM: {use_vllm}")
-    print(f"Expand perturbations: {expand_perturbations}")
-    print("="*80 + "\n")
     
     # Configuration
-    max_seq_length = 4096
     dtype = None
     load_in_4bit = True
     
@@ -533,11 +520,23 @@ def inference(
     else:
         model_name_arg = f"{prefix}epoch-{epoch}/{model_name}{quant_status}/lora_numpert{rank_postfix}"
     
+    # Auto-detect max_seq_length if not provided
+    if max_seq_length is None:
+        # Use a generous default based on model
+        max_seq_length = 16_384 if "qwen" in model_name.lower() else 8192
+        print(f"Using max_seq_length: {max_seq_length:,} tokens")
+    
     print(f"Loading model from: {model_name_arg}\n")
     
     # Load model
     if use_vllm:
-        llm = LLM(model=model_name_arg, max_model_len=max_seq_length)
+        llm = LLM(
+            model=model_name_arg, 
+            max_model_len=max_seq_length,
+            dtype="bfloat16",
+            gpu_memory_utilization=0.8,
+            enforce_eager=False,
+        )
         tokenizer = AutoTokenizer.from_pretrained(model_name_arg, trust_remote_code=True)
     else:
         model, tokenizer = FastLanguageModel.from_pretrained(
@@ -549,16 +548,45 @@ def inference(
         )
         FastLanguageModel.for_inference(model)
     
-    # Load test data
+    # Load test data - FIXED: now using "test" split
     print("Loading test data...")
     test_data = load_fact_checking_data(
         json_paths=test_json_paths,
-        split="test",
+        split="test",  # This will be treated as "validation" internally
         expand_perturbations_flag=expand_perturbations,
         include_doc=True
     )
     
-    print(f"Test dataset size: {len(test_data)}\n")
+    print(f"Test dataset size: {len(test_data)}")
+    
+    # Check for sequences that might be too long
+    print("\nChecking sequence lengths...")
+    too_long = 0
+    max_length_seen = 0
+    
+    for i, example in enumerate(test_data):
+        formatted = tokenizer.apply_chat_template(
+            example["conversations"],
+            tokenize=False,
+            add_generation_prompt=True
+        )
+        tokens = tokenizer(formatted, return_tensors=None)
+        token_count = len(tokens['input_ids'])
+        max_length_seen = max(max_length_seen, token_count)
+        
+        if token_count > max_seq_length:
+            too_long += 1
+            if too_long <= 3:  # Show first 3
+                print(f"⚠️  Example {i} too long: {token_count:,} tokens "
+                      f"(claim_id: {example['claim_id']})")
+    
+    print(f"\nMax sequence length in test set: {max_length_seen:,} tokens")
+    
+    if too_long > 0:
+        print(f"⚠️  WARNING: {too_long}/{len(test_data)} examples exceed max_seq_length!")
+        print(f"   These will be truncated during inference.")
+    else:
+        print(f"✅ All examples fit within max_seq_length ({max_seq_length:,} tokens)")
     
     # Prepare for predictions
     predictions = []
@@ -570,7 +598,7 @@ def inference(
     os.makedirs(pred_dir, exist_ok=True)
     
     # Run inference
-    print("Running inference...")
+    print("\nRunning inference...")
     
     if use_vllm:
         # vLLM batch inference
@@ -611,7 +639,7 @@ def inference(
             outputs = model.generate(
                 **model_inputs,
                 max_new_tokens=512,
-                use_cache=False,
+                use_cache=True,  # Changed to True for inference
                 temperature=0.001,
             )
             
@@ -684,7 +712,6 @@ def inference(
     with open(metrics_path, 'w') as f:
         json.dump(metrics_dict, f, indent=2)
     print(f"Metrics saved to: {metrics_path}\n")
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Fine-tune and evaluate fact-checking models")
