@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""
-Compare classification accuracy between two JSONL files.
+"""Compare classification accuracy between two JSONL files.
 
-Outputs custom IDs where file1 is correct but file2 is incorrect.
-Handles both simple JSONL and OpenAI API response format.
+Outputs custom IDs where file1 is correct but file2 is incorrect. Handles both
+simple JSONL and OpenAI API response format.
 """
 
 import argparse
@@ -32,7 +31,9 @@ class CustomIdParser:
             elif original_label.lower() == "true":
                 gt = True
             else:
-                raise ValueError(f"Unknown original label for baseline: {original_label}")
+                raise ValueError(
+                    f"Unknown original label for baseline: {original_label}"
+                )
         elif perturbation_type in ["t2t", "f2t"]:
             gt = True
         elif perturbation_type in ["t2f", "ft2f", "ff2f"]:
@@ -68,7 +69,9 @@ def extract_label_from_openai_response(data: dict) -> Optional[bool]:
         return None
 
 
-def load_jsonl_predictions(filepath: Path, verbose: bool = False) -> Dict[str, bool]:
+def load_jsonl_predictions(
+    filepath: Path, verbose: bool = False
+) -> Dict[str, bool]:
     """Load JSONL and map custom_id -> predicted_label (bool)."""
     preds = {}
     with open(filepath, "r", encoding="utf-8") as f:
@@ -111,7 +114,9 @@ def load_jsonl_predictions(filepath: Path, verbose: bool = False) -> Dict[str, b
     return preds
 
 
-def evaluate_predictions(preds: Dict[str, bool]) -> Dict[str, Tuple[bool, bool]]:
+def evaluate_predictions(
+    preds: Dict[str, bool]
+) -> Dict[str, Tuple[bool, bool]]:
     """Return dict[cid] = (predicted_label, is_correct)."""
     out = {}
     for cid, pred in preds.items():
@@ -123,12 +128,14 @@ def evaluate_predictions(preds: Dict[str, bool]) -> Dict[str, Tuple[bool, bool]]
     return out
 
 
-def compare_classifications(file1: Dict[str, Tuple[bool, bool]],
-                            file2: Dict[str, Tuple[bool, bool]],
-                            details: bool = False) -> List:
+def compare_classifications(
+    file1: Dict[str, Tuple[bool, bool]],
+    file2: Dict[str, Tuple[bool, bool]],
+    details: bool = False,
+) -> List:
     """Return IDs (or full tuples) where file1 correct and file2 incorrect."""
     improved = []
-    for cid in (set(file1) & set(file2)):
+    for cid in set(file1) & set(file2):
         pred1, corr1 = file1[cid]
         pred2, corr2 = file2[cid]
         if corr1 and not corr2:
@@ -140,16 +147,22 @@ def compare_classifications(file1: Dict[str, Tuple[bool, bool]],
     return improved
 
 
-def print_summary(file1: Dict[str, Tuple[bool, bool]],
-                  file2: Dict[str, Tuple[bool, bool]],
-                  improved: List):
+def print_summary(
+    file1: Dict[str, Tuple[bool, bool]],
+    file2: Dict[str, Tuple[bool, bool]],
+    improved: List,
+):
     common = set(file1) & set(file2)
     f1_corr = sum(corr for _, corr in (file1[c] for c in common))
     f2_corr = sum(corr for _, corr in (file2[c] for c in common))
     print("\n=== COMPARISON SUMMARY ===")
     print(f"Common IDs: {len(common)}")
-    print(f"File1 accuracy: {f1_corr}/{len(common)} = {f1_corr/len(common):.2%}")
-    print(f"File2 accuracy: {f2_corr}/{len(common)} = {f2_corr/len(common):.2%}")
+    print(
+        f"File1 accuracy: {f1_corr}/{len(common)} = {f1_corr/len(common):.2%}"
+    )
+    print(
+        f"File2 accuracy: {f2_corr}/{len(common)} = {f2_corr/len(common):.2%}"
+    )
     print(f"Improved (file1 correct, file2 wrong): {len(improved)}")
 
 
@@ -182,7 +195,9 @@ def main():
 
     if args.output:
         with open(args.output, "w") as f:
-            for cid in (cid if not args.details else cid[0] for cid in improved):
+            for cid in (
+                cid if not args.details else cid[0] for cid in improved
+            ):
                 f.write(cid + "\n")
         print(f"\nSaved to {args.output}")
 

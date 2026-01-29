@@ -1,6 +1,7 @@
 import pytest
 from code.data_preprocessing.perturbations import approximation
 
+
 def test_approximate_number_prefers_human_steps():
     assert approximation.approximate_number(1234) == pytest.approx(1200)
     assert approximation.approximate_number(5000) == pytest.approx(5000)
@@ -69,7 +70,9 @@ def test_perturb_claim_generates_true_and_false_variants(monkeypatch):
     tokens = ["100", "people", "attended", "the", "rally", "."]
     ner_tags = ["CARDINAL", "O", "O", "O", "O", "O"]
 
-    true_claim, false_claim = approximation.perturb_claim(claim, tokens, ner_tags)
+    true_claim, false_claim = approximation.perturb_claim(
+        claim, tokens, ner_tags
+    )
 
     assert true_claim == "About 100 people attended the rally."
     assert false_claim == "About 200 people attended the rally."

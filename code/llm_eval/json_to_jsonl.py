@@ -325,7 +325,6 @@ def create_consolidated_jsonl(  # noqa: C901
                         "body": body,
                     }
 
-
                     # Write the JSON object as a line in the JSONL file
                     consolidated_file.write(json.dumps(json_request) + "\n")
                     entries_processed += 1

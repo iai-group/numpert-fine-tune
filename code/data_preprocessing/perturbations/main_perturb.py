@@ -97,9 +97,7 @@ def main() -> None:
     )
 
     save_data(neg_true, "data/perturbed_data/train_split/negative_true.json")
-    save_data(
-        neg_false, "data/perturbed_data/train_split/negative_false.json"
-    )
+    save_data(neg_false, "data/perturbed_data/train_split/negative_false.json")
     print("Negative number perturbations completed.")
 
     # Numeration perturbations
@@ -114,9 +112,7 @@ def main() -> None:
         num_false, ["numeration_true", "numeration_false"]
     )
 
-    save_data(
-        num_true, "data/perturbed_data/train_split/numeration_true.json"
-    )
+    save_data(num_true, "data/perturbed_data/train_split/numeration_true.json")
     save_data(
         num_false, "data/perturbed_data/train_split/numeration_false.json"
     )
@@ -150,9 +146,7 @@ def main() -> None:
     )
 
     # Save the combined and filtered data
-    save_data(
-        obf_true, "data/perturbed_data/train_split/obfuscation_true.json"
-    )
+    save_data(obf_true, "data/perturbed_data/train_split/obfuscation_true.json")
     save_data(
         obf_false, "data/perturbed_data/train_split/obfuscation_false.json"
     )

@@ -1,4 +1,5 @@
-"""Tests for compare_classifications.py"""
+"""Tests for compare_classifications.py."""
+
 import json
 import sys
 from pathlib import Path
@@ -6,7 +7,9 @@ import pytest
 import os
 
 # Add the current directory to the path for imports
-current_dir = os.path.dirname(os.path.abspath("code/error_analysis/compare_classifications.py"))
+current_dir = os.path.dirname(
+    os.path.abspath("code/error_analysis/compare_classifications.py")
+)
 if current_dir not in sys.path:
     sys.path.insert(0, current_dir)
 
@@ -86,7 +89,9 @@ def test_extract_label_from_openai_response_variants():
     assert extract_label_from_openai_response(data_none) is None
 
     data_unparsable = {
-        "response": {"body": {"choices": [{"message": {"content": "no label"}}]}}
+        "response": {
+            "body": {"choices": [{"message": {"content": "no label"}}]}
+        }
     }
     assert extract_label_from_openai_response(data_unparsable) is None
 
@@ -98,7 +103,9 @@ def test_load_jsonl_predictions_handles_formats_and_skips(tmp_path, capsys):
     # 1) Valid OpenAI response with custom_id
     line1 = {
         "custom_id": "a-true-math-baseline",
-        "response": {"body": {"choices": [{"message": {"content": '{"label": true}'}}]}},
+        "response": {
+            "body": {"choices": [{"message": {"content": '{"label": true}'}}]}
+        },
     }
     # 2) Valid "content" field with label and 'id' instead of custom_id
     line2 = {
@@ -131,15 +138,19 @@ def test_load_jsonl_predictions_handles_formats_and_skips(tmp_path, capsys):
 
 
 def test_evaluate_predictions_and_skip_invalid(capsys):
-    """Test evaluation of predictions against ground truth, skipping invalid IDs."""
+    """Test evaluation of predictions against ground truth, skipping invalid
+    IDs."""
     preds = {
-        "x1-true-cat-baseline": True,   # gt True => correct
-        "x2-false-cat-ff2f": False,     # gt False => correct
-        "bad_custom_id": True,          # invalid -> skipped
+        "x1-true-cat-baseline": True,  # gt True => correct
+        "x2-false-cat-ff2f": False,  # gt False => correct
+        "bad_custom_id": True,  # invalid -> skipped
     }
     evaluated = evaluate_predictions(preds)
     # bad_custom_id should be skipped and not present
-    assert set(evaluated.keys()) == {"x1-true-cat-baseline", "x2-false-cat-ff2f"}
+    assert set(evaluated.keys()) == {
+        "x1-true-cat-baseline",
+        "x2-false-cat-ff2f",
+    }
     assert evaluated["x1-true-cat-baseline"] == (True, True)
     assert evaluated["x2-false-cat-ff2f"] == (False, True)
 
@@ -227,7 +238,9 @@ def test_main_integration(tmp_path, monkeypatch, capsys):
             {
                 "custom_id": "x1-true-stat-baseline",
                 "response": {
-                    "body": {"choices": [{"message": {"content": '{"label": true}'}}]}
+                    "body": {
+                        "choices": [{"message": {"content": '{"label": true}'}}]
+                    }
                 },
             },
             {
@@ -250,13 +263,17 @@ def test_main_integration(tmp_path, monkeypatch, capsys):
             {
                 "custom_id": "x2-false-bio-ff2f",
                 "response": {
-                    "body": {"choices": [{"message": {"content": '{"label": true}'}}]}
+                    "body": {
+                        "choices": [{"message": {"content": '{"label": true}'}}]
+                    }
                 },
             },
             {
                 "id": "x3-true-chem-t2t",
                 "response": {
-                    "body": {"choices": [{"message": {"content": '{"label": true}'}}]}
+                    "body": {
+                        "choices": [{"message": {"content": '{"label": true}'}}]
+                    }
                 },
             },
         ],

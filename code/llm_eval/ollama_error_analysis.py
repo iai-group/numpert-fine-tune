@@ -10,9 +10,7 @@ from typing import Dict, Optional, Tuple
 from code.metrics.eval_ollama_models import get_result_file_path
 
 
-def get_required_data(
-    line: str, perturb: str
-) -> Tuple[
+def get_required_data(line: str, perturb: str) -> Tuple[
     Optional[str],
     Optional[str],
     Optional[str],

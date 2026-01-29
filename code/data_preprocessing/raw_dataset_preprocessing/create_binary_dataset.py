@@ -1,4 +1,5 @@
-"""Remove entries with a specific label from a JSON dataset and add claim IDs."""
+"""Remove entries with a specific label from a JSON dataset and add claim
+IDs."""
 
 import json
 import argparse
@@ -10,16 +11,19 @@ _claim_counter = count(start=1)
 
 
 def generate_claim_id(dataset_split) -> str:
-    """
-    Generate a sequential claim ID.
+    """Generate a sequential claim ID.
 
     Returns:
         str: A sequential claim identifier (e.g., claim_000001).
     """
     return f"{dataset_split}_{next(_claim_counter):06d}"
 
-def remove_label(input_json: str, label_to_remove: str, dataset_split: str) -> Tuple[str, int, int]:
-    """Remove entries with the specified label from the JSON data and add claim_ids."""
+
+def remove_label(
+    input_json: str, label_to_remove: str, dataset_split: str
+) -> Tuple[str, int, int]:
+    """Remove entries with the specified label from the JSON data and add
+    claim_ids."""
 
     data: List[Dict[str, Any]] = json.loads(input_json)
     total_entries: int = len(data)
@@ -41,16 +45,16 @@ def remove_label(input_json: str, label_to_remove: str, dataset_split: str) -> T
 
 
 def main() -> None:
-    """
-    Main function to parse arguments and execute label removal.
-    """
+    """Main function to parse arguments and execute label removal."""
     parser = argparse.ArgumentParser(
         description="Remove specified label from JSON data."
     )
     parser.add_argument("input_json", type=str)
     parser.add_argument("output_json", type=str)
     parser.add_argument("label_to_remove", type=str)
-    parser.add_argument("dataset_split", type=str, choices=["train", "val", "test"])
+    parser.add_argument(
+        "dataset_split", type=str, choices=["train", "val", "test"]
+    )
 
     args = parser.parse_args()
 

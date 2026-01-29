@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-find_dups.py
+"""find_dups.py.
 
 Usage examples:
   python find_dups.py input.jsonl
@@ -25,6 +24,7 @@ _INVISIBLE = (
     "\u00ad",  # SOFT HYPHEN
 )
 
+
 def normalize_id(s: str) -> str:
     s = str(s)
     s = unicodedata.normalize("NFC", s)
@@ -35,21 +35,39 @@ def normalize_id(s: str) -> str:
     s = "".join(ch for ch in s if unicodedata.category(ch)[0] != "C")
     return s
 
+
 def bytes_hex(s: str) -> str:
     return " ".join(f"{b:02x}" for b in s.encode("utf-8", "surrogatepass"))
+
 
 def debug_repr(s: str) -> str:
     return f"{repr(s)} | bytes: {bytes_hex(s)}"
 
+
 def main():
-    p = argparse.ArgumentParser(description="Find duplicate custom_id entries in a JSONL file.")
+    p = argparse.ArgumentParser(
+        description="Find duplicate custom_id entries in a JSONL file."
+    )
     p.add_argument("input", help="input.jsonl")
-    p.add_argument("--no-normalize", action="store_true", help="Don't normalize custom_id before dedup/compare")
-    p.add_argument("--show-lines", action="store_true", help="Also print the full JSON line for each duplicate occurrence")
-    p.add_argument("--dedup-output", help="Write deduplicated output (first occurrence kept) to this file")
+    p.add_argument(
+        "--no-normalize",
+        action="store_true",
+        help="Don't normalize custom_id before dedup/compare",
+    )
+    p.add_argument(
+        "--show-lines",
+        action="store_true",
+        help="Also print the full JSON line for each duplicate occurrence",
+    )
+    p.add_argument(
+        "--dedup-output",
+        help="Write deduplicated output (first occurrence kept) to this file",
+    )
     args = p.parse_args()
 
-    occurrences = defaultdict(list)  # key -> list of (line_no, raw_id, full_line)
+    occurrences = defaultdict(
+        list
+    )  # key -> list of (line_no, raw_id, full_line)
     total_lines = 0
     skipped_invalid = 0
 
@@ -70,8 +88,12 @@ def main():
             occurrences[key].append((lineno, str(raw), line.rstrip("\n")))
 
     unique_count = len(occurrences)
-    print(f"Scanned {total_lines} lines, skipped {skipped_invalid} invalid JSON lines.")
-    print(f"Unique custom_ids (by {'raw' if args.no_normalize else 'normalized'} key): {unique_count}")
+    print(
+        f"Scanned {total_lines} lines, skipped {skipped_invalid} invalid JSON lines."
+    )
+    print(
+        f"Unique custom_ids (by {'raw' if args.no_normalize else 'normalized'} key): {unique_count}"
+    )
     # find duplicates
     duplicates = {k: v for k, v in occurrences.items() if len(v) > 1}
     if not duplicates:
@@ -88,7 +110,11 @@ def main():
             for lineno, raw, full_line in rows:
                 print(f"  line {lineno}: raw id -> {debug_repr(raw)}")
                 if args.show_lines:
-                    snippet = full_line if len(full_line) <= 400 else full_line[:400] + "..."
+                    snippet = (
+                        full_line
+                        if len(full_line) <= 400
+                        else full_line[:400] + "..."
+                    )
                     print(f"     JSON: {snippet}")
             print()
 
@@ -103,6 +129,7 @@ def main():
             for line in chosen:
                 out.write(line.rstrip("\n") + "\n")
         print(f"Wrote {len(chosen)} unique objects to: {args.dedup_output}")
+
 
 if __name__ == "__main__":
     main()

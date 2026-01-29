@@ -3,6 +3,7 @@ import csv
 import sys
 from code.metrics import dataset_metrics
 
+
 def test_count_labels_and_generate_csv_basic(tmp_path):
     data = [
         {"label": "True"},
@@ -16,7 +17,9 @@ def test_count_labels_and_generate_csv_basic(tmp_path):
     with open(json_path, "w") as f:
         json.dump(data, f)
 
-    result = dataset_metrics.count_labels_and_generate_csv(str(json_path), str(csv_path))
+    result = dataset_metrics.count_labels_and_generate_csv(
+        str(json_path), str(csv_path)
+    )
 
     assert result == {"True": 2, "False": 1, "Total": 5}
     assert csv_path.exists()
@@ -43,7 +46,9 @@ def test_count_labels_ignores_non_string_labels(tmp_path):
     with open(json_path, "w") as f:
         json.dump(data, f)
 
-    result = dataset_metrics.count_labels_and_generate_csv(str(json_path), str(csv_path))
+    result = dataset_metrics.count_labels_and_generate_csv(
+        str(json_path), str(csv_path)
+    )
 
     assert result == {"True": 1, "False": 1, "Total": 8}
     with open(csv_path, newline="") as f:
@@ -56,7 +61,9 @@ def test_count_labels_error_on_missing_file(tmp_path, capsys):
     json_path = tmp_path / "missing.json"  # does not exist
     csv_path = tmp_path / "stats.csv"
 
-    result = dataset_metrics.count_labels_and_generate_csv(str(json_path), str(csv_path))
+    result = dataset_metrics.count_labels_and_generate_csv(
+        str(json_path), str(csv_path)
+    )
 
     assert "error" in result and result["error"]
     assert not csv_path.exists()

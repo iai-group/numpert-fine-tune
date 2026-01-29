@@ -1,4 +1,5 @@
 """Tests for the load_tag_claims module."""
+
 import json
 from unittest.mock import MagicMock, mock_open, patch
 from numpert.data_preprocessing.load_tag_claims import (
