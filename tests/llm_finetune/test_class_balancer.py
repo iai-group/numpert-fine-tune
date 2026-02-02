@@ -1,7 +1,7 @@
 import pytest
 from datasets import Dataset
 from collections import Counter
-from code.llm_finetune.class_balancer import DatasetBalancer
+from src.llm_finetune.class_balancer import DatasetBalancer
 
 
 def print_separator(title: str):

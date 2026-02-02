@@ -1,7 +1,7 @@
 """Tests for obfuscation perturbation methods with failsafe."""
 
 from unittest.mock import patch
-from code.data_preprocessing.perturbations.obfuscate import (
+from src.data_preprocessing.perturbations.obfuscate import (
     replace_digits_with_new_sequence,
     random_replacement,
     masking,

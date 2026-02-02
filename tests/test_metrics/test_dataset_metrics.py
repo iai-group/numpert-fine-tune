@@ -1,7 +1,7 @@
 import json
 import csv
 import sys
-from code.metrics import dataset_metrics
+from src.metrics import dataset_metrics
 
 
 def test_count_labels_and_generate_csv_basic(tmp_path):

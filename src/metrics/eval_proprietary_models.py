@@ -5,8 +5,8 @@ from typing import Any, Dict, List, Tuple
 import json
 from sklearn.metrics import accuracy_score
 
-from code.metrics.eval_metrics_latex import DeltaEvalTable
-from code.metrics.metric_utils import get_exclusion_list
+from src.metrics.eval_metrics_latex import DeltaEvalTable
+from src.metrics.metric_utils import get_exclusion_list
 
 
 def read_pred_file(file_name: str) -> List[Dict[str, Any]]:

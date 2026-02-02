@@ -1,7 +1,7 @@
 """Test module for main_perturb functionality."""
 
 from unittest.mock import Mock
-from code.data_preprocessing.perturbations import main_perturb as mp
+from src.data_preprocessing.perturbations import main_perturb as mp
 
 
 def test_remove_unperturbed_claims_filters_and_flattens(capsys):

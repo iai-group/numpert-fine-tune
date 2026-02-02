@@ -6,7 +6,7 @@ from typing import List, Dict
 from datasets import Dataset
 
 # Assuming your script is named data_loader.py
-from code.llm_finetune.hf_dataset_instructions import (
+from src.llm_finetune.hf_dataset_instructions import (
     load_json_files,
     expand_perturbations,
     convert_to_conversations,

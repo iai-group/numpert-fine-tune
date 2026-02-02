@@ -4,7 +4,7 @@ import json
 import pytest
 from unittest.mock import patch, mock_open, MagicMock
 
-from code.metrics.eval_ollama_models import (
+from src.metrics.eval_ollama_models import (
     flip_label,
     convert_bool_label_to_str,
     check_file_exists_and_readable,

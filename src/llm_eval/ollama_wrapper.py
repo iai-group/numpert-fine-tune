@@ -13,7 +13,7 @@ import logging
 from ollama import Client, ChatResponse
 from ollama._types import ResponseError
 import os
-from code.prompt import (
+from src.prompt import (
     PromptType,
     get_fact_check_system_prompt,
     get_fact_check_user_prompt,

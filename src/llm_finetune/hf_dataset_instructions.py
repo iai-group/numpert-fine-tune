@@ -3,7 +3,7 @@ from enum import Enum
 from pathlib import Path
 from typing import List, Union, Optional, Dict
 import json
-from code.prompt import FACT_CHECK_SYSTEM_PROMPT, FACT_CHECK_USER_PROMPT
+from src.prompt import FACT_CHECK_SYSTEM_PROMPT, FACT_CHECK_USER_PROMPT
 
 
 class PerturbationType(Enum):

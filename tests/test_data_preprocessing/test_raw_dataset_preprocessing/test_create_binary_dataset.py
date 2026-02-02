@@ -2,7 +2,7 @@
 
 import json
 import pytest
-from code.data_preprocessing.raw_dataset_preprocessing.create_binary_dataset import (  # noqa: E501
+from src.data_preprocessing.raw_dataset_preprocessing.create_binary_dataset import (  # noqa: E501
     remove_label,
 )
 

@@ -2,7 +2,7 @@
 
 import pytest
 
-from code.metrics.calculate_metrics_jsonl import (
+from src.metrics.calculate_metrics_jsonl import (
     ResponseValidator,
     CustomIdParser,
     JsonlProcessor,

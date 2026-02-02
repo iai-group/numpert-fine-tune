@@ -1,7 +1,7 @@
 """Test suite for range perturbations in numerical claims preprocessing."""
 
 import pytest
-from code.data_preprocessing.perturbations import range as rng
+from src.data_preprocessing.perturbations import range as rng
 
 
 def test_extract_number_from_text_percent():

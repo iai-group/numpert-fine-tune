@@ -1,5 +1,5 @@
 import pytest
-from code.data_preprocessing.perturbations import approximation
+from src.data_preprocessing.perturbations import approximation
 
 
 def test_approximate_number_prefers_human_steps():

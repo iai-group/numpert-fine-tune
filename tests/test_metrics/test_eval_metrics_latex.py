@@ -2,7 +2,7 @@
 
 import pytest
 import numpy as np
-from code.metrics.eval_metrics_latex import DeltaEvalTable
+from src.metrics.eval_metrics_latex import DeltaEvalTable
 
 
 def test_init_default_values():

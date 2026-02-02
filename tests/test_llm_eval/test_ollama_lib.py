@@ -11,8 +11,8 @@ import pytest
 import yaml
 from ollama._types import ResponseError
 
-from code.llm_eval.ollama_wrapper import OllamaLLM
-from code.prompt import get_output_schema
+from src.llm_eval.ollama_wrapper import OllamaLLM
+from src.prompt import get_output_schema
 
 
 class MockMessage:

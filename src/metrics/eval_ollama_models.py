@@ -3,8 +3,8 @@
 import json
 from pathlib import Path
 from typing import Dict, List, Tuple
-from code.metrics.eval_metrics_latex import DeltaEvalTable
-from code.metrics.metric_utils import (
+from src.metrics.eval_metrics_latex import DeltaEvalTable
+from src.metrics.metric_utils import (
     flip_label,
     convert_bool_label_to_str,
     check_file_exists_and_readable,

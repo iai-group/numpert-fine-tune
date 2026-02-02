@@ -5,13 +5,13 @@ import json
 from unittest.mock import patch, MagicMock
 
 import torch
-from code.nli_models.roberta.finqa_roberta import (
+from src.nli_models.roberta.finqa_roberta import (
     configure_wandb,
     evaluate_model,
     fine_tune_model,
     get_model_and_tokenizer,
 )
-from code.nli_models.utils.data_loader import (
+from src.nli_models.utils.data_loader import (
     load_json_data,
     prepare_dataset,
     preprocess_data,

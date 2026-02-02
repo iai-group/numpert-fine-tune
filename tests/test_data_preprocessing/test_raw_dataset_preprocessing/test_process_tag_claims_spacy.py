@@ -7,7 +7,7 @@ from unittest.mock import mock_open, patch, MagicMock
 from spacy.tokens import Span
 
 
-from code.data_preprocessing.raw_dataset_preprocessing.process_tag_claims_spacy import (  # noqa: E501
+from src.data_preprocessing.raw_dataset_preprocessing.process_tag_claims_spacy import (  # noqa: E501
     load_json_data,
     filter_claims,
     get_number_words_set,

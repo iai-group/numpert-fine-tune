@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 
 
-from code.data_preprocessing.raw_dataset_preprocessing.remove_referance import (
+from src.data_preprocessing.raw_dataset_preprocessing.remove_referance import (
     remove_gold_verdict,
     find_json_files,
     process_json_file,

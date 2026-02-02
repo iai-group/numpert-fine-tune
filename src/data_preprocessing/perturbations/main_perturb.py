@@ -1,12 +1,12 @@
 """Main script to apply perturbations on numerical claims in a dataset."""
 
-import code.data_preprocessing.perturbations.approximation as approximation
-import code.data_preprocessing.perturbations.negative as negative
-import code.data_preprocessing.perturbations.numeration as numeration
-import code.data_preprocessing.perturbations.obfuscate as obfuscate
-import code.data_preprocessing.perturbations.range as range
+import src.data_preprocessing.perturbations.approximation as approximation
+import src.data_preprocessing.perturbations.negative as negative
+import src.data_preprocessing.perturbations.numeration as numeration
+import src.data_preprocessing.perturbations.obfuscate as obfuscate
+import src.data_preprocessing.perturbations.range as range
 from typing import Any, List, Dict
-from code.data_preprocessing.perturbations.utils.load_save import (
+from src.data_preprocessing.perturbations.utils.load_save import (
     load_data,
     save_data,
 )

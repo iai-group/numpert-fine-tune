@@ -9,7 +9,7 @@ This script creates a small mock dataset and verifies that:
 """
 
 from datasets import Dataset
-from code.llm_finetune.batch_sampler import EnhancedPerturbationBatchSampler
+from src.llm_finetune.batch_sampler import EnhancedPerturbationBatchSampler
 from collections import Counter
 import random
 

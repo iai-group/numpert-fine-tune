@@ -19,3 +19,5 @@ __pycache__
 misc/
 .DS_Store
 .env
+.github/copilot-instructions.md
+.github/INTEGRATION_GUIDE.md
