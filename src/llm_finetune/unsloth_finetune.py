@@ -314,7 +314,7 @@ def finetune(
         print(f"  {p_type:30s}: {count:5d} ({100*count/len(train_data):5.1f}%)")
 
     # Show label distribution
-    train_label_dist = Counter(train_data["label"])
+    train_label_dist = Counter(train_data["ground_truth"])
     print("\nTrain label distribution:")
     for label, count in train_label_dist.most_common():
         print(f"  {label:30s}: {count:5d} ({100*count/len(train_data):5.1f}%)")
