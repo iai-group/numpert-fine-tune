@@ -1,13 +1,12 @@
 import src
 print(src.__file__)
 import json
-from typing import Optional, List, Dict, Tuple
+from typing import Optional, List, Dict
 from sklearn.metrics import f1_score, accuracy_score, classification_report
 import torch
 from torch.utils.data import Sampler, DataLoader
 from collections import defaultdict, Counter
 import numpy as np
-import random
 
 from src.llm_finetune.hf_dataset_instructions import (
     load_fact_checking_data,
@@ -38,7 +37,6 @@ import pandas as pd
 
 # Valid labels for fact-checking
 VALID_LABELS = ["True", "False"]
-
 
 class PerturbationAwareSFTTrainer(SFTTrainer):
     """Custom SFTTrainer that uses EnhancedPerturbationBatchSampler for
@@ -136,11 +134,11 @@ class ValidationCallback(TrainerCallback):
 def get_model_name_arg(model_name):
     """Convert short model name to full HuggingFace path."""
     if model_name.startswith("Qwen") or model_name.startswith("qwen"):
-        return "unsloth/Qwen3-8B"
+        return "unsloth/Qwen3-4B"
     elif model_name.startswith("llama-3.2-3b"):
         return "unsloth/Llama-3.2-3B-Instruct"
     elif model_name.startswith("llama-3.2-1b"):
-        return "unsloth/Llama-3.2-1B-Instruct"
+        return "/home/stud/u2929246/bhome/unsloth/Llama-3.2-1B-Instruct"
     return model_name
 
 
@@ -203,7 +201,7 @@ def finetune(
 
     print(f"Loading model from: {model_name_arg}\n")
 
-    # Load model
+    # Load model (FIX: use model_name_arg instead of hardcoded value)
     model, tokenizer = FastLanguageModel.from_pretrained(
         model_name=model_name_arg,
         max_seq_length=max_seq_length,
@@ -373,7 +371,7 @@ def finetune(
         },
     )
 
-    # Training arguments
+    # Training arguments (FIX: eval_strategy instead of evaluation_strategy)
     training_args = TrainingArguments(
         per_device_train_batch_size=batch_size,
         per_device_eval_batch_size=batch_size,
@@ -390,7 +388,7 @@ def finetune(
         seed=3407 + epoch,
         output_dir=output_dir,
         report_to="wandb",
-        evaluation_strategy="steps",
+        eval_strategy="steps",  # FIX: was evaluation_strategy
         eval_steps=eval_steps,
         save_strategy="steps",
         save_steps=save_steps,
@@ -446,7 +444,7 @@ def finetune(
             callbacks=[ValidationCallback()],
         )
 
-    # Train on responses only
+    # Train on responses only (FIX: correct markers for ChatML/Qwen)
     if "llama" in model_name.lower():
         trainer = train_on_responses_only(
             trainer,
@@ -456,8 +454,8 @@ def finetune(
     elif "qwen" in model_name.lower():
         trainer = train_on_responses_only(
             trainer,
-            instruction_part="user\n",
-            response_part="assistant\n",
+            instruction_part="<|im_start|>user\n",
+            response_part="<|im_start|>assistant\n",
         )
 
     # Train
@@ -496,16 +494,41 @@ def finetune(
     print("\nFine-tuning complete!\n")
 
 
-def extract_label_from_response(text: str) -> str:
-    """Extract the predicted label from model response."""
+def extract_label_from_response(text: str) -> Optional[str]:
+    """Extract the predicted label from model response.
+    
+    Returns:
+        Extracted label ("True" or "False") or None if unparseable
+    """
     text = text.strip()
-
-    if "True" in text or "true" in text:
+    
+    # Strip Qwen3 thinking tokens if present
+    if "<think>" in text and "</think>" in text:
+        # Remove everything between <think> and </think>
+        import re
+        text = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL).strip()
+    
+    # Also handle case where thinking isn't closed
+    if "<think>" in text:
+        text = text.split("</think>")[-1].strip()
+    
+    text_lower = text.lower()
+    
+    # Check for exact or near-exact matches first
+    if text_lower in ["true", "true.", "true!"]:
         return "True"
-    if "False" in text or "false" in text:
+    if text_lower in ["false", "false.", "false!"]:
         return "False"
+    
+    # Fallback to contains - check False first to avoid "false" matching "true" substring issues
+    # (e.g., "This is False because it's not True" should be False)
+    if "false" in text_lower:
+        return "False"
+    if "true" in text_lower:
+        return "True"
 
-    return random.choice(VALID_LABELS)
+    # Could not parse
+    return None
 
 
 def inference(
@@ -608,8 +631,9 @@ def inference(
         print(f"✅ All examples fit within max_seq_length")
 
     # Prepare for predictions
-    predictions = []
-    ground_truths = test_data["ground_truth"]
+    predictions = []  # Will contain None for parse failures
+    ground_truths = list(test_data["ground_truth"])
+    raw_outputs = []  # Store raw outputs for debugging
 
     # Create output directory
     vllm_suffix = "-vllm" if use_vllm else ""
@@ -632,6 +656,7 @@ def inference(
 
         for output in outputs:
             text = output.outputs[0].text
+            raw_outputs.append(text)
             label = extract_label_from_response(text)
             predictions.append(label)
 
@@ -668,36 +693,71 @@ def inference(
             )
 
             decoded = tokenizer.batch_decode(outputs)[0]
+            raw_outputs.append(decoded)
             label = extract_label_from_response(decoded)
             predictions.append(label)
 
-    # Calculate metrics
+    # Separate valid predictions from parse failures
+    valid_indices = [i for i, pred in enumerate(predictions) if pred is not None]
+    parse_failure_indices = [i for i, pred in enumerate(predictions) if pred is None]
+    
+    valid_predictions = [predictions[i] for i in valid_indices]
+    valid_ground_truths = [ground_truths[i] for i in valid_indices]
+    
+    n_total = len(predictions)
+    n_valid = len(valid_predictions)
+    n_failures = len(parse_failure_indices)
+
+    # Report parse failures
+    print(f"\n📊 Parse Results:")
+    print(f"   Successfully parsed: {n_valid}/{n_total} ({100*n_valid/n_total:.1f}%)")
+    print(f"   Parse failures: {n_failures}/{n_total} ({100*n_failures/n_total:.1f}%)")
+    
+    if n_failures > 0:
+        print(f"\n⚠️  WARNING: {n_failures} responses could not be parsed and are EXCLUDED from metrics.")
+        print("    Check raw_outputs.json and predictions.csv for details.")
+
+    # Calculate metrics (only on valid predictions)
     print("\n" + "=" * 80)
-    print("RESULTS")
+    print(f"RESULTS (on {n_valid}/{n_total} parseable responses)")
     print("=" * 80)
 
-    accuracy = accuracy_score(ground_truths, predictions)
-    f1_macro = f1_score(
-        ground_truths, predictions, average="macro", zero_division=0
-    )
-    f1_weighted = f1_score(
-        ground_truths, predictions, average="weighted", zero_division=0
-    )
+    if n_valid == 0:
+        print("❌ ERROR: No valid predictions! Cannot compute metrics.")
+        accuracy = 0.0
+        f1_macro = 0.0
+        f1_weighted = 0.0
+    else:
+        accuracy = accuracy_score(valid_ground_truths, valid_predictions)
+        f1_macro = f1_score(
+            valid_ground_truths, valid_predictions, average="macro", zero_division=0
+        )
+        f1_weighted = f1_score(
+            valid_ground_truths, valid_predictions, average="weighted", zero_division=0
+        )
 
-    print(f"Accuracy: {accuracy:.4f}")
-    print(f"F1 Macro: {f1_macro:.4f}")
-    print(f"F1 Weighted: {f1_weighted:.4f}")
+        print(f"Accuracy: {accuracy:.4f}")
+        print(f"F1 Macro: {f1_macro:.4f}")
+        print(f"F1 Weighted: {f1_weighted:.4f}")
 
-    print("\nClassification Report:")
-    print(
-        classification_report(ground_truths, predictions, labels=VALID_LABELS)
-    )
+        print("\nClassification Report:")
+        print(
+            classification_report(valid_ground_truths, valid_predictions, labels=VALID_LABELS)
+        )
 
-    # Per-perturbation analysis
+    # Per-perturbation analysis (only on valid predictions)
     print("\nPer-Perturbation Type Analysis:")
-    perturb_metrics = defaultdict(lambda: {"correct": 0, "total": 0})
+    perturb_metrics = defaultdict(lambda: {"correct": 0, "total": 0, "failures": 0})
 
-    for i, (pred, gt) in enumerate(zip(predictions, ground_truths)):
+    # Count failures per perturbation type
+    for i in parse_failure_indices:
+        p_type = test_data[i]["perturbation_type"]
+        perturb_metrics[p_type]["failures"] += 1
+
+    # Count correct/total for valid predictions
+    for i in valid_indices:
+        pred = predictions[i]
+        gt = ground_truths[i]
         p_type = test_data[i]["perturbation_type"]
         perturb_metrics[p_type]["total"] += 1
         if pred == gt:
@@ -705,22 +765,26 @@ def inference(
 
     for p_type in sorted(perturb_metrics.keys()):
         metrics = perturb_metrics[p_type]
+        total_with_failures = metrics["total"] + metrics["failures"]
         acc = (
             metrics["correct"] / metrics["total"] if metrics["total"] > 0 else 0
         )
+        failure_note = f" [+{metrics['failures']} unparsed]" if metrics["failures"] > 0 else ""
         print(
-            f"  {p_type:30s}: {acc:.4f} ({metrics['correct']}/{metrics['total']})"
+            f"  {p_type:30s}: {acc:.4f} ({metrics['correct']}/{metrics['total']}){failure_note}"
         )
 
     print("=" * 80 + "\n")
 
-    # Save predictions
+    # Save predictions (include None for failures, marked clearly)
     results_df = pd.DataFrame(
         {
             "claim_id": test_data["claim_id"],
             "perturbation_type": test_data["perturbation_type"],
             "ground_truth": ground_truths,
-            "prediction": predictions,
+            "prediction": [p if p is not None else "PARSE_FAILURE" for p in predictions],
+            "parsed_successfully": [p is not None for p in predictions],
+            "raw_output": raw_outputs,
         }
     )
 
@@ -733,11 +797,17 @@ def inference(
         "accuracy": accuracy,
         "f1_macro": f1_macro,
         "f1_weighted": f1_weighted,
+        "total_examples": n_total,
+        "valid_examples": n_valid,
+        "parse_failures": n_failures,
+        "parse_failure_rate": n_failures / n_total if n_total > 0 else 0,
+        "note": f"Metrics computed on {n_valid}/{n_total} parseable responses only",
         "per_perturbation": {
             p_type: {
                 "accuracy": m["correct"] / m["total"] if m["total"] > 0 else 0,
                 "correct": m["correct"],
                 "total": m["total"],
+                "parse_failures": m["failures"],
             }
             for p_type, m in perturb_metrics.items()
         },
@@ -747,6 +817,24 @@ def inference(
     with open(metrics_path, "w") as f:
         json.dump(metrics_dict, f, indent=2)
     print(f"Metrics saved to: {metrics_path}\n")
+
+    # Save raw outputs for debugging parse failures
+    if n_failures > 0:
+        # Save detailed info about failures
+        failures_info = [
+            {
+                "index": i,
+                "claim_id": test_data[i]["claim_id"],
+                "perturbation_type": test_data[i]["perturbation_type"],
+                "ground_truth": ground_truths[i],
+                "raw_output": raw_outputs[i],
+            }
+            for i in parse_failure_indices
+        ]
+        failures_path = f"{pred_dir}/parse_failures.json"
+        with open(failures_path, "w") as f:
+            json.dump(failures_info, f, indent=2)
+        print(f"Parse failure details saved to: {failures_path}\n")
 
 
 if __name__ == "__main__":

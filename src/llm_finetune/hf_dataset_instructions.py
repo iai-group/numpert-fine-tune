@@ -3,7 +3,7 @@ from enum import Enum
 from pathlib import Path
 from typing import List, Union, Optional, Dict
 import json
-from src.prompt import FACT_CHECK_SYSTEM_PROMPT, FACT_CHECK_USER_PROMPT
+from src.numpert_prompt.prompt import FACT_CHECK_SYSTEM_PROMPT, FACT_CHECK_USER_PROMPT
 
 
 class PerturbationType(Enum):
@@ -124,20 +124,20 @@ def convert_to_conversations(
             {"role": "system", "content": FACT_CHECK_SYSTEM_PROMPT}
         )
 
-        # User instruction
-        conversations.append(
-            {"role": "user", "content": FACT_CHECK_USER_PROMPT}
-        )
-
-        # Construct the claim message with optional evidence
+        # Single combined user message
         if include_doc and example["doc"]:
-            claim_content = (
-                f"Claim: {example['claim']}\n\nEvidence: {example['doc']}"
+            user_content = (
+                f"{FACT_CHECK_USER_PROMPT}\n\n"
+                f"Claim: {example['claim']}\n\n"
+                f"Evidence: {example['doc']}"
             )
         else:
-            claim_content = f"Claim: {example['claim']}"
+            user_content = (
+                f"{FACT_CHECK_USER_PROMPT}\n\n"
+                f"Claim: {example['claim']}"
+            )
 
-        conversations.append({"role": "user", "content": claim_content})
+        conversations.append({"role": "user", "content": user_content})
 
         # Assistant response (only for training)
         if split == "train":
@@ -150,18 +150,12 @@ def convert_to_conversations(
             "conversations": conversations,
             "claim_id": example["claim_id"],
             "perturbation_type": example["perturbation_type"],
+            "ground_truth": example["label"],  # Always include ground_truth
         }
-
-        # For validation, include ground truth
-        if split != "train":
-            entry["ground_truth"] = example["label"]
 
         messages.append(entry)
 
     return messages
-
-
-# In your data_loader.py (or hf_dataset_instructions.py)
 
 
 def load_fact_checking_data(

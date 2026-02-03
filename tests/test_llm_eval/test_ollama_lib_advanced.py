@@ -12,7 +12,7 @@ import yaml
 from ollama._types import ResponseError
 
 from src.llm_eval.ollama_wrapper import OllamaLLM
-from src.prompt import get_output_schema
+from src.numpert_prompt.prompt import get_output_schema
 
 
 class MockThinkingResponse:
