@@ -7,6 +7,10 @@ from typing import List
 from collections import defaultdict
 import random
 
+# JSON format labels
+LABEL_TRUE = '{"label": true}'
+LABEL_FALSE = '{"label": false}'
+
 
 class DatasetBalancer:
     """Balance dataset by label distribution and perturbation ratios.
@@ -49,10 +53,24 @@ class DatasetBalancer:
 
         self._categorize_examples()
 
+    def _is_true_label(self, label: str) -> bool:
+        """Check if a label represents True (handles JSON format)."""
+        if label is None:
+            return False
+        label_lower = label.lower().strip()
+        return "true" in label_lower and "false" not in label_lower
+
+    def _is_false_label(self, label: str) -> bool:
+        """Check if a label represents False (handles JSON format)."""
+        if label is None:
+            return False
+        label_lower = label.lower().strip()
+        return "false" in label_lower
+
     def _categorize_examples(self):
         """Categorize all examples by type."""
         # First pass: identify original examples and their labels
-        original_labels = {}  # claim_id -> original label
+        original_labels = {}  # claim_id -> original label (True/False as boolean)
 
         for idx in range(len(self.dataset)):
             example = self.dataset[idx]
@@ -61,9 +79,10 @@ class DatasetBalancer:
 
             if perturb_type == "original":
                 label = self._extract_label(example)
-                original_labels[claim_id] = label
+                is_true = self._is_true_label(label)
+                original_labels[claim_id] = is_true
 
-                if label == "True":
+                if is_true:
                     self.original_true_indices.append(idx)
                 else:
                     self.original_false_indices.append(idx)
@@ -77,15 +96,16 @@ class DatasetBalancer:
             if perturb_type == "original":
                 continue
 
-            original_label = original_labels.get(claim_id)
+            original_is_true = original_labels.get(claim_id)
             current_label = self._extract_label(example)
+            current_is_true = self._is_true_label(current_label)
 
             # Categorize based on original → current label transition
-            if original_label == "True" and current_label == "True":
+            if original_is_true and current_is_true:
                 self.t_to_t_indices.append(idx)
-            elif original_label == "True" and current_label == "False":
+            elif original_is_true and not current_is_true:
                 self.t_to_f_indices.append(idx)
-            elif original_label == "False" and current_label == "False":
+            elif not original_is_true and not current_is_true:
                 # Only use *_true perturbations for F→F (more similar to original)
                 if perturb_type.endswith("_true"):
                     self.f_to_f_indices.append(idx)
@@ -264,7 +284,7 @@ class DatasetBalancer:
         actual_true = sum(
             1
             for idx in selected_indices
-            if self._extract_label(self.dataset[idx]) == "True"
+            if self._is_true_label(self._extract_label(self.dataset[idx]))
         )
         actual_false = len(selected_indices) - actual_true
 

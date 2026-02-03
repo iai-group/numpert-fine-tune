@@ -35,8 +35,8 @@ import os
 from tqdm import tqdm
 import pandas as pd
 
-# Valid labels for fact-checking
-VALID_LABELS = ["True", "False"]
+# Valid labels for fact-checking (JSON format)
+VALID_LABELS = ['{"label": true}', '{"label": false}']
 
 class PerturbationAwareSFTTrainer(SFTTrainer):
     """Custom SFTTrainer that uses EnhancedPerturbationBatchSampler for
@@ -51,34 +51,22 @@ class PerturbationAwareSFTTrainer(SFTTrainer):
         self,
         *args,
         use_custom_sampler: bool = False,
-        batch_match_claim_id: bool = False,
-        split_large_claims: bool = True,
-        ensure_original_in_batch: bool = True,
-        ensure_perturbed_in_batch: bool = True,
-        sampler_seed: int = 42,
+        pre_built_batch_sampler=None,  # Accept pre-built sampler
         **kwargs,
     ):
         """
         Args:
             use_custom_sampler: Whether to use EnhancedPerturbationBatchSampler
-            batch_match_claim_id: Group same claim_id in batches
-            split_large_claims: Split large claims across batches
-            ensure_original_in_batch: Ensure each batch has ≥1 original
-            ensure_perturbed_in_batch: Ensure each batch has ≥1 perturbed
-            sampler_seed: Random seed for sampler
+            pre_built_batch_sampler: Pre-built batch sampler (created before columns removed)
         """
         super().__init__(*args, **kwargs)
 
         self.use_custom_sampler = use_custom_sampler
-        self.batch_match_claim_id = batch_match_claim_id
-        self.split_large_claims = split_large_claims
-        self.ensure_original_in_batch = ensure_original_in_batch
-        self.ensure_perturbed_in_batch = ensure_perturbed_in_batch
-        self.sampler_seed = sampler_seed
+        self.pre_built_batch_sampler = pre_built_batch_sampler
 
     def get_train_dataloader(self) -> DataLoader:
         """Override to use custom batch sampler when enabled."""
-        if not self.use_custom_sampler:
+        if not self.use_custom_sampler or self.pre_built_batch_sampler is None:
             # Use default SFTTrainer data loading
             return super().get_train_dataloader()
 
@@ -89,18 +77,8 @@ class PerturbationAwareSFTTrainer(SFTTrainer):
         print("🔧 Using EnhancedPerturbationBatchSampler for training")
         print("=" * 80)
 
-        # Create custom batch sampler
-        batch_sampler = EnhancedPerturbationBatchSampler(
-            dataset=self.train_dataset,
-            batch_size=self.args.per_device_train_batch_size,
-            batch_match_claim_id=self.batch_match_claim_id,
-            split_large_claims=self.split_large_claims,
-            ensure_original_in_batch=self.ensure_original_in_batch,
-            ensure_perturbed_in_batch=self.ensure_perturbed_in_batch,
-            shuffle=True,
-            seed=self.sampler_seed,
-            drop_last=self.args.dataloader_drop_last,
-        )
+        # Use the pre-built batch sampler
+        batch_sampler = self.pre_built_batch_sampler
 
         # Create DataLoader with custom batch sampler
         # Note: When using batch_sampler, we must NOT specify batch_size
@@ -322,6 +300,43 @@ def finetune(
     train_data = train_data.map(formatting_prompts_func, batched=True)
     val_data = val_data.map(formatting_prompts_func, batched=True)
 
+    # Create batch sampler BEFORE removing columns (needs claim_id, perturbation_type)
+    pre_built_batch_sampler = None
+    if batch_match_claim_id:
+        print("\n" + "=" * 80)
+        print("🔧 Creating EnhancedPerturbationBatchSampler (before column removal)")
+        print("=" * 80)
+        pre_built_batch_sampler = EnhancedPerturbationBatchSampler(
+            dataset=train_data,
+            batch_size=batch_size,
+            batch_match_claim_id=batch_match_claim_id,
+            split_large_claims=split_large_claims,
+            ensure_original_in_batch=ensure_original_in_batch,
+            ensure_perturbed_in_batch=ensure_perturbed_in_batch,
+            shuffle=True,
+            seed=3407 + epoch,
+            drop_last=False,
+        )
+        print(f"✅ Batch sampler created with {len(pre_built_batch_sampler)} batches")
+        print("=" * 80 + "\n")
+    
+    # Remove ALL non-tensor columns - keep only 'text' for SFTTrainer
+    # String columns like claim_id, perturbation_type, ground_truth cause tensor errors
+    columns_to_keep = {"text"}
+    
+    train_columns_to_remove = [col for col in train_data.column_names if col not in columns_to_keep]
+    val_columns_to_remove = [col for col in val_data.column_names if col not in columns_to_keep]
+    
+    if train_columns_to_remove:
+        print(f"Removing columns from train data: {train_columns_to_remove}")
+        train_data = train_data.remove_columns(train_columns_to_remove)
+    if val_columns_to_remove:
+        print(f"Removing columns from val data: {val_columns_to_remove}")
+        val_data = val_data.remove_columns(val_columns_to_remove)
+    
+    print(f"Final train columns: {train_data.column_names}")
+    print(f"Final val columns: {val_data.column_names}")
+
     # Report truncation
     if truncated_count > 0:
         truncation_pct = 100 * truncated_count / total_count
@@ -421,13 +436,9 @@ def finetune(
             packing=False,
             args=training_args,
             callbacks=[ValidationCallback()],
-            # Custom sampler parameters
+            # Pass pre-built batch sampler
             use_custom_sampler=True,
-            batch_match_claim_id=batch_match_claim_id,
-            split_large_claims=split_large_claims,
-            ensure_original_in_batch=ensure_original_in_batch,
-            ensure_perturbed_in_batch=ensure_perturbed_in_batch,
-            sampler_seed=3407 + epoch,
+            pre_built_batch_sampler=pre_built_batch_sampler,
         )
     else:
         trainer = SFTTrainer(
@@ -497,15 +508,18 @@ def finetune(
 def extract_label_from_response(text: str) -> Optional[str]:
     """Extract the predicted label from model response.
     
+    Expects JSON format: {"label": true} or {"label": false}
+    
     Returns:
-        Extracted label ("True" or "False") or None if unparseable
+        The extracted label in JSON format, or None if unparseable
     """
+    import re
+    
     text = text.strip()
     
     # Strip Qwen3 thinking tokens if present
     if "<think>" in text and "</think>" in text:
         # Remove everything between <think> and </think>
-        import re
         text = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL).strip()
     
     # Also handle case where thinking isn't closed
@@ -514,18 +528,25 @@ def extract_label_from_response(text: str) -> Optional[str]:
     
     text_lower = text.lower()
     
-    # Check for exact or near-exact matches first
-    if text_lower in ["true", "true.", "true!"]:
-        return "True"
-    if text_lower in ["false", "false.", "false!"]:
-        return "False"
+    # Check for exact or near-exact JSON matches first
+    # Handle variations like {"label": true}, {"label":true}, { "label": true }, etc.
+    if re.search(r'\{\s*"label"\s*:\s*true\s*\}', text_lower):
+        return '{"label": true}'
+    if re.search(r'\{\s*"label"\s*:\s*false\s*\}', text_lower):
+        return '{"label": false}'
     
-    # Fallback to contains - check False first to avoid "false" matching "true" substring issues
-    # (e.g., "This is False because it's not True" should be False)
-    if "false" in text_lower:
-        return "False"
-    if "true" in text_lower:
-        return "True"
+    # Fallback: check for "label": true/false pattern without full JSON structure
+    if re.search(r'"label"\s*:\s*true', text_lower):
+        return '{"label": true}'
+    if re.search(r'"label"\s*:\s*false', text_lower):
+        return '{"label": false}'
+    
+    # Last resort: check for plain true/false (model might omit JSON structure)
+    # Check false first to avoid substring issues
+    if "false" in text_lower and "true" not in text_lower:
+        return '{"label": false}'
+    if "true" in text_lower and "false" not in text_lower:
+        return '{"label": true}'
 
     # Could not parse
     return None

@@ -124,25 +124,24 @@ def convert_to_conversations(
             {"role": "system", "content": FACT_CHECK_SYSTEM_PROMPT}
         )
 
-        # Single combined user message
-        if include_doc and example["doc"]:
-            user_content = (
-                f"{FACT_CHECK_USER_PROMPT}\n\n"
-                f"Claim: {example['claim']}\n\n"
-                f"Evidence: {example['doc']}"
-            )
-        else:
-            user_content = (
-                f"{FACT_CHECK_USER_PROMPT}\n\n"
-                f"Claim: {example['claim']}"
-            )
+        # Fill in the prompt template placeholders
+        evidence = example["doc"]
+        
+        user_content = FACT_CHECK_USER_PROMPT.format(
+            examples="",  # No few-shot examples in this setup
+            claim=example["claim"],
+            evidence=evidence,
+        )
 
         conversations.append({"role": "user", "content": user_content})
+
+        # Convert label to JSON format: "True" -> '{"label": true}', "False" -> '{"label": false}'
+        json_label = '{"label": true}' if example["label"] == "True" else '{"label": false}'
 
         # Assistant response (only for training)
         if split == "train":
             conversations.append(
-                {"role": "assistant", "content": example["label"]}
+                {"role": "assistant", "content": json_label}
             )
 
         # Build the final entry
@@ -150,7 +149,7 @@ def convert_to_conversations(
             "conversations": conversations,
             "claim_id": example["claim_id"],
             "perturbation_type": example["perturbation_type"],
-            "ground_truth": example["label"],  # Always include ground_truth
+            "ground_truth": json_label,  # Always include ground_truth in JSON format
         }
 
         messages.append(entry)
