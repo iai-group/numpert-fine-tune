@@ -1,5 +1,5 @@
+"""Fine-tuning and inference for fact-checking models with numerical perturbations."""
 import src
-print(src.__file__)
 import json
 from typing import Optional, List, Dict
 from sklearn.metrics import f1_score, accuracy_score, classification_report
@@ -7,7 +7,9 @@ import torch
 from torch.utils.data import Sampler, DataLoader
 from collections import defaultdict, Counter
 import numpy as np
+from datetime import datetime
 
+from src.llm_finetune.config import prefix
 from src.llm_finetune.hf_dataset_instructions import (
     load_fact_checking_data,
     load_train_and_validation,
@@ -19,7 +21,7 @@ from src.llm_finetune.batch_sampler import EnhancedPerturbationBatchSampler
 
 from unsloth.chat_templates import get_chat_template
 from unsloth import FastLanguageModel
-from trl import SFTTrainer
+from trl import SFTTrainer, SFTConfig
 from transformers import (
     TrainingArguments,
     DataCollatorForSeq2Seq,
@@ -37,6 +39,10 @@ import pandas as pd
 
 # Valid labels for fact-checking (JSON format)
 VALID_LABELS = ['{"label": true}', '{"label": false}']
+
+# Timestamp for model naming
+time_start = datetime.now()
+model_name_timestamp = time_start.strftime("%Y%m%d_%H%M%S")
 
 class PerturbationAwareSFTTrainer(SFTTrainer):
     """Custom SFTTrainer that uses EnhancedPerturbationBatchSampler for
@@ -116,7 +122,7 @@ def get_model_name_arg(model_name):
     elif model_name.startswith("llama-3.2-3b"):
         return "unsloth/Llama-3.2-3B-Instruct"
     elif model_name.startswith("llama-3.2-1b"):
-        return "/home/stud/u2929246/bhome/unsloth/Llama-3.2-1B-Instruct"
+        return "unsloth/Llama-3.2-1B-Instruct"
     return model_name
 
 
@@ -140,6 +146,7 @@ def finetune(
     eval_steps: int = 100,
     save_steps: int = 500,
 ):
+
     """Fine-tune a model for fact-checking with numerical perturbations."""
 
     print("\n" + "=" * 80)
@@ -255,6 +262,14 @@ def finetune(
 
         return {"text": texts}
 
+    def tokenize_func(examples):
+        return tokenizer(
+            examples["text"],
+            truncation=True,
+            max_length=max_seq_length,
+            padding=False, # Collator handles dynamic padding
+        )
+
     # Load datasets
     print("Loading datasets...")
     datasets = load_train_and_validation(
@@ -294,11 +309,14 @@ def finetune(
     print("\nTrain label distribution:")
     for label, count in train_label_dist.most_common():
         print(f"  {label:30s}: {count:5d} ({100*count/len(train_data):5.1f}%)")
-
+    
     # Format datasets
-    print("\nFormatting datasets...")
+    print("\nFormatting and tokenizing datasets...")
     train_data = train_data.map(formatting_prompts_func, batched=True)
     val_data = val_data.map(formatting_prompts_func, batched=True)
+    
+    train_data = train_data.map(tokenize_func, batched=True)
+    val_data = val_data.map(tokenize_func, batched=True)
 
     # Create batch sampler BEFORE removing columns (needs claim_id, perturbation_type)
     pre_built_batch_sampler = None
@@ -319,20 +337,22 @@ def finetune(
         )
         print(f"✅ Batch sampler created with {len(pre_built_batch_sampler)} batches")
         print("=" * 80 + "\n")
+
+
     
     # Remove ALL non-tensor columns - keep only 'text' for SFTTrainer
     # String columns like claim_id, perturbation_type, ground_truth cause tensor errors
-    columns_to_keep = {"text"}
-    
-    train_columns_to_remove = [col for col in train_data.column_names if col not in columns_to_keep]
-    val_columns_to_remove = [col for col in val_data.column_names if col not in columns_to_keep]
-    
-    if train_columns_to_remove:
-        print(f"Removing columns from train data: {train_columns_to_remove}")
-        train_data = train_data.remove_columns(train_columns_to_remove)
-    if val_columns_to_remove:
-        print(f"Removing columns from val data: {val_columns_to_remove}")
-        val_data = val_data.remove_columns(val_columns_to_remove)
+    columns_to_keep = {"input_ids", "attention_mask", "labels", "text"}
+
+    # If using the custom sampler, we also can to keep metadata 
+    # until after the sampler is initialized
+    model_inputs = {"input_ids", "attention_mask", "labels", "text"}
+    sampler_metadata = {"claim_id", "perturbation_type"}
+
+    cols_to_remove = [c for c in train_data.column_names if c not in columns_to_keep]
+
+    train_data = train_data.remove_columns(cols_to_remove)
+    val_data = val_data.remove_columns(cols_to_remove)
     
     print(f"Final train columns: {train_data.column_names}")
     print(f"Final val columns: {val_data.column_names}")
@@ -356,8 +376,9 @@ def finetune(
         )
 
     # Create output directory
-    output_dir = f"epoch-{epoch}/{model_name}{quant_status}/outputs/numpert{rank_postfix}"
-    os.makedirs(output_dir, exist_ok=True)
+    output_dir = f"{prefix}tuned_models/epoch-{epoch}/{model_name}{quant_status}_{rank_postfix}_{model_name_timestamp}"
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir, exist_ok=True)
 
     # Initialize wandb
     run = wandb.init(
@@ -386,8 +407,7 @@ def finetune(
         },
     )
 
-    # Training arguments (FIX: eval_strategy instead of evaluation_strategy)
-    training_args = TrainingArguments(
+    training_config = SFTConfig(
         per_device_train_batch_size=batch_size,
         per_device_eval_batch_size=batch_size,
         gradient_accumulation_steps=gradient_accumulation_steps,
@@ -402,8 +422,7 @@ def finetune(
         lr_scheduler_type="cosine",
         seed=3407 + epoch,
         output_dir=output_dir,
-        report_to="wandb",
-        eval_strategy="steps",  # FIX: was evaluation_strategy
+        eval_strategy="steps",
         eval_steps=eval_steps,
         save_strategy="steps",
         save_steps=save_steps,
@@ -411,32 +430,20 @@ def finetune(
         metric_for_best_model="eval_loss",
         greater_is_better=False,
         save_total_limit=3,
+        max_seq_length=max_seq_length,
+        dataset_text_field="text",
+        packing=False,
     )
 
-    # Data collator
-    data_collator = DataCollatorForSeq2Seq(
-        tokenizer=tokenizer,
-        padding=True,
-        max_length=max_seq_length,
-        pad_to_multiple_of=8,
-        return_tensors="pt",
-    )
-
-    # Create trainer - use custom trainer if batch matching is enabled
+    # 3. Initialize the correct Trainer
     if batch_match_claim_id:
         trainer = PerturbationAwareSFTTrainer(
             model=model,
             tokenizer=tokenizer,
             train_dataset=train_data,
             eval_dataset=val_data,
-            dataset_text_field="text",
-            max_seq_length=max_seq_length,
-            data_collator=data_collator,
-            dataset_num_proc=2,
-            packing=False,
-            args=training_args,
+            args=training_config,
             callbacks=[ValidationCallback()],
-            # Pass pre-built batch sampler
             use_custom_sampler=True,
             pre_built_batch_sampler=pre_built_batch_sampler,
         )
@@ -446,17 +453,14 @@ def finetune(
             tokenizer=tokenizer,
             train_dataset=train_data,
             eval_dataset=val_data,
-            dataset_text_field="text",
-            max_seq_length=max_seq_length,
-            data_collator=data_collator,
-            dataset_num_proc=2,
-            packing=False,
-            args=training_args,
+            args=training_config,
             callbacks=[ValidationCallback()],
         )
 
-    # Train on responses only (FIX: correct markers for ChatML/Qwen)
+    # 4. Apply Response-Only Loss (The Unsloth way)
+    # This effectively implements completion_only_loss=True by masking the instruction
     if "llama" in model_name.lower():
+        # Llama 3.1/3.2 Template specific strings
         trainer = train_on_responses_only(
             trainer,
             instruction_part="<|start_header_id|>user<|end_header_id|>\n\n",
@@ -560,7 +564,7 @@ def inference(
     use_vllm: bool = False,
     expand_perturbations: bool = True,
     max_seq_length: int = 16384,
-    output_dir: str = "predictions/numpert",
+    output_dir: str = f"{prefix}predictions/{model_name_timestamp}",
 ):
     """Run inference on test data."""
 
