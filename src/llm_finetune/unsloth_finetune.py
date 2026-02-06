@@ -667,7 +667,7 @@ def finetune(
     run.finish()
 
     # Save model
-    save_dir = f"{prefix}{model_name}_{model_name_timestamp}/epoch-{actual_final_epoch}{quant_status}"
+    save_dir = f"{prefix}models/{model_name}_{model_name_timestamp}/epoch-{actual_final_epoch}{quant_status}"
     if not os.path.exists(save_dir):
         os.makedirs(save_dir, exist_ok=True)
 
