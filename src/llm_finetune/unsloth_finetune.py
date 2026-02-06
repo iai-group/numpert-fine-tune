@@ -118,7 +118,7 @@ class ValidationCallback(TrainerCallback):
 def get_model_name_arg(model_name):
     """Convert short model name to full HuggingFace path."""
     if model_name.startswith("Qwen") or model_name.startswith("qwen"):
-        return "unsloth/Qwen3-4B"
+        return "unsloth/Qwen3-8B"
     elif model_name.startswith("llama-3.2-3b"):
         return "unsloth/Llama-3.2-3B-Instruct"
     elif model_name.startswith("llama-3.2-1b"):
@@ -131,9 +131,10 @@ def finetune(
     val_json_paths: List[str],
     model_name: str = "llama-3.2-3b-instruct",
     rank: int = 32,
-    epoch: int = 1,
+    num_train_epochs: int = 1,
+    start_epoch: int = 1,
     batch_size: int = 2,
-    gradient_accumulation_steps: int = 4,
+    gradient_accumulation_steps: int = 1,
     max_seq_length: int = 16384,
     expand_perturbations: bool = True,
     balance_labels: bool = False,
@@ -146,6 +147,7 @@ def finetune(
     eval_steps: int = 100,
     save_steps: int = 500,
 ):
+    target_epoch = start_epoch + num_train_epochs - 1
 
     """Fine-tune a model for fact-checking with numerical perturbations."""
 
@@ -154,7 +156,8 @@ def finetune(
     print("=" * 80)
     print(f"Model: {model_name}")
     print(f"Rank: {rank}")
-    print(f"Epoch: {epoch}")
+    print(f"Resume epoch: {start_epoch}")
+    print(f"Number of training epochs set: {num_train_epochs}")
     print(f"Batch size: {batch_size}")
     print(f"Gradient accumulation: {gradient_accumulation_steps}")
     print(f"Effective batch size: {batch_size * gradient_accumulation_steps}")
@@ -179,10 +182,10 @@ def finetune(
     quant_status = "" if load_in_4bit else "-unquantized"
 
     # Determine model path
-    if epoch == 1:
+    if start_epoch == 1:
         model_name_arg = get_model_name_arg(model_name)
     else:
-        model_name_arg = f"epoch-{epoch-1}/{model_name}{quant_status}/lora_numpert{rank_postfix}"
+        model_name_arg = f"epoch-{start_epoch-1}/{model_name}{quant_status}/lora_numpert{rank_postfix}"
 
     print(f"Loading model from: {model_name_arg}\n")
 
@@ -218,10 +221,10 @@ def finetune(
     )
 
     # Set chat template
-    if "llama" in model_name.lower():
-        tokenizer = get_chat_template(tokenizer, chat_template="llama-3.1")
-    elif "qwen" in model_name.lower():
-        tokenizer = get_chat_template(tokenizer, chat_template="chatml")
+#    if "llama" in model_name.lower():
+ #       tokenizer = get_chat_template(tokenizer, chat_template="llama-3.1")
+  #  elif "qwen" in model_name.lower():
+    tokenizer = get_chat_template(tokenizer, chat_template="chatml")
 
     # Set padding
     tokenizer.padding_side = "right"
@@ -232,45 +235,73 @@ def finetune(
     truncated_count = 0
     total_count = 0
 
-    def formatting_prompts_func(examples):
-        nonlocal truncated_count, total_count
-
-        convos = examples["conversations"]
-        texts = []
-
-        for convo in convos:
-            text = tokenizer.apply_chat_template(
-                convo, tokenize=False, add_generation_prompt=False
-            )
-
-            # Check length
-            tokens = tokenizer(
-                text, return_tensors=None, add_special_tokens=True
-            )
-            token_count = len(tokens["input_ids"])
-            total_count += 1
-
-            if token_count > max_seq_length:
-                truncated_count += 1
-                if truncated_count <= 5:
-                    print(
-                        f"⚠️  Example {total_count} exceeds max_seq_length: "
-                        f"{token_count:,} > {max_seq_length:,} tokens"
-                    )
-
-            texts.append(text)
-
-        return {"text": texts}
-
     def tokenize_func(examples):
-        return tokenizer(
-            examples["text"],
-            truncation=True,
-            max_length=max_seq_length,
-            padding=False, # Collator handles dynamic padding
-        )
+        all_input_ids = []
+        all_labels = []
+        all_attention_mask = []
 
-    # Load datasets
+        for conv in examples["conversations"]:
+            # Verify conversation structure
+            if len(conv) < 2 or conv[-1]["role"] != "assistant":
+                print(f"⚠️ Warning: Unexpected conversation format: {conv}")
+                # Instead of continue, create a dummy example
+                dummy_text = "Error"
+                dummy_tokens = tokenizer(dummy_text, truncation=True, max_length=max_seq_length, padding=False)
+                all_input_ids.append(dummy_tokens["input_ids"])
+                all_labels.append([-100] * len(dummy_tokens["input_ids"]))
+                all_attention_mask.append(dummy_tokens["attention_mask"])
+                continue
+            
+            # Separate prompt from response
+            prompt_conv = conv[:-1]
+            
+            # Format prompt with add_generation_prompt=True
+            prompt_text = tokenizer.apply_chat_template(
+                prompt_conv, 
+                tokenize=False, 
+                add_generation_prompt=True
+            )
+            
+            # Format full conversation
+            full_text = tokenizer.apply_chat_template(
+                conv, 
+                tokenize=False, 
+                add_generation_prompt=False
+            )
+            
+            # Tokenize both
+            prompt_tokens = tokenizer(
+                prompt_text, 
+                add_special_tokens=False,
+                truncation=False
+            )
+            
+            full_tokens = tokenizer(
+                full_text, 
+                truncation=True, 
+                max_length=max_seq_length, 
+                padding=False
+            )
+            
+            input_ids = full_tokens["input_ids"]
+            attention_mask = full_tokens["attention_mask"]
+            labels = input_ids.copy()
+            
+            # Mask the prompt tokens
+            prompt_len = len(prompt_tokens["input_ids"])
+            for i in range(min(prompt_len, len(labels))):
+                labels[i] = -100
+            
+            all_input_ids.append(input_ids)
+            all_labels.append(labels)
+            all_attention_mask.append(attention_mask)
+
+        return {
+            "input_ids": all_input_ids,
+            "labels": all_labels,
+            "attention_mask": all_attention_mask,
+        }
+
     print("Loading datasets...")
     datasets = load_train_and_validation(
         train_json_paths=train_json_paths,
@@ -292,7 +323,7 @@ def finetune(
             balance_labels=balance_labels,
             perturb_ratio=perturb_ratio,
             false_perturb_t_to_f_ratio=false_perturb_t_to_f_ratio,
-            seed=3407 + epoch,
+            seed=3407 + start_epoch,
         )
         train_data = balancer.balance()
 
@@ -309,15 +340,171 @@ def finetune(
     print("\nTrain label distribution:")
     for label, count in train_label_dist.most_common():
         print(f"  {label:30s}: {count:5d} ({100*count/len(train_data):5.1f}%)")
+
+    # ============================================================================
+    # DEBUG: Check conversation format
+    # ============================================================================
+    print("\n" + "=" * 80)
+    print("DEBUGGING CONVERSATION FORMAT")
+    print("=" * 80)
+
+    def debug_conversation(dataset, dataset_name, num_samples=3):
+        print(f"\n{dataset_name} Dataset:")
+        print(f"  Total examples: {len(dataset)}")
+        print(f"  Columns: {dataset.column_names}")
+        
+        # Check conversation structure
+        has_assistant = 0
+        missing_assistant = 0
+        
+        for example in dataset:
+            conv = example["conversations"]
+            if len(conv) >= 2 and conv[-1]["role"] == "assistant":
+                has_assistant += 1
+            else:
+                missing_assistant += 1
+        
+        print(f"\n  Conversations with assistant response: {has_assistant}")
+        print(f"  Conversations WITHOUT assistant response: {missing_assistant}")
+        
+        # Show sample conversations
+        print(f"\n  Sample conversations (showing first {num_samples}):")
+        for i in range(min(num_samples, len(dataset))):
+            example = dataset[i]
+            conv = example["conversations"]
+            
+            print(f"\n  --- Example {i} ---")
+            print(f"  Claim ID: {example.get('claim_id', 'N/A')}")
+            print(f"  Perturbation: {example.get('perturbation_type', 'N/A')}")
+            print(f"  Ground truth: {example.get('ground_truth', 'N/A')}")
+            print(f"  Conversation structure:")
+            
+            for j, msg in enumerate(conv):
+                role = msg["role"]
+                content = msg["content"][:100] + "..." if len(msg["content"]) > 100 else msg["content"]
+                print(f"    [{j}] {role}: {repr(content)}")
+            
+            # Check if last message is assistant
+            if conv[-1]["role"] == "assistant":
+                print(f"  ✅ Last message is from assistant")
+            else:
+                print(f"  ❌ Last message is NOT from assistant (role: {conv[-1]['role']})")
+
+    # Debug both datasets
+    debug_conversation(train_data, "TRAINING")
+    debug_conversation(val_data, "VALIDATION")
+
+    print("\n" + "=" * 80)
+    print("END DEBUG")
+    print("=" * 80 + "\n")
+
+    # ============================================================================
+    # Apply filtering for validation data
+    # ============================================================================
+    def has_assistant_response(example):
+        conv = example["conversations"]
+        return len(conv) >= 2 and conv[-1]["role"] == "assistant"
+
+    print("Filtering validation data...")
+    print(f"Val data before filtering: {len(val_data)}")
+    val_data = val_data.filter(has_assistant_response)
+    print(f"Val data after filtering: {len(val_data)}")
+
+    if len(val_data) == 0:
+        print("\n❌ WARNING: No validation examples left after filtering!")
+        print("   Your validation data doesn't have assistant responses.")
+        print("   Consider fixing your data loading or skipping validation.\n")
     
     # Format datasets
     print("\nFormatting and tokenizing datasets...")
-    train_data = train_data.map(formatting_prompts_func, batched=True)
-    val_data = val_data.map(formatting_prompts_func, batched=True)
     
+    # Format datasets
+    print("\nFormatting and tokenizing datasets...")
+
     train_data = train_data.map(tokenize_func, batched=True)
     val_data = val_data.map(tokenize_func, batched=True)
+    
+    # Fix for "AttributeError: 'list' object has no attribute 'tolist'"
+    # Unsloth's train_on_responses_only expects numpy arrays, not python lists.
+    # We only format the tensor columns so 'claim_id' remains a string for the sampler.
+    tensor_cols = ["input_ids", "attention_mask", "labels"]
+    train_data.set_format(type="numpy", columns=tensor_cols, output_all_columns=True)
+    val_data.set_format(type="numpy", columns=tensor_cols, output_all_columns=True)
 
+    print("\n" + "=" * 80)
+    print("DEBUGGING TOKENIZATION & MASKING")
+    print("=" * 80)
+
+    def debug_tokenization(dataset, dataset_name, num_samples=2):
+        print(f"\n{dataset_name} Dataset:")
+        
+        for i in range(min(num_samples, len(dataset))):
+            example = dataset[i]
+            
+            print(f"\n  --- Example {i} ---")
+            print(f"  Input IDs length: {len(example['input_ids'])}")
+            print(f"  Labels length: {len(example['labels'])}")
+            print(f"  Attention mask length: {len(example['attention_mask'])}")
+            
+            # Count masked tokens
+            labels = example['labels']
+            masked_count = sum(1 for x in labels if x == -100)
+            trainable_count = sum(1 for x in labels if x != -100)
+            
+            print(f"  Masked tokens (instruction): {masked_count}")
+            print(f"  Trainable tokens (response): {trainable_count}")
+            print(f"  Masking ratio: {masked_count / len(labels) * 100:.1f}%")
+            
+            # Decode to show what's masked vs trainable
+            input_ids = example['input_ids']
+            
+            # Show first 10 tokens
+            print(f"\n  First 10 tokens (should be masked):")
+            for j in range(min(10, len(input_ids))):
+                token_id = input_ids[j]
+                label = labels[j]
+                token_text = tokenizer.decode([token_id])
+                mask_status = "MASKED" if label == -100 else "TRAIN"
+                print(f"    [{j}] {mask_status:7s} | token_id={token_id:5d} | {repr(token_text)}")
+            
+            # Find transition from masked to trainable
+            transition_idx = None
+            for j in range(len(labels)):
+                if labels[j] != -100:
+                    transition_idx = j
+                    break
+            
+            if transition_idx:
+                print(f"\n  Transition point (first trainable token at index {transition_idx}):")
+                start = max(0, transition_idx - 3)
+                end = min(len(input_ids), transition_idx + 3)
+                for j in range(start, end):
+                    token_id = input_ids[j]
+                    label = labels[j]
+                    token_text = tokenizer.decode([token_id])
+                    mask_status = "MASKED" if label == -100 else "TRAIN"
+                    marker = " <-- TRANSITION" if j == transition_idx else ""
+                    print(f"    [{j}] {mask_status:7s} | token_id={token_id:5d} | {repr(token_text)}{marker}")
+            
+            # Decode full texts
+            print(f"\n  Full input (decoded):")
+            full_text = tokenizer.decode(input_ids)
+            print(f"    {repr(full_text[:200])}...")
+            
+            # Decode only the trainable part
+            trainable_ids = [input_ids[j] for j in range(len(input_ids)) if labels[j] != -100]
+            trainable_text = tokenizer.decode(trainable_ids)
+            print(f"\n  Trainable portion (what model learns from):")
+            print(f"    {repr(trainable_text)}")
+
+    debug_tokenization(train_data, "TRAINING")
+    if len(val_data) > 0:
+        debug_tokenization(val_data, "VALIDATION")
+
+    print("\n" + "=" * 80)
+    print("END DEBUG")
+    print("=" * 80 + "\n")
+    
     # Create batch sampler BEFORE removing columns (needs claim_id, perturbation_type)
     pre_built_batch_sampler = None
     if batch_match_claim_id:
@@ -332,7 +519,7 @@ def finetune(
             ensure_original_in_batch=ensure_original_in_batch,
             ensure_perturbed_in_batch=ensure_perturbed_in_batch,
             shuffle=True,
-            seed=3407 + epoch,
+            seed=3407 + start_epoch,
             drop_last=False,
         )
         print(f"✅ Batch sampler created with {len(pre_built_batch_sampler)} batches")
@@ -342,17 +529,15 @@ def finetune(
     
     # Remove ALL non-tensor columns - keep only 'text' for SFTTrainer
     # String columns like claim_id, perturbation_type, ground_truth cause tensor errors
-    columns_to_keep = {"input_ids", "attention_mask", "labels", "text"}
 
     # If using the custom sampler, we also can to keep metadata 
     # until after the sampler is initialized
     model_inputs = {"input_ids", "attention_mask", "labels", "text"}
     sampler_metadata = {"claim_id", "perturbation_type"}
 
-    cols_to_remove = [c for c in train_data.column_names if c not in columns_to_keep]
-
-    train_data = train_data.remove_columns(cols_to_remove)
-    val_data = val_data.remove_columns(cols_to_remove)
+    columns_to_keep = {"input_ids", "attention_mask", "labels"}
+    train_data = train_data.remove_columns([c for c in train_data.column_names if c not in columns_to_keep])
+    val_data = val_data.remove_columns([c for c in val_data.column_names if c not in columns_to_keep])
     
     print(f"Final train columns: {train_data.column_names}")
     print(f"Final val columns: {val_data.column_names}")
@@ -376,18 +561,23 @@ def finetune(
         )
 
     # Create output directory
-    output_dir = f"{prefix}tuned_models/epoch-{epoch}/{model_name}{quant_status}_{rank_postfix}_{model_name_timestamp}"
+    output_dir = f"{prefix}tuned_models/epoch-{start_epoch}/{model_name}{quant_status}_{rank_postfix}"
     if not os.path.exists(output_dir):
         os.makedirs(output_dir, exist_ok=True)
+
+    # Calculate final epoch number
+    target_epoch = start_epoch + num_train_epochs - 1 
 
     # Initialize wandb
     run = wandb.init(
         project="numpert_finetune",
-        name=f"{model_name}{quant_status} numpert epoch-{epoch} (r{rank})",
+        name=f"{model_name}{quant_status}_epoch_{start_epoch}→{target_epoch}_(r{rank})",
         config={
             "model": model_name,
             "rank": rank,
-            "epoch": epoch,
+            "start_epoch": start_epoch,
+            "num_train_epochs": num_train_epochs,
+            "target_epoch": target_epoch,
             "batch_size": batch_size,
             "gradient_accumulation": gradient_accumulation_steps,
             "effective_batch_size": batch_size * gradient_accumulation_steps,
@@ -412,7 +602,7 @@ def finetune(
         per_device_eval_batch_size=batch_size,
         gradient_accumulation_steps=gradient_accumulation_steps,
         warmup_steps=50,
-        num_train_epochs=1,
+        num_train_epochs=num_train_epochs,
         learning_rate=1e-4,
         fp16=not is_bfloat16_supported(),
         bf16=is_bfloat16_supported(),
@@ -420,7 +610,7 @@ def finetune(
         optim="adamw_8bit",
         weight_decay=0.01,
         lr_scheduler_type="cosine",
-        seed=3407 + epoch,
+        seed=3407 + start_epoch,
         output_dir=output_dir,
         eval_strategy="steps",
         eval_steps=eval_steps,
@@ -444,6 +634,7 @@ def finetune(
             eval_dataset=val_data,
             args=training_config,
             callbacks=[ValidationCallback()],
+            data_collator=DataCollatorForSeq2Seq(tokenizer=tokenizer, padding=True),
             use_custom_sampler=True,
             pre_built_batch_sampler=pre_built_batch_sampler,
         )
@@ -457,25 +648,12 @@ def finetune(
             callbacks=[ValidationCallback()],
         )
 
-    # 4. Apply Response-Only Loss (The Unsloth way)
-    # This effectively implements completion_only_loss=True by masking the instruction
-    if "llama" in model_name.lower():
-        # Llama 3.1/3.2 Template specific strings
-        trainer = train_on_responses_only(
-            trainer,
-            instruction_part="<|start_header_id|>user<|end_header_id|>\n\n",
-            response_part="<|start_header_id|>assistant<|end_header_id|>\n\n",
-        )
-    elif "qwen" in model_name.lower():
-        trainer = train_on_responses_only(
-            trainer,
-            instruction_part="<|im_start|>user\n",
-            response_part="<|im_start|>assistant\n",
-        )
 
     # Train
     print("\nStarting training...\n")
     trainer.train()
+
+    actual_final_epoch = start_epoch + int(trainer.state.epoch)
 
     # Final evaluation
     print("\n" + "=" * 80)
@@ -489,25 +667,34 @@ def finetune(
     run.finish()
 
     # Save model
-    save_dir = f"epoch-{epoch}/{model_name}{quant_status}"
-    os.makedirs(save_dir, exist_ok=True)
+    save_dir = f"{prefix}{model_name}_{model_name_timestamp}/epoch-{actual_final_epoch}{quant_status}"
+    if not os.path.exists(save_dir):
+        os.makedirs(save_dir, exist_ok=True)
 
-    lora_path = f"{save_dir}/lora_numpert{rank_postfix}"
+    lora_path = f"{save_dir}/lora_weights{rank_postfix}"
+
+    if not os.path.exists(lora_path):
+        os.makedirs(lora_path, exist_ok=True)
+    
     model.save_pretrained(lora_path)
     tokenizer.save_pretrained(lora_path)
     print(f"LoRA weights saved to: {lora_path}")
 
     # Merge and save
-    merged_path = f"{save_dir}/merged_numpert{rank_postfix}"
+    merged_path = f"{save_dir}/merged_model{rank_postfix}"
+    if not os.path.exists(merged_path):
+        os.makedirs(merged_path, exist_ok=True)
+
     model.save_pretrained_merged(
         merged_path,
         tokenizer,
         save_method="merged_16bit",
     )
     print(f"Merged model saved to: {merged_path}")
-
-    print("\nFine-tuning complete!\n")
-
+    print(f"✅ Training complete")
+    print(f"   Started at epoch: {start_epoch}")
+    print(f"   Trained for: {int(trainer.state.epoch)} epochs")
+    print(f"   Final epoch reached: {actual_final_epoch}")
 
 def extract_label_from_response(text: str) -> Optional[str]:
     """Extract the predicted label from model response.
@@ -891,14 +1078,15 @@ if __name__ == "__main__":
         "--model", default="llama-3.2-3b-instruct", help="Model name"
     )
     parser.add_argument("--rank", type=int, default=32, help="LoRA rank")
-    parser.add_argument("--epoch", type=int, default=1, help="Epoch number")
+    parser.add_argument("--start_epoch", type=int, default=1, help="Epoch number to resume at to resume")
+    parser.add_argument("--num_train_epochs", type=int, default=1, help="Number of training epochs")
 
     # Training hyperparameters
     parser.add_argument(
         "--batch_size", type=int, default=2, help="Per-device batch size"
     )
     parser.add_argument(
-        "--grad_accum", type=int, default=4, help="Gradient accumulation steps"
+        "--grad_accum", type=int, default=1, help="Gradient accumulation steps"
     )
     parser.add_argument(
         "--max_seq_length",
@@ -988,7 +1176,8 @@ if __name__ == "__main__":
             val_json_paths=args.val_json,
             model_name=args.model,
             rank=args.rank,
-            epoch=args.epoch,
+            start_epoch=args.start_epoch,
+            num_train_epochs=args.num_train_epochs,
             batch_size=args.batch_size,
             gradient_accumulation_steps=args.grad_accum,
             max_seq_length=args.max_seq_length,
@@ -1012,7 +1201,7 @@ if __name__ == "__main__":
             test_json_paths=args.test_json,
             model_name=args.model,
             rank=args.rank,
-            epoch=args.epoch,
+            start_epoch=args.start_epoch,
             use_vllm=args.use_vllm,
             expand_perturbations=args.expand_perturbations,
             max_seq_length=args.max_seq_length,

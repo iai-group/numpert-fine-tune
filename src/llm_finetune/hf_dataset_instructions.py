@@ -1,3 +1,4 @@
+"""hf_dataset_instructions.py"""
 from datasets import Dataset, concatenate_datasets
 from enum import Enum
 from pathlib import Path
@@ -139,10 +140,9 @@ def convert_to_conversations(
         json_label = '{"label": true}' if example["label"] == "True" else '{"label": false}'
 
         # Assistant response (only for training)
-        if split == "train":
-            conversations.append(
-                {"role": "assistant", "content": json_label}
-            )
+        conversations.append(
+            {"role": "assistant", "content": json_label}
+        )
 
         # Build the final entry
         entry = {
@@ -175,7 +175,7 @@ def load_fact_checking_data(
     Returns:
         HuggingFace Dataset ready for SFTTrainer
     """
-    # Treat "test" the same as "validation" (no assistant response, include ground_truth)
+    # Treat "test" the same as "validation" (both include assistant response for consistency)
     effective_split = "validation" if split == "test" else split
 
     # Load raw examples from JSON files
