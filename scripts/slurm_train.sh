@@ -1,14 +1,70 @@
 #!/bin/bash
-#SBATCH --gres=gpu:2
+#SBATCH --job-name=finetune_unsloth
 #SBATCH --partition=gpu
-#SBATCH --time=30:00:00
-#SBATCH --mem=400G
-#SBATCH --job-name=numpert_3classes
-#SBATCH --output=numpert_3classes.out
- 
-# Activate environment
-uenv verbose cuda-12.4.0 cudnn-12.x-8.8.0
-uenv miniconda3-py311
-conda activate transformer_cuda124
-conda env list
-python -m code.nli_models.roberta.finqa_roberta
+##  --gres=gpu:nvidia_h100_nvl:1
+#SBATCH --time=12:00:00
+#SBATCH --output=finetune_unsloth.out
+#SBATCH --mem=300G
+#SBATCH --nodelist=gorina9
+
+
+# Print job information
+echo "=========================================="
+echo "SLURM Job Information"
+echo "=========================================="
+echo "Job ID: $SLURM_JOB_ID"
+echo "Job Name: $SLURM_JOB_NAME"
+echo "Node: $SLURM_NODELIST"
+echo "Partition: $SLURM_JOB_PARTITION"
+echo "Start Time: $(date)"
+echo "=========================================="
+echo ""
+
+# Load environment
+echo "Activating uv environment..."
+echo $PATH
+source .finetune/bin/activate
+CUDA_DEVICE_ORDER=PCI_BUS_ID
+CUDA_VISIBLE_DEVICES=6
+
+python -c "
+from huggingface_hub import scan_cache_dir
+cache = scan_cache_dir()
+for repo in cache.repos:
+    if 'Qwen3' in repo.repo_id:
+        print(f'{repo.repo_id}: {repo.size_on_disk_str}, refs: {[r.refs for r in repo.revisions]}')
+"
+
+python -c "
+from huggingface_hub import hf_hub_download
+import os
+os.environ['HF_HUB_OFFLINE'] = '1'
+path = hf_hub_download('unsloth/Qwen3-8B', 'config.json')
+print('Found config at:', path)
+"
+
+# Verify GPU is available
+echo ""
+echo "Checking GPU availability..."
+nvidia-smi
+echo ""
+
+# Run training script
+echo "=========================================="
+echo "Starting Fine-tuning Script"
+echo "=========================================="
+echo ""
+
+
+echo "Working directory: $(pwd)"
+echo ""
+    
+bash ./scripts/finetune_qwen.sh
+
+# Print completion information
+echo ""
+echo "=========================================="
+echo "SLURM Job Completed"
+echo "=========================================="
+echo "End Time: $(date)"
+echo "=========================================="
