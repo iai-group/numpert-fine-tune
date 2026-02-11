@@ -423,7 +423,7 @@ def finetune(
 
     train_data = train_data.map(tokenize_func, batched=True)
     val_data = val_data.map(tokenize_func, batched=True)
-    
+
     # Fix for "AttributeError: 'list' object has no attribute 'tolist'"
     # Unsloth's train_on_responses_only expects numpy arrays, not python lists.
     # We only format the tensor columns so 'claim_id' remains a string for the sampler.
@@ -700,54 +700,51 @@ def extract_label_from_response(text: str) -> Optional[str]:
     """Extract the predicted label from model response.
     
     Expects JSON format: {"label": true} or {"label": false}
+    Uses strict JSON parsing - only perfectly formatted responses are accepted.
     
     Returns:
         The extracted label in JSON format, or None if unparseable
     """
     import re
+    import json
     
-    text = text.strip()
+    original_text = text.strip()
     
     # Strip Qwen3 thinking tokens if present
-    if "<think>" in text and "</think>" in text:
+    if "<think>" in original_text and "</think>" in original_text:
         # Remove everything between <think> and </think>
-        text = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL).strip()
+        text = re.sub(r"<think>.*?</think>", "", original_text, flags=re.DOTALL).strip()
+    elif "<think>" in original_text:
+        # Handle case where thinking isn't closed - take content after </think>
+        text = original_text.split("</think>")[-1].strip()
+    else:
+        text = original_text
     
-    # Also handle case where thinking isn't closed
-    if "<think>" in text:
-        text = text.split("</think>")[-1].strip()
-    
-    text_lower = text.lower()
-    
-    # Check for exact or near-exact JSON matches first
-    # Handle variations like {"label": true}, {"label":true}, { "label": true }, etc.
-    if re.search(r'\{\s*"label"\s*:\s*true\s*\}', text_lower):
-        return '{"label": true}'
-    if re.search(r'\{\s*"label"\s*:\s*false\s*\}', text_lower):
-        return '{"label": false}'
-    
-    # Fallback: check for "label": true/false pattern without full JSON structure
-    if re.search(r'"label"\s*:\s*true', text_lower):
-        return '{"label": true}'
-    if re.search(r'"label"\s*:\s*false', text_lower):
-        return '{"label": false}'
-    
-    # Last resort: check for plain true/false (model might omit JSON structure)
-    # Check false first to avoid substring issues
-    if "false" in text_lower and "true" not in text_lower:
-        return '{"label": false}'
-    if "true" in text_lower and "false" not in text_lower:
-        return '{"label": true}'
-
-    # Could not parse
-    return None
-
+    # Try to parse as JSON
+    try:
+        parsed = json.loads(text)
+        
+        # Validate against schema: must have "label" key with boolean value
+        if isinstance(parsed, dict) and "label" in parsed:
+            label_value = parsed["label"]
+            
+            # Ensure it's a boolean (not string "true"/"false")
+            if isinstance(label_value, bool):
+                # Return normalized JSON string format
+                return f'{{"label": {str(label_value).lower()}}}'
+        
+        # If we get here, structure doesn't match schema
+        return None
+        
+    except (json.JSONDecodeError, ValueError):
+        # Could not parse as valid JSON
+        return None
 
 def inference(
     test_json_paths: List[str],
     model_name: str = "llama-3.2-3b-instruct",
     rank: int = 32,
-    epoch: int = 0,
+    start_epoch: int = 0,
     use_vllm: bool = False,
     expand_perturbations: bool = True,
     max_seq_length: int = 16384,
@@ -759,7 +756,7 @@ def inference(
     print("STARTING INFERENCE")
     print("=" * 80)
     print(f"Model: {model_name}")
-    print(f"Epoch: {epoch}")
+    print(f"Model from Epoch: {start_epoch}")
     print(f"Max sequence length: {max_seq_length:,} tokens")
     print(f"Use vLLM: {use_vllm}")
     print(f"Expand perturbations: {expand_perturbations}")
@@ -773,10 +770,10 @@ def inference(
     quant_status = "" if load_in_4bit else "-unquantized"
 
     # Determine model path
-    if epoch == 0:
+    if start_epoch == 0:
         model_name_arg = get_model_name_arg(model_name)
     else:
-        model_name_arg = f"epoch-{epoch}/{model_name}{quant_status}/lora_numpert{rank_postfix}"
+        model_name_arg = f"epoch-{start_epoch}/{model_name}{quant_status}/lora_numpert{rank_postfix}"
 
     print(f"Loading model from: {model_name_arg}\n")
 
@@ -849,7 +846,7 @@ def inference(
 
     # Create output directory
     vllm_suffix = "-vllm" if use_vllm else ""
-    pred_dir = f"{output_dir}/{model_name}{rank_postfix}{quant_status}-epoch-{epoch}{vllm_suffix}"
+    pred_dir = f"{output_dir}/{model_name}{rank_postfix}{quant_status}-epoch-{start_epoch}{vllm_suffix}"
     os.makedirs(pred_dir, exist_ok=True)
 
     # Run inference
@@ -908,6 +905,12 @@ def inference(
             raw_outputs.append(decoded)
             label = extract_label_from_response(decoded)
             predictions.append(label)
+
+    # Save raw outputs (including thinking tags) for debugging
+    raw_outputs_path = f"{pred_dir}/raw_outputs.json"
+    with open(raw_outputs_path, "w") as f:
+        json.dump(raw_outputs, f, indent=2)
+    print(f"Raw outputs saved to: {raw_outputs_path}\n")
 
     # Separate valid predictions from parse failures
     valid_indices = [i for i, pred in enumerate(predictions) if pred is not None]
@@ -1013,7 +1016,9 @@ def inference(
         "valid_examples": n_valid,
         "parse_failures": n_failures,
         "parse_failure_rate": n_failures / n_total if n_total > 0 else 0,
-        "note": f"Metrics computed on {n_valid}/{n_total} parseable responses only",
+        "invalid_outputs": n_failures,  # Add this for clarity
+        "valid_output_rate": n_valid / n_total if n_total > 0 else 0,
+        "note": f"Metrics computed on {n_valid}/{n_total} parseable responses only. Only perfectly formatted JSON accepted.",
         "per_perturbation": {
             p_type: {
                 "accuracy": m["correct"] / m["total"] if m["total"] > 0 else 0,
