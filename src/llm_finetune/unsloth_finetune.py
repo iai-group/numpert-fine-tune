@@ -185,7 +185,7 @@ def finetune(
     if start_epoch == 1:
         model_name_arg = get_model_name_arg(model_name)
     else:
-        model_name_arg = f"epoch-{start_epoch-1}/{model_name}{quant_status}/lora_numpert{rank_postfix}"
+        model_name_arg = f"/home/stud/u2929246/bhome/numpert-fine-tune/models/qwen-3-8b_20260206_000635/merged_model"
 
     print(f"Loading model from: {model_name_arg}\n")
 
@@ -221,10 +221,12 @@ def finetune(
     )
 
     # Set chat template
-#    if "llama" in model_name.lower():
- #       tokenizer = get_chat_template(tokenizer, chat_template="llama-3.1")
-  #  elif "qwen" in model_name.lower():
-    tokenizer = get_chat_template(tokenizer, chat_template="chatml")
+    if "llama-3" in model_name.lower():
+        tokenizer = get_chat_template(tokenizer, chat_template="llama-3.1")
+    elif "qwen" in model_name.lower():
+        tokenizer = get_chat_template(tokenizer, chat_template="chatml")
+    else: #TODO fix for other models
+        tokenizer = get_chat_template(tokenizer, chat_template="chatml")
 
     # Set padding
     tokenizer.padding_side = "right"
@@ -235,13 +237,13 @@ def finetune(
     truncated_count = 0
     total_count = 0
 
+
     def tokenize_func(examples):
         all_input_ids = []
         all_labels = []
         all_attention_mask = []
 
         for conv in examples["conversations"]:
-            # Verify conversation structure
             if len(conv) < 2 or conv[-1]["role"] != "assistant":
                 print(f"⚠️ Warning: Unexpected conversation format: {conv}")
                 # Instead of continue, create a dummy example
@@ -252,45 +254,45 @@ def finetune(
                 all_attention_mask.append(dummy_tokens["attention_mask"])
                 continue
             
-            # Separate prompt from response
-            prompt_conv = conv[:-1]
+            # 1. Format the full text (Instruction + Response + EOS)
+            full_text = tokenizer.apply_chat_template(
+                conv, 
+                tokenize=False, 
+                add_generation_prompt=False # Crucial: False includes the EOS token
+            )
             
-            # Format prompt with add_generation_prompt=True
+            # 2. Format the prompt only (Instruction + Generation Header)
             prompt_text = tokenizer.apply_chat_template(
-                prompt_conv, 
+                conv[:-1], 
                 tokenize=False, 
                 add_generation_prompt=True
             )
             
-            # Format full conversation
-            full_text = tokenizer.apply_chat_template(
-                conv, 
-                tokenize=False, 
-                add_generation_prompt=False
+            # 3. Tokenize both
+            full_tokens = tokenizer(
+                full_text, 
+                truncation=True, 
+                max_length=max_seq_length, 
+                padding=False,
+                add_special_tokens=False # Template already adds them
             )
             
-            # Tokenize both
             prompt_tokens = tokenizer(
                 prompt_text, 
                 add_special_tokens=False,
                 truncation=False
             )
             
-            full_tokens = tokenizer(
-                full_text, 
-                truncation=True, 
-                max_length=max_seq_length, 
-                padding=False
-            )
-            
             input_ids = full_tokens["input_ids"]
             attention_mask = full_tokens["attention_mask"]
-            labels = input_ids.copy()
             
-            # Mask the prompt tokens
+            # 4. Mask the labels: -100 for prompt, actual ID for response
+            labels = [-100] * len(input_ids)
             prompt_len = len(prompt_tokens["input_ids"])
-            for i in range(min(prompt_len, len(labels))):
-                labels[i] = -100
+            
+            # Only unmask tokens from the end of the prompt to the end of the full sequence
+            for i in range(prompt_len, len(input_ids)):
+                labels[i] = input_ids[i]
             
             all_input_ids.append(input_ids)
             all_labels.append(labels)
@@ -301,6 +303,8 @@ def finetune(
             "labels": all_labels,
             "attention_mask": all_attention_mask,
         }
+    
+    
 
     print("Loading datasets...")
     datasets = load_train_and_validation(
@@ -765,17 +769,41 @@ def inference(
     # Configuration
     dtype = None
     load_in_4bit = True
-
+    
     rank_postfix = "" if rank == 16 else f"_r{rank}"
     quant_status = "" if load_in_4bit else "-unquantized"
 
-    # Determine model path
-    if start_epoch == 0:
-        model_name_arg = get_model_name_arg(model_name)
+    # 1. Check if the user provided a direct path to a local folder
+    if os.path.isdir(model_name):
+        print(f"📂 Mode: Direct local folder")
+        model_name_arg = model_name
+
+    # 2. If start_epoch > 0, look for the checkpoint in the training output directory
+    elif start_epoch > 0:
+        # Construct the path matching the training save logic: 
+        # {prefix}tuned_models/epoch-{epoch}/{name}/...
+        
+        # Path A: Correct path based on finetune() save_dir logic
+        # TODO: Må fikse den her til correct
+        trained_path = f"{prefix}tuned_models/epoch-{start_epoch}/{model_name}{quant_status}/lora_numpert{rank_postfix}"
+        
+
+        if os.path.exists(trained_path):
+            print(f"📂 Mode: Found training checkpoint (Standard)")
+            model_name_arg = trained_path
+        else:
+            print(f"⚠️ Warning: Checkpoint for epoch {start_epoch} not found locally.")
+            print(f"   Checked: {trained_path}")
+            print(f"   Attempting to load '{model_name}' from Hugging Face...")
+            model_name_arg = get_model_name_arg(model_name)
+
+    # 3. Default to Hugging Face Hub or mapped alias
     else:
-        model_name_arg = f"epoch-{start_epoch}/{model_name}{quant_status}/lora_numpert{rank_postfix}"
+        print(f"☁️ Mode: Hugging Face / Alias")
+        model_name_arg = get_model_name_arg(model_name)
 
     print(f"Loading model from: {model_name_arg}\n")
+
 
     # Load model
     if use_vllm:
@@ -863,14 +891,28 @@ def inference(
 
         outputs = llm.generate(prompts, sampling_params)
 
-        for output in outputs:
+        for idx, output in enumerate(outputs):
             text = output.outputs[0].text
-            raw_outputs.append(text)
+            raw_outputs.append({
+                "index": idx,
+                "claim_id": test_data[idx]["claim_id"],
+                "perturbation_type": test_data[idx]["perturbation_type"],
+                "ground_truth": test_data[idx]["ground_truth"],
+                "full_prompt": prompts[idx],  # Full input
+                "raw_response": text,  # Model output only
+            })
             label = extract_label_from_response(text)
             predictions.append(label)
 
     else:
         for i in tqdm(range(len(test_data))):
+            # Format the prompt
+            prompt_text = tokenizer.apply_chat_template(
+                test_data[i]["conversations"],
+                tokenize=False,
+                add_generation_prompt=True
+            )
+            
             model_inputs = tokenizer.apply_chat_template(
                 test_data[i]["conversations"],
                 tokenize=True,
@@ -894,6 +936,9 @@ def inference(
                         model_inputs["input_ids"] != pad_id
                     ).long()
 
+            # Store input length
+            input_length = model_inputs["input_ids"].shape[1]
+            
             outputs = model.generate(
                 **model_inputs,
                 max_new_tokens=512,
@@ -901,25 +946,39 @@ def inference(
                 temperature=0.001,
             )
 
-            decoded = tokenizer.batch_decode(outputs)[0]
-            raw_outputs.append(decoded)
+            # Decode only new tokens
+            new_tokens = outputs[0][input_length:]
+            decoded = tokenizer.decode(new_tokens, skip_special_tokens=True)
+            
+            raw_outputs.append({
+                "index": i,
+                "claim_id": test_data[i]["claim_id"],
+                "perturbation_type": test_data[i]["perturbation_type"],
+                "ground_truth": test_data[i]["ground_truth"],
+                "full_prompt": prompt_text,  # Full input
+                "raw_response": decoded,  # Model output only
+            })
+            
             label = extract_label_from_response(decoded)
             predictions.append(label)
 
-    # Save raw outputs (including thinking tags) for debugging
-    raw_outputs_path = f"{pred_dir}/raw_outputs.json"
+    raw_outputs_path = f"{pred_dir}/inference_details.json"
     with open(raw_outputs_path, "w") as f:
         json.dump(raw_outputs, f, indent=2)
-    print(f"Raw outputs saved to: {raw_outputs_path}\n")
+    print(f"Inference details (prompts + outputs) saved to: {raw_outputs_path}\n")
+
+    # Extract predictions for metrics
+    predictions_only = [item["raw_response"] for item in raw_outputs]
+    labels_extracted = [extract_label_from_response(resp) for resp in predictions_only]
 
     # Separate valid predictions from parse failures
-    valid_indices = [i for i, pred in enumerate(predictions) if pred is not None]
-    parse_failure_indices = [i for i, pred in enumerate(predictions) if pred is None]
-    
-    valid_predictions = [predictions[i] for i in valid_indices]
+    valid_indices = [i for i, pred in enumerate(labels_extracted) if pred is not None]
+    parse_failure_indices = [i for i, pred in enumerate(labels_extracted) if pred is None]
+
+    valid_predictions = [labels_extracted[i] for i in valid_indices]
     valid_ground_truths = [ground_truths[i] for i in valid_indices]
-    
-    n_total = len(predictions)
+
+    n_total = len(labels_extracted)
     n_valid = len(valid_predictions)
     n_failures = len(parse_failure_indices)
 
@@ -927,10 +986,10 @@ def inference(
     print(f"\n📊 Parse Results:")
     print(f"   Successfully parsed: {n_valid}/{n_total} ({100*n_valid/n_total:.1f}%)")
     print(f"   Parse failures: {n_failures}/{n_total} ({100*n_failures/n_total:.1f}%)")
-    
+
     if n_failures > 0:
         print(f"\n⚠️  WARNING: {n_failures} responses could not be parsed and are EXCLUDED from metrics.")
-        print("    Check raw_outputs.json and predictions.csv for details.")
+        print("    Check inference_details.json and parse_failures.json for details.")
 
     # Calculate metrics (only on valid predictions)
     print("\n" + "=" * 80)
@@ -971,7 +1030,7 @@ def inference(
 
     # Count correct/total for valid predictions
     for i in valid_indices:
-        pred = predictions[i]
+        pred = labels_extracted[i]
         gt = ground_truths[i]
         p_type = test_data[i]["perturbation_type"]
         perturb_metrics[p_type]["total"] += 1
@@ -981,9 +1040,7 @@ def inference(
     for p_type in sorted(perturb_metrics.keys()):
         metrics = perturb_metrics[p_type]
         total_with_failures = metrics["total"] + metrics["failures"]
-        acc = (
-            metrics["correct"] / metrics["total"] if metrics["total"] > 0 else 0
-        )
+        acc = metrics["correct"] / metrics["total"] if metrics["total"] > 0 else 0
         failure_note = f" [+{metrics['failures']} unparsed]" if metrics["failures"] > 0 else ""
         print(
             f"  {p_type:30s}: {acc:.4f} ({metrics['correct']}/{metrics['total']}){failure_note}"
@@ -991,15 +1048,24 @@ def inference(
 
     print("=" * 80 + "\n")
 
-    # Save predictions (include None for failures, marked clearly)
+    # Save parse failures with full context
+    if n_failures > 0:
+        failures_info = [raw_outputs[i] for i in parse_failure_indices]
+        
+        failures_path = f"{pred_dir}/parse_failures.json"
+        with open(failures_path, "w") as f:
+            json.dump(failures_info, f, indent=2)
+        print(f"Parse failure details (with full prompts) saved to: {failures_path}\n")
+        
+    # Save predictions CSV
     results_df = pd.DataFrame(
         {
             "claim_id": test_data["claim_id"],
             "perturbation_type": test_data["perturbation_type"],
             "ground_truth": ground_truths,
-            "prediction": [p if p is not None else "PARSE_FAILURE" for p in predictions],
-            "parsed_successfully": [p is not None for p in predictions],
-            "raw_output": raw_outputs,
+            "prediction": [p if p is not None else "PARSE_FAILURE" for p in labels_extracted],
+            "parsed_successfully": [p is not None for p in labels_extracted],
+            "raw_response": [item["raw_response"] for item in raw_outputs],
         }
     )
 
@@ -1016,9 +1082,8 @@ def inference(
         "valid_examples": n_valid,
         "parse_failures": n_failures,
         "parse_failure_rate": n_failures / n_total if n_total > 0 else 0,
-        "invalid_outputs": n_failures,  # Add this for clarity
         "valid_output_rate": n_valid / n_total if n_total > 0 else 0,
-        "note": f"Metrics computed on {n_valid}/{n_total} parseable responses only. Only perfectly formatted JSON accepted.",
+        "note": f"Metrics computed on {n_valid}/{n_total} parseable responses only.",
         "per_perturbation": {
             p_type: {
                 "accuracy": m["correct"] / m["total"] if m["total"] > 0 else 0,
@@ -1080,7 +1145,7 @@ if __name__ == "__main__":
 
     # Model configuration
     parser.add_argument(
-        "--model", default="llama-3.2-3b-instruct", help="Model name"
+        "--model", default=None, help="Model name"
     )
     parser.add_argument("--rank", type=int, default=32, help="LoRA rank")
     parser.add_argument("--start_epoch", type=int, default=1, help="Epoch number to resume at to resume")
