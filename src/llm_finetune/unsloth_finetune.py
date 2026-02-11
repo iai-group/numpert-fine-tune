@@ -1,4 +1,6 @@
 """Fine-tuning and inference for fact-checking models with numerical perturbations."""
+import re
+import json
 import src
 import json
 from typing import Optional, List, Dict
@@ -114,11 +116,13 @@ class ValidationCallback(TrainerCallback):
                 print(f"{key}: {value:.4f}")
             print("=" * 80 + "\n")
 
-
+# TODO add more models
 def get_model_name_arg(model_name):
     """Convert short model name to full HuggingFace path."""
-    if model_name.startswith("Qwen") or model_name.startswith("qwen"):
+    if model_name.startswith("Qwen3-8B") or model_name.startswith("Qwen3-8B"):
         return "unsloth/Qwen3-8B"
+    elif model_name.startswith("Qwen3-32B") or model_name.startswith("Qwen-3-32B"):
+        return "unsloth/Qwen3-32B"
     elif model_name.startswith("llama-3.2-3b"):
         return "unsloth/Llama-3.2-3B-Instruct"
     elif model_name.startswith("llama-3.2-1b"):
@@ -709,8 +713,6 @@ def extract_label_from_response(text: str) -> Optional[str]:
     Returns:
         The extracted label in JSON format, or None if unparseable
     """
-    import re
-    import json
     
     original_text = text.strip()
     
