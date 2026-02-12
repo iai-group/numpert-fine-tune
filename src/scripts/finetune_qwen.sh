@@ -16,20 +16,20 @@ set -u  # Exit on undefined variable
 # ==============================================================================
 MODEL="Qwen"          # Options: qwen-3-8b, llama-3.2-3b-instruct, llama-3.2-1b-instruct
 RANK=32                    # LoRA rank (16, 32, 64) - higher = more parameters but slower
-EPOCH=3                    # Epoch number (1 for first training, 2+ for continued training)
-
+START_EPOCH=1                   # Epoch number (1 for first training, 2+ for continued training)
+NUM_TRAIN_EPOCHS=5
 # ==============================================================================
 # TRAINING HYPERPARAMETERS
 # ==============================================================================
-BATCH_SIZE=4               # Per-device batch size (adjust based on GPU memory)
-GRAD_ACCUM=4              # Gradient accumulation steps
+BATCH_SIZE=5               # Per-device batch size (adjust based on GPU memory) #### E.g. Original-F + T->T + T->F + Original_F + F -> TF = 5   (NOT 6 unless F-> FF is included!!)
+GRAD_ACCUM=1              # Gradient accumulation steps
                           # Effective batch size = BATCH_SIZE × GRAD_ACCUM = 16
-MAX_SEQ_LENGTH=16384      # Maximum sequence length in tokens
+MAX_SEQ_LENGTH=8192      # Maximum sequence length in tokens
                           # Your docs are 2000-4000 words ≈ 3000-6000 tokens
 
 # ==============================================================================
 # DATASET BALANCING CONFIGURATION
-# ==============================================================================
+# ====================  ==========================================================
 BALANCE_LABELS=true        # Balance True/False label distribution
 PERTURB_RATIO=1.0         # Ratio of perturbed to original examples
                           # 1.0 = 1:1 (equal number of original and perturbed)
@@ -63,6 +63,15 @@ VAL_JSON=(
     "/home/stud/u2929246/bhome/numpert-fine-tune/data/perturbed_data/val_split/numeration_false.json"
 )
 
+#TRAIN_JSON=(
+#    "/home/stud/u2929246/bhome/numpert-fine-tune/data/perturbed_data/train_split/numeration_true_test.json"
+#)
+
+# Validation data - can specify multiple files
+#VAL_JSON=(
+#    "/home/stud/u2929246/bhome/numpert-fine-tune/data/perturbed_data/train_split/numeration_true_test.json"
+#)
+
 # ==============================================================================
 # EVALUATION & CHECKPOINTING
 # ==============================================================================
@@ -80,7 +89,7 @@ echo ""
 echo "Model Configuration:"
 echo "  Model:           $MODEL"
 echo "  LoRA Rank:       $RANK"
-echo "  Epoch:           $EPOCH"
+echo "  Start Epoch:           $START_EPOCH"
 echo ""
 echo "Training Hyperparameters:"
 echo "  Batch Size:      $BATCH_SIZE"
@@ -151,13 +160,14 @@ echo ""
 SCRIPT_DIR="/home/stud/u2929246/bhome/numpert-fine-tune"
 cd "$SCRIPT_DIR"
 
-CMD="python -m src.llm_finetune.unsloth_finetune \
+CMD="python -m src.llm_finetune.unsloth_finetune\
     --mode finetune \
     --train_json ${TRAIN_JSON[@]} \
     --val_json ${VAL_JSON[@]} \
-    --model $MODEL \
+    --model ${MODEL} \
     --rank $RANK \
-    --epoch $EPOCH \
+    --start_epoch $START_EPOCH \
+    --num_train_epochs $NUM_TRAIN_EPOCHS \
     --batch_size $BATCH_SIZE \
     --grad_accum $GRAD_ACCUM \
     --max_seq_length $MAX_SEQ_LENGTH \
@@ -202,9 +212,9 @@ echo "Training Completed Successfully!"
 echo "=========================================="
 echo ""
 echo "Output Locations:"
-echo "  LoRA weights:    epoch-$EPOCH/$MODEL/lora_numpert_r$RANK/"
-echo "  Merged model:    epoch-$EPOCH/$MODEL/merged_numpert_r$RANK/"
-echo "  Training logs:   epoch-$EPOCH/$MODEL/outputs/numpert_r$RANK/"
+#echo "  LoRA weights:    epoch-$EPOCH/$MODEL/lora_numpert_r$RANK/"
+#echo "  Merged model:    epoch-$EPOCH/$MODEL/merged_numpert_r$RANK/"
+#echo "  Training logs:   epoch-$EPOCH/$MODEL/outputs/numpert_r$RANK/"
 echo ""
 echo "Next Steps:"
 echo "  1. Check WandB dashboard for training metrics"

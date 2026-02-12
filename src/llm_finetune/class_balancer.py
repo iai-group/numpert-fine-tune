@@ -1,5 +1,5 @@
 """
-Dataset balancing utilities - no CUDA dependencies
+class_balancer.py
 """
 
 from datasets import Dataset

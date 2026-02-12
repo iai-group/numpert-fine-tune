@@ -14,10 +14,22 @@ set -u  # Exit on undefined variable
 # ==============================================================================
 # MODEL CONFIGURATION
 # ==============================================================================
+<<<<<<< HEAD
 MODEL="qwen-3-8b"          # Options: qwen-3-8b, llama-3.2-3b-instruct, llama-3.2-1b-instruct
 RANK=32                    # LoRA rank (16, 32, 64) - higher = more parameters but slower
 START_EPOCH=1                   # Epoch number (1 for first training, 2+ for continued training)
 NUM_TRAIN_EPOCHS=5
+=======
+MODEL="Qwen"          # Options: qwen-3-8b, llama-3.2-3b-instruct, llama-3.2-1b-instruct
+RANK=32                    # LoRA rank (16, 32, 64) - higher = more parameters but slower
+<<<<<<< HEAD:src/scripts/finetune_qwen.sh
+EPOCH=3                    # Epoch number (1 for first training, 2+ for continued training)
+
+=======
+START_EPOCH=1                   # Epoch number (1 for first training, 2+ for continued training)
+NUM_TRAIN_EPOCHS=5
+>>>>>>> remote-test:scripts/finetune_qwen.sh
+>>>>>>> remote-test
 # ==============================================================================
 # TRAINING HYPERPARAMETERS
 # ==============================================================================
@@ -160,7 +172,15 @@ echo ""
 SCRIPT_DIR="/home/stud/u2929246/bhome/numpert-fine-tune"
 cd "$SCRIPT_DIR"
 
+<<<<<<< HEAD
 CMD="python -m src.llm_finetune.unsloth_finetune\
+=======
+<<<<<<< HEAD:src/scripts/finetune_qwen.sh
+CMD="python -m src.llm_finetune.unsloth_finetune \
+=======
+CMD="python -m src.llm_finetune.unsloth_finetune\
+>>>>>>> remote-test:scripts/finetune_qwen.sh
+>>>>>>> remote-test
     --mode finetune \
     --train_json ${TRAIN_JSON[@]} \
     --val_json ${VAL_JSON[@]} \
