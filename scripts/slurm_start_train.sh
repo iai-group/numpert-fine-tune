@@ -27,21 +27,6 @@ source .finetune/bin/activate
 CUDA_DEVICE_ORDER=PCI_BUS_ID
 CUDA_VISIBLE_DEVICES=6
 
-python -c "
-from huggingface_hub import scan_cache_dir
-cache = scan_cache_dir()
-for repo in cache.repos:
-    if 'Qwen3' in repo.repo_id:
-        print(f'{repo.repo_id}: {repo.size_on_disk_str}, refs: {[r.refs for r in repo.revisions]}')
-"
-
-python -c "
-from huggingface_hub import hf_hub_download
-import os
-os.environ['HF_HUB_OFFLINE'] = '1'
-path = hf_hub_download('unsloth/Qwen3-8B', 'config.json')
-print('Found config at:', path)
-"
 
 # Verify GPU is available
 echo ""
