@@ -1,9 +1,10 @@
+"""hf_dataset_instructions.py"""
 from datasets import Dataset, concatenate_datasets
 from enum import Enum
 from pathlib import Path
 from typing import List, Union, Optional, Dict
 import json
-from code.prompt import FACT_CHECK_SYSTEM_PROMPT, FACT_CHECK_USER_PROMPT
+from src.numpert_prompt.prompt import FACT_CHECK_SYSTEM_PROMPT, FACT_CHECK_USER_PROMPT
 
 
 class PerturbationType(Enum):
@@ -124,44 +125,36 @@ def convert_to_conversations(
             {"role": "system", "content": FACT_CHECK_SYSTEM_PROMPT}
         )
 
-        # User instruction
-        conversations.append(
-            {"role": "user", "content": FACT_CHECK_USER_PROMPT}
+        # Fill in the prompt template placeholders
+        evidence = example["doc"]
+        
+        user_content = FACT_CHECK_USER_PROMPT.format(
+            examples="",  # No few-shot examples in this setup
+            claim=example["claim"],
+            evidence=evidence,
         )
 
-        # Construct the claim message with optional evidence
-        if include_doc and example["doc"]:
-            claim_content = (
-                f"Claim: {example['claim']}\n\nEvidence: {example['doc']}"
-            )
-        else:
-            claim_content = f"Claim: {example['claim']}"
+        conversations.append({"role": "user", "content": user_content})
 
-        conversations.append({"role": "user", "content": claim_content})
+        # Convert label to JSON format: "True" -> '{"label": true}', "False" -> '{"label": false}'
+        json_label = '{"label": true}' if example["label"] == "True" else '{"label": false}'
 
         # Assistant response (only for training)
-        if split == "train":
-            conversations.append(
-                {"role": "assistant", "content": example["label"]}
-            )
+        conversations.append(
+            {"role": "assistant", "content": json_label}
+        )
 
         # Build the final entry
         entry = {
             "conversations": conversations,
             "claim_id": example["claim_id"],
             "perturbation_type": example["perturbation_type"],
+            "ground_truth": json_label,  # Always include ground_truth in JSON format
         }
-
-        # For validation, include ground truth
-        if split != "train":
-            entry["ground_truth"] = example["label"]
 
         messages.append(entry)
 
     return messages
-
-
-# In your data_loader.py (or hf_dataset_instructions.py)
 
 
 def load_fact_checking_data(
@@ -182,7 +175,7 @@ def load_fact_checking_data(
     Returns:
         HuggingFace Dataset ready for SFTTrainer
     """
-    # Treat "test" the same as "validation" (no assistant response, include ground_truth)
+    # Treat "test" the same as "validation" (both include assistant response for consistency)
     effective_split = "validation" if split == "test" else split
 
     # Load raw examples from JSON files

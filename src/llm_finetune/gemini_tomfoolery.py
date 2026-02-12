@@ -1,24 +1,25 @@
+import src
+print(src.__file__)
 import json
-from typing import Optional, List, Dict, Tuple
+from typing import Optional, List, Dict
 from sklearn.metrics import f1_score, accuracy_score, classification_report
 import torch
 from torch.utils.data import Sampler, DataLoader
 from collections import defaultdict, Counter
 import numpy as np
-import random
 
-from code.llm_finetune.hf_dataset_instructions import (
+from src.llm_finetune.hf_dataset_instructions import (
     load_fact_checking_data,
     load_train_and_validation,
     PerturbationType,
 )
-from code.llm_finetune.data_balancer import DatasetBalancer
-from code.llm_finetune.batch_sampler import EnhancedPerturbationBatchSampler
+from src.llm_finetune.class_balancer import DatasetBalancer
+from src.llm_finetune.batch_sampler import EnhancedPerturbationBatchSampler
 
 
 from unsloth.chat_templates import get_chat_template
 from unsloth import FastLanguageModel
-from trl import SFTTrainer
+from trl import SFTTrainer, SFTConfig
 from transformers import (
     TrainingArguments,
     DataCollatorForSeq2Seq,
@@ -34,9 +35,8 @@ import os
 from tqdm import tqdm
 import pandas as pd
 
-# Valid labels for fact-checking
-VALID_LABELS = ["True", "False"]
-
+# Valid labels for fact-checking (JSON format)
+VALID_LABELS = ['{"label": true}', '{"label": false}']
 
 class PerturbationAwareSFTTrainer(SFTTrainer):
     """Custom SFTTrainer that uses EnhancedPerturbationBatchSampler for
@@ -51,34 +51,22 @@ class PerturbationAwareSFTTrainer(SFTTrainer):
         self,
         *args,
         use_custom_sampler: bool = False,
-        batch_match_claim_id: bool = False,
-        split_large_claims: bool = True,
-        ensure_original_in_batch: bool = True,
-        ensure_perturbed_in_batch: bool = True,
-        sampler_seed: int = 42,
+        pre_built_batch_sampler=None,  # Accept pre-built sampler
         **kwargs,
     ):
         """
         Args:
             use_custom_sampler: Whether to use EnhancedPerturbationBatchSampler
-            batch_match_claim_id: Group same claim_id in batches
-            split_large_claims: Split large claims across batches
-            ensure_original_in_batch: Ensure each batch has ≥1 original
-            ensure_perturbed_in_batch: Ensure each batch has ≥1 perturbed
-            sampler_seed: Random seed for sampler
+            pre_built_batch_sampler: Pre-built batch sampler (created before columns removed)
         """
         super().__init__(*args, **kwargs)
 
         self.use_custom_sampler = use_custom_sampler
-        self.batch_match_claim_id = batch_match_claim_id
-        self.split_large_claims = split_large_claims
-        self.ensure_original_in_batch = ensure_original_in_batch
-        self.ensure_perturbed_in_batch = ensure_perturbed_in_batch
-        self.sampler_seed = sampler_seed
+        self.pre_built_batch_sampler = pre_built_batch_sampler
 
     def get_train_dataloader(self) -> DataLoader:
         """Override to use custom batch sampler when enabled."""
-        if not self.use_custom_sampler:
+        if not self.use_custom_sampler or self.pre_built_batch_sampler is None:
             # Use default SFTTrainer data loading
             return super().get_train_dataloader()
 
@@ -89,18 +77,8 @@ class PerturbationAwareSFTTrainer(SFTTrainer):
         print("🔧 Using EnhancedPerturbationBatchSampler for training")
         print("=" * 80)
 
-        # Create custom batch sampler
-        batch_sampler = EnhancedPerturbationBatchSampler(
-            dataset=self.train_dataset,
-            batch_size=self.args.per_device_train_batch_size,
-            batch_match_claim_id=self.batch_match_claim_id,
-            split_large_claims=self.split_large_claims,
-            ensure_original_in_batch=self.ensure_original_in_batch,
-            ensure_perturbed_in_batch=self.ensure_perturbed_in_batch,
-            shuffle=True,
-            seed=self.sampler_seed,
-            drop_last=self.args.dataloader_drop_last,
-        )
+        # Use the pre-built batch sampler
+        batch_sampler = self.pre_built_batch_sampler
 
         # Create DataLoader with custom batch sampler
         # Note: When using batch_sampler, we must NOT specify batch_size
@@ -134,11 +112,11 @@ class ValidationCallback(TrainerCallback):
 def get_model_name_arg(model_name):
     """Convert short model name to full HuggingFace path."""
     if model_name.startswith("Qwen") or model_name.startswith("qwen"):
-        return "unsloth/Qwen3-8B"
+        return "unsloth/Qwen3-4B"
     elif model_name.startswith("llama-3.2-3b"):
         return "unsloth/Llama-3.2-3B-Instruct"
     elif model_name.startswith("llama-3.2-1b"):
-        return "unsloth/Llama-3.2-1B-Instruct"
+        return "/home/stud/u2929246/bhome/unsloth/Llama-3.2-1B-Instruct"
     return model_name
 
 
@@ -162,6 +140,7 @@ def finetune(
     eval_steps: int = 100,
     save_steps: int = 500,
 ):
+
     """Fine-tune a model for fact-checking with numerical perturbations."""
 
     print("\n" + "=" * 80)
@@ -201,7 +180,7 @@ def finetune(
 
     print(f"Loading model from: {model_name_arg}\n")
 
-    # Load model
+    # Load model (FIX: use model_name_arg instead of hardcoded value)
     model, tokenizer = FastLanguageModel.from_pretrained(
         model_name=model_name_arg,
         max_seq_length=max_seq_length,
@@ -277,6 +256,14 @@ def finetune(
 
         return {"text": texts}
 
+    def tokenize_func(examples):
+        return tokenizer(
+            examples["text"],
+            truncation=True,
+            max_length=max_seq_length,
+            padding=False, # Collator handles dynamic padding
+        )
+
     # Load datasets
     print("Loading datasets...")
     datasets = load_train_and_validation(
@@ -312,15 +299,61 @@ def finetune(
         print(f"  {p_type:30s}: {count:5d} ({100*count/len(train_data):5.1f}%)")
 
     # Show label distribution
-    train_label_dist = Counter(train_data["label"])
+    train_label_dist = Counter(train_data["ground_truth"])
     print("\nTrain label distribution:")
     for label, count in train_label_dist.most_common():
         print(f"  {label:30s}: {count:5d} ({100*count/len(train_data):5.1f}%)")
-
+    
     # Format datasets
-    print("\nFormatting datasets...")
+    print("\nFormatting and tokenizing datasets...")
     train_data = train_data.map(formatting_prompts_func, batched=True)
     val_data = val_data.map(formatting_prompts_func, batched=True)
+    
+    train_data = train_data.map(tokenize_func, batched=True)
+    val_data = val_data.map(tokenize_func, batched=True)
+
+    # Create batch sampler BEFORE removing columns (needs claim_id, perturbation_type)
+    pre_built_batch_sampler = None
+    if batch_match_claim_id:
+        print("\n" + "=" * 80)
+        print("🔧 Creating EnhancedPerturbationBatchSampler (before column removal)")
+        print("=" * 80)
+        pre_built_batch_sampler = EnhancedPerturbationBatchSampler(
+            dataset=train_data,
+            batch_size=batch_size,
+            batch_match_claim_id=batch_match_claim_id,
+            split_large_claims=split_large_claims,
+            ensure_original_in_batch=ensure_original_in_batch,
+            ensure_perturbed_in_batch=ensure_perturbed_in_batch,
+            shuffle=True,
+            seed=3407 + epoch,
+            drop_last=False,
+        )
+        print(f"✅ Batch sampler created with {len(pre_built_batch_sampler)} batches")
+        print("=" * 80 + "\n")
+
+
+    
+    # Remove ALL non-tensor columns - keep only 'text' for SFTTrainer
+    # String columns like claim_id, perturbation_type, ground_truth cause tensor errors
+    columns_to_keep = {"input_ids", "attention_mask", "labels", "text"}
+
+    # If using the custom sampler, we also need to keep metadata 
+    # until AFTER the sampler is initialized
+    model_inputs = {"input_ids", "attention_mask", "labels", "text"}
+    sampler_metadata = {"claim_id", "perturbation_type"}
+
+    cols_to_remove = [c for c in train_data.column_names if c not in columns_to_keep]
+
+    train_data = train_data.remove_columns(cols_to_remove)
+    val_data = val_data.remove_columns(cols_to_remove)
+    #train_data = train_data.remove_columns([c for c in train_data.column_names if c not in columns_to_keep])
+    #val_data = val_data.remove_columns([c for c in val_data.column_names if c not in columns_to_keep])
+    
+
+    
+    print(f"Final train columns: {train_data.column_names}")
+    print(f"Final val columns: {val_data.column_names}")
 
     # Report truncation
     if truncated_count > 0:
@@ -371,8 +404,7 @@ def finetune(
         },
     )
 
-    # Training arguments
-    training_args = TrainingArguments(
+    training_config = SFTConfig(
         per_device_train_batch_size=batch_size,
         per_device_eval_batch_size=batch_size,
         gradient_accumulation_steps=gradient_accumulation_steps,
@@ -387,8 +419,7 @@ def finetune(
         lr_scheduler_type="cosine",
         seed=3407 + epoch,
         output_dir=output_dir,
-        report_to="wandb",
-        evaluation_strategy="steps",
+        eval_strategy="steps",
         eval_steps=eval_steps,
         save_strategy="steps",
         save_steps=save_steps,
@@ -396,38 +427,22 @@ def finetune(
         metric_for_best_model="eval_loss",
         greater_is_better=False,
         save_total_limit=3,
+        max_seq_length=max_seq_length,
+        dataset_text_field="text",
+        packing=False,
     )
 
-    # Data collator
-    data_collator = DataCollatorForSeq2Seq(
-        tokenizer=tokenizer,
-        padding=True,
-        max_length=max_seq_length,
-        pad_to_multiple_of=8,
-        return_tensors="pt",
-    )
-
-    # Create trainer - use custom trainer if batch matching is enabled
+    # 3. Initialize the correct Trainer
     if batch_match_claim_id:
         trainer = PerturbationAwareSFTTrainer(
             model=model,
             tokenizer=tokenizer,
             train_dataset=train_data,
             eval_dataset=val_data,
-            dataset_text_field="text",
-            max_seq_length=max_seq_length,
-            data_collator=data_collator,
-            dataset_num_proc=2,
-            packing=False,
-            args=training_args,
+            args=training_config,
             callbacks=[ValidationCallback()],
-            # Custom sampler parameters
             use_custom_sampler=True,
-            batch_match_claim_id=batch_match_claim_id,
-            split_large_claims=split_large_claims,
-            ensure_original_in_batch=ensure_original_in_batch,
-            ensure_perturbed_in_batch=ensure_perturbed_in_batch,
-            sampler_seed=3407 + epoch,
+            pre_built_batch_sampler=pre_built_batch_sampler,
         )
     else:
         trainer = SFTTrainer(
@@ -435,17 +450,14 @@ def finetune(
             tokenizer=tokenizer,
             train_dataset=train_data,
             eval_dataset=val_data,
-            dataset_text_field="text",
-            max_seq_length=max_seq_length,
-            data_collator=data_collator,
-            dataset_num_proc=2,
-            packing=False,
-            args=training_args,
+            args=training_config,
             callbacks=[ValidationCallback()],
         )
 
-    # Train on responses only
+    # 4. Apply Response-Only Loss (The Unsloth way)
+    # This effectively implements completion_only_loss=True by masking the instruction
     if "llama" in model_name.lower():
+        # Llama 3.1/3.2 Template specific strings
         trainer = train_on_responses_only(
             trainer,
             instruction_part="<|start_header_id|>user<|end_header_id|>\n\n",
@@ -454,8 +466,8 @@ def finetune(
     elif "qwen" in model_name.lower():
         trainer = train_on_responses_only(
             trainer,
-            instruction_part="user\n",
-            response_part="assistant\n",
+            instruction_part="<|im_start|>user\n",
+            response_part="<|im_start|>assistant\n",
         )
 
     # Train
@@ -494,16 +506,51 @@ def finetune(
     print("\nFine-tuning complete!\n")
 
 
-def extract_label_from_response(text: str) -> str:
-    """Extract the predicted label from model response."""
+def extract_label_from_response(text: str) -> Optional[str]:
+    """Extract the predicted label from model response.
+    
+    Expects JSON format: {"label": true} or {"label": false}
+    
+    Returns:
+        The extracted label in JSON format, or None if unparseable
+    """
+    import re
+    
     text = text.strip()
+    
+    # Strip Qwen3 thinking tokens if present
+    if "<think>" in text and "</think>" in text:
+        # Remove everything between <think> and </think>
+        text = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL).strip()
+    
+    # Also handle case where thinking isn't closed
+    if "<think>" in text:
+        text = text.split("</think>")[-1].strip()
+    
+    text_lower = text.lower()
+    
+    # Check for exact or near-exact JSON matches first
+    # Handle variations like {"label": true}, {"label":true}, { "label": true }, etc.
+    if re.search(r'\{\s*"label"\s*:\s*true\s*\}', text_lower):
+        return '{"label": true}'
+    if re.search(r'\{\s*"label"\s*:\s*false\s*\}', text_lower):
+        return '{"label": false}'
+    
+    # Fallback: check for "label": true/false pattern without full JSON structure
+    if re.search(r'"label"\s*:\s*true', text_lower):
+        return '{"label": true}'
+    if re.search(r'"label"\s*:\s*false', text_lower):
+        return '{"label": false}'
+    
+    # Last resort: check for plain true/false (model might omit JSON structure)
+    # Check false first to avoid substring issues
+    if "false" in text_lower and "true" not in text_lower:
+        return '{"label": false}'
+    if "true" in text_lower and "false" not in text_lower:
+        return '{"label": true}'
 
-    if "True" in text or "true" in text:
-        return "True"
-    if "False" in text or "false" in text:
-        return "False"
-
-    return random.choice(VALID_LABELS)
+    # Could not parse
+    return None
 
 
 def inference(
@@ -606,8 +653,9 @@ def inference(
         print(f"✅ All examples fit within max_seq_length")
 
     # Prepare for predictions
-    predictions = []
-    ground_truths = test_data["ground_truth"]
+    predictions = []  # Will contain None for parse failures
+    ground_truths = list(test_data["ground_truth"])
+    raw_outputs = []  # Store raw outputs for debugging
 
     # Create output directory
     vllm_suffix = "-vllm" if use_vllm else ""
@@ -630,6 +678,7 @@ def inference(
 
         for output in outputs:
             text = output.outputs[0].text
+            raw_outputs.append(text)
             label = extract_label_from_response(text)
             predictions.append(label)
 
@@ -666,36 +715,71 @@ def inference(
             )
 
             decoded = tokenizer.batch_decode(outputs)[0]
+            raw_outputs.append(decoded)
             label = extract_label_from_response(decoded)
             predictions.append(label)
 
-    # Calculate metrics
+    # Separate valid predictions from parse failures
+    valid_indices = [i for i, pred in enumerate(predictions) if pred is not None]
+    parse_failure_indices = [i for i, pred in enumerate(predictions) if pred is None]
+    
+    valid_predictions = [predictions[i] for i in valid_indices]
+    valid_ground_truths = [ground_truths[i] for i in valid_indices]
+    
+    n_total = len(predictions)
+    n_valid = len(valid_predictions)
+    n_failures = len(parse_failure_indices)
+
+    # Report parse failures
+    print(f"\n📊 Parse Results:")
+    print(f"   Successfully parsed: {n_valid}/{n_total} ({100*n_valid/n_total:.1f}%)")
+    print(f"   Parse failures: {n_failures}/{n_total} ({100*n_failures/n_total:.1f}%)")
+    
+    if n_failures > 0:
+        print(f"\n⚠️  WARNING: {n_failures} responses could not be parsed and are EXCLUDED from metrics.")
+        print("    Check raw_outputs.json and predictions.csv for details.")
+
+    # Calculate metrics (only on valid predictions)
     print("\n" + "=" * 80)
-    print("RESULTS")
+    print(f"RESULTS (on {n_valid}/{n_total} parseable responses)")
     print("=" * 80)
 
-    accuracy = accuracy_score(ground_truths, predictions)
-    f1_macro = f1_score(
-        ground_truths, predictions, average="macro", zero_division=0
-    )
-    f1_weighted = f1_score(
-        ground_truths, predictions, average="weighted", zero_division=0
-    )
+    if n_valid == 0:
+        print("❌ ERROR: No valid predictions! Cannot compute metrics.")
+        accuracy = 0.0
+        f1_macro = 0.0
+        f1_weighted = 0.0
+    else:
+        accuracy = accuracy_score(valid_ground_truths, valid_predictions)
+        f1_macro = f1_score(
+            valid_ground_truths, valid_predictions, average="macro", zero_division=0
+        )
+        f1_weighted = f1_score(
+            valid_ground_truths, valid_predictions, average="weighted", zero_division=0
+        )
 
-    print(f"Accuracy: {accuracy:.4f}")
-    print(f"F1 Macro: {f1_macro:.4f}")
-    print(f"F1 Weighted: {f1_weighted:.4f}")
+        print(f"Accuracy: {accuracy:.4f}")
+        print(f"F1 Macro: {f1_macro:.4f}")
+        print(f"F1 Weighted: {f1_weighted:.4f}")
 
-    print("\nClassification Report:")
-    print(
-        classification_report(ground_truths, predictions, labels=VALID_LABELS)
-    )
+        print("\nClassification Report:")
+        print(
+            classification_report(valid_ground_truths, valid_predictions, labels=VALID_LABELS)
+        )
 
-    # Per-perturbation analysis
+    # Per-perturbation analysis (only on valid predictions)
     print("\nPer-Perturbation Type Analysis:")
-    perturb_metrics = defaultdict(lambda: {"correct": 0, "total": 0})
+    perturb_metrics = defaultdict(lambda: {"correct": 0, "total": 0, "failures": 0})
 
-    for i, (pred, gt) in enumerate(zip(predictions, ground_truths)):
+    # Count failures per perturbation type
+    for i in parse_failure_indices:
+        p_type = test_data[i]["perturbation_type"]
+        perturb_metrics[p_type]["failures"] += 1
+
+    # Count correct/total for valid predictions
+    for i in valid_indices:
+        pred = predictions[i]
+        gt = ground_truths[i]
         p_type = test_data[i]["perturbation_type"]
         perturb_metrics[p_type]["total"] += 1
         if pred == gt:
@@ -703,22 +787,26 @@ def inference(
 
     for p_type in sorted(perturb_metrics.keys()):
         metrics = perturb_metrics[p_type]
+        total_with_failures = metrics["total"] + metrics["failures"]
         acc = (
             metrics["correct"] / metrics["total"] if metrics["total"] > 0 else 0
         )
+        failure_note = f" [+{metrics['failures']} unparsed]" if metrics["failures"] > 0 else ""
         print(
-            f"  {p_type:30s}: {acc:.4f} ({metrics['correct']}/{metrics['total']})"
+            f"  {p_type:30s}: {acc:.4f} ({metrics['correct']}/{metrics['total']}){failure_note}"
         )
 
     print("=" * 80 + "\n")
 
-    # Save predictions
+    # Save predictions (include None for failures, marked clearly)
     results_df = pd.DataFrame(
         {
             "claim_id": test_data["claim_id"],
             "perturbation_type": test_data["perturbation_type"],
             "ground_truth": ground_truths,
-            "prediction": predictions,
+            "prediction": [p if p is not None else "PARSE_FAILURE" for p in predictions],
+            "parsed_successfully": [p is not None for p in predictions],
+            "raw_output": raw_outputs,
         }
     )
 
@@ -731,11 +819,17 @@ def inference(
         "accuracy": accuracy,
         "f1_macro": f1_macro,
         "f1_weighted": f1_weighted,
+        "total_examples": n_total,
+        "valid_examples": n_valid,
+        "parse_failures": n_failures,
+        "parse_failure_rate": n_failures / n_total if n_total > 0 else 0,
+        "note": f"Metrics computed on {n_valid}/{n_total} parseable responses only",
         "per_perturbation": {
             p_type: {
                 "accuracy": m["correct"] / m["total"] if m["total"] > 0 else 0,
                 "correct": m["correct"],
                 "total": m["total"],
+                "parse_failures": m["failures"],
             }
             for p_type, m in perturb_metrics.items()
         },
@@ -745,6 +839,24 @@ def inference(
     with open(metrics_path, "w") as f:
         json.dump(metrics_dict, f, indent=2)
     print(f"Metrics saved to: {metrics_path}\n")
+
+    # Save raw outputs for debugging parse failures
+    if n_failures > 0:
+        # Save detailed info about failures
+        failures_info = [
+            {
+                "index": i,
+                "claim_id": test_data[i]["claim_id"],
+                "perturbation_type": test_data[i]["perturbation_type"],
+                "ground_truth": ground_truths[i],
+                "raw_output": raw_outputs[i],
+            }
+            for i in parse_failure_indices
+        ]
+        failures_path = f"{pred_dir}/parse_failures.json"
+        with open(failures_path, "w") as f:
+            json.dump(failures_info, f, indent=2)
+        print(f"Parse failure details saved to: {failures_path}\n")
 
 
 if __name__ == "__main__":

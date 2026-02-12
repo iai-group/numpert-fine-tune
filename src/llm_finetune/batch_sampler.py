@@ -1,4 +1,4 @@
-"""Batch sampling utilities for perturbation-aware batching."""
+"""batch_sampler.py Batch sampling utilities for perturbation-aware batching."""
 
 from torch.utils.data import Sampler
 from collections import defaultdict

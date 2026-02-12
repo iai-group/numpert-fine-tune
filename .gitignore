@@ -19,3 +19,17 @@ __pycache__
 misc/
 .DS_Store
 .env
+models/
+_unsloth_sentencepiece_temp/
+.finetune/
+.venv/
+scripts/unsloth_compiled_cache/
+unsloth_compiled_cache/
+wandb/
+zslurm_out_files_for_ref/
+inference_tests/
+/unsloth_finetune_test_bench.py
+unsloth_compiled_cache/
+tuned_models/
+inference_tests/
+*.out

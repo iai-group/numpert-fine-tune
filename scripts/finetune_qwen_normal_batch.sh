@@ -14,22 +14,22 @@ set -u  # Exit on undefined variable
 # ==============================================================================
 # MODEL CONFIGURATION
 # ==============================================================================
-MODEL="qwen-3-8b"          # Options: qwen-3-8b, llama-3.2-3b-instruct, llama-3.2-1b-instruct
+MODEL="Qwen/Qwen3-8B"          # Options: qwen-3-8b, llama-3.2-3b-instruct, llama-3.2-1b-instruct
 RANK=32                    # LoRA rank (16, 32, 64) - higher = more parameters but slower
-EPOCH=1                    # Epoch number (1 for first training, 2+ for continued training)
+EPOCH=3                    # Epoch number (1 for first training, 2+ for continued training)
 
 # ==============================================================================
 # TRAINING HYPERPARAMETERS
 # ==============================================================================
-BATCH_SIZE=4               # Per-device batch size (adjust based on GPU memory)
-GRAD_ACCUM=4              # Gradient accumulation steps
+BATCH_SIZE=6               # Per-device batch size (adjust based on GPU memory)
+GRAD_ACCUM=1              # Gradient accumulation steps
                           # Effective batch size = BATCH_SIZE × GRAD_ACCUM = 16
-MAX_SEQ_LENGTH=16384      # Maximum sequence length in tokens
+MAX_SEQ_LENGTH=8192      # Maximum sequence length in tokens
                           # Your docs are 2000-4000 words ≈ 3000-6000 tokens
 
 # ==============================================================================
 # DATASET BALANCING CONFIGURATION
-# ==============================================================================
+# ====================  ==========================================================
 BALANCE_LABELS=true        # Balance True/False label distribution
 PERTURB_RATIO=1.0         # Ratio of perturbed to original examples
                           # 1.0 = 1:1 (equal number of original and perturbed)
@@ -53,14 +53,12 @@ ENSURE_PERTURBED_IN_BATCH=true # Each batch has ≥1 perturbed example
 # ==============================================================================
 # Training data - can specify multiple files
 TRAIN_JSON=(
-    "data/perturbed_data/train_split/numeration_true.json"
-    "data/perturbed_data/train_split/numeration_false.json"
+    "/home/stud/u2929246/bhome/numpert-fine-tune/data/perturbed_data/train_split/numeration_true_test.json"
 )
 
 # Validation data - can specify multiple files
 VAL_JSON=(
-    "data/perturbed_data/val_split/numeration_true.json"
-    "data/perturbed_data/val_split/numeration_false.json"
+    "/home/stud/u2929246/bhome/numpert-fine-tune/data/perturbed_data/train_split/numeration_true_test.json"
 )
 
 # ==============================================================================
@@ -139,57 +137,23 @@ fi
 echo "✓ All data files found"
 echo ""
 
-# Confirm before starting (optional - comment out if not needed)
-read -p "Start training? (y/n) " -n 1 -r
-echo
-if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    echo "Training cancelled."
-    exit 0
-fi
-
-echo ""
 echo "=========================================="
 echo "Starting Training..."
 echo "=========================================="
 echo ""
 
+
 # Build command
-CMD="python train_integrated.py \
+
+# Run from the numpert-fine-tune directory (parent of src/)
+SCRIPT_DIR="/bhome/numpert-fine-tune"
+cd "$SCRIPT_DIR"
+
+CMD="python -m src.llm_finetune.unsloth_finetune \
     --mode finetune \
     --train_json ${TRAIN_JSON[@]} \
     --val_json ${VAL_JSON[@]} \
-    --model $MODEL \
-    --rank $RANK \
-    --epoch $EPOCH \
-    --batch_size $BATCH_SIZE \
-    --grad_accum $GRAD_ACCUM \
-    --max_seq_length $MAX_SEQ_LENGTH \
-    --expand_perturbations \
-    --perturb_ratio $PERTURB_RATIO \
-    --false_perturb_t_to_f_ratio $FALSE_T_TO_F_RATIO \
-    --eval_steps $EVAL_STEPS \
-    --save_steps $SAVE_STEPS"
-
-# Add optional flags
-if [ "$BALANCE_LABELS" = true ]; then
-    CMD="$CMD --balance_labels"
-fi
-
-if [ "$BATCH_MATCH_CLAIM_ID" = true ]; then
-    CMD="$CMD --batch_match_claim_id"
-fi
-
-if [ "$SPLIT_LARGE_CLAIMS" = true ]; then
-    CMD="$CMD --split_large_claims"
-fi
-
-if [ "$ENSURE_ORIGINAL_IN_BATCH" = true ]; then
-    CMD="$CMD --ensure_original_in_batch"
-fi
-
-if [ "$ENSURE_PERTURBED_IN_BATCH" = true ]; then
-    CMD="$CMD --ensure_perturbed_in_batch"
-fi
+    --model ${MODEL}"
 
 # Print full command (for debugging)
 echo "Executing command:"
