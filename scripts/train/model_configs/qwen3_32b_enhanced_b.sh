@@ -153,7 +153,7 @@ CMD="python -m src.llm_finetune.unsloth_finetune \
     --val_json ${VAL_JSON[@]} \
     --model ${MODEL} \
     --debug \
-    --pertub_type_names ${PERTURB_TYPE_NAMES}"
+    --perturb_type_names ${PERTURB_TYPE_NAMES}"
 
 # Print full command (for debugging)
 echo "Executing command:"
