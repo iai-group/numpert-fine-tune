@@ -55,12 +55,14 @@ ENSURE_PERTURBED_IN_BATCH=true # Each batch has ≥1 perturbed example
 # ==============================================================================
 # Training data - can specify multiple files
 TRAIN_JSON=(
-    "./data/perturbed_data/train_split/numeration_true_test.json"
+    "./perturbed_data/train_split/numeration_true.json"
+    "./perturbed_data/train_split/numeration_false.json"
 )
 
 # Validation data - can specify multiple files
 VAL_JSON=(
-    "./data/perturbed_data/train_split/numeration_true_test.json"
+    "./perturbed_data/val_split/numeration_true.json"
+    "./perturbed_data/val_split/numeration_false.json"
 )
 
 # ==============================================================================
@@ -74,13 +76,13 @@ SAVE_STEPS=500            # Save checkpoint every N steps
 # ==============================================================================
 
 echo "=========================================="
-echo "Qwen3-8B Fine-tuning Configuration"
+echo "$MODEL Fine-tuning Configuration"
 echo "=========================================="
 echo ""
 echo "Model Configuration:"
 echo "  Model:           $MODEL"
 echo "  LoRA Rank:       $RANK"
-echo "  Epoch:           $EPOCH"
+echo "  Start Epoch:     $START_EPOCH"
 echo ""
 echo "Training Hyperparameters:"
 echo "  Batch Size:      $BATCH_SIZE"
@@ -147,8 +149,6 @@ echo ""
 
 # Build command
 
-
-
 CMD="python -m src.llm_finetune.unsloth_finetune \
     --mode finetune \
     --train_json ${TRAIN_JSON[@]} \
@@ -169,14 +169,4 @@ echo ""
 echo "=========================================="
 echo "Training Completed Successfully!"
 echo "=========================================="
-echo ""
-echo "Output Locations:"
-echo "  LoRA weights:    epoch-$EPOCH/$MODEL/lora_numpert_r$RANK/"
-echo "  Merged model:    epoch-$EPOCH/$MODEL/merged_numpert_r$RANK/"
-echo "  Training logs:   epoch-$EPOCH/$MODEL/outputs/numpert_r$RANK/"
-echo ""
-echo "Next Steps:"
-echo "  1. Check WandB dashboard for training metrics"
-echo "  2. Run inference with: ./inference_qwen.sh"
-echo "  3. For epoch 2, set EPOCH=2 and re-run this script"
 echo ""
