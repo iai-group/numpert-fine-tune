@@ -22,7 +22,7 @@ echo ""
 
 # Load environment
 echo "Activating uv environment..."
-echo $PATH
+#echo $PATH
 source .finetune/bin/activate
 CUDA_DEVICE_ORDER=PCI_BUS_ID
 CUDA_VISIBLE_DEVICES=6
@@ -44,7 +44,7 @@ echo ""
 echo "Working directory: $(pwd)"
 echo ""
     
-bash ./scripts/train/model_configs/qwen3_32_enhanced_b.sh
+bash ./scripts/train/model_configs/qwen3_32b_enhanced_b.sh
 
 # Print completion information
 echo ""

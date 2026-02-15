@@ -22,7 +22,7 @@ echo ""
 
 # Load environment
 echo "Activating uv environment..."
-echo $PATH
+#echo $PATH
 source .finetune/bin/activate
 CUDA_DEVICE_ORDER=PCI_BUS_ID
 CUDA_VISIBLE_DEVICES=6

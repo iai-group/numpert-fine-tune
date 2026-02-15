@@ -55,14 +55,14 @@ ENSURE_PERTURBED_IN_BATCH=true # Each batch has ≥1 perturbed example
 # ==============================================================================
 # Training data - can specify multiple files
 TRAIN_JSON=(
-    "./perturbed_data/train_split/numeration_true.json"
-    "./perturbed_data/train_split/numeration_false.json"
+    "./data/perturbed_data/train_split/numeration_true.json"
+    "./data/perturbed_data/train_split/numeration_false.json"
 )
 
 # Validation data - can specify multiple files
 VAL_JSON=(
-    "./perturbed_data/val_split/numeration_true.json"
-    "./perturbed_data/val_split/numeration_false.json"
+    "./data/perturbed_data/val_split/numeration_true.json"
+    "./data/perturbed_data/val_split/numeration_false.json"
 )
 
 # ==============================================================================
