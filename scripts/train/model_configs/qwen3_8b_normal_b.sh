@@ -14,14 +14,16 @@ set -u  # Exit on undefined variable
 # ==============================================================================
 # MODEL CONFIGURATION
 # ==============================================================================
-MODEL="qwen-3-8b"          # Options: qwen-3-8b, llama-3.2-3b-instruct, llama-3.2-1b-instruct
+MODEL="Qwen3-8B"          # Options: qwen-3-8b, llama-3.2-3b-instruct, llama-3.2-1b-instruct
 RANK=32                    # LoRA rank (16, 32, 64) - higher = more parameters but slower
 START_EPOCH=1                   # Epoch number (1 for first training, 2+ for continued training)
-NUM_TRAIN_EPOCHS=5
+NUM_TRAIN_EPOCHS=3                  # Total number of training epochs
+PERTURB_TYPE_NAMES="numeration"  # Perturbation type name(s) for logging and saving
+
 # ==============================================================================
 # TRAINING HYPERPARAMETERS
 # ==============================================================================
-BATCH_SIZE=5               # Per-device batch size (adjust based on GPU memory) #### E.g. Original-F + T->T + T->F + Original_F + F -> TF = 5   (NOT 6 unless F-> FF is included!!)
+BATCH_SIZE=5               # Per-device batch size (adjust based on GPU memory) #### E.g. Original-F + T->T + T->F + Original_F + F -> TF = 4 
 GRAD_ACCUM=1              # Gradient accumulation steps
                           # Effective batch size = BATCH_SIZE × GRAD_ACCUM = 16
 MAX_SEQ_LENGTH=8192      # Maximum sequence length in tokens
@@ -53,24 +55,13 @@ ENSURE_PERTURBED_IN_BATCH=true # Each batch has ≥1 perturbed example
 # ==============================================================================
 # Training data - can specify multiple files
 TRAIN_JSON=(
-    "/home/stud/u2929246/bhome/numpert-fine-tune/data/perturbed_data/train_split/numeration_true.json"
-    "/home/stud/u2929246/bhome/numpert-fine-tune/data/perturbed_data/train_split/numeration_false.json"
+    "./data/perturbed_data/train_split/numeration_true_test.json"
 )
 
 # Validation data - can specify multiple files
 VAL_JSON=(
-    "/home/stud/u2929246/bhome/numpert-fine-tune/data/perturbed_data/val_split/numeration_true.json"
-    "/home/stud/u2929246/bhome/numpert-fine-tune/data/perturbed_data/val_split/numeration_false.json"
+    "./data/perturbed_data/train_split/numeration_true_test.json"
 )
-
-#TRAIN_JSON=(
-#    "/home/stud/u2929246/bhome/numpert-fine-tune/data/perturbed_data/train_split/numeration_true_test.json"
-#)
-
-# Validation data - can specify multiple files
-#VAL_JSON=(
-#    "/home/stud/u2929246/bhome/numpert-fine-tune/data/perturbed_data/train_split/numeration_true_test.json"
-#)
 
 # ==============================================================================
 # EVALUATION & CHECKPOINTING
@@ -89,7 +80,7 @@ echo ""
 echo "Model Configuration:"
 echo "  Model:           $MODEL"
 echo "  LoRA Rank:       $RANK"
-echo "  Start Epoch:           $START_EPOCH"
+echo "  Epoch:           $EPOCH"
 echo ""
 echo "Training Hyperparameters:"
 echo "  Batch Size:      $BATCH_SIZE"
@@ -156,47 +147,15 @@ echo ""
 
 # Build command
 
-# Run from the numpert-fine-tune directory (parent of src/)
-SCRIPT_DIR="/home/stud/u2929246/bhome/numpert-fine-tune"
-cd "$SCRIPT_DIR"
 
-CMD="python -m src.llm_finetune.unsloth_finetune\
+
+CMD="python -m src.llm_finetune.unsloth_finetune \
     --mode finetune \
     --train_json ${TRAIN_JSON[@]} \
     --val_json ${VAL_JSON[@]} \
     --model ${MODEL} \
-    --rank $RANK \
-    --start_epoch $START_EPOCH \
-    --num_train_epochs $NUM_TRAIN_EPOCHS \
-    --batch_size $BATCH_SIZE \
-    --grad_accum $GRAD_ACCUM \
-    --max_seq_length $MAX_SEQ_LENGTH \
-    --expand_perturbations \
-    --perturb_ratio $PERTURB_RATIO \
-    --false_perturb_t_to_f_ratio $FALSE_T_TO_F_RATIO \
-    --eval_steps $EVAL_STEPS \
-    --save_steps $SAVE_STEPS"
-
-# Add optional flags
-if [ "$BALANCE_LABELS" = true ]; then
-    CMD="$CMD --balance_labels"
-fi
-
-if [ "$BATCH_MATCH_CLAIM_ID" = true ]; then
-    CMD="$CMD --batch_match_claim_id"
-fi
-
-if [ "$SPLIT_LARGE_CLAIMS" = true ]; then
-    CMD="$CMD --split_large_claims"
-fi
-
-if [ "$ENSURE_ORIGINAL_IN_BATCH" = true ]; then
-    CMD="$CMD --ensure_original_in_batch"
-fi
-
-if [ "$ENSURE_PERTURBED_IN_BATCH" = true ]; then
-    CMD="$CMD --ensure_perturbed_in_batch"
-fi
+    --debug \
+    --perturb_type_names ${PERTURB_TYPE_NAMES}"
 
 # Print full command (for debugging)
 echo "Executing command:"
@@ -212,9 +171,9 @@ echo "Training Completed Successfully!"
 echo "=========================================="
 echo ""
 echo "Output Locations:"
-#echo "  LoRA weights:    epoch-$EPOCH/$MODEL/lora_numpert_r$RANK/"
-#echo "  Merged model:    epoch-$EPOCH/$MODEL/merged_numpert_r$RANK/"
-#echo "  Training logs:   epoch-$EPOCH/$MODEL/outputs/numpert_r$RANK/"
+echo "  LoRA weights:    epoch-$EPOCH/$MODEL/lora_numpert_r$RANK/"
+echo "  Merged model:    epoch-$EPOCH/$MODEL/merged_numpert_r$RANK/"
+echo "  Training logs:   epoch-$EPOCH/$MODEL/outputs/numpert_r$RANK/"
 echo ""
 echo "Next Steps:"
 echo "  1. Check WandB dashboard for training metrics"

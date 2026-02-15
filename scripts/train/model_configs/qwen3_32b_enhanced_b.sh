@@ -14,14 +14,15 @@ set -u  # Exit on undefined variable
 # ==============================================================================
 # MODEL CONFIGURATION
 # ==============================================================================
-MODEL="Qwen/Qwen3-8B"          # Options: qwen-3-8b, llama-3.2-3b-instruct, llama-3.2-1b-instruct
+MODEL="Qwen3-32B"          # Options: qwen-3-8b, llama-3.2-3b-instruct, llama-3.2-1b-instruct
 RANK=32                    # LoRA rank (16, 32, 64) - higher = more parameters but slower
 EPOCH=3                    # Epoch number (1 for first training, 2+ for continued training)
+PERTURB_TYPE_NAMES="numeration"  # Perturbation type name(s) for logging and saving
 
 # ==============================================================================
 # TRAINING HYPERPARAMETERS
 # ==============================================================================
-BATCH_SIZE=6               # Per-device batch size (adjust based on GPU memory)
+BATCH_SIZE=5               # Per-device batch size (adjust based on GPU memory) #### E.g. Original-F + T->T + T->F + Original_F + F -> TF = 4 
 GRAD_ACCUM=1              # Gradient accumulation steps
                           # Effective batch size = BATCH_SIZE × GRAD_ACCUM = 16
 MAX_SEQ_LENGTH=8192      # Maximum sequence length in tokens
@@ -151,7 +152,9 @@ CMD="python -m src.llm_finetune.unsloth_finetune \
     --mode finetune \
     --train_json ${TRAIN_JSON[@]} \
     --val_json ${VAL_JSON[@]} \
-    --model ${MODEL}"
+    --model ${MODEL} \
+    --debug \
+    --pertub_type_names ${PERTURB_TYPE_NAMES}"
 
 # Print full command (for debugging)
 echo "Executing command:"

@@ -44,7 +44,7 @@ echo ""
 echo "Working directory: $(pwd)"
 echo ""
     
-bash ./scripts/train/model_configs/finetune_qwen_normal_batch.sh
+bash ./scripts/train/model_configs/qwen3_8b_normal_b.sh
 
 # Print completion information
 echo ""
