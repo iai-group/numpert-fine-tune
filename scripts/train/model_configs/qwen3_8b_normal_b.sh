@@ -14,14 +14,16 @@ set -u  # Exit on undefined variable
 # ==============================================================================
 # MODEL CONFIGURATION
 # ==============================================================================
-MODEL="Qwen/Qwen3-8B"          # Options: qwen-3-8b, llama-3.2-3b-instruct, llama-3.2-1b-instruct
+MODEL="Qwen3-8B"          # Options: qwen-3-8b, llama-3.2-3b-instruct, llama-3.2-1b-instruct
 RANK=32                    # LoRA rank (16, 32, 64) - higher = more parameters but slower
-EPOCH=3                    # Epoch number (1 for first training, 2+ for continued training)
+START_EPOCH=1                   # Epoch number (1 for first training, 2+ for continued training)
+NUM_TRAIN_EPOCHS=3                  # Total number of training epochs
+PERTURB_TYPE_NAMES="numeration"  # Perturbation type name(s) for logging and saving
 
 # ==============================================================================
 # TRAINING HYPERPARAMETERS
 # ==============================================================================
-BATCH_SIZE=6               # Per-device batch size (adjust based on GPU memory)
+BATCH_SIZE=5               # Per-device batch size (adjust based on GPU memory) #### E.g. Original-F + T->T + T->F + Original_F + F -> TF = 4 
 GRAD_ACCUM=1              # Gradient accumulation steps
                           # Effective batch size = BATCH_SIZE × GRAD_ACCUM = 16
 MAX_SEQ_LENGTH=8192      # Maximum sequence length in tokens
@@ -53,12 +55,14 @@ ENSURE_PERTURBED_IN_BATCH=true # Each batch has ≥1 perturbed example
 # ==============================================================================
 # Training data - can specify multiple files
 TRAIN_JSON=(
-    "/home/stud/u2929246/bhome/numpert-fine-tune/data/perturbed_data/train_split/numeration_true_test.json"
+    "./perturbed_data/train_split/numeration_true.json"
+    "./perturbed_data/train_split/numeration_false.json"
 )
 
 # Validation data - can specify multiple files
 VAL_JSON=(
-    "/home/stud/u2929246/bhome/numpert-fine-tune/data/perturbed_data/train_split/numeration_true_test.json"
+    "./perturbed_data/val_split/numeration_true.json"
+    "./perturbed_data/val_split/numeration_false.json"
 )
 
 # ==============================================================================
@@ -72,13 +76,13 @@ SAVE_STEPS=500            # Save checkpoint every N steps
 # ==============================================================================
 
 echo "=========================================="
-echo "Qwen3-8B Fine-tuning Configuration"
+echo "$MODEL Fine-tuning Configuration"
 echo "=========================================="
 echo ""
 echo "Model Configuration:"
 echo "  Model:           $MODEL"
 echo "  LoRA Rank:       $RANK"
-echo "  Epoch:           $EPOCH"
+echo "  Start Epoch:     $START_EPOCH"
 echo ""
 echo "Training Hyperparameters:"
 echo "  Batch Size:      $BATCH_SIZE"
@@ -145,15 +149,13 @@ echo ""
 
 # Build command
 
-# Run from the numpert-fine-tune directory (parent of src/)
-SCRIPT_DIR="/bhome/numpert-fine-tune"
-cd "$SCRIPT_DIR"
-
 CMD="python -m src.llm_finetune.unsloth_finetune \
     --mode finetune \
     --train_json ${TRAIN_JSON[@]} \
     --val_json ${VAL_JSON[@]} \
-    --model ${MODEL}"
+    --model ${MODEL} \
+    --debug \
+    --perturb_type_names ${PERTURB_TYPE_NAMES}"
 
 # Print full command (for debugging)
 echo "Executing command:"
@@ -167,14 +169,4 @@ echo ""
 echo "=========================================="
 echo "Training Completed Successfully!"
 echo "=========================================="
-echo ""
-echo "Output Locations:"
-echo "  LoRA weights:    epoch-$EPOCH/$MODEL/lora_numpert_r$RANK/"
-echo "  Merged model:    epoch-$EPOCH/$MODEL/merged_numpert_r$RANK/"
-echo "  Training logs:   epoch-$EPOCH/$MODEL/outputs/numpert_r$RANK/"
-echo ""
-echo "Next Steps:"
-echo "  1. Check WandB dashboard for training metrics"
-echo "  2. Run inference with: ./inference_qwen.sh"
-echo "  3. For epoch 2, set EPOCH=2 and re-run this script"
 echo ""

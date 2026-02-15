@@ -1,9 +1,9 @@
 #!/bin/bash
-#SBATCH --job-name=finetune_unsloth
+#SBATCH --job-name=qwen3-32b-finetune
 #SBATCH --partition=gpu
-##  --gres=gpu:nvidia_h100_nvl:1
-#SBATCH --time=12:00:00
-#SBATCH --output=finetune_unsloth.out
+#SBATCH --gres=gpu:nvidia_h100_nvl:1
+#SBATCH --time=24:00:00
+#SBATCH --output=scripts/slurm_out/train/qwen3-32b-finetune_enhanced_batch.out
 #SBATCH --mem=300G
 #SBATCH --nodelist=gorina9
 
@@ -44,7 +44,7 @@ echo ""
 echo "Working directory: $(pwd)"
 echo ""
     
-bash ./scripts/finetune_qwen.sh
+bash ./scripts/train/model_configs/qwen3_32_enhanced_b.sh
 
 # Print completion information
 echo ""
