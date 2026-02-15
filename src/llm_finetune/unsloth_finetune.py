@@ -443,7 +443,7 @@ def finetune(
     print("DEBUGGING TOKENIZATION & MASKING")
     print("=" * 80)
 
-    def debug_tokenization(dataset, dataset_name, num_samples=2):
+    def debug_tokenization(dataset, dataset_name, num_samples=3):
         print(f"\n{dataset_name} Dataset:")
         
         for i in range(min(num_samples, len(dataset))):
@@ -497,7 +497,7 @@ def finetune(
             # Decode full texts
             print(f"\n  Full input (decoded):")
             full_text = tokenizer.decode(input_ids)
-            print(f"    {repr(full_text[:200])}...")
+            print(f"    {repr(full_text[:200000])}...")
             
             # Decode only the trainable part
             trainable_ids = [input_ids[j] for j in range(len(input_ids)) if labels[j] != -100]

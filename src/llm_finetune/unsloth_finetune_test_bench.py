@@ -116,7 +116,7 @@ class ValidationCallback(TrainerCallback):
                 print(f"{key}: {value:.4f}")
             print("=" * 80 + "\n")
 
-# TODO add more models
+
 def get_model_name_arg(model_name):
     """Convert short model name to full HuggingFace path."""
     if model_name.startswith("Qwen3-8B") or model_name.startswith("Qwen3-8B"):
@@ -229,7 +229,7 @@ def finetune(
         tokenizer = get_chat_template(tokenizer, chat_template="llama-3.1")
     elif "qwen" in model_name.lower():
         tokenizer = get_chat_template(tokenizer, chat_template="chatml")
-    else: #TODO fix for other models
+    else:
         tokenizer = get_chat_template(tokenizer, chat_template="chatml")
 
     # Set padding
