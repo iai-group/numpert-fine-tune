@@ -18,7 +18,7 @@ MODEL="Qwen3-8B"          # Options: qwen-3-8b, Qwen3-32B, llama-3.2-3b-instruct
 RANK=32                    # LoRA rank (16, 32, 64) - higher = more parameters but slower
 START_EPOCH=1                   # Epoch number (1 for first training, 2+ for continued training)
 NUM_TRAIN_EPOCHS=3                  # Total number of training epochs
-PERTURB_TYPE_NAMES="numeration"  # Perturbation type name(s) for logging and saving
+PERTURB_TYPE_NAMES="numeration_enhanced_batched"  # Perturbation type name(s) for logging and saving
 
 # ==============================================================================
 # TRAINING HYPERPARAMETERS
@@ -163,7 +163,8 @@ CMD="python -m src.llm_finetune.unsloth_finetune\
     --perturb_ratio $PERTURB_RATIO \
     --false_perturb_t_to_f_ratio $FALSE_T_TO_F_RATIO \
     --eval_steps $EVAL_STEPS \
-    --save_steps $SAVE_STEPS"
+    --save_steps $SAVE_STEPS \
+    --perturb_type_names ${PERTURB_TYPE_NAMES}"
 
 # Add optional flags
 if [ "$BALANCE_LABELS" = true ]; then

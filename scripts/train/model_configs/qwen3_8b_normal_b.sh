@@ -18,7 +18,7 @@ MODEL="Qwen3-8B"          # Options: qwen-3-8b, llama-3.2-3b-instruct, llama-3.2
 RANK=32                    # LoRA rank (16, 32, 64) - higher = more parameters but slower
 START_EPOCH=1                   # Epoch number (1 for first training, 2+ for continued training)
 NUM_TRAIN_EPOCHS=3                  # Total number of training epochs
-PERTURB_TYPE_NAMES="numeration"  # Perturbation type name(s) for logging and saving
+PERTURB_TYPE_NAMES="numeration_normal_batched"  # Perturbation type name(s) for logging and saving
 
 # ==============================================================================
 # TRAINING HYPERPARAMETERS
@@ -68,7 +68,7 @@ VAL_JSON=(
 # ==============================================================================
 # EVALUATION & CHECKPOINTING
 # ==============================================================================
-EVAL_STEPS=100            # Evaluate on validation set every N steps
+EVAL_STEPS=500            # Evaluate on validation set every N steps
 SAVE_STEPS=500            # Save checkpoint every N steps
 
 # ==============================================================================
@@ -154,7 +154,6 @@ CMD="python -m src.llm_finetune.unsloth_finetune \
     --train_json ${TRAIN_JSON[@]} \
     --val_json ${VAL_JSON[@]} \
     --model ${MODEL} \
-    --debug \
     --perturb_type_names ${PERTURB_TYPE_NAMES}"
 
 # Print full command (for debugging)

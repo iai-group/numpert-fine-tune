@@ -1,11 +1,11 @@
 #!/bin/bash
 #SBATCH --job-name=qwen3-8b-finetune
 #SBATCH --partition=gpu
-##  --gres=gpu:nvidia_h100_nvl:1
+#sbatch  --gres=gpu:nvidia_h100_nvl:1
 #SBATCH --time=12:00:00
 #SBATCH --output=scripts/slurm_out/train/qwen3-8b-finetune_normal_batch.out
 #SBATCH --mem=300G
-#SBATCH --nodelist=gorina8
+#SBATCH --nodelist=gorina9
 
 
 # Print job information

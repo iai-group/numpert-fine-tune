@@ -17,8 +17,8 @@ set -u  # Exit on undefined variable
 MODEL="Qwen3-32B"          # Options: qwen-3-8b, Qwen3-32B, llama-3.2-3b-instruct, llama-3.2-1b-instruct
 RANK=32                    # LoRA rank (16, 32, 64) - higher = more parameters but slower
 START_EPOCH=1                   # Epoch number (1 for first training, 2+ for continued training)
-NUM_TRAIN_EPOCHS=3                  # Total number of training epochs
-PERTURB_TYPE_NAMES="numeration"  # Perturbation type name(s) for logging and saving
+NUM_TRAIN_EPOCHS=2                  # Total number of training epochs
+PERTURB_TYPE_NAMES="numeration_enhanced"  # Perturbation type name(s) for logging and saving
 # ==============================================================================
 # TRAINING HYPERPARAMETERS
 # ==============================================================================
@@ -66,7 +66,7 @@ VAL_JSON=(
 # ==============================================================================
 # EVALUATION & CHECKPOINTING
 # ==============================================================================
-EVAL_STEPS=100            # Evaluate on validation set every N steps
+EVAL_STEPS=500            # Evaluate on validation set every N steps
 SAVE_STEPS=500            # Save checkpoint every N steps
 
 # ==============================================================================
@@ -147,13 +147,52 @@ echo ""
 
 # Build command
 
-CMD="python -m src.llm_finetune.unsloth_finetune \
+CMD="python -m src.llm_finetune.unsloth_finetune\
     --mode finetune \
     --train_json ${TRAIN_JSON[@]} \
     --val_json ${VAL_JSON[@]} \
     --model ${MODEL} \
-    --debug \
+    --rank $RANK \
+    --start_epoch $START_EPOCH \
+    --num_train_epochs $NUM_TRAIN_EPOCHS \
+    --batch_size $BATCH_SIZE \
+    --grad_accum $GRAD_ACCUM \
+    --max_seq_length $MAX_SEQ_LENGTH \
+    --expand_perturbations \
+    --perturb_ratio $PERTURB_RATIO \
+    --false_perturb_t_to_f_ratio $FALSE_T_TO_F_RATIO \
+    --eval_steps $EVAL_STEPS \
+    --save_steps $SAVE_STEPS \
     --perturb_type_names ${PERTURB_TYPE_NAMES}"
+
+# Add optional flags
+if [ "$BALANCE_LABELS" = true ]; then
+    CMD="$CMD --balance_labels"
+fi
+
+if [ "$BATCH_MATCH_CLAIM_ID" = true ]; then
+    CMD="$CMD --batch_match_claim_id"
+fi
+
+if [ "$SPLIT_LARGE_CLAIMS" = true ]; then
+    CMD="$CMD --split_large_claims"
+fi
+
+if [ "$ENSURE_ORIGINAL_IN_BATCH" = true ]; then
+    CMD="$CMD --ensure_original_in_batch"
+fi
+
+if [ "$ENSURE_PERTURBED_IN_BATCH" = true ]; then
+    CMD="$CMD --ensure_perturbed_in_batch"
+fi
+
+# Print full command (for debugging)
+echo "Executing command:"
+echo "$CMD"
+echo ""
+
+# Run training
+eval $CMD
 
 # Print full command (for debugging)
 echo "Executing command:"
