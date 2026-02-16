@@ -67,7 +67,7 @@ VAL_JSON=(
 # ==============================================================================
 # EVALUATION & CHECKPOINTING
 # ==============================================================================
-EVAL_STEPS=100            # Evaluate on validation set every N steps
+EVAL_STEPS=500            # Evaluate on validation set every N steps
 SAVE_STEPS=500            # Save checkpoint every N steps
 
 # ==============================================================================
