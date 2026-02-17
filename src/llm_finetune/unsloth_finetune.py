@@ -133,9 +133,11 @@ def finetune(
     train_json_paths: List[str],
     val_json_paths: List[str],
     model_name: str = "llama-3.2-3b-instruct",
+    perturb_type_names: str = "",
     rank: int = 32,
     num_train_epochs: int = 1,
     start_epoch: int = 1,
+    resume_model: Optional[str] = None,
     batch_size: int = 2,
     gradient_accumulation_steps: int = 1,
     max_seq_length: int = 16384,
@@ -149,6 +151,7 @@ def finetune(
     ensure_perturbed_in_batch: bool = True,
     eval_steps: int = 100,
     save_steps: int = 500,
+    debug: bool = False,
 ):
     target_epoch = start_epoch + num_train_epochs - 1
 
@@ -188,7 +191,12 @@ def finetune(
     if start_epoch == 1:
         model_name_arg = get_model_name_arg(model_name)
     else:
-        model_name_arg = f"models/qwen-3-8b_20260206_000635/merged_model"
+        if resume_model is None:
+            raise ValueError(
+                f"--resume_model is required when start_epoch > 1. "
+                f"Provide the path to a previously saved merged model."
+            )
+        model_name_arg = resume_model
 
     print(f"Loading model from: {model_name_arg}\n")
 
@@ -351,59 +359,60 @@ def finetune(
     # ============================================================================
     # DEBUG: Check conversation format
     # ============================================================================
-    print("\n" + "=" * 80)
-    print("DEBUGGING CONVERSATION FORMAT")
-    print("=" * 80)
+    if debug:
+        print("\n" + "=" * 80)
+        print("DEBUGGING CONVERSATION FORMAT")
+        print("=" * 80)
 
-    def debug_conversation(dataset, dataset_name, num_samples=3):
-        print(f"\n{dataset_name} Dataset:")
-        print(f"  Total examples: {len(dataset)}")
-        print(f"  Columns: {dataset.column_names}")
-        
-        # Check conversation structure
-        has_assistant = 0
-        missing_assistant = 0
-        
-        for example in dataset:
-            conv = example["conversations"]
-            if len(conv) >= 2 and conv[-1]["role"] == "assistant":
-                has_assistant += 1
-            else:
-                missing_assistant += 1
-        
-        print(f"\n  Conversations with assistant response: {has_assistant}")
-        print(f"  Conversations WITHOUT assistant response: {missing_assistant}")
-        
-        # Show sample conversations
-        print(f"\n  Sample conversations (showing first {num_samples}):")
-        for i in range(min(num_samples, len(dataset))):
-            example = dataset[i]
-            conv = example["conversations"]
+        def debug_conversation(dataset, dataset_name, num_samples=3):
+            print(f"\n{dataset_name} Dataset:")
+            print(f"  Total examples: {len(dataset)}")
+            print(f"  Columns: {dataset.column_names}")
             
-            print(f"\n  --- Example {i} ---")
-            print(f"  Claim ID: {example.get('claim_id', 'N/A')}")
-            print(f"  Perturbation: {example.get('perturbation_type', 'N/A')}")
-            print(f"  Ground truth: {example.get('ground_truth', 'N/A')}")
-            print(f"  Conversation structure:")
+            # Check conversation structure
+            has_assistant = 0
+            missing_assistant = 0
             
-            for j, msg in enumerate(conv):
-                role = msg["role"]
-                content = msg["content"][:100] + "..." if len(msg["content"]) > 100 else msg["content"]
-                print(f"    [{j}] {role}: {repr(content)}")
+            for example in dataset:
+                conv = example["conversations"]
+                if len(conv) >= 2 and conv[-1]["role"] == "assistant":
+                    has_assistant += 1
+                else:
+                    missing_assistant += 1
             
-            # Check if last message is assistant
-            if conv[-1]["role"] == "assistant":
-                print(f"  ✅ Last message is from assistant")
-            else:
-                print(f"  ❌ Last message is NOT from assistant (role: {conv[-1]['role']})")
+            print(f"\n  Conversations with assistant response: {has_assistant}")
+            print(f"  Conversations WITHOUT assistant response: {missing_assistant}")
+            
+            # Show sample conversations
+            print(f"\n  Sample conversations (showing first {num_samples}):")
+            for i in range(min(num_samples, len(dataset))):
+                example = dataset[i]
+                conv = example["conversations"]
+                
+                print(f"\n  --- Example {i} ---")
+                print(f"  Claim ID: {example.get('claim_id', 'N/A')}")
+                print(f"  Perturbation: {example.get('perturbation_type', 'N/A')}")
+                print(f"  Ground truth: {example.get('ground_truth', 'N/A')}")
+                print(f"  Conversation structure:")
+                
+                for j, msg in enumerate(conv):
+                    role = msg["role"]
+                    content = msg["content"][:100] + "..." if len(msg["content"]) > 100 else msg["content"]
+                    print(f"    [{j}] {role}: {repr(content)}")
+                
+                # Check if last message is assistant
+                if conv[-1]["role"] == "assistant":
+                    print(f"  ✅ Last message is from assistant")
+                else:
+                    print(f"  ❌ Last message is NOT from assistant (role: {conv[-1]['role']})")
 
-    # Debug both datasets
-    debug_conversation(train_data, "TRAINING")
-    debug_conversation(val_data, "VALIDATION")
+        # Debug both datasets
+        debug_conversation(train_data, "TRAINING")
+        debug_conversation(val_data, "VALIDATION")
 
-    print("\n" + "=" * 80)
-    print("END DEBUG")
-    print("=" * 80 + "\n")
+        print("\n" + "=" * 80)
+        print("END DEBUG")
+        print("=" * 80 + "\n")
 
     # ============================================================================
     # Apply filtering for validation data
@@ -438,79 +447,80 @@ def finetune(
     train_data.set_format(type="numpy", columns=tensor_cols, output_all_columns=True)
     val_data.set_format(type="numpy", columns=tensor_cols, output_all_columns=True)
 
-    print("\n" + "=" * 80)
-    print("DEBUGGING TOKENIZATION & MASKING")
-    print("=" * 80)
+    if debug:
+        print("\n" + "=" * 80)
+        print("DEBUGGING TOKENIZATION & MASKING")
+        print("=" * 80)
 
-    def debug_tokenization(dataset, dataset_name, num_samples=2):
-        print(f"\n{dataset_name} Dataset:")
-        
-        for i in range(min(num_samples, len(dataset))):
-            example = dataset[i]
+        def debug_tokenization(dataset, dataset_name, num_samples=2):
+            print(f"\n{dataset_name} Dataset:")
             
-            print(f"\n  --- Example {i} ---")
-            print(f"  Input IDs length: {len(example['input_ids'])}")
-            print(f"  Labels length: {len(example['labels'])}")
-            print(f"  Attention mask length: {len(example['attention_mask'])}")
-            
-            # Count masked tokens
-            labels = example['labels']
-            masked_count = sum(1 for x in labels if x == -100)
-            trainable_count = sum(1 for x in labels if x != -100)
-            
-            print(f"  Masked tokens (instruction): {masked_count}")
-            print(f"  Trainable tokens (response): {trainable_count}")
-            print(f"  Masking ratio: {masked_count / len(labels) * 100:.1f}%")
-            
-            # Decode to show what's masked vs trainable
-            input_ids = example['input_ids']
-            
-            # Show first 10 tokens
-            print(f"\n  First 10 tokens (should be masked):")
-            for j in range(min(10, len(input_ids))):
-                token_id = input_ids[j]
-                label = labels[j]
-                token_text = tokenizer.decode([token_id])
-                mask_status = "MASKED" if label == -100 else "TRAIN"
-                print(f"    [{j}] {mask_status:7s} | token_id={token_id:5d} | {repr(token_text)}")
-            
-            # Find transition from masked to trainable
-            transition_idx = None
-            for j in range(len(labels)):
-                if labels[j] != -100:
-                    transition_idx = j
-                    break
-            
-            if transition_idx:
-                print(f"\n  Transition point (first trainable token at index {transition_idx}):")
-                start = max(0, transition_idx - 3)
-                end = min(len(input_ids), transition_idx + 3)
-                for j in range(start, end):
+            for i in range(min(num_samples, len(dataset))):
+                example = dataset[i]
+                
+                print(f"\n  --- Example {i} ---")
+                print(f"  Input IDs length: {len(example['input_ids'])}")
+                print(f"  Labels length: {len(example['labels'])}")
+                print(f"  Attention mask length: {len(example['attention_mask'])}")
+                
+                # Count masked tokens
+                labels = example['labels']
+                masked_count = sum(1 for x in labels if x == -100)
+                trainable_count = sum(1 for x in labels if x != -100)
+                
+                print(f"  Masked tokens (instruction): {masked_count}")
+                print(f"  Trainable tokens (response): {trainable_count}")
+                print(f"  Masking ratio: {masked_count / len(labels) * 100:.1f}%")
+                
+                # Decode to show what's masked vs trainable
+                input_ids = example['input_ids']
+                
+                # Show first 10 tokens
+                print(f"\n  First 10 tokens (should be masked):")
+                for j in range(min(10, len(input_ids))):
                     token_id = input_ids[j]
                     label = labels[j]
                     token_text = tokenizer.decode([token_id])
                     mask_status = "MASKED" if label == -100 else "TRAIN"
-                    marker = " <-- TRANSITION" if j == transition_idx else ""
-                    print(f"    [{j}] {mask_status:7s} | token_id={token_id:5d} | {repr(token_text)}{marker}")
-            
-            # Decode full texts
-            print(f"\n  Full input (decoded):")
-            full_text = tokenizer.decode(input_ids)
-            print(f"    {repr(full_text[:200])}...")
-            
-            # Decode only the trainable part
-            trainable_ids = [input_ids[j] for j in range(len(input_ids)) if labels[j] != -100]
-            trainable_text = tokenizer.decode(trainable_ids)
-            print(f"\n  Trainable portion (what model learns from):")
-            print(f"    {repr(trainable_text)}")
+                    print(f"    [{j}] {mask_status:7s} | token_id={token_id:5d} | {repr(token_text)}")
+                
+                # Find transition from masked to trainable
+                transition_idx = None
+                for j in range(len(labels)):
+                    if labels[j] != -100:
+                        transition_idx = j
+                        break
+                
+                if transition_idx:
+                    print(f"\n  Transition point (first trainable token at index {transition_idx}):")
+                    start = max(0, transition_idx - 3)
+                    end = min(len(input_ids), transition_idx + 3)
+                    for j in range(start, end):
+                        token_id = input_ids[j]
+                        label = labels[j]
+                        token_text = tokenizer.decode([token_id])
+                        mask_status = "MASKED" if label == -100 else "TRAIN"
+                        marker = " <-- TRANSITION" if j == transition_idx else ""
+                        print(f"    [{j}] {mask_status:7s} | token_id={token_id:5d} | {repr(token_text)}{marker}")
+                
+                # Decode full texts
+                print(f"\n  Full input (decoded):")
+                full_text = tokenizer.decode(input_ids)
+                print(f"    {repr(full_text[:200])}...")
+                
+                # Decode only the trainable part
+                trainable_ids = [input_ids[j] for j in range(len(input_ids)) if labels[j] != -100]
+                trainable_text = tokenizer.decode(trainable_ids)
+                print(f"\n  Trainable portion (what model learns from):")
+                print(f"    {repr(trainable_text)}")
 
-    debug_tokenization(train_data, "TRAINING")
-    if len(val_data) > 0:
-        debug_tokenization(val_data, "VALIDATION")
+        debug_tokenization(train_data, "TRAINING")
+        if len(val_data) > 0:
+            debug_tokenization(val_data, "VALIDATION")
 
-    print("\n" + "=" * 80)
-    print("END DEBUG")
-    print("=" * 80 + "\n")
+        print("\n" + "=" * 80)
+        print("END DEBUG")
+        print("=" * 80 + "\n")
     
     # Create batch sampler BEFORE removing columns (needs claim_id, perturbation_type)
     pre_built_batch_sampler = None
@@ -567,8 +577,9 @@ def finetune(
             f"\n✅ All examples fit within max_seq_length ({max_seq_length:,} tokens)"
         )
 
-    # Create output directory
-    output_dir = f"{prefix}tuned_models/epoch-{start_epoch}/{model_name}{quant_status}_{rank_postfix}"
+    # Create output directory (used for checkpoints and final model)
+    base_dir = f"{prefix}models/{model_name}_{model_name_timestamp}_{perturb_type_names}"
+    output_dir = f"{base_dir}/checkpoints{rank_postfix}"
     if not os.path.exists(output_dir):
         os.makedirs(output_dir, exist_ok=True)
 
@@ -578,7 +589,7 @@ def finetune(
     # Initialize wandb
     run = wandb.init(
         project="numpert_finetune",
-        name=f"{model_name}{quant_status}_epoch_{start_epoch}→{target_epoch}_(r{rank})",
+        name=f"{model_name}{quant_status}_epoch_{start_epoch}→{target_epoch}_(r{rank})_{perturb_type_names}",
         config={
             "model": model_name,
             "rank": rank,
@@ -674,7 +685,7 @@ def finetune(
     run.finish()
 
     # Save model
-    save_dir = f"{prefix}models/{model_name}_{model_name_timestamp}/epoch-{actual_final_epoch}{quant_status}"
+    save_dir = f"{base_dir}/epoch-{actual_final_epoch}{quant_status}"
     if not os.path.exists(save_dir):
         os.makedirs(save_dir, exist_ok=True)
 
@@ -1148,8 +1159,14 @@ if __name__ == "__main__":
     parser.add_argument(
         "--model", default=None, help="Model name"
     )
+
+    # Perturbation type name for model naming
+    parser.add_argument(
+        "--perturb_type_names", default=None, help="Adds perturb type to trained model name")
+
     parser.add_argument("--rank", type=int, default=32, help="LoRA rank")
     parser.add_argument("--start_epoch", type=int, default=1, help="Epoch number to resume at to resume")
+    parser.add_argument("--resume_model", type=str, default=None, help="Path to a previously saved merged model to resume training from (required when start_epoch > 1)")
     parser.add_argument("--num_train_epochs", type=int, default=1, help="Number of training epochs")
 
     # Training hyperparameters
@@ -1224,6 +1241,13 @@ if __name__ == "__main__":
         "--save_steps", type=int, default=500, help="Checkpoint save frequency"
     )
 
+    # Debug
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="Enable debug output for conversation format and tokenization/masking",
+    )
+
     # Inference
     parser.add_argument(
         "--use_vllm", action="store_true", help="Use vLLM for inference"
@@ -1246,8 +1270,10 @@ if __name__ == "__main__":
             train_json_paths=args.train_json,
             val_json_paths=args.val_json,
             model_name=args.model,
+            perturb_type_names=args.perturb_type_names,
             rank=args.rank,
             start_epoch=args.start_epoch,
+            resume_model=args.resume_model,
             num_train_epochs=args.num_train_epochs,
             batch_size=args.batch_size,
             gradient_accumulation_steps=args.grad_accum,
@@ -1262,6 +1288,7 @@ if __name__ == "__main__":
             ensure_perturbed_in_batch=args.ensure_perturbed_in_batch,
             eval_steps=args.eval_steps,
             save_steps=args.save_steps,
+            debug=args.debug,
         )
 
     elif args.mode == "inference":

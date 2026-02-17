@@ -1,9 +1,9 @@
 #!/bin/bash
-#SBATCH --job-name=finetune_unsloth
+#SBATCH --job-name=qwen3-32b-finetune
 #SBATCH --partition=gpu
-##  --gres=gpu:nvidia_h100_nvl:1
-#SBATCH --time=4:00:00
-#SBATCH --output=finetune_unsloth.out
+#SBATCH --gres=gpu:nvidia_h100_nvl:1
+#SBATCH --time=24:00:00
+#SBATCH --output=scripts/slurm_out/train/qwen3-32b-finetune_enhanced_batch.out
 #SBATCH --mem=300G
 #SBATCH --nodelist=gorina9
 
@@ -20,13 +20,13 @@ echo "Start Time: $(date)"
 echo "=========================================="
 echo ""
 
-# Load environment whereever uv installed it
+# Load environment
 echo "Activating uv environment..."
-echo $PATH
+#echo $PATH
 source .finetune/bin/activate
-
 CUDA_DEVICE_ORDER=PCI_BUS_ID
 CUDA_VISIBLE_DEVICES=6
+
 
 # Verify GPU is available
 echo ""
@@ -40,13 +40,11 @@ echo "Starting Fine-tuning Script"
 echo "=========================================="
 echo ""
 
-SCRIPT_DIR="numpert-fine-tune"
-cd "$SCRIPT_DIR"
 
 echo "Working directory: $(pwd)"
 echo ""
-
-bash ./scripts/finetune_qwen.sh
+    
+bash ./scripts/train/model_configs/qwen3_32b_enhanced_b.sh
 
 # Print completion information
 echo ""

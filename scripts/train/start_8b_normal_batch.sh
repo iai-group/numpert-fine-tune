@@ -1,11 +1,11 @@
 #!/bin/bash
-#SBATCH --job-name=finetune_unsloth
+#SBATCH --job-name=qwen3-8b-finetune
 #SBATCH --partition=gpu
-#SBATCH --gres=gpu:1
+#sbatch  --gres=gpu:1
 #SBATCH --time=12:00:00
-#SBATCH --output=finetune_unsloth.out
+#SBATCH --output=scripts/slurm_out/train/qwen3-8b-finetune_normal_batch.out
 #SBATCH --mem=300G
-#SBATCH --nodelist=gorina9
+#SBATCH --nodelist=gorina8
 
 
 # Print job information
@@ -19,30 +19,14 @@ echo "Partition: $SLURM_JOB_PARTITION"
 echo "Start Time: $(date)"
 echo "=========================================="
 echo ""
-uenv verbose cuda-12.5.1 cudnn-12.x-8.8.0
+
 # Load environment
 echo "Activating uv environment..."
-echo $PATH
+# echo $PATH
 # source .finetune/bin/activate
-uv sync
 CUDA_DEVICE_ORDER=PCI_BUS_ID
 CUDA_VISIBLE_DEVICES=6
 
-uv run python -c "
-from huggingface_hub import scan_cache_dir
-cache = scan_cache_dir()
-for repo in cache.repos:
-    if 'Qwen3' in repo.repo_id:
-        print(f'{repo.repo_id}: {repo.size_on_disk_str}, refs: {[r.refs for r in repo.revisions]}')
-"
-
-uv run python -c "
-from huggingface_hub import hf_hub_download
-import os
-os.environ['HF_HUB_OFFLINE'] = '1'
-path = hf_hub_download('unsloth/Qwen3-8B', 'config.json')
-print('Found config at:', path)
-"
 
 # Verify GPU is available
 echo ""
@@ -59,10 +43,8 @@ echo ""
 
 echo "Working directory: $(pwd)"
 echo ""
-
-# uv pip install -r requirements.txt --upgrade
-# uv pip install scikit-learn --upgrade
-bash ./scripts/finetune_qwen.sh
+    
+bash ./scripts/train/model_configs/qwen3_8b_normal_b.sh
 
 # Print completion information
 echo ""

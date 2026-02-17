@@ -14,22 +14,24 @@ set -u  # Exit on undefined variable
 # ==============================================================================
 # MODEL CONFIGURATION
 # ==============================================================================
-MODEL="Qwen"          # Options: qwen-3-8b, llama-3.2-3b-instruct, llama-3.2-1b-instruct
+MODEL="Qwen3-8B"          # Options: qwen-3-8b, Qwen3-32B, llama-3.2-3b-instruct, llama-3.2-1b-instruct
 RANK=32                    # LoRA rank (16, 32, 64) - higher = more parameters but slower
-EPOCH=3                    # Epoch number (1 for first training, 2+ for continued training)
+START_EPOCH=1                   # Epoch number (1 for first training, 2+ for continued training)
+NUM_TRAIN_EPOCHS=3                  # Total number of training epochs
+PERTURB_TYPE_NAMES="numeration_enhanced_batched"  # Perturbation type name(s) for logging and saving
 
 # ==============================================================================
 # TRAINING HYPERPARAMETERS
 # ==============================================================================
-BATCH_SIZE=4               # Per-device batch size (adjust based on GPU memory)
-GRAD_ACCUM=4              # Gradient accumulation steps
+BATCH_SIZE=5               # Per-device batch size (adjust based on GPU memory) #### E.g. Original-F + T->T + T->F + Original_F + F -> TF = 4 
+GRAD_ACCUM=1              # Gradient accumulation steps
                           # Effective batch size = BATCH_SIZE × GRAD_ACCUM = 16
-MAX_SEQ_LENGTH=16384      # Maximum sequence length in tokens
+MAX_SEQ_LENGTH=8192      # Maximum sequence length in tokens
                           # Your docs are 2000-4000 words ≈ 3000-6000 tokens
 
 # ==============================================================================
 # DATASET BALANCING CONFIGURATION
-# ==============================================================================
+# ====================  ==========================================================
 BALANCE_LABELS=true        # Balance True/False label distribution
 PERTURB_RATIO=1.0         # Ratio of perturbed to original examples
                           # 1.0 = 1:1 (equal number of original and perturbed)
@@ -53,20 +55,19 @@ ENSURE_PERTURBED_IN_BATCH=true # Each batch has ≥1 perturbed example
 # ==============================================================================
 # Training data - can specify multiple files
 TRAIN_JSON=(
-    "data/perturbed_data/train_split/numeration_true.json"
-    "data/perturbed_data/train_split/numeration_false.json"
+    "./data/perturbed_data/train_split/numeration_true.json"
+    "./data/perturbed_data/train_split/numeration_false.json"
 )
 
 # Validation data - can specify multiple files
 VAL_JSON=(
-    "data/perturbed_data/val_split/numeration_true.json"
-    "data/perturbed_data/val_split/numeration_false.json"
+    "./data/perturbed_data/val_split/numeration_true.json"
+    "./data/perturbed_data/val_split/numeration_false.json"
 )
-
 # ==============================================================================
 # EVALUATION & CHECKPOINTING
 # ==============================================================================
-EVAL_STEPS=100            # Evaluate on validation set every N steps
+EVAL_STEPS=500            # Evaluate on validation set every N steps
 SAVE_STEPS=500            # Save checkpoint every N steps
 
 # ==============================================================================
@@ -74,13 +75,13 @@ SAVE_STEPS=500            # Save checkpoint every N steps
 # ==============================================================================
 
 echo "=========================================="
-echo "Qwen3-8B Fine-tuning Configuration"
+echo "$MODEL Fine-tuning Configuration"
 echo "=========================================="
 echo ""
 echo "Model Configuration:"
 echo "  Model:           $MODEL"
 echo "  LoRA Rank:       $RANK"
-echo "  Epoch:           $EPOCH"
+echo "  Start Epoch:     $START_EPOCH"
 echo ""
 echo "Training Hyperparameters:"
 echo "  Batch Size:      $BATCH_SIZE"
@@ -147,16 +148,20 @@ echo ""
 
 # Build command
 
+<<<<<<< HEAD:scripts/finetune_qwen.sh
 # Run from the numpert-fine-tune directory (parent of src/)
-
-
-CMD="uv run python -m src.llm_finetune.unsloth_finetune \
+# uv pip install scikit-learn --upgrade
+CMD="uv run python -m src.llm_finetune.unsloth_finetune\
+=======
+CMD="python -m src.llm_finetune.unsloth_finetune\
+>>>>>>> 0e57f3766eda814daa30057a05df077578dea1f5:scripts/train/model_configs/qwen3_8b_enhanced_b.sh
     --mode finetune \
     --train_json ${TRAIN_JSON[@]} \
     --val_json ${VAL_JSON[@]} \
-    --model $MODEL \
+    --model ${MODEL} \
     --rank $RANK \
-    --epoch $EPOCH \
+    --start_epoch $START_EPOCH \
+    --num_train_epochs $NUM_TRAIN_EPOCHS \
     --batch_size $BATCH_SIZE \
     --grad_accum $GRAD_ACCUM \
     --max_seq_length $MAX_SEQ_LENGTH \
@@ -164,7 +169,8 @@ CMD="uv run python -m src.llm_finetune.unsloth_finetune \
     --perturb_ratio $PERTURB_RATIO \
     --false_perturb_t_to_f_ratio $FALSE_T_TO_F_RATIO \
     --eval_steps $EVAL_STEPS \
-    --save_steps $SAVE_STEPS"
+    --save_steps $SAVE_STEPS \
+    --perturb_type_names ${PERTURB_TYPE_NAMES}"
 
 # Add optional flags
 if [ "$BALANCE_LABELS" = true ]; then
@@ -193,34 +199,10 @@ echo "$CMD"
 echo ""
 
 # Run training
-uv run python -m src.llm_finetune.unsloth_finetune \
-    --mode finetune \
-    --train_json ${TRAIN_JSON[@]} \
-    --val_json ${VAL_JSON[@]} \
-    --model $MODEL \
-    --rank $RANK \
-    --epoch $EPOCH \
-    --batch_size $BATCH_SIZE \
-    --grad_accum $GRAD_ACCUM \
-    --max_seq_length $MAX_SEQ_LENGTH \
-    --expand_perturbations \
-    --perturb_ratio $PERTURB_RATIO \
-    --false_perturb_t_to_f_ratio $FALSE_T_TO_F_RATIO \
-    --eval_steps $EVAL_STEPS \
-    --save_steps $SAVE_STEPS
+eval $CMD
 
 echo ""
 echo "=========================================="
 echo "Training Completed Successfully!"
 echo "=========================================="
-echo ""
-echo "Output Locations:"
-echo "  LoRA weights:    epoch-$EPOCH/$MODEL/lora_numpert_r$RANK/"
-echo "  Merged model:    epoch-$EPOCH/$MODEL/merged_numpert_r$RANK/"
-echo "  Training logs:   epoch-$EPOCH/$MODEL/outputs/numpert_r$RANK/"
-echo ""
-echo "Next Steps:"
-echo "  1. Check WandB dashboard for training metrics"
-echo "  2. Run inference with: ./inference_qwen.sh"
-echo "  3. For epoch 2, set EPOCH=2 and re-run this script"
 echo ""
