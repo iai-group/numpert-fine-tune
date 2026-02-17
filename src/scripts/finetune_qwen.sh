@@ -53,14 +53,14 @@ ENSURE_PERTURBED_IN_BATCH=true # Each batch has ≥1 perturbed example
 # ==============================================================================
 # Training data - can specify multiple files
 TRAIN_JSON=(
-    "/home/stud/u2929246/bhome/numpert-fine-tune/data/perturbed_data/train_split/numeration_true.json"
-    "/home/stud/u2929246/bhome/numpert-fine-tune/data/perturbed_data/train_split/numeration_false.json"
+    "data/perturbed_data/train_split/numeration_true.json"
+    "data/perturbed_data/train_split/numeration_false.json"
 )
 
 # Validation data - can specify multiple files
 VAL_JSON=(
-    "/home/stud/u2929246/bhome/numpert-fine-tune/data/perturbed_data/val_split/numeration_true.json"
-    "/home/stud/u2929246/bhome/numpert-fine-tune/data/perturbed_data/val_split/numeration_false.json"
+    "data/perturbed_data/val_split/numeration_true.json"
+    "data/perturbed_data/val_split/numeration_false.json"
 )
 
 # ==============================================================================
@@ -148,10 +148,9 @@ echo ""
 # Build command
 
 # Run from the numpert-fine-tune directory (parent of src/)
-SCRIPT_DIR="/home/stud/u2929246/bhome/numpert-fine-tune"
-cd "$SCRIPT_DIR"
 
-CMD="python -m src.llm_finetune.unsloth_finetune \
+
+CMD="uv run python -m src.llm_finetune.unsloth_finetune \
     --mode finetune \
     --train_json ${TRAIN_JSON[@]} \
     --val_json ${VAL_JSON[@]} \
@@ -194,7 +193,21 @@ echo "$CMD"
 echo ""
 
 # Run training
-eval $CMD
+uv run python -m src.llm_finetune.unsloth_finetune \
+    --mode finetune \
+    --train_json ${TRAIN_JSON[@]} \
+    --val_json ${VAL_JSON[@]} \
+    --model $MODEL \
+    --rank $RANK \
+    --epoch $EPOCH \
+    --batch_size $BATCH_SIZE \
+    --grad_accum $GRAD_ACCUM \
+    --max_seq_length $MAX_SEQ_LENGTH \
+    --expand_perturbations \
+    --perturb_ratio $PERTURB_RATIO \
+    --false_perturb_t_to_f_ratio $FALSE_T_TO_F_RATIO \
+    --eval_steps $EVAL_STEPS \
+    --save_steps $SAVE_STEPS
 
 echo ""
 echo "=========================================="

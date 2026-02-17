@@ -32,7 +32,6 @@ from transformers import (
 )
 from unsloth import is_bfloat16_supported
 from unsloth.chat_templates import train_on_responses_only
-from vllm import LLM, SamplingParams
 import wandb
 import argparse
 import os
@@ -189,7 +188,7 @@ def finetune(
     if start_epoch == 1:
         model_name_arg = get_model_name_arg(model_name)
     else:
-        model_name_arg = f"/home/stud/u2929246/bhome/numpert-fine-tune/models/qwen-3-8b_20260206_000635/merged_model"
+        model_name_arg = f"models/qwen-3-8b_20260206_000635/merged_model"
 
     print(f"Loading model from: {model_name_arg}\n")
 

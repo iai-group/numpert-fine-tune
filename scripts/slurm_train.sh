@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=finetune_unsloth
 #SBATCH --partition=gpu
-##  --gres=gpu:nvidia_h100_nvl:1
+#SBATCH --gres=gpu:1
 #SBATCH --time=12:00:00
 #SBATCH --output=finetune_unsloth.out
 #SBATCH --mem=300G
@@ -19,15 +19,16 @@ echo "Partition: $SLURM_JOB_PARTITION"
 echo "Start Time: $(date)"
 echo "=========================================="
 echo ""
-
+uenv verbose cuda-12.5.1 cudnn-12.x-8.8.0
 # Load environment
 echo "Activating uv environment..."
 echo $PATH
-source .finetune/bin/activate
+# source .finetune/bin/activate
+uv sync
 CUDA_DEVICE_ORDER=PCI_BUS_ID
 CUDA_VISIBLE_DEVICES=6
 
-python -c "
+uv run python -c "
 from huggingface_hub import scan_cache_dir
 cache = scan_cache_dir()
 for repo in cache.repos:
@@ -35,7 +36,7 @@ for repo in cache.repos:
         print(f'{repo.repo_id}: {repo.size_on_disk_str}, refs: {[r.refs for r in repo.revisions]}')
 "
 
-python -c "
+uv run python -c "
 from huggingface_hub import hf_hub_download
 import os
 os.environ['HF_HUB_OFFLINE'] = '1'
@@ -58,7 +59,9 @@ echo ""
 
 echo "Working directory: $(pwd)"
 echo ""
-    
+
+# uv pip install -r requirements.txt --upgrade
+# uv pip install scikit-learn --upgrade
 bash ./scripts/finetune_qwen.sh
 
 # Print completion information

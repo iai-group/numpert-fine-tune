@@ -53,23 +53,23 @@ ENSURE_PERTURBED_IN_BATCH=true # Each batch has ≥1 perturbed example
 # ==============================================================================
 # Training data - can specify multiple files
 TRAIN_JSON=(
-    "/home/stud/u2929246/bhome/numpert-fine-tune/data/perturbed_data/train_split/numeration_true.json"
-    "/home/stud/u2929246/bhome/numpert-fine-tune/data/perturbed_data/train_split/numeration_false.json"
+    "data/perturbed_data/train_split/numeration_true.json"
+    "data/perturbed_data/train_split/numeration_false.json"
 )
 
 # Validation data - can specify multiple files
 VAL_JSON=(
-    "/home/stud/u2929246/bhome/numpert-fine-tune/data/perturbed_data/val_split/numeration_true.json"
-    "/home/stud/u2929246/bhome/numpert-fine-tune/data/perturbed_data/val_split/numeration_false.json"
+    "data/perturbed_data/val_split/numeration_true.json"
+    "data/perturbed_data/val_split/numeration_false.json"
 )
 
 #TRAIN_JSON=(
-#    "/home/stud/u2929246/bhome/numpert-fine-tune/data/perturbed_data/train_split/numeration_true_test.json"
+#    "data/perturbed_data/train_split/numeration_true_test.json"
 #)
 
 # Validation data - can specify multiple files
 #VAL_JSON=(
-#    "/home/stud/u2929246/bhome/numpert-fine-tune/data/perturbed_data/train_split/numeration_true_test.json"
+#    "data/perturbed_data/train_split/numeration_true_test.json"
 #)
 
 # ==============================================================================
@@ -157,10 +157,8 @@ echo ""
 # Build command
 
 # Run from the numpert-fine-tune directory (parent of src/)
-SCRIPT_DIR="/home/stud/u2929246/bhome/numpert-fine-tune"
-cd "$SCRIPT_DIR"
-
-CMD="python -m src.llm_finetune.unsloth_finetune\
+# uv pip install scikit-learn --upgrade
+CMD="uv run python -m src.llm_finetune.unsloth_finetune\
     --mode finetune \
     --train_json ${TRAIN_JSON[@]} \
     --val_json ${VAL_JSON[@]} \
