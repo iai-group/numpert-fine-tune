@@ -76,7 +76,7 @@ def upload(args):
 
     repo_id = build_repo_id(args)
     private = not args.public
-    print(f"[✓] Target repo: {repo_id} ({'public' if args.public else 'private'})")
+    print(f"[✓] Visibility: {'public' if args.public else 'private'}")
 
     api = HfApi()
 
@@ -88,7 +88,7 @@ def upload(args):
             private=private,
             exist_ok=True,
         )
-        print(f"[✓] Repo ready: https://huggingface.co/{repo_id}")
+        print(f"[✓] Repo ready")
     except Exception as e:
         print(f"[ERROR] Failed to create/access repo: {e}")
         sys.exit(1)
@@ -102,7 +102,8 @@ def upload(args):
         )
 
     # Upload
-    print(f"\n[→] Uploading from: {model_path}")
+    display_path = Path(*model_path.parts[-3:]) if len(model_path.parts) >= 3 else model_path
+    print(f"\n[→] Uploading from: .../{display_path}")
     print("    This may take a while for large models...\n")
 
     try:
@@ -117,8 +118,7 @@ def upload(args):
         print(f"[ERROR] Upload failed: {e}")
         sys.exit(1)
 
-    print(f"\n[✓] Upload complete!")
-    print(f"    https://huggingface.co/{repo_id}\n")
+    print(f"\n[✓] Upload complete!\n")
 
     # Contextual reminders based on upload type
     if upload_type == "lora":
@@ -140,18 +140,18 @@ def main():
         description="Upload a finetuned model to HuggingFace Hub.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
-        Examples:
-        # Upload a merged model (auto-detects type)
-        python upload_to_hf.py ./merged_model my-llama-finetune
+Examples:
+  # Upload a merged model (auto-detects type)
+  python upload_to_hf.py ./merged_model my-llama-finetune
 
-        # Upload LoRA adapter weights only
-        python upload_to_hf.py ./lora_weights my-llama-lora --type lora
+  # Upload LoRA adapter weights only
+  python upload_to_hf.py ./lora_weights my-llama-lora --type lora
 
-        # Upload to an org namespace, public
-        python upload_to_hf.py ./merged_model my-model --namespace my-org --public
+  # Upload to an org namespace, public
+  python upload_to_hf.py ./merged_model my-model --namespace my-org --public
 
-        # Upload a specific checkpoint, keeping optimizer states
-        python upload_to_hf.py ./checkpoint-1000 my-model-ckpt1000 --type checkpoint --include-optimizer-states
+  # Upload a specific checkpoint, keeping optimizer states
+  python upload_to_hf.py ./checkpoint-1000 my-model-ckpt1000 --type checkpoint --include-optimizer-states
         """,
     )
 
@@ -161,7 +161,7 @@ def main():
         help="Path to the model model_path (merged model, LoRA weights, or checkpoint).",
     )
     parser.add_argument(
-        "--model_name", 
+        "--model_name",
         default=None,
         help="Name of the model repo on HuggingFace (e.g. 'my-llama-finetune').",
     )
@@ -199,8 +199,6 @@ def main():
     # Auth check — populates username for namespace fallback
     print()
     args.username = check_auth()
-    print(f"[✓] Authenticated as: {args.username}\n")
-
     upload(args)
 
 
