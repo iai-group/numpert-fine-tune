@@ -1,9 +1,9 @@
 #!/bin/bash
-#SBATCH --job-name=qwen3-8b-finetune
+#SBATCH --job-name=env_test_qwen3-8b-finetune
 #SBATCH --partition=gpu
-#sbatch  --gres=gpu:1
+#SBATCH --gres=gpu:1
 #SBATCH --time=12:00:00
-#SBATCH --output=scripts/slurm_out/train/qwen3-8b-finetune_normal_batch.out
+#SBATCH --output=scripts/slurm_out/train/qwen3-8b-finetune_normal_batchtestesttest.out
 #SBATCH --mem=300G
 #SBATCH --nodelist=gorina8
 
@@ -24,9 +24,6 @@ echo ""
 echo "Activating uv environment..."
 # echo $PATH
 # source .finetune/bin/activate
-CUDA_DEVICE_ORDER=PCI_BUS_ID
-CUDA_VISIBLE_DEVICES=6
-
 
 # Verify GPU is available
 echo ""

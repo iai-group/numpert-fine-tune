@@ -147,14 +147,10 @@ echo ""
 
 # Build command
 
-<<<<<<< HEAD:src/scripts/finetune_qwen.sh
 # Run from the numpert-fine-tune directory (parent of src/)
 
 
 CMD="uv run python -m src.llm_finetune.unsloth_finetune \
-=======
-CMD="python -m src.llm_finetune.unsloth_finetune\
->>>>>>> 0e57f3766eda814daa30057a05df077578dea1f5:scripts/train/model_configs/qwen3_32b_enhanced_b.sh
     --mode finetune \
     --train_json ${TRAIN_JSON[@]} \
     --val_json ${VAL_JSON[@]} \
