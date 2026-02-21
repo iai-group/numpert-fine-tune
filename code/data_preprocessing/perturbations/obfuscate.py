@@ -139,50 +139,35 @@ def value_removal(claim: str, entities: List[Dict[str, Any]]) -> str:
     return perturbed_claim
 
 
-def process_json(
-    input_data: List[Dict[str, Any]]
-) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]], List[Dict[str, Any]]]:
-    """Returns three separate lists for each perturbation type.
-
-    Args:
-        input_data: List of input data entries.
-
-    Returns:
-        A tuple containing:
-        - List of entries with random replacements.
-        - List of entries with masked values.
-        - List of entries with removed values.
-    """
-    random_replacement_data = []
-    masking_data = []
-    value_removal_data = []
+def process_json(input_data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Returns a single list with all obfuscation perturbations per entry."""
+    output_data = []
 
     for entry in input_data:
         claim: str = entry["normalized_claim"]
         entities: List[Dict[str, Any]] = entry.get("entities", [])
+        label: str = entry.get("label", "UNKNOWN")
 
         perturbed_claim1 = random_replacement(claim, entities)
         perturbed_claim2 = masking(claim, entities)
         perturbed_claim3 = value_removal(claim, entities)
 
+        # Only include entry if at least one perturbation changed the claim
+        if all(p == claim for p in [perturbed_claim1, perturbed_claim2, perturbed_claim3]):
+            continue
+
         base_entry = {key: entry[key] for key in INCLUDED_KEYS if key in entry}
 
         if perturbed_claim1 != claim:
-            random_entry = base_entry.copy()
-            random_entry["random_replacement_false"] = perturbed_claim1
-            random_replacement_data.append(random_entry)
-
+            base_entry[f"perturb_type3_{label}_random"] = perturbed_claim1
         if perturbed_claim2 != claim:
-            masking_entry = base_entry.copy()
-            masking_entry["masking_false"] = perturbed_claim2
-            masking_data.append(masking_entry)
-
+            base_entry[f"perturb_type3_{label}_masked"] = perturbed_claim2
         if perturbed_claim3 != claim:
-            removal_entry = base_entry.copy()
-            removal_entry["value_removal_false"] = perturbed_claim3
-            value_removal_data.append(removal_entry)
+            base_entry[f"perturb_type3_{label}_removed"] = perturbed_claim3
 
-    return random_replacement_data, masking_data, value_removal_data
+        output_data.append(base_entry)
+
+    return output_data
 
 
 def main() -> None:
@@ -214,11 +199,11 @@ def main() -> None:
 
     data: List[Dict[str, Any]] = load_data(args.input)
 
-    random_data, masking_data, removal_data = process_json(data)
+    output_data = process_json(data)
 
-    save_data(random_data, random_output)
-    save_data(masking_data, masking_output)
-    save_data(removal_data, removal_output)
+    save_data(output_data, random_output)
+    save_data(output_data, masking_output)
+    save_data(output_data, removal_output)
 
     print(f"Random replacement data saved to: {random_output}")
     print(f"Masking data saved to: {masking_output}")

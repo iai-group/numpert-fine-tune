@@ -375,11 +375,11 @@ def process_json(input_data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     for entry in input_data:
         claim_text = entry.get("normalized_claim", "")
         entities = entry.get("entities", [])
+        label = entry.get("label", "UNKNOWN")
         perturbed_entry = dict(entry)
 
-        for truth_value in ["true", "false"]:
-            perturbed_claim = perturb_claim(claim_text, entities, truth_value)
-            perturbed_entry[f"range_{truth_value}"] = perturbed_claim
+        perturbed_entry[f"perturb_type1_{label}"] = perturb_claim(claim_text, entities, "true")
+        perturbed_entry[f"perturb_type2_{label}"] = perturb_claim(claim_text, entities, "false")
 
         for key_to_remove in ["ner_tags", "tokens", "entities"]:
             perturbed_entry.pop(key_to_remove, None)

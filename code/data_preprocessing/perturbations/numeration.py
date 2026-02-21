@@ -5,6 +5,7 @@ from typing import Any, Dict, List, Optional, Set
 from num2words import num2words
 from code.data_preprocessing.perturbations.utils.load_save import (
     INCLUDED_KEYS,
+    
 )
 
 # Numerical entity types
@@ -217,20 +218,21 @@ def process_json(input_data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """
     output_data: List[Dict[str, Any]] = []
     for entry in input_data:
+        label = entry.get("label", "UNKNOWN")
 
         # Apply perturbations for "true" and "false" truth values
-        perturbed_true = process_sentence(entry, "true")
-        perturbed_false = process_sentence(entry, "false")
+        perturbed_type1 = process_sentence(entry, "true")
+        perturbed_type2 = process_sentence(entry, "false")
 
         # Include only if at least one perturbation was made
-        if perturbed_true or perturbed_false:
+        if perturbed_type1 or perturbed_type2:
             # Create a new entry with only the included keys
             perturbed_entry = {
                 key: entry[key] for key in INCLUDED_KEYS if key in entry
             }
-            if perturbed_true:
-                perturbed_entry["numeration_true"] = perturbed_true
-            if perturbed_false:
-                perturbed_entry["numeration_false"] = perturbed_false
+            if perturbed_type1:
+                perturbed_entry[f"perturb_type1_{label}"] = perturbed_type1
+            if perturbed_type2:
+                perturbed_entry[f"perturb_type2_{label}"] = perturbed_type2
             output_data.append(perturbed_entry)
     return output_data

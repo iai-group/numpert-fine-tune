@@ -309,13 +309,14 @@ def process_claims(input_file, output_file):
             excluded_unperturbed += 1
             continue
 
+        label = claim.get("label", "UNKNOWN")
         out = {
             k: v
             for k, v in claim.items()
             if k not in {"tokens", "ner_tags", "entities"}
         }
-        out["approximation_true"] = t
-        out["approximation_false"] = f_
+        out[f"perturb_type1_{label}"] = t
+        out[f"perturb_type2_{label}"] = f_
         output.append(out)
 
     with open(output_file, "w", encoding="utf-8") as f:
