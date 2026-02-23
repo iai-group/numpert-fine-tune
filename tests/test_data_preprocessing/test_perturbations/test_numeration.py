@@ -250,76 +250,6 @@ class TestProcessSentence:
         result = process_sentence(content, "false")
         assert result == "Modified sentence"
 
-    @patch("code.data_preprocessing.perturbations.numeration.process_entity")
-    def test_process_sentence_multiple_entities_sorted(
-        self, mock_process_entity
-    ):
-        """Test process_sentence processes entities in reverse order."""
-        mock_process_entity.side_effect = [
-            ("First change", True),
-            ("Second change", True),
-        ]
-
-        # Entities should be processed in reverse order
-        calls = mock_process_entity.call_args_list
-        assert (
-            calls[0][0][0]["start_char"] == 10
-        )  # First call with higher start_char
-        assert (
-            calls[1][0][0]["start_char"] == 5
-        )  # Second call with lower start_char
-
-
-class TestProcessJson:
-    """Test process_json function to apply numeration perturbations."""
-
-    @patch(
-        "code.data_preprocessing.perturbations.utils.load_save.INCLUDED_KEYS",
-        ["id", "claim"],
-    )
-    @patch("code.data_preprocessing.perturbations.numeration.process_sentence")
-    def test_process_json_no_changes(self, mock_process_sentence):
-        """Test process_json with no changes."""
-        mock_process_sentence.return_value = None
-        input_data = [{"id": 1, "claim": "test"}]
-        result = process_json(input_data)
-        assert result == []
-
-    @patch(
-        "code.data_preprocessing.perturbations.utils.load_save.INCLUDED_KEYS",
-        ["id", "claim"],
-    )
-    @patch("code.data_preprocessing.perturbations.numeration.process_sentence")
-    def test_process_json_with_changes(self, mock_process_sentence):
-        """Test process_json with changes."""
-        mock_process_sentence.side_effect = ["true result", "false result"]
-        input_data = [{"id": 1, "claim": "test", "extra": "removed"}]
-        result = process_json(input_data)
-
-        expected = [
-            {
-                "id": 1,
-                "claim": "test",
-                "numeration_true": "true result",
-                "numeration_false": "false result",
-            }
-        ]
-        assert result == expected
-
-    @patch(
-        "code.data_preprocessing.perturbations.utils.load_save.INCLUDED_KEYS",
-        ["id"],
-    )
-    @patch("code.data_preprocessing.perturbations.numeration.process_sentence")
-    def test_process_json_only_false_change(self, mock_process_sentence):
-        """Test process_json with only false change."""
-        mock_process_sentence.side_effect = [None, "false result"]
-        input_data = [{"id": 1}]
-        result = process_json(input_data)
-
-        expected = [{"id": 1, "numeration_false": "false result"}]
-        assert result == expected
-
 
 class TestConstants:
     """Test constants related to numerical entities and perturbation factors."""
@@ -339,3 +269,207 @@ class TestConstants:
             "TIME": 60,
         }
         assert perturbation_factors == expected
+class TestProcessJsonWithLabel:
+    """Test process_json function with label-based key naming."""
+
+    @patch(
+        "code.data_preprocessing.perturbations.numeration.process_sentence"
+    )
+    def test_process_json_label_used_in_key(self, mock_process_sentence):
+        """Test process_json uses label in output key names."""
+        mock_process_sentence.side_effect = ["true result", "false result"]
+        input_data = [{"id": 1, "label": "True"}]
+        with patch(
+            "code.data_preprocessing.perturbations.numeration.INCLUDED_KEYS",
+            ["id", "label"],
+        ):
+            result = process_json(input_data)
+        assert "perturb_type1_True" in result[0]
+        assert "perturb_type2_True" in result[0]
+
+    @patch(
+        "code.data_preprocessing.perturbations.numeration.process_sentence"
+    )
+    def test_process_json_unknown_label_fallback(self, mock_process_sentence):
+        """Test process_json falls back to UNKNOWN when label is missing."""
+        mock_process_sentence.side_effect = [None, "false result"]
+        input_data = [{"id": 1}]
+        with patch(
+            "code.data_preprocessing.perturbations.numeration.INCLUDED_KEYS",
+            ["id"],
+        ):
+            result = process_json(input_data)
+        assert "perturb_type2_UNKNOWN" in result[0]
+
+    @patch(
+        "code.data_preprocessing.perturbations.numeration.process_sentence"
+    )
+    def test_process_json_multiple_entries(self, mock_process_sentence):
+        """Test process_json processes multiple entries correctly."""
+        mock_process_sentence.side_effect = [
+            "true result 1",
+            "false result 1",
+            None,
+            None,
+            "true result 3",
+            None,
+        ]
+        input_data = [
+            {"id": 1, "label": "True"},
+            {"id": 2, "label": "False"},
+            {"id": 3, "label": "True"},
+        ]
+        with patch(
+            "code.data_preprocessing.perturbations.numeration.INCLUDED_KEYS",
+            ["id", "label"],
+        ):
+            result = process_json(input_data)
+        assert len(result) == 2
+        assert result[0]["id"] == 1
+        assert result[1]["id"] == 3
+
+    @patch(
+        "code.data_preprocessing.perturbations.numeration.process_sentence"
+    )
+    def test_process_json_excluded_keys_not_present(
+        self, mock_process_sentence
+    ):
+        """Test process_json excludes keys not in INCLUDED_KEYS."""
+        mock_process_sentence.side_effect = ["true result", None]
+        input_data = [{"id": 1, "label": "True", "extra_field": "should_be_excluded"}]
+        with patch(
+            "code.data_preprocessing.perturbations.numeration.INCLUDED_KEYS",
+            ["id", "label"],
+        ):
+            result = process_json(input_data)
+        assert "extra_field" not in result[0]
+
+
+class TestModifyNumberEdgeCases:
+    """Additional edge case tests for modify_number."""
+
+    def test_modify_number_zero_percent(self):
+        """Test modify_number with zero value for PERCENT."""
+        result = modify_number(0.0, "PERCENT", "false")
+        # 0 * 1.1 = 0.0, rounds to 0, same as original, so +1 = 1
+        assert result == 1
+
+    def test_modify_number_large_number(self):
+        """Test modify_number with large numbers."""
+        result = modify_number(1000.0, "CARDINAL", "false")
+        assert result == 1100  # 1000 * 1.1 = 1100
+
+    def test_modify_number_quantity_entity(self):
+        """Test modify_number with QUANTITY entity type (uses default factor)."""
+        result = modify_number(50.0, "QUANTITY", "false")
+        assert result == 51.0  # 50 + 1 (default factor)
+
+    def test_modify_number_true_preserves_float(self):
+        """Test that true value preserves float precision."""
+        result = modify_number(3.14, "CARDINAL", "true")
+        assert result == 3.14
+
+
+class TestNumerationPerturbationEdgeCases:
+    """Additional edge case tests for numeration_perturbation."""
+
+    def test_numeration_perturbation_default_truth_value(self):
+        """Test numeration_perturbation uses 'true' as default."""
+        result = numeration_perturbation("50%", "PERCENT")
+        # Default is 'true', so no modification but converts to words
+        assert "fifty" in result
+
+    @patch("code.data_preprocessing.perturbations.numeration.num2words")
+    def test_numeration_perturbation_date(self, mock_num2words):
+        """Test numeration_perturbation with a date value."""
+        mock_num2words.return_value = "two thousand twenty-five"
+        result = numeration_perturbation("2020", "DATE", "false")
+        assert "two thousand twenty-five" in result
+
+    @patch("code.data_preprocessing.perturbations.numeration.num2words")
+    def test_numeration_perturbation_money_singular(self, mock_num2words):
+        """Test numeration_perturbation with $1 (singular dollar)."""
+        mock_num2words.return_value = "one"
+        result = numeration_perturbation("$1", "MONEY", "true")
+        assert result == "one dollar"
+
+    def test_numeration_perturbation_empty_string(self):
+        """Test numeration_perturbation with empty string."""
+        result = numeration_perturbation("", "PERCENT", "false")
+        assert result == ""
+
+
+class TestProcessSentenceEdgeCases:
+    """Additional edge case tests for process_sentence."""
+
+    def test_process_sentence_no_normalized_claim_key(self):
+        """Test process_sentence with missing normalized_claim raises KeyError."""
+        content = {"entities": []}
+        try:
+            process_sentence(content, "false")
+            assert False, "Expected KeyError"
+        except KeyError:
+            pass
+
+    @patch("code.data_preprocessing.perturbations.numeration.process_entity")
+    def test_process_sentence_no_perturbation_made(self, mock_process_entity):
+        """Test process_sentence returns None when no perturbation is made."""
+        mock_process_entity.return_value = ("Original sentence", False)
+        content = {
+            "normalized_claim": "Original sentence",
+            "entities": [{"label": "PERCENT", "start_char": 0}],
+        }
+        result = process_sentence(content, "false")
+        assert result is None
+
+    @patch("code.data_preprocessing.perturbations.numeration.process_entity")
+    def test_process_sentence_entities_sorted_reverse(
+        self, mock_process_entity
+    ):
+        """Test process_sentence sorts entities in reverse start_char order."""
+        mock_process_entity.return_value = ("sentence", False)
+        content = {
+            "normalized_claim": "50% and 20 people",
+            "entities": [
+                {"label": "PERCENT", "start_char": 5},
+                {"label": "CARDINAL", "start_char": 10},
+                {"label": "DATE", "start_char": 2},
+            ],
+        }
+        process_sentence(content, "false")
+        calls = mock_process_entity.call_args_list
+        start_chars = [call[0][0]["start_char"] for call in calls]
+        assert start_chars == sorted(start_chars, reverse=True)
+
+
+class TestAdjustEntityBoundsEdgeCases:
+    """Additional edge case tests for adjust_entity_bounds."""
+
+    def test_adjust_entity_bounds_start_at_zero_money(self):
+        """Test adjust_entity_bounds does not go below 0 for MONEY."""
+        sentence = "$50 here"
+        entity = {"label": "MONEY"}
+        start, end = adjust_entity_bounds(sentence, entity, 0, 3)
+        assert start == 0  # Cannot go below 0
+
+    def test_adjust_entity_bounds_percent_at_end(self):
+        """Test adjust_entity_bounds handles percent at end of sentence."""
+        sentence = "50%"
+        entity = {"label": "PERCENT"}
+        start, end = adjust_entity_bounds(sentence, entity, 0, 2)
+        assert end == 3  # Should include the %
+
+    def test_adjust_entity_bounds_percent_no_symbol(self):
+        """Test adjust_entity_bounds when no % symbol follows."""
+        sentence = "50 percent"
+        entity = {"label": "PERCENT"}
+        start, end = adjust_entity_bounds(sentence, entity, 0, 2)
+        assert end == 2  # No % to include
+
+    def test_adjust_entity_bounds_euro_symbol(self):
+        """Test adjust_entity_bounds handles € symbol for MONEY."""
+        sentence = "€100 total"
+        entity = {"label": "MONEY"}
+        start, end = adjust_entity_bounds(sentence, entity, 1, 4)
+        assert start == 0  # Adjusted to include €
+

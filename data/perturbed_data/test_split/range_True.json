@@ -54,8 +54,8 @@
         "label_original": "correct",
         "claim_id": "test_000019",
         "normalized_claim": "So far, each of the 47 counties has met the two-thirds threshold on the appointment of the county executive committee members, with three counties of Kilifi, Nyeri and Kericho attaining a 50-50 representation.\"",
-        "perturb_type1_True": "So far, each of the between 42 and 51 counties has met the two-thirds threshold on the appointment of the county executive committee members, with three counties of Kilifi, Nyeri and Kericho attaining a between 45 and 55-50 representation.\"",
-        "perturb_type2_True": "So far, each of the between 68 and 77 counties has met the two-thirds threshold on the appointment of the county executive committee members, with three counties of Kilifi, Nyeri and Kericho attaining a between 72 and 82-50 representation.\""
+        "perturb_type1_True": "So far, each of the between 42 and 52 counties has met the two-thirds threshold on the appointment of the county executive committee members, with three counties of Kilifi, Nyeri and Kericho attaining a between 45 and 55-50 representation.\"",
+        "perturb_type2_True": "So far, each of the between 68 and 78 counties has met the two-thirds threshold on the appointment of the county executive committee members, with three counties of Kilifi, Nyeri and Kericho attaining a between 72 and 83-50 representation.\""
     },
     {
         "country_of_origin": "usa",
@@ -84,7 +84,7 @@
         "claim_id": "test_000024",
         "normalized_claim": "“One in six local election officials have received threats of violence” and threats against judges have doubled over four years and threats against members of Congress have increased by 10 times over five years.",
         "perturb_type1_True": "“One in six local election officials have received threats of violence” and threats against judges have doubled over four years and threats against members of Congress have increased by between 9 and 11 times over five years.",
-        "perturb_type2_True": "“One in six local election officials have received threats of violence” and threats against judges have doubled over four years and threats against members of Congress have increased by between 14 and 16 times over five years."
+        "perturb_type2_True": "“One in six local election officials have received threats of violence” and threats against judges have doubled over four years and threats against members of Congress have increased by between 14 and 17 times over five years."
     },
     {
         "country_of_origin": "usa",
@@ -126,8 +126,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_000035",
         "normalized_claim": "Says \"43 of Joe’s legislative proposals have become law, including 21 since President Trump took office.\"",
-        "perturb_type1_True": "Says \"between 38 and 47 of Joe’s legislative proposals have become law, including between 18 and 23 since President Trump took office.\"",
-        "perturb_type2_True": "Says \"between 62 and 70 of Joe’s legislative proposals have become law, including between 30 and 34 since President Trump took office.\""
+        "perturb_type1_True": "Says \"between 38 and 48 of Joe’s legislative proposals have become law, including between 18 and 24 since President Trump took office.\"",
+        "perturb_type2_True": "Says \"between 62 and 71 of Joe’s legislative proposals have become law, including between 30 and 35 since President Trump took office.\""
     },
     {
         "crawled_date": "2022-10-06T15:00:06",
@@ -170,8 +170,8 @@
         "label_original": "true",
         "claim_id": "test_000056",
         "normalized_claim": "Says of El Paso that some years, \"in a city of almost 700,000, we had five murders the entire year. Our average over the last 10 years is 18 (murders per year). We exceeded that average just on one day\" after a gunman opened fire at a Walmart in the city.",
-        "perturb_type1_True": "Says of El Paso that some years, \"in a city of almost between 630,000 and 770,000, we had five murders the entire year. Our average over the last 10 years is between 16 and 19 (murders per year). We exceeded that average just on one day\" after a gunman opened fire at a Walmart in the city.",
-        "perturb_type2_True": "Says of El Paso that some years, \"in a city of almost between 1,015,000 and 1,155,000, we had five murders the entire year. Our average over the last 10 years is between 26 and 29 (murders per year). We exceeded that average just on one day\" after a gunman opened fire at a Walmart in the city."
+        "perturb_type1_True": "Says of El Paso that some years, \"in a city of almost between 630,000 and 770,000, we had five murders the entire year. Our average over the last 10 years is between 16 and 20 (murders per year). We exceeded that average just on one day\" after a gunman opened fire at a Walmart in the city.",
+        "perturb_type2_True": "Says of El Paso that some years, \"in a city of almost between 1,015,000 and 1,155,000, we had five murders the entire year. Our average over the last 10 years is between 26 and 30 (murders per year). We exceeded that average just on one day\" after a gunman opened fire at a Walmart in the city."
     },
     {
         "country_of_origin": "usa",
@@ -198,8 +198,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_000060",
         "normalized_claim": "Says \"TriMet now spends $1.63 in benefits for every $1.00 spent on wages.\"",
-        "perturb_type1_True": "Says \"TriMet now spends between $1.47 and $1.79 in benefits for every between $0.90 and $1.10 spent on wages.\"",
-        "perturb_type2_True": "Says \"TriMet now spends between $1.87 and $2.04 in benefits for every between $1.15 and $1.25 spent on wages.\""
+        "perturb_type1_True": "Says \"TriMet now spends between $1 and $2 in benefits for every between $0 and $2 spent on wages.\"",
+        "perturb_type2_True": "Says \"TriMet now spends between $1 and $3 in benefits for every between $1 and $2 spent on wages.\""
     },
     {
         "country_of_origin": "usa",
@@ -226,8 +226,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_000075",
         "normalized_claim": "Says Sherrod Brown \"votes 97 percent with Chuck Schumer, almost 95 plus percent with Elizabeth Warren.\"",
-        "perturb_type1_True": "Says Sherrod Brown \"votes between 87.3 percent and 106.7 percent with Chuck Schumer, almost 95 plus percent with Elizabeth Warren.\"",
-        "perturb_type2_True": "Says Sherrod Brown \"votes between 145.5 percent and 155.2 percent with Chuck Schumer, almost 95 plus percent with Elizabeth Warren.\""
+        "perturb_type1_True": "Says Sherrod Brown \"votes between 87 percent and 107 percent with Chuck Schumer, almost 95 plus percent with Elizabeth Warren.\"",
+        "perturb_type2_True": "Says Sherrod Brown \"votes between 145 percent and 156 percent with Chuck Schumer, almost 95 plus percent with Elizabeth Warren.\""
     },
     {
         "crawled_date": "2022-10-07T00:00:06",
@@ -270,8 +270,8 @@
         "label_original": "Accurate.",
         "claim_id": "test_000124",
         "normalized_claim": "“There were 144,305 newly reported COVID-19 cases in the United States today. This beats the previous record of 133,819 cases reported on Monday, November 9. This is the 8th day in a row with over 100,000 cases reported.”",
-        "perturb_type1_True": "“There were between 129,874 and 158,735 newly reported COVID-19 cases in the United States today. This beats the previous record of between 120,437 and 147,200 cases reported on Monday, November 9. This is the 8th day in a row with over between 90,000 and 110,000 cases reported.”",
-        "perturb_type2_True": "“There were between 209,242 and 238,103 newly reported COVID-19 cases in the United States today. This beats the previous record of between 194,037 and 220,801 cases reported on Monday, November 9. This is the 8th day in a row with over between 145,000 and 165,000 cases reported.”"
+        "perturb_type1_True": "“There were between 129,874 and 158,736 newly reported COVID-19 cases in the United States today. This beats the previous record of between 120,437 and 147,201 cases reported on Monday, November 9. This is the 8th day in a row with over between 90,000 and 110,000 cases reported.”",
+        "perturb_type2_True": "“There were between 209,242 and 238,104 newly reported COVID-19 cases in the United States today. This beats the previous record of between 194,037 and 220,802 cases reported on Monday, November 9. This is the 8th day in a row with over between 145,000 and 165,000 cases reported.”"
     },
     {
         "country_of_origin": "usa",
@@ -326,8 +326,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_000182",
         "normalized_claim": "Israel cut its illegal immigration rate by \"99 percent\" by constructing a 143-mile fence along its southern border.",
-        "perturb_type1_True": "Israel cut its illegal immigration rate by \"between 89.1 percent and 108.9 percent\" by constructing a 143-mile fence along its southern border.",
-        "perturb_type2_True": "Israel cut its illegal immigration rate by \"between 148.5 percent and 158.4 percent\" by constructing a 143-mile fence along its southern border."
+        "perturb_type1_True": "Israel cut its illegal immigration rate by \"between 89 percent and 109 percent\" by constructing a 143-mile fence along its southern border.",
+        "perturb_type2_True": "Israel cut its illegal immigration rate by \"between 148 percent and 159 percent\" by constructing a 143-mile fence along its southern border."
     },
     {
         "country_of_origin": "usa",
@@ -340,8 +340,8 @@
         "label_original": "true",
         "claim_id": "test_000185",
         "normalized_claim": "Says most of Austin’s biggest parks have recycling though as \"many as 293 out of 300\" Austin city \"parks have no recycling, including almost every neighborhood park.\"",
-        "perturb_type1_True": "Says most of Austin’s biggest parks have recycling though as \"many as between 263 and 322 out of between 270 and 330\" Austin city \"parks have no recycling, including almost every neighborhood park.\"",
-        "perturb_type2_True": "Says most of Austin’s biggest parks have recycling though as \"many as between 424 and 483 out of between 435 and 495\" Austin city \"parks have no recycling, including almost every neighborhood park.\""
+        "perturb_type1_True": "Says most of Austin’s biggest parks have recycling though as \"many as between 263 and 323 out of between 270 and 330\" Austin city \"parks have no recycling, including almost every neighborhood park.\"",
+        "perturb_type2_True": "Says most of Austin’s biggest parks have recycling though as \"many as between 424 and 484 out of between 435 and 495\" Austin city \"parks have no recycling, including almost every neighborhood park.\""
     },
     {
         "country_of_origin": "usa",
@@ -442,8 +442,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_000254",
         "normalized_claim": "\"Twenty-3,000,000 Americans suffer from addiction, but only 1 in 10 get treatment.\"",
-        "perturb_type1_True": "\"Twenty-3,000,000 Americans suffer from addiction, but only between 0 and 1 in between 9 and 11 get treatment.\"",
-        "perturb_type2_True": "\"Twenty-3,000,000 Americans suffer from addiction, but only 1 in between 14 and 16 get treatment.\""
+        "perturb_type1_True": "\"Twenty-3,000,000 Americans suffer from addiction, but only between 0 and 2 in between 9 and 11 get treatment.\"",
+        "perturb_type2_True": "\"Twenty-3,000,000 Americans suffer from addiction, but only between 1 and 2 in between 14 and 17 get treatment.\""
     },
     {
         "crawled_date": "2020-10-01",
@@ -514,8 +514,8 @@
         "label_original": "correct",
         "claim_id": "test_000282",
         "normalized_claim": "So far, each of the 47 counties has met the two-thirds threshold on the appointment of the county executive committee members, with three counties of Kilifi, Nyeri and Kericho attaining a 50-50 representation.”",
-        "perturb_type1_True": "So far, each of the between 42 and 51 counties has met the two-thirds threshold on the appointment of the county executive committee members, with three counties of Kilifi, Nyeri and Kericho attaining a between 45 and 55-50 representation.”",
-        "perturb_type2_True": "So far, each of the between 68 and 77 counties has met the two-thirds threshold on the appointment of the county executive committee members, with three counties of Kilifi, Nyeri and Kericho attaining a between 72 and 82-50 representation.”"
+        "perturb_type1_True": "So far, each of the between 42 and 52 counties has met the two-thirds threshold on the appointment of the county executive committee members, with three counties of Kilifi, Nyeri and Kericho attaining a between 45 and 55-50 representation.”",
+        "perturb_type2_True": "So far, each of the between 68 and 78 counties has met the two-thirds threshold on the appointment of the county executive committee members, with three counties of Kilifi, Nyeri and Kericho attaining a between 72 and 83-50 representation.”"
     },
     {
         "crawled_date": "2022-10-07T06:00:06",
@@ -573,7 +573,7 @@
         "claim_id": "test_000303",
         "normalized_claim": "SaysRuben Kihuen \"only managed in the minority to get one bill passed out of the eight to 10 he introduced\" during the 2015 legislative session.",
         "perturb_type1_True": "SaysRuben Kihuen \"only managed in the minority to get one bill passed out of the eight to between 9 and 11 he introduced\" during the 2015 legislative session.",
-        "perturb_type2_True": "SaysRuben Kihuen \"only managed in the minority to get one bill passed out of the eight to between 14 and 16 he introduced\" during the 2015 legislative session."
+        "perturb_type2_True": "SaysRuben Kihuen \"only managed in the minority to get one bill passed out of the eight to between 14 and 17 he introduced\" during the 2015 legislative session."
     },
     {
         "country_of_origin": "usa",
@@ -657,8 +657,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_000348",
         "normalized_claim": "Says 55 percent of council members have come from area where only 10 percent of Austinites live.",
-        "perturb_type1_True": "Says between 49.5 percent and 60.5 percent of council members have come from area where only between 9 percent and 11 percent of Austinites live.",
-        "perturb_type2_True": "Says between 82.5 percent and 88 percent of council members have come from area where only between 15 percent and 16 percent of Austinites live."
+        "perturb_type1_True": "Says between 49 percent and 61 percent of council members have come from area where only between 9 percent and 11 percent of Austinites live.",
+        "perturb_type2_True": "Says between 82 percent and 88 percent of council members have come from area where only between 15 percent and 16 percent of Austinites live."
     },
     {
         "country_of_origin": "usa",
@@ -686,8 +686,8 @@
         "label_original": "correct",
         "claim_id": "test_000376",
         "normalized_claim": "“Compliance levels with parole and probation conditions have improved to reach a historic mark of 98%.”",
-        "perturb_type1_True": "“Compliance levels with parole and probation conditions have improved to reach a historic mark of between 88.2% and 107.8%.”",
-        "perturb_type2_True": "“Compliance levels with parole and probation conditions have improved to reach a historic mark of between 147% and 156.8%.”"
+        "perturb_type1_True": "“Compliance levels with parole and probation conditions have improved to reach a historic mark of between 88% and 108%.”",
+        "perturb_type2_True": "“Compliance levels with parole and probation conditions have improved to reach a historic mark of between 147% and 157%.”"
     },
     {
         "country_of_origin": "usa",
@@ -700,8 +700,8 @@
         "label_original": "true",
         "claim_id": "test_000379",
         "normalized_claim": "Obama's tax plan cuts taxes \"for 95 percent of all working families.\"",
-        "perturb_type1_True": "Obama's tax plan cuts taxes \"for between 85.5 percent and 104.5 percent of all working families.\"",
-        "perturb_type2_True": "Obama's tax plan cuts taxes \"for between 142.5 percent and 152 percent of all working families.\""
+        "perturb_type1_True": "Obama's tax plan cuts taxes \"for between 85 percent and 105 percent of all working families.\"",
+        "perturb_type2_True": "Obama's tax plan cuts taxes \"for between 142 percent and 152 percent of all working families.\""
     },
     {
         "crawled_date": "2022-10-07T12:42:09",
@@ -715,8 +715,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_000382",
         "normalized_claim": "“84% of all new electric capacity planned to come onto the electric grid this year is clean energy.”",
-        "perturb_type1_True": "“between 75.6% and 92.4% of all new electric capacity planned to come onto the electric grid this year is clean energy.”",
-        "perturb_type2_True": "“between 126% and 134.4% of all new electric capacity planned to come onto the electric grid this year is clean energy.”"
+        "perturb_type1_True": "“between 75% and 93% of all new electric capacity planned to come onto the electric grid this year is clean energy.”",
+        "perturb_type2_True": "“between 126% and 135% of all new electric capacity planned to come onto the electric grid this year is clean energy.”"
     },
     {
         "crawled_date": "2023-05-24T11:28:42",
@@ -804,8 +804,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_000416",
         "normalized_claim": "“The average hospital stay for a case of COVID-19 costs about $17,064. The vaccine is free.”",
-        "perturb_type1_True": "“The average hospital stay for a case of COVID-19 costs about between $15,357.60 and $18,770.40. The vaccine is free.”",
-        "perturb_type2_True": "“The average hospital stay for a case of COVID-19 costs about between $19,623.60 and $21,330. The vaccine is free.”"
+        "perturb_type1_True": "“The average hospital stay for a case of COVID-19 costs about between $15,357 and $18,771. The vaccine is free.”",
+        "perturb_type2_True": "“The average hospital stay for a case of COVID-19 costs about between $19,623 and $21,330. The vaccine is free.”"
     },
     {
         "country_of_origin": "usa",
@@ -818,8 +818,8 @@
         "label_original": "true",
         "claim_id": "test_000421",
         "normalized_claim": "\"Only 3 percent of voters 18 to 34 don't believe that climate change is really happening.\"",
-        "perturb_type1_True": "\"Only between 2.7 percent and 3.3 percent of voters 18 to 34 don't believe that climate change is really happening.\"",
-        "perturb_type2_True": "\"Only between 4.5 percent and 4.8 percent of voters 18 to 34 don't believe that climate change is really happening.\""
+        "perturb_type1_True": "\"Only between 2 percent and 4 percent of voters 18 to 34 don't believe that climate change is really happening.\"",
+        "perturb_type2_True": "\"Only between 4 percent and 5 percent of voters 18 to 34 don't believe that climate change is really happening.\""
     },
     {
         "country_of_origin": "usa",
@@ -846,8 +846,8 @@
         "label_original": "true",
         "claim_id": "test_000426",
         "normalized_claim": "Before 2005, \"the percentage of\" Texas high school \"students meeting the college readiness standards of the Texas Higher Education Coordinating Board stood at 28% in English and 42% in math. Those figures stood at 65% and 66% in 2013.\"",
-        "perturb_type1_True": "Before 2005, \"the percentage of\" Texas high school \"students meeting the college readiness standards of the Texas Higher Education Coordinating Board stood at between 25.2% and 30.8% in English and between 37.8% and 46.2% in math. Those figures stood at between 58.5% and 71.5% and between 59.4% and 72.6% in 2013.\"",
-        "perturb_type2_True": "Before 2005, \"the percentage of\" Texas high school \"students meeting the college readiness standards of the Texas Higher Education Coordinating Board stood at between 42% and 44.8% in English and between 63% and 67.2% in math. Those figures stood at between 97.5% and 104% and between 99% and 105.6% in 2013.\""
+        "perturb_type1_True": "Before 2005, \"the percentage of\" Texas high school \"students meeting the college readiness standards of the Texas Higher Education Coordinating Board stood at between 25% and 31% in English and between 37% and 47% in math. Those figures stood at between 58% and 72% and between 59% and 73% in 2013.\"",
+        "perturb_type2_True": "Before 2005, \"the percentage of\" Texas high school \"students meeting the college readiness standards of the Texas Higher Education Coordinating Board stood at between 42% and 45% in English and between 63% and 68% in math. Those figures stood at between 97% and 104% and between 99% and 106% in 2013.\""
     },
     {
         "crawled_date": "2022-10-07T00:00:06",
@@ -974,8 +974,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_000473",
         "normalized_claim": "Small businesses in West Virginia make up \"99 percent of the total number of businesses in the state\" and employ \"nearly 50 percent of the state’s workforce.\"",
-        "perturb_type1_True": "Small businesses in West Virginia make up \"between 89.1 percent and 108.9 percent of the total number of businesses in the state\" and employ \"nearly between 45 percent and 55 percent of the state’s workforce.\"",
-        "perturb_type2_True": "Small businesses in West Virginia make up \"between 148.5 percent and 158.4 percent of the total number of businesses in the state\" and employ \"nearly between 75 percent and 80 percent of the state’s workforce.\""
+        "perturb_type1_True": "Small businesses in West Virginia make up \"between 89 percent and 109 percent of the total number of businesses in the state\" and employ \"nearly between 45 percent and 55 percent of the state’s workforce.\"",
+        "perturb_type2_True": "Small businesses in West Virginia make up \"between 148 percent and 159 percent of the total number of businesses in the state\" and employ \"nearly between 75 percent and 80 percent of the state’s workforce.\""
     },
     {
         "crawled_date": "2022-10-06T15:00:06",
@@ -1048,8 +1048,8 @@
         "label_original": "correct",
         "claim_id": "test_000494",
         "normalized_claim": "”To date, 385 public entities have been registered in the portal, and 5,236 contracts published valued at Ksh 146,500,000,000.”",
-        "perturb_type1_True": "”To date, between 346 and 423 public entities have been registered in the portal, and between 4,712 and 5,759 contracts published valued at Ksh between 131,850,000,000 and 161,150,000,000.”",
-        "perturb_type2_True": "”To date, between 558 and 635 public entities have been registered in the portal, and between 7,592 and 8,639 contracts published valued at Ksh between 168,475,000,000 and 183,125,000,000.”"
+        "perturb_type1_True": "”To date, between 346 and 424 public entities have been registered in the portal, and between 4,712 and 5,760 contracts published valued at Ksh between 131,850,000,000 and 161,150,000,000.”",
+        "perturb_type2_True": "”To date, between 558 and 636 public entities have been registered in the portal, and between 7,592 and 8,640 contracts published valued at Ksh between 168,475,000,000 and 183,125,000,000.”"
     },
     {
         "crawled_date": "2019-04-03",
@@ -1063,8 +1063,8 @@
         "label_original": "TRUE",
         "claim_id": "test_000506",
         "normalized_claim": "Inactivated polio vaccine (IPV) introduced in Nov 2015. Around 4 crore doses administered to children.",
-        "perturb_type1_True": "Inactivated polio vaccine (IPV) introduced in Nov 2015. Around between 3 and 4 crore doses administered to children.",
-        "perturb_type2_True": "Inactivated polio vaccine (IPV) introduced in Nov 2015. Around between 5 and 6 crore doses administered to children."
+        "perturb_type1_True": "Inactivated polio vaccine (IPV) introduced in Nov 2015. Around between 3 and 5 crore doses administered to children.",
+        "perturb_type2_True": "Inactivated polio vaccine (IPV) introduced in Nov 2015. Around between 5 and 7 crore doses administered to children."
     },
     {
         "crawled_date": "2014-10-27",
@@ -1164,8 +1164,8 @@
         "label_original": "true",
         "claim_id": "test_000554",
         "normalized_claim": "Under Donald Trump's tax plan, \"51 percent of single parents would see their taxes go up.\"",
-        "perturb_type1_True": "Under Donald Trump's tax plan, \"between 45.9 percent and 56.1 percent of single parents would see their taxes go up.\"",
-        "perturb_type2_True": "Under Donald Trump's tax plan, \"between 76.5 percent and 81.6 percent of single parents would see their taxes go up.\""
+        "perturb_type1_True": "Under Donald Trump's tax plan, \"between 45 percent and 57 percent of single parents would see their taxes go up.\"",
+        "perturb_type2_True": "Under Donald Trump's tax plan, \"between 76 percent and 82 percent of single parents would see their taxes go up.\""
     },
     {
         "crawled_date": "2012-12-19",
@@ -1222,8 +1222,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_000596",
         "normalized_claim": "\"Only 12% of legal immigrants are selected based on skill or based on merit. In countries like Canada, Australia and New Zealand, and others, that number is closer to 60, and even 70 and 75% in some cases.\"",
-        "perturb_type1_True": "\"Only between 10.8% and 13.2% of legal immigrants are selected based on skill or based on merit. In countries like Canada, Australia and New Zealand, and others, that number is closer to between 54 and 66, and even 70 and between 67.5% and 82.5% in some cases.\"",
-        "perturb_type2_True": "\"Only between 18% and 19.2% of legal immigrants are selected based on skill or based on merit. In countries like Canada, Australia and New Zealand, and others, that number is closer to between 87 and 99, and even 70 and between 112.5% and 120% in some cases.\""
+        "perturb_type1_True": "\"Only between 10% and 14% of legal immigrants are selected based on skill or based on merit. In countries like Canada, Australia and New Zealand, and others, that number is closer to between 54 and 66, and even 70 and between 67% and 83% in some cases.\"",
+        "perturb_type2_True": "\"Only between 18% and 20% of legal immigrants are selected based on skill or based on merit. In countries like Canada, Australia and New Zealand, and others, that number is closer to between 87 and 99, and even 70 and between 112% and 120% in some cases.\""
     },
     {
         "country_of_origin": "usa",
@@ -1236,8 +1236,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_000600",
         "normalized_claim": "\"Radio Marti and TV Marti have spent more than $500,000,000 to reach less than 1 percent of the Cuban population.\"",
-        "perturb_type1_True": "\"Radio Marti and TV Marti have spent more than between $450,000,000 and $550,000,000 to reach less than between 0.9 percent and 1.1 percent of the Cuban population.\"",
-        "perturb_type2_True": "\"Radio Marti and TV Marti have spent more than between $575,000,000 and $625,000,000 to reach less than between 1.5 percent and 1.6 percent of the Cuban population.\""
+        "perturb_type1_True": "\"Radio Marti and TV Marti have spent more than between $450,000,000 and $550,000,000 to reach less than between 0 percent and 2 percent of the Cuban population.\"",
+        "perturb_type2_True": "\"Radio Marti and TV Marti have spent more than between $575,000,000 and $625,000,000 to reach less than between 1 percent and 2 percent of the Cuban population.\""
     },
     {
         "crawled_date": "2017-10-27",
@@ -1324,8 +1324,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_000642",
         "normalized_claim": "Raising the minimum wage to $10.10 an hour, \"would help lift over a million Americans out of poverty.\"",
-        "perturb_type1_True": "Raising the minimum wage to between $9.09 and $11.11 an hour, \"would help lift over a million Americans out of poverty.\"",
-        "perturb_type2_True": "Raising the minimum wage to between $11.62 and $12.62 an hour, \"would help lift over a million Americans out of poverty.\""
+        "perturb_type1_True": "Raising the minimum wage to between $9 and $12 an hour, \"would help lift over a million Americans out of poverty.\"",
+        "perturb_type2_True": "Raising the minimum wage to between $11 and $13 an hour, \"would help lift over a million Americans out of poverty.\""
     },
     {
         "crawled_date": "2014-12-23",
@@ -1354,7 +1354,7 @@
         "claim_id": "test_000645",
         "normalized_claim": "\"To give a sense of how families are struggling, a record four out of every 10 school kids in Ohio now qualifies for subsidized lunch.\"",
         "perturb_type1_True": "\"To give a sense of how families are struggling, a record four out of every between 9 and 11 school kids in Ohio now qualifies for subsidized lunch.\"",
-        "perturb_type2_True": "\"To give a sense of how families are struggling, a record four out of every between 14 and 16 school kids in Ohio now qualifies for subsidized lunch.\""
+        "perturb_type2_True": "\"To give a sense of how families are struggling, a record four out of every between 14 and 17 school kids in Ohio now qualifies for subsidized lunch.\""
     },
     {
         "crawled_date": "2022-10-06T15:00:06",
@@ -1368,8 +1368,8 @@
         "label_original": "correct",
         "claim_id": "test_000656",
         "normalized_claim": "“The Accelerated Schools Infrastructure Delivery Initiative programme continues to deliver modern facilities to our schools... with at least 187 schools being completed to date.\"",
-        "perturb_type1_True": "“The Accelerated Schools Infrastructure Delivery Initiative programme continues to deliver modern facilities to our schools... with at least between 168 and 205 schools being completed to date.\"",
-        "perturb_type2_True": "“The Accelerated Schools Infrastructure Delivery Initiative programme continues to deliver modern facilities to our schools... with at least between 271 and 308 schools being completed to date.\""
+        "perturb_type1_True": "“The Accelerated Schools Infrastructure Delivery Initiative programme continues to deliver modern facilities to our schools... with at least between 168 and 206 schools being completed to date.\"",
+        "perturb_type2_True": "“The Accelerated Schools Infrastructure Delivery Initiative programme continues to deliver modern facilities to our schools... with at least between 271 and 309 schools being completed to date.\""
     },
     {
         "country_of_origin": "usa",
@@ -1468,8 +1468,8 @@
         "label_original": "True",
         "claim_id": "test_000695",
         "normalized_claim": "Actor George Clooney once gifted each of his 14 closest friends a suitcase filled with $1,000,000 in cash.",
-        "perturb_type1_True": "Actor George Clooney once gifted each of his between 12 and 15 closest friends a suitcase filled with between $900,000 and $1,100,000 in cash.",
-        "perturb_type2_True": "Actor George Clooney once gifted each of his between 20 and 23 closest friends a suitcase filled with between $1,150,000 and $1,250,000 in cash."
+        "perturb_type1_True": "Actor George Clooney once gifted each of his between 12 and 16 closest friends a suitcase filled with between $900,000 and $1,100,000 in cash.",
+        "perturb_type2_True": "Actor George Clooney once gifted each of his between 20 and 24 closest friends a suitcase filled with between $1,150,000 and $1,250,000 in cash."
     },
     {
         "country_of_origin": "usa",
@@ -1482,8 +1482,8 @@
         "label_original": "true",
         "claim_id": "test_000707",
         "normalized_claim": "\"Of the 13 (Bill) Clinton speeches that fetched $500,000 or more, only two occurred during the years his wife was not secretary of state.\"",
-        "perturb_type1_True": "\"Of the between 11 and 14 (Bill) Clinton speeches that fetched between $450,000 and $550,000 or more, only two occurred during the years his wife was not secretary of state.\"",
-        "perturb_type2_True": "\"Of the between 18 and 21 (Bill) Clinton speeches that fetched between $575,000 and $625,000 or more, only two occurred during the years his wife was not secretary of state.\""
+        "perturb_type1_True": "\"Of the between 11 and 15 (Bill) Clinton speeches that fetched between $450,000 and $550,000 or more, only two occurred during the years his wife was not secretary of state.\"",
+        "perturb_type2_True": "\"Of the between 18 and 22 (Bill) Clinton speeches that fetched between $575,000 and $625,000 or more, only two occurred during the years his wife was not secretary of state.\""
     },
     {
         "country_of_origin": "usa",
@@ -1496,8 +1496,8 @@
         "label_original": "true",
         "claim_id": "test_000708",
         "normalized_claim": "Says 97 percent of food stamp benefits \"are paid in the proper amounts to people who are really eligible.\"",
-        "perturb_type1_True": "Says between 87.3 percent and 106.7 percent of food stamp benefits \"are paid in the proper amounts to people who are really eligible.\"",
-        "perturb_type2_True": "Says between 145.5 percent and 155.2 percent of food stamp benefits \"are paid in the proper amounts to people who are really eligible.\""
+        "perturb_type1_True": "Says between 87 percent and 107 percent of food stamp benefits \"are paid in the proper amounts to people who are really eligible.\"",
+        "perturb_type2_True": "Says between 145 percent and 156 percent of food stamp benefits \"are paid in the proper amounts to people who are really eligible.\""
     },
     {
         "crawled_date": "2020-10-29",
@@ -1539,8 +1539,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_000739",
         "normalized_claim": "\"In last week’s debate, Bernie questioned Hillary’s commitment to fighting climate change because a whopping 0.2 percent of the money given to our campaign has come from employees of oil and gas companies. Not even 2 percent, mind you: 0.2 percent.\"",
-        "perturb_type1_True": "\"In last week’s debate, Bernie questioned Hillary’s commitment to fighting climate change because a whopping 0.2 percent of the money given to our campaign has come from employees of oil and gas companies. Not even between 1.8 percent and 2.2 percent, mind you: 0.2 percent.\"",
-        "perturb_type2_True": "\"In last week’s debate, Bernie questioned Hillary’s commitment to fighting climate change because a whopping 0.3 percent of the money given to our campaign has come from employees of oil and gas companies. Not even between 3 percent and 3.2 percent, mind you: 0.3 percent.\""
+        "perturb_type1_True": "\"In last week’s debate, Bernie questioned Hillary’s commitment to fighting climate change because a whopping between 0 percent and 1 percent of the money given to our campaign has come from employees of oil and gas companies. Not even between 1 percent and 3 percent, mind you: between 0 percent and 1 percent.\"",
+        "perturb_type2_True": "\"In last week’s debate, Bernie questioned Hillary’s commitment to fighting climate change because a whopping between 0 percent and 1 percent of the money given to our campaign has come from employees of oil and gas companies. Not even between 3 percent and 4 percent, mind you: between 0 percent and 1 percent.\""
     },
     {
         "country_of_origin": "usa",
@@ -1581,8 +1581,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_000758",
         "normalized_claim": "For 21 countries in Sub-Saharan Africa, \"we simply do not have data to say anything about trends in poverty.\"",
-        "perturb_type1_True": "For between 18 and 23 countries in Sub-Saharan Africa, \"we simply do not have data to say anything about trends in poverty.\"",
-        "perturb_type2_True": "For between 30 and 34 countries in Sub-Saharan Africa, \"we simply do not have data to say anything about trends in poverty.\""
+        "perturb_type1_True": "For between 18 and 24 countries in Sub-Saharan Africa, \"we simply do not have data to say anything about trends in poverty.\"",
+        "perturb_type2_True": "For between 30 and 35 countries in Sub-Saharan Africa, \"we simply do not have data to say anything about trends in poverty.\""
     },
     {
         "country_of_origin": "usa",
@@ -1697,8 +1697,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_000814",
         "normalized_claim": "Says Dontre Hamilton \"was shot 14 times by police for resting on a park bench in Milwaukee.\"",
-        "perturb_type1_True": "Says Dontre Hamilton \"was shot between 12 and 15 times by police for resting on a park bench in Milwaukee.\"",
-        "perturb_type2_True": "Says Dontre Hamilton \"was shot between 20 and 23 times by police for resting on a park bench in Milwaukee.\""
+        "perturb_type1_True": "Says Dontre Hamilton \"was shot between 12 and 16 times by police for resting on a park bench in Milwaukee.\"",
+        "perturb_type2_True": "Says Dontre Hamilton \"was shot between 20 and 24 times by police for resting on a park bench in Milwaukee.\""
     },
     {
         "crawled_date": "2022-10-18T21:00:07",
@@ -1755,8 +1755,8 @@
         "label_original": "true",
         "claim_id": "test_000837",
         "normalized_claim": "\"We saw the prison population expand and vacancy rates for correctional officers go from 2.9% to 15.2%\" over the last eight years.",
-        "perturb_type1_True": "\"We saw the prison population expand and vacancy rates for correctional officers go from between 2.6% and 3.2% to between 13.7% and 16.7%\" over the last eight years.",
-        "perturb_type2_True": "\"We saw the prison population expand and vacancy rates for correctional officers go from between 4.3% and 4.6% to between 22.8% and 24.3%\" over the last eight years."
+        "perturb_type1_True": "\"We saw the prison population expand and vacancy rates for correctional officers go from between 2% and 4% to between 13% and 17%\" over the last eight years.",
+        "perturb_type2_True": "\"We saw the prison population expand and vacancy rates for correctional officers go from between 4% and 5% to between 22% and 25%\" over the last eight years."
     },
     {
         "crawled_date": "2023-05-25T16:44:43",
@@ -1813,8 +1813,8 @@
         "label_original": "correct",
         "claim_id": "test_000887",
         "normalized_claim": "\"...figures show that 2,048,052 households benefited from indigent support systems for electricity in 2014.\"",
-        "perturb_type1_True": "\"...figures show that between 1,843,246 and 2,252,857 households benefited from indigent support systems for electricity in 2014.\"",
-        "perturb_type2_True": "\"...figures show that between 2,969,675 and 3,379,285 households benefited from indigent support systems for electricity in 2014.\""
+        "perturb_type1_True": "\"...figures show that between 1,843,246 and 2,252,858 households benefited from indigent support systems for electricity in 2014.\"",
+        "perturb_type2_True": "\"...figures show that between 2,969,675 and 3,379,286 households benefited from indigent support systems for electricity in 2014.\""
     },
     {
         "country_of_origin": "usa",
@@ -1827,8 +1827,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_000889",
         "normalized_claim": "\"Over 39% of violent criminals return to prison following their release.\"",
-        "perturb_type1_True": "\"Over between 35.1% and 42.9% of violent criminals return to prison following their release.\"",
-        "perturb_type2_True": "\"Over between 58.5% and 62.4% of violent criminals return to prison following their release.\""
+        "perturb_type1_True": "\"Over between 35% and 43% of violent criminals return to prison following their release.\"",
+        "perturb_type2_True": "\"Over between 58% and 63% of violent criminals return to prison following their release.\""
     },
     {
         "country_of_origin": "usa",
@@ -1871,8 +1871,8 @@
         "label_original": "correct",
         "claim_id": "test_000914",
         "normalized_claim": "“The World Bank's annual Doing Business Report currently puts South Africa number 82 out of 190 countries that they have tracked with regard to being able to do business in an efficient way.”",
-        "perturb_type1_True": "“The World Bank's annual Doing Business Report currently puts South Africa number between 73 and 90 out of between 171 and 209 countries that they have tracked with regard to being able to do business in an efficient way.”",
-        "perturb_type2_True": "“The World Bank's annual Doing Business Report currently puts South Africa number between 118 and 135 out of between 275 and 313 countries that they have tracked with regard to being able to do business in an efficient way.”"
+        "perturb_type1_True": "“The World Bank's annual Doing Business Report currently puts South Africa number between 73 and 91 out of between 171 and 209 countries that they have tracked with regard to being able to do business in an efficient way.”",
+        "perturb_type2_True": "“The World Bank's annual Doing Business Report currently puts South Africa number between 118 and 136 out of between 275 and 314 countries that they have tracked with regard to being able to do business in an efficient way.”"
     },
     {
         "crawled_date": "2012-12-28",
@@ -1930,8 +1930,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_000969",
         "normalized_claim": "The transportation sales tax would cost the average consumer an estimated $112 a year.",
-        "perturb_type1_True": "The transportation sales tax would cost the average consumer an estimated between $100.80 and $123.20 a year.",
-        "perturb_type2_True": "The transportation sales tax would cost the average consumer an estimated between $128.80 and $140 a year."
+        "perturb_type1_True": "The transportation sales tax would cost the average consumer an estimated between $100 and $124 a year.",
+        "perturb_type2_True": "The transportation sales tax would cost the average consumer an estimated between $128 and $140 a year."
     },
     {
         "country_of_origin": "usa",
@@ -1974,8 +1974,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_000980",
         "normalized_claim": "In 2017, Joe Biden paid $3,742,974 in federal income taxes and Kamala Harris paid $516,469 while Donald Trump paid $750.",
-        "perturb_type1_True": "In 2017, Joe Biden paid between $3,368,676.60 and $4,117,271.40 in federal income taxes and Kamala Harris paid between $464,822.10 and $568,115.90 while Donald Trump paid between $675 and $825.",
-        "perturb_type2_True": "In 2017, Joe Biden paid between $4,304,420.10 and $4,678,717.50 in federal income taxes and Kamala Harris paid between $593,939.35 and $645,586.25 while Donald Trump paid between $862.50 and $937.50."
+        "perturb_type1_True": "In 2017, Joe Biden paid between $3,368,676 and $4,117,272 in federal income taxes and Kamala Harris paid between $464,822 and $568,116 while Donald Trump paid between $675 and $825.",
+        "perturb_type2_True": "In 2017, Joe Biden paid between $4,304,420 and $4,678,718 in federal income taxes and Kamala Harris paid between $593,939 and $645,587 while Donald Trump paid between $862 and $938."
     },
     {
         "crawled_date": "2022-10-07T00:00:06",
@@ -2003,8 +2003,8 @@
         "label_original": "true",
         "claim_id": "test_000992",
         "normalized_claim": "\"If you take into account all the people who are struggling for work, or have just stopped looking, the real unemployment rate is over 15 percent.\"",
-        "perturb_type1_True": "\"If you take into account all the people who are struggling for work, or have just stopped looking, the real unemployment rate is over between 13.5 percent and 16.5 percent.\"",
-        "perturb_type2_True": "\"If you take into account all the people who are struggling for work, or have just stopped looking, the real unemployment rate is over between 22.5 percent and 24 percent.\""
+        "perturb_type1_True": "\"If you take into account all the people who are struggling for work, or have just stopped looking, the real unemployment rate is over between 13 percent and 17 percent.\"",
+        "perturb_type2_True": "\"If you take into account all the people who are struggling for work, or have just stopped looking, the real unemployment rate is over between 22 percent and 24 percent.\""
     },
     {
         "crawled_date": "2022-10-06T15:00:06",
@@ -2018,8 +2018,8 @@
         "label_original": "correct",
         "claim_id": "test_000997",
         "normalized_claim": "“Only 5% of the money sent to counties went to Nairobi.” ",
-        "perturb_type1_True": "“Only between 4.5% and 5.5% of the money sent to counties went to Nairobi.” ",
-        "perturb_type2_True": "“Only between 7.5% and 8% of the money sent to counties went to Nairobi.” "
+        "perturb_type1_True": "“Only between 4% and 6% of the money sent to counties went to Nairobi.” ",
+        "perturb_type2_True": "“Only between 7% and 8% of the money sent to counties went to Nairobi.” "
     },
     {
         "crawled_date": "2022-10-06T15:00:06",
@@ -2047,8 +2047,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_001019",
         "normalized_claim": "\"Charlie Crist allowed college tuition to increase up to 15 percent every year.\"",
-        "perturb_type1_True": "\"Charlie Crist allowed college tuition to increase up to between 13.5 percent and 16.5 percent every year.\"",
-        "perturb_type2_True": "\"Charlie Crist allowed college tuition to increase up to between 22.5 percent and 24 percent every year.\""
+        "perturb_type1_True": "\"Charlie Crist allowed college tuition to increase up to between 13 percent and 17 percent every year.\"",
+        "perturb_type2_True": "\"Charlie Crist allowed college tuition to increase up to between 22 percent and 24 percent every year.\""
     },
     {
         "country_of_origin": "usa",
@@ -2061,8 +2061,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_001025",
         "normalized_claim": "\"If you have a job in this country, (there's a) 97 percent chance that you're not going to be in poverty.\"",
-        "perturb_type1_True": "\"If you have a job in this country, (there's a) between 87.3 percent and 106.7 percent chance that you're not going to be in poverty.\"",
-        "perturb_type2_True": "\"If you have a job in this country, (there's a) between 145.5 percent and 155.2 percent chance that you're not going to be in poverty.\""
+        "perturb_type1_True": "\"If you have a job in this country, (there's a) between 87 percent and 107 percent chance that you're not going to be in poverty.\"",
+        "perturb_type2_True": "\"If you have a job in this country, (there's a) between 145 percent and 156 percent chance that you're not going to be in poverty.\""
     },
     {
         "country_of_origin": "usa",
@@ -2162,7 +2162,7 @@
         "claim_id": "test_001094",
         "normalized_claim": "The GOP-controlled Legislature has \"refused to act on at least 150\" appointees of Gov. Tony Evers.",
         "perturb_type1_True": "The GOP-controlled Legislature has \"refused to act on at least between 135 and 165\" appointees of Gov. Tony Evers.",
-        "perturb_type2_True": "The GOP-controlled Legislature has \"refused to act on at least between 217 and 247\" appointees of Gov. Tony Evers."
+        "perturb_type2_True": "The GOP-controlled Legislature has \"refused to act on at least between 217 and 248\" appointees of Gov. Tony Evers."
     },
     {
         "country_of_origin": "usa",
@@ -2175,8 +2175,8 @@
         "label_original": "true",
         "claim_id": "test_001104",
         "normalized_claim": "Says 1 in 5 Texans did not have health insurance coverage before the pandemic, and now “nearly 1 in 3 Texans under the age of 65 don’t have access to health care insurance.”",
-        "perturb_type1_True": "Says between 0 and 1 in between 4 and 5 Texans did not have health insurance coverage before the pandemic, and now “nearly between 0 and 1 in between 2 and 3 Texans under the age of 65 don’t have access to health care insurance.”",
-        "perturb_type2_True": "Says 1 in between 7 and 8 Texans did not have health insurance coverage before the pandemic, and now “nearly 1 in 4 Texans under the age of 65 don’t have access to health care insurance.”"
+        "perturb_type1_True": "Says between 0 and 2 in between 4 and 6 Texans did not have health insurance coverage before the pandemic, and now “nearly between 0 and 2 in between 2 and 4 Texans under the age of 65 don’t have access to health care insurance.”",
+        "perturb_type2_True": "Says between 1 and 2 in between 7 and 9 Texans did not have health insurance coverage before the pandemic, and now “nearly between 1 and 2 in between 4 and 5 Texans under the age of 65 don’t have access to health care insurance.”"
     },
     {
         "crawled_date": "2022-10-07T03:00:06",
@@ -2205,8 +2205,8 @@
         "label_original": "true",
         "claim_id": "test_001107",
         "normalized_claim": "406 constituencies voted to leave, 242 voted to remain in the EU referendum.",
-        "perturb_type1_True": "Between 365 and 446 constituencies voted to leave, between 217 and 266 voted to remain in the EU referendum.",
-        "perturb_type2_True": "Between 588 and 669 constituencies voted to leave, between 350 and 399 voted to remain in the EU referendum."
+        "perturb_type1_True": "Between 365 and 447 constituencies voted to leave, between 217 and 267 voted to remain in the EU referendum.",
+        "perturb_type2_True": "Between 588 and 670 constituencies voted to leave, between 350 and 400 voted to remain in the EU referendum."
     },
     {
         "country_of_origin": "usa",
@@ -2219,8 +2219,8 @@
         "label_original": "true",
         "claim_id": "test_001119",
         "normalized_claim": "Says if labor force participation rate were the same as when Barack Obama became president, unemployment would be 11 percent.",
-        "perturb_type1_True": "Says if labor force participation rate were the same as when Barack Obama became president, unemployment would be between 9.9 percent and 12.1 percent.",
-        "perturb_type2_True": "Says if labor force participation rate were the same as when Barack Obama became president, unemployment would be between 16.5 percent and 17.6 percent."
+        "perturb_type1_True": "Says if labor force participation rate were the same as when Barack Obama became president, unemployment would be between 9 percent and 13 percent.",
+        "perturb_type2_True": "Says if labor force participation rate were the same as when Barack Obama became president, unemployment would be between 16 percent and 18 percent."
     },
     {
         "country_of_origin": "usa",
@@ -2247,8 +2247,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_001147",
         "normalized_claim": "\"There are 321,092 public school teachers in Texas. And there are 313,850 non-teachers in our public schools.\"",
-        "perturb_type1_True": "\"There are between 288,982 and 353,201 public school teachers in Texas. And there are between 282,465 and 345,235 non-teachers in our public schools.\"",
-        "perturb_type2_True": "\"There are between 465,583 and 529,801 public school teachers in Texas. And there are between 455,082 and 517,852 non-teachers in our public schools.\""
+        "perturb_type1_True": "\"There are between 288,982 and 353,202 public school teachers in Texas. And there are between 282,465 and 345,235 non-teachers in our public schools.\"",
+        "perturb_type2_True": "\"There are between 465,583 and 529,802 public school teachers in Texas. And there are between 455,082 and 517,853 non-teachers in our public schools.\""
     },
     {
         "crawled_date": "2022-10-07T12:42:09",
@@ -2306,8 +2306,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_001179",
         "normalized_claim": "\"Over 97 percent of the scientific community … believe that humans are contributing to climate change.\"",
-        "perturb_type1_True": "\"Over between 87.3 percent and 106.7 percent of the scientific community … believe that humans are contributing to climate change.\"",
-        "perturb_type2_True": "\"Over between 145.5 percent and 155.2 percent of the scientific community … believe that humans are contributing to climate change.\""
+        "perturb_type1_True": "\"Over between 87 percent and 107 percent of the scientific community … believe that humans are contributing to climate change.\"",
+        "perturb_type2_True": "\"Over between 145 percent and 156 percent of the scientific community … believe that humans are contributing to climate change.\""
     },
     {
         "crawled_date": "2023-05-25T16:46:57",
@@ -2351,7 +2351,7 @@
         "claim_id": "test_001195",
         "normalized_claim": "“10,000 people have recently died. 9,950 of them, thereabouts, are people who hadn’t been vaccinated.\"",
         "perturb_type1_True": "“between 9,000 and 11,000 people have recently died. between 8,955 and 10,945 of them, thereabouts, are people who hadn’t been vaccinated.\"",
-        "perturb_type2_True": "“between 14,500 and 16,500 people have recently died. between 14,427 and 16,417 of them, thereabouts, are people who hadn’t been vaccinated.\""
+        "perturb_type2_True": "“between 14,500 and 16,500 people have recently died. between 14,427 and 16,418 of them, thereabouts, are people who hadn’t been vaccinated.\""
     },
     {
         "country_of_origin": "usa",
@@ -2378,8 +2378,8 @@
         "label_original": "true",
         "claim_id": "test_001199",
         "normalized_claim": "John McCain wants to \"give oil companies another $4-billion\" in tax breaks.",
-        "perturb_type1_True": "John McCain wants to \"give oil companies another between $3.60 and $4.40-billion\" in tax breaks.",
-        "perturb_type2_True": "John McCain wants to \"give oil companies another between $4.60 and $5-billion\" in tax breaks."
+        "perturb_type1_True": "John McCain wants to \"give oil companies another between $3 and $5-billion\" in tax breaks.",
+        "perturb_type2_True": "John McCain wants to \"give oil companies another between $4 and $5-billion\" in tax breaks."
     },
     {
         "country_of_origin": "usa",
@@ -2464,8 +2464,8 @@
         "label_original": "True",
         "claim_id": "test_001240",
         "normalized_claim": "“I’m going to ask the wealthiest Americans and the biggest corporations of the Fortune 500 companies, 91 making a collective billions of dollars, didn’t pay a single solitary penny in federal tax.”",
-        "perturb_type1_True": "“I’m going to ask the wealthiest Americans and the biggest corporations of the Fortune 500 companies, between 81 and 100 making a collective billions of dollars, didn’t pay a single solitary penny in federal tax.”",
-        "perturb_type2_True": "“I’m going to ask the wealthiest Americans and the biggest corporations of the Fortune 500 companies, between 131 and 150 making a collective billions of dollars, didn’t pay a single solitary penny in federal tax.”"
+        "perturb_type1_True": "“I’m going to ask the wealthiest Americans and the biggest corporations of the Fortune 500 companies, between 81 and 101 making a collective billions of dollars, didn’t pay a single solitary penny in federal tax.”",
+        "perturb_type2_True": "“I’m going to ask the wealthiest Americans and the biggest corporations of the Fortune 500 companies, between 131 and 151 making a collective billions of dollars, didn’t pay a single solitary penny in federal tax.”"
     },
     {
         "country_of_origin": "usa",
@@ -2478,8 +2478,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_001243",
         "normalized_claim": "\"America owns 3 percent of the world’s oil but consumes 25 percent of its global reserves.\"",
-        "perturb_type1_True": "\"America owns between 2.7 percent and 3.3 percent of the world’s oil but consumes between 22.5 percent and 27.5 percent of its global reserves.\"",
-        "perturb_type2_True": "\"America owns between 4.5 percent and 4.8 percent of the world’s oil but consumes between 37.5 percent and 40 percent of its global reserves.\""
+        "perturb_type1_True": "\"America owns between 2 percent and 4 percent of the world’s oil but consumes between 22 percent and 28 percent of its global reserves.\"",
+        "perturb_type2_True": "\"America owns between 4 percent and 5 percent of the world’s oil but consumes between 37 percent and 40 percent of its global reserves.\""
     },
     {
         "crawled_date": "2023-05-25T16:33:46",
@@ -2507,8 +2507,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_001251",
         "normalized_claim": "France \"wouldn’t buy Texas beef for some reason, yet 76 percent of their energy comes from nuclear power.\"",
-        "perturb_type1_True": "France \"wouldn’t buy Texas beef for some reason, yet between 68.4 percent and 83.6 percent of their energy comes from nuclear power.\"",
-        "perturb_type2_True": "France \"wouldn’t buy Texas beef for some reason, yet between 114 percent and 121.6 percent of their energy comes from nuclear power.\""
+        "perturb_type1_True": "France \"wouldn’t buy Texas beef for some reason, yet between 68 percent and 84 percent of their energy comes from nuclear power.\"",
+        "perturb_type2_True": "France \"wouldn’t buy Texas beef for some reason, yet between 114 percent and 122 percent of their energy comes from nuclear power.\""
     },
     {
         "country_of_origin": "usa",
@@ -2535,8 +2535,8 @@
         "label_original": "true",
         "claim_id": "test_001265",
         "normalized_claim": "Says he has sued the Obama administration 25 times.",
-        "perturb_type1_True": "Says he has sued the Obama administration between 22 and 27 times.",
-        "perturb_type2_True": "Says he has sued the Obama administration between 36 and 41 times."
+        "perturb_type1_True": "Says he has sued the Obama administration between 22 and 28 times.",
+        "perturb_type2_True": "Says he has sued the Obama administration between 36 and 42 times."
     },
     {
         "country_of_origin": "usa",
@@ -2549,8 +2549,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_001267",
         "normalized_claim": "A \"working woman\" will earn $7.70 on $10.",
-        "perturb_type1_True": "A \"working woman\" will earn between $6.93 and $8.47 on between $9 and $11.",
-        "perturb_type2_True": "A \"working woman\" will earn between $8.86 and $9.62 on between $11.50 and $12.50."
+        "perturb_type1_True": "A \"working woman\" will earn between $6 and $9 on between $9 and $11.",
+        "perturb_type2_True": "A \"working woman\" will earn between $8 and $10 on between $11 and $13."
     },
     {
         "crawled_date": "2022-10-07T06:00:06",
@@ -2592,8 +2592,8 @@
         "label_original": "true",
         "claim_id": "test_001290",
         "normalized_claim": "Says \"by 4th grade, 86 percent of African-American boys and 82 percent (of) Hispanic boys are reading below proficiency levels.\"",
-        "perturb_type1_True": "Says \"by between 3rd and 5thth grade, between 77.4 percent and 94.6 percent of African-American boys and between 73.8 percent and 90.2 percent (of) Hispanic boys are reading below proficiency levels.\"",
-        "perturb_type2_True": "Says \"by between 6th and 7thth grade, between 129 percent and 137.6 percent of African-American boys and between 123 percent and 131.2 percent (of) Hispanic boys are reading below proficiency levels.\""
+        "perturb_type1_True": "Says \"by between 3rd and 5thth grade, between 77 percent and 95 percent of African-American boys and between 73 percent and 91 percent (of) Hispanic boys are reading below proficiency levels.\"",
+        "perturb_type2_True": "Says \"by between 6th and 7thth grade, between 129 percent and 138 percent of African-American boys and between 123 percent and 132 percent (of) Hispanic boys are reading below proficiency levels.\""
     },
     {
         "crawled_date": "2023-05-25T20:30:23",
@@ -2636,8 +2636,8 @@
         "label_original": "true",
         "claim_id": "test_001310",
         "normalized_claim": "\"Three out of the 18 benchmarks of the (GAO) have been fulfilled. Even among Republican math, that is a failing grade.\"",
-        "perturb_type1_True": "\"Three out of the between 16 and 19 benchmarks of the (GAO) have been fulfilled. Even among Republican math, that is a failing grade.\"",
-        "perturb_type2_True": "\"Three out of the between 26 and 29 benchmarks of the (GAO) have been fulfilled. Even among Republican math, that is a failing grade.\""
+        "perturb_type1_True": "\"Three out of the between 16 and 20 benchmarks of the (GAO) have been fulfilled. Even among Republican math, that is a failing grade.\"",
+        "perturb_type2_True": "\"Three out of the between 26 and 30 benchmarks of the (GAO) have been fulfilled. Even among Republican math, that is a failing grade.\""
     },
     {
         "country_of_origin": "usa",
@@ -2650,8 +2650,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_001326",
         "normalized_claim": "\"Women in Florida make 83 cents for every dollar a man makes.\"",
-        "perturb_type1_True": "\"Women in Florida make between 74.70 and 91.30 cents for every dollar a man makes.\"",
-        "perturb_type2_True": "\"Women in Florida make between 95.45 and 103.75 cents for every dollar a man makes.\""
+        "perturb_type1_True": "\"Women in Florida make between 74 and 92 cents for every dollar a man makes.\"",
+        "perturb_type2_True": "\"Women in Florida make between 95 and 104 cents for every dollar a man makes.\""
     },
     {
         "crawled_date": "2013-11-13",
@@ -2693,8 +2693,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_001357",
         "normalized_claim": "If Rhode Island applied a 1-percent sales tax on all items exempt from sales tax, ''the state would receive an additional $89,376,857.''",
-        "perturb_type1_True": "If Rhode Island applied a 1-percent sales tax on all items exempt from sales tax, ''the state would receive an additional between $80,439,171.30 and $98,314,542.70.''",
-        "perturb_type2_True": "If Rhode Island applied a 1-percent sales tax on all items exempt from sales tax, ''the state would receive an additional between $102,783,385.55 and $111,721,071.25.''"
+        "perturb_type1_True": "If Rhode Island applied a 1-percent sales tax on all items exempt from sales tax, ''the state would receive an additional between $80,439,171 and $98,314,543.''",
+        "perturb_type2_True": "If Rhode Island applied a 1-percent sales tax on all items exempt from sales tax, ''the state would receive an additional between $102,783,385 and $111,721,072.''"
     },
     {
         "country_of_origin": "usa",
@@ -2707,8 +2707,8 @@
         "label_original": "true",
         "claim_id": "test_001359",
         "normalized_claim": "Says Amanda Fritz \"manages less than 5 percent of city operations.\"",
-        "perturb_type1_True": "Says Amanda Fritz \"manages less than between 4.5 percent and 5.5 percent of city operations.\"",
-        "perturb_type2_True": "Says Amanda Fritz \"manages less than between 7.5 percent and 8 percent of city operations.\""
+        "perturb_type1_True": "Says Amanda Fritz \"manages less than between 4 percent and 6 percent of city operations.\"",
+        "perturb_type2_True": "Says Amanda Fritz \"manages less than between 7 percent and 8 percent of city operations.\""
     },
     {
         "country_of_origin": "usa",
@@ -2779,7 +2779,7 @@
         "label_original": "true",
         "claim_id": "test_001383",
         "normalized_claim": "Says his elections proposal would allow \"a potential of 168 hours (of early voting), which I think is the most we’ve ever had.\"",
-        "perturb_type1_True": "Says his elections proposal would allow \"a potential of between 151 and 184 hours (of early voting), which I think is the most we’ve ever had.\"",
+        "perturb_type1_True": "Says his elections proposal would allow \"a potential of between 151 and 185 hours (of early voting), which I think is the most we’ve ever had.\"",
         "perturb_type2_True": "Says his elections proposal would allow \"a potential of between 193 and 210 hours (of early voting), which I think is the most we’ve ever had.\""
     },
     {
@@ -2807,8 +2807,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_001398",
         "normalized_claim": "The CBO says that if you raise the minimum wage to $10.10 an hour, \"half a million people would lose their jobs.\"",
-        "perturb_type1_True": "The CBO says that if you raise the minimum wage to between $9.09 and $11.11 an hour, \"half a million people would lose their jobs.\"",
-        "perturb_type2_True": "The CBO says that if you raise the minimum wage to between $11.62 and $12.62 an hour, \"half a million people would lose their jobs.\""
+        "perturb_type1_True": "The CBO says that if you raise the minimum wage to between $9 and $12 an hour, \"half a million people would lose their jobs.\"",
+        "perturb_type2_True": "The CBO says that if you raise the minimum wage to between $11 and $13 an hour, \"half a million people would lose their jobs.\""
     },
     {
         "country_of_origin": "usa",
@@ -2893,8 +2893,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_001443",
         "normalized_claim": "\"In Texas, there are 668 Democratic Hispanic elected officials to the 60 in the Republican Party.\"",
-        "perturb_type1_True": "\"In Texas, there are between 601 and 734 Democratic Hispanic elected officials to the between 54 and 66 in the Republican Party.\"",
-        "perturb_type2_True": "\"In Texas, there are between 968 and 1,102 Democratic Hispanic elected officials to the between 87 and 99 in the Republican Party.\""
+        "perturb_type1_True": "\"In Texas, there are between 601 and 735 Democratic Hispanic elected officials to the between 54 and 66 in the Republican Party.\"",
+        "perturb_type2_True": "\"In Texas, there are between 968 and 1,103 Democratic Hispanic elected officials to the between 87 and 99 in the Republican Party.\""
     },
     {
         "country_of_origin": "usa",
@@ -2936,8 +2936,8 @@
         "label_original": "True",
         "claim_id": "test_001456",
         "normalized_claim": "Ex-PM Lal Bahadur Shastri’s wife repaid Rs 5K loan taken from PNB after his death",
-        "perturb_type1_True": "Ex-PM Lal Bahadur Shastri’s wife repaid Rs between 4.50 and 5.50K loan taken from PNB after his death",
-        "perturb_type2_True": "Ex-PM Lal Bahadur Shastri’s wife repaid Rs between 5.75 and 6.25K loan taken from PNB after his death"
+        "perturb_type1_True": "Ex-PM Lal Bahadur Shastri’s wife repaid Rs between 4 and 6K loan taken from PNB after his death",
+        "perturb_type2_True": "Ex-PM Lal Bahadur Shastri’s wife repaid Rs between 5 and 7K loan taken from PNB after his death"
     },
     {
         "country_of_origin": "usa",
@@ -2993,8 +2993,8 @@
         "label_original": "correct",
         "claim_id": "test_001522",
         "normalized_claim": "“We experienced an increase in the number of functional health facilities growing from 9,858 to 10,820 in 2018 across all counties.",
-        "perturb_type1_True": "“We experienced an increase in the number of functional health facilities growing from between 8,872 and 10,843 to between 9,738 and 11,902 in 2018 across all counties.",
-        "perturb_type2_True": "“We experienced an increase in the number of functional health facilities growing from between 14,294 and 16,265 to between 15,689 and 17,853 in 2018 across all counties."
+        "perturb_type1_True": "“We experienced an increase in the number of functional health facilities growing from between 8,872 and 10,844 to between 9,738 and 11,902 in 2018 across all counties.",
+        "perturb_type2_True": "“We experienced an increase in the number of functional health facilities growing from between 14,294 and 16,266 to between 15,689 and 17,853 in 2018 across all counties."
     },
     {
         "crawled_date": "2010-12-12",
@@ -3022,8 +3022,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_001534",
         "normalized_claim": "\"57% of the jobs created\" in Austin \"from 2009 to 2013 do not pay families a living wage.\"",
-        "perturb_type1_True": "\"between 51.3% and 62.7% of the jobs created\" in Austin \"from 2009 to 2013 do not pay families a living wage.\"",
-        "perturb_type2_True": "\"between 85.5% and 91.2% of the jobs created\" in Austin \"from 2009 to 2013 do not pay families a living wage.\""
+        "perturb_type1_True": "\"between 51% and 63% of the jobs created\" in Austin \"from 2009 to 2013 do not pay families a living wage.\"",
+        "perturb_type2_True": "\"between 85% and 92% of the jobs created\" in Austin \"from 2009 to 2013 do not pay families a living wage.\""
     },
     {
         "country_of_origin": "usa",
@@ -3080,8 +3080,8 @@
         "label_original": "true",
         "claim_id": "test_001569",
         "normalized_claim": "\"We haven’t had control of the House for the last two years and it’s been malfunctioning. We had 109 sessions scheduled and held 49.\"",
-        "perturb_type1_True": "\"We haven’t had control of the House for the last two years and it’s been malfunctioning. We had between 98 and 119 sessions scheduled and held between 44 and 53.\"",
-        "perturb_type2_True": "\"We haven’t had control of the House for the last two years and it’s been malfunctioning. We had between 158 and 179 sessions scheduled and held between 71 and 80.\""
+        "perturb_type1_True": "\"We haven’t had control of the House for the last two years and it’s been malfunctioning. We had between 98 and 120 sessions scheduled and held between 44 and 54.\"",
+        "perturb_type2_True": "\"We haven’t had control of the House for the last two years and it’s been malfunctioning. We had between 158 and 180 sessions scheduled and held between 71 and 81.\""
     },
     {
         "crawled_date": "2022-10-07T03:00:06",
@@ -3139,8 +3139,8 @@
         "label_original": "true",
         "claim_id": "test_001589",
         "normalized_claim": "\"Nearly 2/3 of rural Missourians don’t have access to broadband. That needs to change.\"",
-        "perturb_type1_True": "\"Nearly between 1 and 2/3 of rural Missourians don’t have access to broadband. That needs to change.\"",
-        "perturb_type2_True": "\"Nearly between 2 and 3/3 of rural Missourians don’t have access to broadband. That needs to change.\""
+        "perturb_type1_True": "\"Nearly between 1 and 3/3 of rural Missourians don’t have access to broadband. That needs to change.\"",
+        "perturb_type2_True": "\"Nearly between 2 and 4/3 of rural Missourians don’t have access to broadband. That needs to change.\""
     },
     {
         "country_of_origin": "usa",
@@ -3153,8 +3153,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_001592",
         "normalized_claim": "\"We were living outside of Houston and that’s when I found it: a commuter college, 45 minutes away that cost $50 a semester.\"",
-        "perturb_type1_True": "\"We were living outside of Houston and that’s when I found it: a commuter college, between 40 and 49 minutes away that cost between $45 and $55 a semester.\"",
-        "perturb_type2_True": "\"We were living outside of Houston and that’s when I found it: a commuter college, between 51 and 56 minutes away that cost between $57.50 and $62.50 a semester.\""
+        "perturb_type1_True": "\"We were living outside of Houston and that’s when I found it: a commuter college, between 40 and 50 minutes away that cost between $45 and $55 a semester.\"",
+        "perturb_type2_True": "\"We were living outside of Houston and that’s when I found it: a commuter college, between 51 and 57 minutes away that cost between $57 and $63 a semester.\""
     },
     {
         "country_of_origin": "usa",
@@ -3167,8 +3167,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_001594",
         "normalized_claim": "Says \"72% of refugees admitted into U.S. (2/3 -2/11) during COURT BREAKDOWN are from 7 countries: SYRIA, IRAQ, SOMALIA, IRAN, SUDAN, LIBYA & YEMEN.\"",
-        "perturb_type1_True": "Says \"between 64.8% and 79.2% of refugees admitted into U.S. (2/3 -2/11) during COURT BREAKDOWN are from between 6 and 7 countries: SYRIA, IRAQ, SOMALIA, IRAN, SUDAN, LIBYA & YEMEN.\"",
-        "perturb_type2_True": "Says \"between 108% and 115.2% of refugees admitted into U.S. (2/3 -2/11) during COURT BREAKDOWN are from between 10 and 11 countries: SYRIA, IRAQ, SOMALIA, IRAN, SUDAN, LIBYA & YEMEN.\""
+        "perturb_type1_True": "Says \"between 64% and 80% of refugees admitted into U.S. (2/3 -2/11) during COURT BREAKDOWN are from between 6 and 8 countries: SYRIA, IRAQ, SOMALIA, IRAN, SUDAN, LIBYA & YEMEN.\"",
+        "perturb_type2_True": "Says \"between 108% and 116% of refugees admitted into U.S. (2/3 -2/11) during COURT BREAKDOWN are from between 10 and 12 countries: SYRIA, IRAQ, SOMALIA, IRAN, SUDAN, LIBYA & YEMEN.\""
     },
     {
         "crawled_date": "2023-05-25T16:33:46",
@@ -3196,8 +3196,8 @@
         "label_original": "true",
         "claim_id": "test_001604",
         "normalized_claim": "Says New Hampshire’s second congressional district includes two counties where \"almost 5 percent if not more\" of residents are enrolled in the state’s expanded Medicaid program.",
-        "perturb_type1_True": "Says New Hampshire’s second congressional district includes two counties where \"almost between 4.5 percent and 5.5 percent if not more\" of residents are enrolled in the state’s expanded Medicaid program.",
-        "perturb_type2_True": "Says New Hampshire’s second congressional district includes two counties where \"almost between 7.5 percent and 8 percent if not more\" of residents are enrolled in the state’s expanded Medicaid program."
+        "perturb_type1_True": "Says New Hampshire’s second congressional district includes two counties where \"almost between 4 percent and 6 percent if not more\" of residents are enrolled in the state’s expanded Medicaid program.",
+        "perturb_type2_True": "Says New Hampshire’s second congressional district includes two counties where \"almost between 7 percent and 8 percent if not more\" of residents are enrolled in the state’s expanded Medicaid program."
     },
     {
         "crawled_date": "2010-11-17",
@@ -3211,8 +3211,8 @@
         "label_original": "true",
         "claim_id": "test_001608",
         "normalized_claim": "\"Congressman Ryan has secured a grand total of $116,838,763 to date (for the Mahoning Valley) and has an additional $27,095,000 pending in FY2010 spending bills.\"",
-        "perturb_type1_True": "\"Congressman Ryan has secured a grand total of between $105,154,886.70 and $128,522,639.30 to date (for the Mahoning Valley) and has an additional between $24,385,500 and $29,804,500 pending in FY2010 spending bills.\"",
-        "perturb_type2_True": "\"Congressman Ryan has secured a grand total of between $134,364,577.45 and $146,048,453.75 to date (for the Mahoning Valley) and has an additional between $31,159,250 and $33,868,750 pending in FY2010 spending bills.\""
+        "perturb_type1_True": "\"Congressman Ryan has secured a grand total of between $105,154,886 and $128,522,640 to date (for the Mahoning Valley) and has an additional between $24,385,500 and $29,804,500 pending in FY2010 spending bills.\"",
+        "perturb_type2_True": "\"Congressman Ryan has secured a grand total of between $134,364,577 and $146,048,454 to date (for the Mahoning Valley) and has an additional between $31,159,250 and $33,868,750 pending in FY2010 spending bills.\""
     },
     {
         "crawled_date": "2022-09-08",
@@ -3240,8 +3240,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_001621",
         "normalized_claim": "The Republican Party has \"21 percent party ID and shrinking.\"",
-        "perturb_type1_True": "The Republican Party has \"between 18.9 percent and 23.1 percent party ID and shrinking.\"",
-        "perturb_type2_True": "The Republican Party has \"between 31.5 percent and 33.6 percent party ID and shrinking.\""
+        "perturb_type1_True": "The Republican Party has \"between 18 percent and 24 percent party ID and shrinking.\"",
+        "perturb_type2_True": "The Republican Party has \"between 31 percent and 34 percent party ID and shrinking.\""
     },
     {
         "crawled_date": "2023-05-25T20:37:53",
@@ -3269,8 +3269,8 @@
         "label_original": "true",
         "claim_id": "test_001626",
         "normalized_claim": "\"Amiddle-class family donates $1 to charity, they get 15 cents off their income tax. Bill Gates donates $1 to charity, he takes 35 cents off his income tax.\"",
-        "perturb_type1_True": "\"Amiddle-class family donates between $0.90 and $1.10 to charity, they get between 13.50 and 16.50 cents off their income tax. Bill Gates donates between $0.90 and $1.10 to charity, he takes between 31.50 and 38.50 cents off his income tax.\"",
-        "perturb_type2_True": "\"Amiddle-class family donates between $1.15 and $1.25 to charity, they get between 17.25 and 18.75 cents off their income tax. Bill Gates donates between $1.15 and $1.25 to charity, he takes between 40.25 and 43.75 cents off his income tax.\""
+        "perturb_type1_True": "\"Amiddle-class family donates between $0 and $2 to charity, they get between 13 and 17 cents off their income tax. Bill Gates donates between $0 and $2 to charity, he takes between 31 and 39 cents off his income tax.\"",
+        "perturb_type2_True": "\"Amiddle-class family donates between $1 and $2 to charity, they get between 17 and 19 cents off their income tax. Bill Gates donates between $1 and $2 to charity, he takes between 40 and 44 cents off his income tax.\""
     },
     {
         "country_of_origin": "usa",
@@ -3283,8 +3283,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_001632",
         "normalized_claim": "Says \"President Obama’s proposed oil tax would cost consumers 24 cents a gallon.\"",
-        "perturb_type1_True": "Says \"President Obama’s proposed oil tax would cost consumers between 21.60 and 26.40 cents a gallon.\"",
-        "perturb_type2_True": "Says \"President Obama’s proposed oil tax would cost consumers between 27.60 and 30 cents a gallon.\""
+        "perturb_type1_True": "Says \"President Obama’s proposed oil tax would cost consumers between 21 and 27 cents a gallon.\"",
+        "perturb_type2_True": "Says \"President Obama’s proposed oil tax would cost consumers between 27 and 30 cents a gallon.\""
     },
     {
         "crawled_date": "2014-11-12",
@@ -3298,8 +3298,8 @@
         "label_original": "true",
         "claim_id": "test_001638",
         "normalized_claim": "\"The president of the United States came in the Tuesday before the election in a ward that went 99% for him in the last election and they couldn't even (increase) the vote there.\"",
-        "perturb_type1_True": "\"The president of the United States came in the Tuesday before the election in a ward that went between 89.1% and 108.9% for him in the last election and they couldn't even (increase) the vote there.\"",
-        "perturb_type2_True": "\"The president of the United States came in the Tuesday before the election in a ward that went between 148.5% and 158.4% for him in the last election and they couldn't even (increase) the vote there.\""
+        "perturb_type1_True": "\"The president of the United States came in the Tuesday before the election in a ward that went between 89% and 109% for him in the last election and they couldn't even (increase) the vote there.\"",
+        "perturb_type2_True": "\"The president of the United States came in the Tuesday before the election in a ward that went between 148% and 159% for him in the last election and they couldn't even (increase) the vote there.\""
     },
     {
         "crawled_date": "2020-12-15",
@@ -3327,8 +3327,8 @@
         "label_original": "true",
         "claim_id": "test_001648",
         "normalized_claim": "\"Fifteen years ago, the assets of the six largest banks in this country totaled 17 percent of GDP ... The assets of the six largest banks in the United States today total 63 percent of GDP.\"",
-        "perturb_type1_True": "\"Fifteen years ago, the assets of the six largest banks in this country totaled between 15.3 percent and 18.7 percent of GDP ... The assets of the six largest banks in the United States today total between 56.7 percent and 69.3 percent of GDP.\"",
-        "perturb_type2_True": "\"Fifteen years ago, the assets of the six largest banks in this country totaled between 25.5 percent and 27.2 percent of GDP ... The assets of the six largest banks in the United States today total between 94.5 percent and 100.8 percent of GDP.\""
+        "perturb_type1_True": "\"Fifteen years ago, the assets of the six largest banks in this country totaled between 15 percent and 19 percent of GDP ... The assets of the six largest banks in the United States today total between 56 percent and 70 percent of GDP.\"",
+        "perturb_type2_True": "\"Fifteen years ago, the assets of the six largest banks in this country totaled between 25 percent and 28 percent of GDP ... The assets of the six largest banks in the United States today total between 94 percent and 101 percent of GDP.\""
     },
     {
         "crawled_date": "2019-12-13",
@@ -3371,8 +3371,8 @@
         "label_original": "correct",
         "claim_id": "test_001658",
         "normalized_claim": "Kenya currently ranks 56th globally and third in sub-Saharan Africa on the ease of doing business report, from a low of 136th globally in 2014.",
-        "perturb_type1_True": "Kenya currently ranks between 55th and 57thth globally and third in sub-Saharan Africa on the ease of doing business report, from a low of between 122 and 149th globally in 2014.",
-        "perturb_type2_True": "Kenya currently ranks between 58th and 59thth globally and third in sub-Saharan Africa on the ease of doing business report, from a low of between 197 and 224th globally in 2014."
+        "perturb_type1_True": "Kenya currently ranks between 55th and 57thth globally and third in sub-Saharan Africa on the ease of doing business report, from a low of between 122 and 150th globally in 2014.",
+        "perturb_type2_True": "Kenya currently ranks between 58th and 59thth globally and third in sub-Saharan Africa on the ease of doing business report, from a low of between 197 and 225th globally in 2014."
     },
     {
         "crawled_date": "2022-10-07T00:00:06",
@@ -3557,8 +3557,8 @@
         "label_original": "correct",
         "claim_id": "test_001758",
         "normalized_claim": "“In simple terms, 50% of all the money collected as revenues in Kenya goes into the pockets of less than 2% of the country's total population.\"",
-        "perturb_type1_True": "“In simple terms, between 45% and 55% of all the money collected as revenues in Kenya goes into the pockets of less than between 1.8% and 2.2% of the country's total population.\"",
-        "perturb_type2_True": "“In simple terms, between 75% and 80% of all the money collected as revenues in Kenya goes into the pockets of less than between 3% and 3.2% of the country's total population.\""
+        "perturb_type1_True": "“In simple terms, between 45% and 55% of all the money collected as revenues in Kenya goes into the pockets of less than between 1% and 3% of the country's total population.\"",
+        "perturb_type2_True": "“In simple terms, between 75% and 80% of all the money collected as revenues in Kenya goes into the pockets of less than between 3% and 4% of the country's total population.\""
     },
     {
         "crawled_date": "2022-10-06T21:00:06",
@@ -3587,8 +3587,8 @@
         "label_original": "true",
         "claim_id": "test_001791",
         "normalized_claim": "In the 2016 EU referendum, 148 Labour constituencies voted to leave, 84 to remain. 247 Conservative constituencies voted to leave, 80 to remain.",
-        "perturb_type1_True": "In the 2016 EU referendum, between 133 and 162 Labour constituencies voted to leave, between 75 and 92 to remain. between 222 and 271 Conservative constituencies voted to leave, between 72 and 88 to remain.",
-        "perturb_type2_True": "In the 2016 EU referendum, between 214 and 244 Labour constituencies voted to leave, between 121 and 138 to remain. between 358 and 407 Conservative constituencies voted to leave, between 116 and 132 to remain."
+        "perturb_type1_True": "In the 2016 EU referendum, between 133 and 163 Labour constituencies voted to leave, between 75 and 93 to remain. between 222 and 272 Conservative constituencies voted to leave, between 72 and 88 to remain.",
+        "perturb_type2_True": "In the 2016 EU referendum, between 214 and 245 Labour constituencies voted to leave, between 121 and 139 to remain. between 358 and 408 Conservative constituencies voted to leave, between 116 and 132 to remain."
     },
     {
         "crawled_date": "2023-05-25T16:55:40",
@@ -3602,8 +3602,8 @@
         "label_original": "correct",
         "claim_id": "test_001809",
         "normalized_claim": "The World Health Organization reports that in 2018, 4% of deaths in Nigeria were caused by cancer.",
-        "perturb_type1_True": "The World Health Organization reports that in 2018, between 3.6% and 4.4% of deaths in Nigeria were caused by cancer.",
-        "perturb_type2_True": "The World Health Organization reports that in 2018, between 6% and 6.4% of deaths in Nigeria were caused by cancer."
+        "perturb_type1_True": "The World Health Organization reports that in 2018, between 3% and 5% of deaths in Nigeria were caused by cancer.",
+        "perturb_type2_True": "The World Health Organization reports that in 2018, between 6% and 7% of deaths in Nigeria were caused by cancer."
     },
     {
         "crawled_date": "2022-10-07T03:00:06",
@@ -3617,8 +3617,8 @@
         "label_original": "True",
         "claim_id": "test_001823",
         "normalized_claim": "The FBI compiled an internal 83-page document on internet slang that they released in 2014.",
-        "perturb_type1_True": "The FBI compiled an internal between 74 and 91-page document on internet slang that they released in 2014.",
-        "perturb_type2_True": "The FBI compiled an internal between 120 and 136-page document on internet slang that they released in 2014."
+        "perturb_type1_True": "The FBI compiled an internal between 74 and 92-page document on internet slang that they released in 2014.",
+        "perturb_type2_True": "The FBI compiled an internal between 120 and 137-page document on internet slang that they released in 2014."
     },
     {
         "country_of_origin": "usa",
@@ -3631,8 +3631,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_001829",
         "normalized_claim": "Says a portfolio managed by the Texas General Land Office earned 22 percent last year while the state’s emergency reserve account experienced a 1 percent gain.",
-        "perturb_type1_True": "Says a portfolio managed by the Texas General Land Office earned between 19.8 percent and 24.2 percent last year while the state’s emergency reserve account experienced a between 0.9 percent and 1.1 percent gain.",
-        "perturb_type2_True": "Says a portfolio managed by the Texas General Land Office earned between 33 percent and 35.2 percent last year while the state’s emergency reserve account experienced a between 1.5 percent and 1.6 percent gain."
+        "perturb_type1_True": "Says a portfolio managed by the Texas General Land Office earned between 19 percent and 25 percent last year while the state’s emergency reserve account experienced a between 0 percent and 2 percent gain.",
+        "perturb_type2_True": "Says a portfolio managed by the Texas General Land Office earned between 33 percent and 36 percent last year while the state’s emergency reserve account experienced a between 1 percent and 2 percent gain."
     },
     {
         "crawled_date": "2023-05-25T16:22:06",
@@ -3760,8 +3760,8 @@
         "label_original": "mostly-true",
         "claim_id": "test_001874",
         "normalized_claim": "Say Portland Public Schools' central administration makes up less than 4 percent of the staff.",
-        "perturb_type1_True": "Say Portland Public Schools' central administration makes up less than between 3.6 percent and 4.4 percent of the staff.",
-        "perturb_type2_True": "Say Portland Public Schools' central administration makes up less than between 6 percent and 6.4 percent of the staff."
+        "perturb_type1_True": "Say Portland Public Schools' central administration makes up less than between 3 percent and 5 percent of the staff.",
+        "perturb_type2_True": "Say Portland Public Schools' central administration makes up less than between 6 percent and 7 percent of the staff."
     },
     {
         "country_of_origin": "usa",

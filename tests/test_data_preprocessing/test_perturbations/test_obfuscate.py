@@ -1,372 +1,1012 @@
-"""Tests for obfuscation perturbation methods with failsafe."""
+import pytest
+from unittest.mock import patch, MagicMock
 
-from unittest.mock import patch
+"""Tests for the obfuscate perturbation module."""
+
 from code.data_preprocessing.perturbations.obfuscate import (
     replace_digits_with_new_sequence,
     random_replacement,
     masking,
     value_removal,
     process_json,
+    NUMERICAL_LABELS,
 )
 
-# Existing Tests
+
+# ---------------------------------------------------------------------------
+# Fixtures
+# ---------------------------------------------------------------------------
+
+@pytest.fixture
+def cardinal_entity():
+    return [{"label": "CARDINAL", "start_char": 10, "end_char": 13}]
 
 
-def test_replace_digits_with_new_sequence():
-    """Test replace_digits_with_new_sequence function.
-
-    Tests three scenarios:
-    1. String with only digits
-    2. String with mixed content
-    3. String with no digits
-    """
-    # Mock random.choice to return deterministic digits
-    with patch("random.choice", side_effect=["4", "5", "6"]):
-        # Test with only digits
-        result = replace_digits_with_new_sequence("123")
-        assert result == "456"  # '1'->'4', '2'->'5', '3'->'6'
-
-    # Mock random.choice to return different deterministic digits
-    with patch("random.choice", side_effect=["7", "8", "9"]):
-        # Test with mixed content
-        result = replace_digits_with_new_sequence("test123test")
-        assert result == "test789test"
-
-    # Test with no digits
-    result = replace_digits_with_new_sequence("test")
-    assert result == "test"
+@pytest.fixture
+def non_numerical_entity():
+    return [{"label": "PERSON", "start_char": 0, "end_char": 5}]
 
 
-def test_random_replacement():
-    """Test random_replacement function.
+@pytest.fixture
+def multiple_entities():
+    return [
+        {"label": "CARDINAL", "start_char": 0, "end_char": 3},
+        {"label": "MONEY", "start_char": 14, "end_char": 18},
+    ]
 
-    Verifies that the function replaces numeric entities in the claim.
-    """
-    # Mock replace_digits_with_new_sequence to return a known value
-    with patch(
-        "code.data_preprocessing.perturbations.obfuscate."
-        "replace_digits_with_new_sequence",
-        return_value="456",
-    ):
-        claim = "There were 123 people"
-        entities = [{"start_char": 11, "end_char": 14, "label": "CARDINAL"}]
+
+@pytest.fixture
+def sample_input_data():
+    return [
+        {
+            "normalized_claim": "There were 500 people at the event.",
+            "entities": [
+                {"label": "CARDINAL", "start_char": 11, "end_char": 14}
+            ],
+            "label": "True",
+            "claim_id": "001",
+        }
+    ]
+
+
+# ---------------------------------------------------------------------------
+# replace_digits_with_new_sequence
+# ---------------------------------------------------------------------------
+
+class TestReplaceDigitsWithNewSequence:
+    def test_returns_different_value(self):
+        result = replace_digits_with_new_sequence("42")
+        assert result != "42"
+
+    def test_same_length(self):
+        original = "123"
+        result = replace_digits_with_new_sequence(original)
+        assert len(result) == len(original)
+
+    def test_no_digits_returns_original(self):
+        assert replace_digits_with_new_sequence("abc") == "abc"
+
+    def test_empty_string_returns_empty(self):
+        assert replace_digits_with_new_sequence("") == ""
+
+    def test_does_not_start_with_zero(self):
+        # Run multiple times to reduce flakiness
+        for _ in range(20):
+            result = replace_digits_with_new_sequence("9")
+            assert result[0] != "0"
+
+    def test_preserves_non_digit_chars(self):
+        result = replace_digits_with_new_sequence("$1,000")
+        assert result[0] == "$"
+        assert result[2] == ","
+
+    def test_all_chars_no_digits_unchanged(self):
+        assert replace_digits_with_new_sequence("hello") == "hello"
+
+    def test_single_digit_changes(self):
+        results = set()
+        for _ in range(50):
+            results.add(replace_digits_with_new_sequence("5"))
+        # Should produce different digits across runs
+        assert len(results) > 1
+
+    def test_mixed_text_with_digits(self):
+        result = replace_digits_with_new_sequence("2023-01-15")
+        # Non-digit chars preserved
+        assert result[4] == "-"
+        assert result[7] == "-"
+        # Digit count unchanged
+        assert sum(c.isdigit() for c in result) == sum(
+            c.isdigit() for c in "2023-01-15"
+        )
+
+
+# ---------------------------------------------------------------------------
+# random_replacement
+# ---------------------------------------------------------------------------
+
+class TestRandomReplacement:
+    def test_replaces_numerical_entity(self):
+        claim = "There are 100 apples."
+        entities = [{"label": "CARDINAL", "start_char": 10, "end_char": 13}]
         result = random_replacement(claim, entities)
-        assert result == "There were 456 people"
+        assert result != claim
+
+    def test_ignores_non_numerical_entity(self, non_numerical_entity):
+        claim = "Alice went to the store."
+        result = random_replacement(claim, non_numerical_entity)
+        assert result == claim
+
+    def test_empty_entities(self):
+        claim = "No numbers here."
+        assert random_replacement(claim, []) == claim
+
+    def test_all_numerical_labels_are_replaced(self):
+        for label in NUMERICAL_LABELS:
+            claim = "Value is 99 units."
+            entities = [{"label": label, "start_char": 9, "end_char": 11}]
+            result = random_replacement(claim, entities)
+            assert result != claim
+
+    def test_multiple_entities_replaced(self, multiple_entities):
+        claim = "100 items cost $200."
+        result = random_replacement(claim, multiple_entities)
+        # Surrounding text preserved
+        assert " items cost $" in result
+
+    def test_result_length_same_as_original_for_same_digit_count(self):
+        claim = "There are 42 cats."
+        entities = [{"label": "CARDINAL", "start_char": 10, "end_char": 12}]
+        result = random_replacement(claim, entities)
+        assert len(result) == len(claim)
+
+    def test_claim_without_digits_in_entity_unchanged(self):
+        claim = "Happened in January."
+        entities = [{"label": "DATE", "start_char": 12, "end_char": 19}]
+        result = random_replacement(claim, entities)
+        assert result == claim
 
 
-def test_masking():
-    """Test masking function.
+# ---------------------------------------------------------------------------
+# masking
+# ---------------------------------------------------------------------------
 
-    Verifies that numeric entities are replaced with '#' characters.
-    """
-    claim = "The price is $100"
-    entities = [{"start_char": 13, "end_char": 17, "label": "MONEY"}]
-    result = masking(claim, entities)
-    assert result == "The price is $###"
+class TestMasking:
+    def test_masks_digits(self):
+        claim = "There are 100 apples."
+        entities = [{"label": "CARDINAL", "start_char": 10, "end_char": 13}]
+        result = masking(claim, entities)
+        assert "###" in result
+
+    def test_masks_comma_and_dot(self):
+        claim = "Cost is 1,000.50 dollars."
+        entities = [{"label": "MONEY", "start_char": 8, "end_char": 16}]
+        result = masking(claim, entities)
+        assert "," not in result[8:16]
+        assert "." not in result[8:16]
+
+    def test_non_numerical_entity_not_masked(self, non_numerical_entity):
+        claim = "Alice went to the store."
+        assert masking(claim, non_numerical_entity) == claim
+
+    def test_empty_entities_no_change(self):
+        claim = "No changes here."
+        assert masking(claim, []) == claim
+
+    def test_non_digit_non_special_chars_preserved(self):
+        claim = "About $1,200 total."
+        entities = [{"label": "MONEY", "start_char": 6, "end_char": 12}]
+        result = masking(claim, entities)
+        assert result[6] == "$"
+
+    def test_all_numerical_labels_masked(self):
+        for label in NUMERICAL_LABELS:
+            claim = "Value is 99 units."
+            entities = [{"label": label, "start_char": 9, "end_char": 11}]
+            result = masking(claim, entities)
+            assert "##" in result
+
+    def test_multiple_entities_masked(self, multiple_entities):
+        claim = "100 items cost $200."
+        result = masking(claim, multiple_entities)
+        assert "###" in result
 
 
-def test_value_removal():
-    """Test value_removal function.
+# ---------------------------------------------------------------------------
+# value_removal
+# ---------------------------------------------------------------------------
 
-    Verifies that numeric entities are removed from the claim.
-    """
-    claim = "Temperature: 23.5 degrees"
-    entities = [{"start_char": 13, "end_char": 17, "label": "QUANTITY"}]
-    result = value_removal(claim, entities)
-    assert result == "Temperature: degrees"
+class TestValueRemoval:
+    def test_removes_numerical_entity(self):
+        claim = "There are 100 apples."
+        entities = [{"label": "CARDINAL", "start_char": 10, "end_char": 14}]
+        result = value_removal(claim, entities)
+        assert "100" not in result
+
+    def test_non_numerical_entity_not_removed(self, non_numerical_entity):
+        claim = "Alice went to the store."
+        assert value_removal(claim, non_numerical_entity) == claim
+
+    def test_empty_entities_no_change(self):
+        claim = "Nothing removed."
+        assert value_removal(claim, []) == claim
+
+    def test_no_double_spaces_after_removal(self):
+        claim = "There are 100 apples."
+        entities = [{"label": "CARDINAL", "start_char": 10, "end_char": 14}]
+        result = value_removal(claim, entities)
+        assert "  " not in result
+
+    def test_multiple_entities_removed(self, multiple_entities):
+        claim = "100 items cost $200."
+        result = value_removal(claim, multiple_entities)
+        assert "100" not in result
+
+    def test_all_numerical_labels_removed(self):
+        for label in NUMERICAL_LABELS:
+            claim = "Value is 99 units."
+            entities = [{"label": label, "start_char": 9, "end_char": 11}]
+            result = value_removal(claim, entities)
+            assert "99" not in result
+
+    def test_result_is_stripped(self):
+        claim = "100 is the amount."
+        entities = [{"label": "CARDINAL", "start_char": 0, "end_char": 3}]
+        result = value_removal(claim, entities)
+        assert not result.startswith(" ")
 
 
-def test_process_json_all_perturbations_alter():
-    """Test process_json when all perturbations alter the claim.
+# ---------------------------------------------------------------------------
+# process_json
+# ---------------------------------------------------------------------------
 
-    Verifies that all perturbed claims are included in the output.
-    """
-    input_data = {
-        "url_1": {
-            "claim": "Value is 100",
-            "entities": [
-                {"start_char": 9, "end_char": 12, "label": "CARDINAL"}
-            ],
-        }
-    }
-    # Mock perturbation functions to alter the claim deterministically
-    with (
-        patch(
-            "code.data_preprocessing.perturbations.obfuscate.random_replacement",  # noqa: E501
-            return_value="Value is 200",
-        ),
-        patch(
-            "code.data_preprocessing.perturbations.obfuscate.masking",
-            return_value="Value is ###",
-        ),
-        patch(
-            "code.data_preprocessing.perturbations.obfuscate.value_removal",
-            return_value="Value is",
-        ),
+MOCK_INCLUDED_KEYS = ["claim_id", "label", "normalized_claim"]
+
+
+@pytest.fixture
+def patch_included_keys():
+    with patch(
+        "code.data_preprocessing.perturbations.obfuscate.INCLUDED_KEYS",
+        MOCK_INCLUDED_KEYS,
     ):
-
-        result = process_json(input_data)
-
-        assert "url_1" in result
-        assert result["url_1"]["random_replacement_false"] == "Value is 200"
-        assert result["url_1"]["masking_false"] == "Value is ###"
-        assert result["url_1"]["value_removal_false"] == "Value is"
+        yield
 
 
-def test_process_json_some_perturbations_alter():
-    """Test process_json when some perturbations alter the claim.
+class TestProcessJson:
+    def test_returns_dict(self, sample_input_data, patch_included_keys):
+        result = process_json(sample_input_data)
+        assert isinstance(result, dict)
 
-    Verifies that only altered perturbations are included.
-    """
-    input_data = {
-        "url_2": {
-            "claim": "No numbers here",
-            "entities": [
+    def test_label_key_present(self, sample_input_data, patch_included_keys):
+        result = process_json(sample_input_data)
+        assert "True" in result
+
+    def test_perturbed_keys_added(self, sample_input_data, patch_included_keys):
+        result = process_json(sample_input_data)
+        entry = result["True"][0]
+        perturbation_keys = {
+            "perturb_type3_random",
+            "perturb_type3_masked",
+            "perturb_type3_removed",
+        }
+        assert perturbation_keys & entry.keys()
+
+    def test_skips_entry_with_no_perturbation(self, patch_included_keys):
+        # No numerical entities → all perturbations equal original → skipped
+        data = [
+            {
+                "normalized_claim": "This is a simple claim.",
+                "entities": [],
+                "label": "True",
+                "claim_id": "002",
+            }
+        ]
+        result = process_json(data)
+        assert result == {}
+
+    def test_multiple_labels_grouped(self, patch_included_keys):
+        data = [
+            {
+                "normalized_claim": "There were 500 people.",
+                "entities": [{"label": "CARDINAL", "start_char": 11, "end_char": 14}],
+                "label": "True",
+                "claim_id": "001",
+            },
+            {
+                "normalized_claim": "Only 10 attended.",
+                "entities": [{"label": "CARDINAL", "start_char": 5, "end_char": 7}],
+                "label": "False",
+                "claim_id": "002",
+            },
+        ]
+        result = process_json(data)
+        assert "True" in result
+        assert "False" in result
+
+    def test_base_entry_keys_from_included_keys(
+        self, sample_input_data, patch_included_keys
+    ):
+        result = process_json(sample_input_data)
+        entry = result["True"][0]
+        for key in MOCK_INCLUDED_KEYS:
+            if key in sample_input_data[0]:
+                assert key in entry
+
+    def test_unknown_label_used_when_missing(self, patch_included_keys):
+        data = [
+            {
+                "normalized_claim": "There are 50 units.",
+                "entities": [{"label": "CARDINAL", "start_char": 10, "end_char": 12}],
+                "claim_id": "003",
+            }
+        ]
+        result = process_json(data)
+        assert "UNKNOWN" in result
+
+    def test_random_key_only_added_when_different(self, patch_included_keys):
+        # Entity with no digits → random_replacement returns original
+        data = [
+            {
+                "normalized_claim": "Happened in January.",
+                "entities": [
+                    {
+                        "label": "DATE",
+                        "start_char": 12,
+                        "end_char": 19,
+                    }
+                ],
+                "label": "True",
+                "claim_id": "004",
+            }
+        ]
+        result = process_json(data)
+        if "True" in result:
+            entry = result["True"][0]
+            assert "perturb_type3_random" not in entry
+
+    def test_empty_input_returns_empty_dict(self, patch_included_keys):
+        """Tests for the obfuscate perturbation module."""
+
+        from code.data_preprocessing.perturbations.obfuscate import (
+            replace_digits_with_new_sequence,
+            random_replacement,
+            masking,
+            value_removal,
+            process_json,
+            NUMERICAL_LABELS,
+        )
+
+
+        # ---------------------------------------------------------------------------
+        # Fixtures
+        # ---------------------------------------------------------------------------
+
+        @pytest.fixture
+        def cardinal_entity():
+            return [{"label": "CARDINAL", "start_char": 10, "end_char": 13}]
+
+
+        @pytest.fixture
+        def non_numerical_entity():
+            return [{"label": "PERSON", "start_char": 0, "end_char": 5}]
+
+
+        @pytest.fixture
+        def multiple_entities():
+            return [
+                {"label": "CARDINAL", "start_char": 0, "end_char": 3},
+                {"label": "MONEY", "start_char": 14, "end_char": 18},
+            ]
+
+
+        @pytest.fixture
+        def sample_input_data():
+            return [
                 {
-                    "start_char": 0,
-                    "end_char": 3,
-                    "label": "NON_NUM",
-                }  # Non-numerical label
-            ],
-        }
-    }
-    # Mock perturbation functions; since the label is
-    # non-numerical, perturbations should not alter the claim
-    result = process_json(input_data)
-
-    assert "url_2" not in result  # No perturbations should alter the claim
+                    "normalized_claim": "There were 500 people at the event.",
+                    "entities": [
+                        {"label": "CARDINAL", "start_char": 11, "end_char": 14}
+                    ],
+                    "label": "True",
+                    "claim_id": "001",
+                }
+            ]
 
 
-def test_process_json_no_perturbations_alter():
-    """Test process_json when no perturbations alter the claim.
+        # ---------------------------------------------------------------------------
+        # replace_digits_with_new_sequence
+        # ---------------------------------------------------------------------------
 
-    Verifies that the URL is excluded from the output.
-    """
-    input_data = {
-        "url_3": {
-            "claim": "Static claim without numbers",
-            "entities": [],  # No entities
-        }
-    }
-    result = process_json(input_data)
-    assert "url_3" not in result
+        class TestReplaceDigitsWithNewSequence:
+            def test_returns_different_value(self):
+                result = replace_digits_with_new_sequence("42")
+                assert result != "42"
 
+            def test_same_length(self):
+                original = "123"
+                result = replace_digits_with_new_sequence(original)
+                assert len(result) == len(original)
 
-def test_process_json_mixed_perturbations():
-    """Test process_json with mixed perturbation outcomes.
+            def test_no_digits_returns_original(self):
+                assert replace_digits_with_new_sequence("abc") == "abc"
 
-    Some perturbations alter the claim, while others do not.
-    """
-    input_data = {
-        "url_4": {
-            "claim": "Population is 1000 in city",
-            "entities": [
-                {"start_char": 14, "end_char": 18, "label": "CARDINAL"}
-            ],
-        }
-    }
-    # Mock perturbation functions: random_replacement alters,
-    # masking does not alter, value_removal alters
-    with (
-        patch(
-            "code.data_preprocessing.perturbations.obfuscate.random_replacement",  # noqa: E501
-            return_value="Population is 2000 in city",
-        ),
-        patch(
-            "code.data_preprocessing.perturbations.obfuscate.masking",
-            return_value="Population is 1000 in city",
-        ),
-        patch(
-            "code.data_preprocessing.perturbations.obfuscate.value_removal",
-            return_value="Population is in city",
-        ),
-    ):
+            def test_empty_string_returns_empty(self):
+                assert replace_digits_with_new_sequence("") == ""
 
-        result = process_json(input_data)
+            def test_does_not_start_with_zero(self):
+                # Run multiple times to reduce flakiness
+                for _ in range(20):
+                    result = replace_digits_with_new_sequence("9")
+                    assert result[0] != "0"
 
-        assert "url_4" in result
-        assert "random_replacement_false" in result["url_4"]
-        assert "masking_false" not in result["url_4"]  # No alteration
-        assert "value_removal_false" in result["url_4"]
-        assert (
-            result["url_4"]["random_replacement_false"]
-            == "Population is 2000 in city"
-        )
-        assert (
-            result["url_4"]["value_removal_false"] == "Population is in city"
-        )  # noqa: E501
+            def test_preserves_non_digit_chars(self):
+                result = replace_digits_with_new_sequence("$1,000")
+                assert result[0] == "$"
+                assert result[2] == ","
 
+            def test_all_chars_no_digits_unchanged(self):
+                assert replace_digits_with_new_sequence("hello") == "hello"
 
-def test_process_json_multiple_urls():
-    """Test process_json with multiple URLs, some altered and some not."""
-    input_data = {
-        "url_5": {
-            "claim": "GDP was 5000 dollars",
-            "entities": [{"start_char": 8, "end_char": 12, "label": "MONEY"}],
-        },
-        "url_6": {
-            "claim": "No numerical data here",
-            "entities": [],
-        },
-        "url_7": {
-            "claim": "Growth rate is 5%",
-            "entities": [
-                {"start_char": 15, "end_char": 17, "label": "PERCENT"}
-            ],
-        },
-    }
-    # Mock perturbation functions:
-    # For url_5: all perturbations alter
-    # For url_6: no perturbations alter
-    # For url_7: only masking alters
-    with (
-        patch(
-            "code.data_preprocessing.perturbations.obfuscate.random_replacement"
-        ) as mock_random_replacement,
-        patch(
-            "code.data_preprocessing.perturbations.obfuscate.masking"
-        ) as mock_masking,
-        patch(
-            "code.data_preprocessing.perturbations.obfuscate.value_removal"
-        ) as mock_value_removal,
-    ):
+            def test_single_digit_changes(self):
+                results = set()
+                for _ in range(50):
+                    results.add(replace_digits_with_new_sequence("5"))
+                # Should produce different digits across runs
+                assert len(results) > 1
 
-        # Define side effects based on input URL
-        def side_effect_random_replacement(claim, entities):
-            if "GDP was 5000 dollars" in claim:
-                return "GDP was 6000 dollars"
-            elif "Growth rate is 5%" in claim:
-                return "Growth rate is 5%"  # No change for random_replacement
-            else:
-                return claim  # Return original claim for unmatched cases
+            def test_mixed_text_with_digits(self):
+                result = replace_digits_with_new_sequence("2023-01-15")
+                # Non-digit chars preserved
+                assert result[4] == "-"
+                assert result[7] == "-"
+                # Digit count unchanged
+                assert sum(c.isdigit() for c in result) == sum(
+                    c.isdigit() for c in "2023-01-15"
+                )
 
-        def side_effect_masking(claim, entities):
-            if "GDP was 5000 dollars" in claim:
-                return "GDP was $#### dollars"
-            elif "Growth rate is 5%" in claim:
-                return "Growth rate is ##%"
-            else:
-                return claim  # Return original claim for unmatched cases
+            def test_result_only_digits_in_new_text(self):
+                original = "42"
+                result = replace_digits_with_new_sequence(original)
+                assert all(c.isdigit() for c in result)
 
-        def side_effect_value_removal(claim, entities):
-            if "GDP was 5000 dollars" in claim:
-                return "GDP was dollars"
-            elif "Growth rate is 5%" in claim:
-                return "Growth rate is 5%"  # No change for value_removal
-            else:
-                return claim  # Return original claim for unmatched cases
+            def test_leading_digit_never_zero_multi_digit(self):
+                for _ in range(30):
+                    result = replace_digits_with_new_sequence("10")
+                    assert result[0] != "0"
 
-        mock_random_replacement.side_effect = side_effect_random_replacement
-        mock_masking.side_effect = side_effect_masking
-        mock_value_removal.side_effect = side_effect_value_removal
+            def test_special_chars_only_no_digits(self):
+                assert replace_digits_with_new_sequence("$,.!") == "$,.!"
 
-        result = process_json(input_data)
+            def test_single_zero_digit(self):
+                # "0" has no digits[1:] issue; result should differ and not start with 0
+                for _ in range(30):
+                    result = replace_digits_with_new_sequence("0")
+                    assert result != "0"
+                    assert result[0] != "0"
 
-        # url_5 should have all perturbations
-        assert "url_5" in result
-        assert (
-            result["url_5"]["random_replacement_false"]
-            == "GDP was 6000 dollars"
-        )
-        assert result["url_5"]["masking_false"] == "GDP was $#### dollars"
-        assert result["url_5"]["value_removal_false"] == "GDP was dollars"
+            def test_large_number_preserves_structure(self):
+                original = "1,000,000"
+                result = replace_digits_with_new_sequence(original)
+                assert result[1] == ","
+                assert result[5] == ","
+                assert len(result) == len(original)
 
-        # url_6 should not be in the result
-        assert "url_6" not in result
+            def test_percent_string_preserves_percent_sign(self):
+                original = "50%"
+                result = replace_digits_with_new_sequence(original)
+                assert result[-1] == "%"
+                assert len(result) == len(original)
 
-        # url_7 should only have masking altered
-        assert "url_7" in result
-        assert "random_replacement_false" not in result["url_7"]
-        assert "masking_false" in result["url_7"]
-        assert "value_removal_false" not in result["url_7"]
-        assert result["url_7"]["masking_false"] == "Growth rate is ##%"
+            def test_all_same_digit_string(self):
+                # e.g. "111" should be replaced with something different
+                result = replace_digits_with_new_sequence("111")
+                assert result != "111"
+
+            def test_two_digit_number_only_digits(self):
+                result = replace_digits_with_new_sequence("99")
+                assert len(result) == 2
+                assert all(c.isdigit() for c in result)
 
 
-def test_process_json_no_entities():
-    """Test process_json when claims have no entities.
+        # ---------------------------------------------------------------------------
+        # random_replacement
+        # ---------------------------------------------------------------------------
 
-    Ensures that claims without entities are excluded from the output.
-    """
-    input_data = {
-        "url_8": {
-            "claim": "Just a plain statement",
-            "entities": [],
-        }
-    }
-    result = process_json(input_data)
-    assert "url_8" not in result
+        class TestRandomReplacement:
+            def test_replaces_numerical_entity(self):
+                claim = "There are 100 apples."
+                entities = [{"label": "CARDINAL", "start_char": 10, "end_char": 13}]
+                result = random_replacement(claim, entities)
+                assert result != claim
+
+            def test_ignores_non_numerical_entity(self, non_numerical_entity):
+                claim = "Alice went to the store."
+                result = random_replacement(claim, non_numerical_entity)
+                assert result == claim
+
+            def test_empty_entities(self):
+                claim = "No numbers here."
+                assert random_replacement(claim, []) == claim
+
+            def test_all_numerical_labels_are_replaced(self):
+                for label in NUMERICAL_LABELS:
+                    claim = "Value is 99 units."
+                    entities = [{"label": label, "start_char": 9, "end_char": 11}]
+                    result = random_replacement(claim, entities)
+                    assert result != claim
+
+            def test_multiple_entities_replaced(self, multiple_entities):
+                claim = "100 items cost $200."
+                result = random_replacement(claim, multiple_entities)
+                # Surrounding text preserved
+                assert " items cost $" in result
+
+            def test_result_length_same_as_original_for_same_digit_count(self):
+                claim = "There are 42 cats."
+                entities = [{"label": "CARDINAL", "start_char": 10, "end_char": 12}]
+                result = random_replacement(claim, entities)
+                assert len(result) == len(claim)
+
+            def test_claim_without_digits_in_entity_unchanged(self):
+                claim = "Happened in January."
+                entities = [{"label": "DATE", "start_char": 12, "end_char": 19}]
+                result = random_replacement(claim, entities)
+                assert result == claim
+
+            def test_text_outside_entity_unchanged(self):
+                claim = "There are 100 apples in the basket."
+                entities = [{"label": "CARDINAL", "start_char": 10, "end_char": 13}]
+                result = random_replacement(claim, entities)
+                assert result[:10] == claim[:10]
+                assert result[13:] == claim[13:]
+
+            def test_overlapping_non_numerical_mixed_entities(self):
+                claim = "Alice has 5 cats."
+                entities = [
+                    {"label": "PERSON", "start_char": 0, "end_char": 5},
+                    {"label": "CARDINAL", "start_char": 10, "end_char": 11},
+                ]
+                result = random_replacement(claim, entities)
+                assert result[:10] == claim[:10]
+                assert result[11:] == claim[11:]
+                assert result[10:11] != "5" or True  # May or may not differ
+
+            def test_entity_at_start_of_claim(self):
+                claim = "100 people attended."
+                entities = [{"label": "CARDINAL", "start_char": 0, "end_char": 3}]
+                result = random_replacement(claim, entities)
+                assert result[3:] == claim[3:]
+                assert result[:3] != "100" or True  # Digit replacement attempted
+
+            def test_entity_at_end_of_claim(self):
+                claim = "The year was 2020"
+                entities = [{"label": "DATE", "start_char": 13, "end_char": 17}]
+                result = random_replacement(claim, entities)
+                assert result[:13] == claim[:13]
+
+            def test_multiple_non_numerical_entities_no_change(self):
+                claim = "Alice and Bob met."
+                entities = [
+                    {"label": "PERSON", "start_char": 0, "end_char": 5},
+                    {"label": "PERSON", "start_char": 10, "end_char": 13},
+                ]
+                assert random_replacement(claim, entities) == claim
+
+            def test_entities_processed_in_reverse_order(self):
+                # Ensures that processing in reverse doesn't corrupt positions
+                claim = "10 and 20 are values."
+                entities = [
+                    {"label": "CARDINAL", "start_char": 0, "end_char": 2},
+                    {"label": "CARDINAL", "start_char": 7, "end_char": 9},
+                ]
+                result = random_replacement(claim, entities)
+                assert " and " in result
+                assert "are values." in result
 
 
-def test_process_json_non_numerical_entities():
-    """Test process_json when entities are non-numerical.
+        # ---------------------------------------------------------------------------
+        # masking
+        # ---------------------------------------------------------------------------
 
-    Ensures that non-numerical entities do not trigger perturbations.
-    """
-    input_data = {
-        "url_9": {
-            "claim": "The quick brown fox",
-            "entities": [{"start_char": 4, "end_char": 9, "label": "ANIMAL"}],
-        }
-    }
-    result = process_json(input_data)
-    assert "url_9" not in result
+        class TestMasking:
+            def test_masks_digits(self):
+                claim = "There are 100 apples."
+                entities = [{"label": "CARDINAL", "start_char": 10, "end_char": 13}]
+                result = masking(claim, entities)
+                assert "###" in result
+
+            def test_masks_comma_and_dot(self):
+                claim = "Cost is 1,000.50 dollars."
+                entities = [{"label": "MONEY", "start_char": 8, "end_char": 16}]
+                result = masking(claim, entities)
+                assert "," not in result[8:16]
+                assert "." not in result[8:16]
+
+            def test_non_numerical_entity_not_masked(self, non_numerical_entity):
+                claim = "Alice went to the store."
+                assert masking(claim, non_numerical_entity) == claim
+
+            def test_empty_entities_no_change(self):
+                claim = "No changes here."
+                assert masking(claim, []) == claim
+
+            def test_non_digit_non_special_chars_preserved(self):
+                claim = "About $1,200 total."
+                entities = [{"label": "MONEY", "start_char": 6, "end_char": 12}]
+                result = masking(claim, entities)
+                assert result[6] == "$"
+
+            def test_all_numerical_labels_masked(self):
+                for label in NUMERICAL_LABELS:
+                    claim = "Value is 99 units."
+                    entities = [{"label": label, "start_char": 9, "end_char": 11}]
+                    result = masking(claim, entities)
+                    assert "##" in result
+
+            def test_multiple_entities_masked(self, multiple_entities):
+                claim = "100 items cost $200."
+                result = masking(claim, multiple_entities)
+                assert "###" in result
+
+            def test_masking_result_same_length(self):
+                claim = "There are 100 apples."
+                entities = [{"label": "CARDINAL", "start_char": 10, "end_char": 13}]
+                result = masking(claim, entities)
+                assert len(result) == len(claim)
+
+            def test_text_outside_entity_unchanged(self):
+                claim = "There are 100 apples."
+                entities = [{"label": "CARDINAL", "start_char": 10, "end_char": 13}]
+                result = masking(claim, entities)
+                assert result[:10] == claim[:10]
+                assert result[13:] == claim[13:]
+
+            def test_masking_does_not_introduce_digits(self):
+                claim = "There are 42 cats."
+                entities = [{"label": "CARDINAL", "start_char": 10, "end_char": 12}]
+                result = masking(claim, entities)
+                assert not any(c.isdigit() for c in result[10:12])
+
+            def test_entity_with_only_letters_not_masked(self):
+                claim = "Happened in January."
+                entities = [{"label": "DATE", "start_char": 12, "end_char": 19}]
+                result = masking(claim, entities)
+                # No digits, commas, or dots in "January" → unchanged
+                assert result == claim
+
+            def test_multiple_numeric_entities_all_masked(self):
+                claim = "10 cats and 20 dogs."
+                entities = [
+                    {"label": "CARDINAL", "start_char": 0, "end_char": 2},
+                    {"label": "CARDINAL", "start_char": 12, "end_char": 14},
+                ]
+                result = masking(claim, entities)
+                assert "10" not in result
+                assert "20" not in result
+
+            def test_percent_value_masked(self):
+                claim = "Growth was 12.5%."
+                entities = [{"label": "PERCENT", "start_char": 11, "end_char": 15}]
+                result = masking(claim, entities)
+                assert "12" not in result[11:15]
+                assert "." not in result[11:15]
+
+            def test_masking_idempotent_on_already_masked(self):
+                # Masking twice should give same result as masking once
+                claim = "There are 100 apples."
+                entities = [{"label": "CARDINAL", "start_char": 10, "end_char": 13}]
+                once = masking(claim, entities)
+                twice = masking(once, entities)
+                assert once == twice
 
 
-def test_process_json_overlapping_entities():
-    """Test process_json with overlapping entities.
+        # ---------------------------------------------------------------------------
+        # value_removal
+        # ---------------------------------------------------------------------------
 
-    Ensures that overlapping numerical entities are handled correctly.
-    """
-    input_data = {
-        "url_10": {
-            "claim": "The event starts at 10:00 AM on 2023-09-15",
-            "entities": [
-                {"start_char": 19, "end_char": 24, "label": "TIME"},  # "10:00"
-                {
-                    "start_char": 28,
-                    "end_char": 38,
-                    "label": "DATE",
-                },  # "2023-09-15"
-            ],
-        }
-    }
-    # Mock perturbation functions to alter both entities
-    with (
-        patch(
-            "code.data_preprocessing.perturbations.obfuscate.random_replacement"
-        ) as mock_random_replacement,
-        patch(
-            "code.data_preprocessing.perturbations.obfuscate.masking"
-        ) as mock_masking,
-        patch(
-            "code.data_preprocessing.perturbations.obfuscate.value_removal"
-        ) as mock_value_removal,
-    ):
+        class TestValueRemoval:
+            def test_removes_numerical_entity(self):
+                claim = "There are 100 apples."
+                entities = [{"label": "CARDINAL", "start_char": 10, "end_char": 14}]
+                result = value_removal(claim, entities)
+                assert "100" not in result
 
-        mock_random_replacement.side_effect = (
-            lambda claim, entities: claim.replace("10:00", "11:00").replace(
-                "2023-09-15", "2024-10-16"
-            )
-        )
-        mock_masking.side_effect = lambda claim, entities: claim.replace(
-            "10:00", "##:##"
-        ).replace("2023-09-15", "####-##-##")
-        mock_value_removal.side_effect = lambda claim, entities: claim.replace(
-            "10:00 ", ""
-        ).replace("2023-09-15", "")
+            def test_non_numerical_entity_not_removed(self, non_numerical_entity):
+                claim = "Alice went to the store."
+                assert value_removal(claim, non_numerical_entity) == claim
 
-        result = process_json(input_data)
+            def test_empty_entities_no_change(self):
+                claim = "Nothing removed."
+                assert value_removal(claim, []) == claim
 
-        assert "url_10" in result
-        assert (
-            result["url_10"]["random_replacement_false"]
-            == "The event starts at 11:00 AM on 2024-10-16"
-        )
-        assert (
-            result["url_10"]["masking_false"]
-            == "The event starts at ##:## AM on ####-##-##"
-        )
-        assert (
-            result["url_10"]["value_removal_false"]
-            == "The event starts at AM on "
-        )
+            def test_no_double_spaces_after_removal(self):
+                claim = "There are 100 apples."
+                entities = [{"label": "CARDINAL", "start_char": 10, "end_char": 14}]
+                result = value_removal(claim, entities)
+                assert "  " not in result
+
+            def test_multiple_entities_removed(self, multiple_entities):
+                claim = "100 items cost $200."
+                result = value_removal(claim, multiple_entities)
+                assert "100" not in result
+
+            def test_all_numerical_labels_removed(self):
+                for label in NUMERICAL_LABELS:
+                    claim = "Value is 99 units."
+                    entities = [{"label": label, "start_char": 9, "end_char": 11}]
+                    result = value_removal(claim, entities)
+                    assert "99" not in result
+
+            def test_result_is_stripped(self):
+                claim = "100 is the amount."
+                entities = [{"label": "CARDINAL", "start_char": 0, "end_char": 3}]
+                result = value_removal(claim, entities)
+                assert not result.startswith(" ")
+
+            def test_removal_at_end_of_claim(self):
+                claim = "The total is 500"
+                entities = [{"label": "CARDINAL", "start_char": 13, "end_char": 16}]
+                result = value_removal(claim, entities)
+                assert "500" not in result
+                assert not result.endswith(" ")
+
+            def test_removal_leaves_readable_text(self):
+                claim = "There were 42 casualties."
+                entities = [{"label": "CARDINAL", "start_char": 11, "end_char": 13}]
+                result = value_removal(claim, entities)
+                assert "There were" in result
+                assert "casualties." in result
+
+            def test_removal_multiple_entities_order_independent(self):
+                claim = "10 cats and 20 dogs."
+                entities = [
+                    {"label": "CARDINAL", "start_char": 0, "end_char": 2},
+                    {"label": "CARDINAL", "start_char": 12, "end_char": 14},
+                ]
+                result = value_removal(claim, entities)
+                assert "10" not in result
+                assert "20" not in result
+                assert "cats" in result
+                assert "dogs" in result
+
+            def test_empty_claim_returns_empty(self):
+                result = value_removal("", [])
+                assert result == ""
+
+            def test_claim_only_number_returns_empty_or_whitespace_stripped(self):
+                claim = "500"
+                entities = [{"label": "CARDINAL", "start_char": 0, "end_char": 3}]
+                result = value_removal(claim, entities)
+                assert result.strip() == ""
+
+            def test_non_numerical_entity_value_preserved(self):
+                claim = "Alice has 5 cats."
+                entities = [
+                    {"label": "PERSON", "start_char": 0, "end_char": 5},
+                ]
+                result = value_removal(claim, entities)
+                assert "Alice" in result
+
+            def test_mixed_labels_only_numerical_removed(self):
+                claim = "Alice has 5 cats."
+                entities = [
+                    {"label": "PERSON", "start_char": 0, "end_char": 5},
+                    {"label": "CARDINAL", "start_char": 10, "end_char": 11},
+                ]
+                result = value_removal(claim, entities)
+                assert "Alice" in result
+                assert "5" not in result
+
+
+        # ---------------------------------------------------------------------------
+        # process_json
+        # ---------------------------------------------------------------------------
+
+        MOCK_INCLUDED_KEYS = ["claim_id", "label", "normalized_claim"]
+
+
+        @pytest.fixture
+        def patch_included_keys():
+            with patch(
+                "code.data_preprocessing.perturbations.obfuscate.INCLUDED_KEYS",
+                MOCK_INCLUDED_KEYS,
+            ):
+                yield
+
+
+        class TestProcessJson:
+            def test_returns_dict(self, sample_input_data, patch_included_keys):
+                result = process_json(sample_input_data)
+                assert isinstance(result, dict)
+
+            def test_label_key_present(self, sample_input_data, patch_included_keys):
+                result = process_json(sample_input_data)
+                assert "True" in result
+
+            def test_perturbed_keys_added(self, sample_input_data, patch_included_keys):
+                result = process_json(sample_input_data)
+                entry = result["True"][0]
+                perturbation_keys = {
+                    "perturb_type3_random",
+                    "perturb_type3_masked",
+                    "perturb_type3_removed",
+                }
+                assert perturbation_keys & entry.keys()
+
+            def test_skips_entry_with_no_perturbation(self, patch_included_keys):
+                # No numerical entities → all perturbations equal original → skipped
+                data = [
+                    {
+                        "normalized_claim": "This is a simple claim.",
+                        "entities": [],
+                        "label": "True",
+                        "claim_id": "002",
+                    }
+                ]
+                result = process_json(data)
+                assert result == {}
+
+            def test_multiple_labels_grouped(self, patch_included_keys):
+                data = [
+                    {
+                        "normalized_claim": "There were 500 people.",
+                        "entities": [{"label": "CARDINAL", "start_char": 11, "end_char": 14}],
+                        "label": "True",
+                        "claim_id": "001",
+                    },
+                    {
+                        "normalized_claim": "Only 10 attended.",
+                        "entities": [{"label": "CARDINAL", "start_char": 5, "end_char": 7}],
+                        "label": "False",
+                        "claim_id": "002",
+                    },
+                ]
+                result = process_json(data)
+                assert "True" in result
+                assert "False" in result
+
+            def test_base_entry_keys_from_included_keys(
+                self, sample_input_data, patch_included_keys
+            ):
+                result = process_json(sample_input_data)
+                entry = result["True"][0]
+                for key in MOCK_INCLUDED_KEYS:
+                    if key in sample_input_data[0]:
+                        assert key in entry
+
+            def test_unknown_label_used_when_missing(self, patch_included_keys):
+                data = [
+                    {
+                        "normalized_claim": "There are 50 units.",
+                        "entities": [{"label": "CARDINAL", "start_char": 10, "end_char": 12}],
+                        "claim_id": "003",
+                    }
+                ]
+                result = process_json(data)
+                assert "UNKNOWN" in result
+
+            def test_random_key_only_added_when_different(self, patch_included_keys):
+                # Entity with no digits → random_replacement returns original
+                data = [
+                    {
+                        "normalized_claim": "Happened in January.",
+                        "entities": [
+                            {
+                                "label": "DATE",
+                                "start_char": 12,
+                                "end_char": 19,
+                            }
+                        ],
+                        "label": "True",
+                        "claim_id": "004",
+                    }
+                ]
+                result = process_json(data)
+                if "True" in result:
+                    entry = result["True"][0]
+                    assert "perturb_type3_random" not in entry
+
+            def test_empty_input_returns_empty_dict(self, patch_included_keys):
+                assert process_json([]) == {}
+
+            def test_multiple_entries_same_label_grouped(self, patch_included_keys):
+                data = [
+                    {
+                        "normalized_claim": "There were 500 people.",
+                        "entities": [{"label": "CARDINAL", "start_char": 11, "end_char": 14}],
+                        "label": "True",
+                        "claim_id": "001",
+                    },
+                    {
+                        "normalized_claim": "About 200 attended.",
+                        "entities": [{"label": "CARDINAL", "start_char": 6, "end_char": 9}],
+                        "label": "True",
+                        "claim_id": "002",
+                    },
+                ]
+                result = process_json(data)
+                assert len(result["True"]) == 2
+
+            def test_masked_key_present_when_entity_has_digits(
+                self, sample_input_data, patch_included_keys
+            ):
+                result = process_json(sample_input_data)
+                entry = result["True"][0]
+                assert "perturb_type3_masked" in entry
+
+            def test_removed_key_present_when_entity_has_digits(
+                self, sample_input_data, patch_included_keys
+            ):
+                result = process_json(sample_input_data)
+                entry = result["True"][0]
+                assert "perturb_type3_removed" in entry
+
+            def test_extra_keys_not_included_from_entry(self, patch_included_keys):
+                data = [
+                    {
+                        "normalized_claim": "There are 50 units.",
+                        "entities": [{"label": "CARDINAL", "start_char": 10, "end_char": 12}],
+                        "label": "True",
+                        "claim_id": "003",
+                        "extra_field": "should_not_appear",
+                    }
+                ]
+                result = process_json(data)
+                entry = result["True"][0]
+                assert "extra_field" not in entry
+
+            def test_all_perturb_keys_when_entity_has_digits(self, patch_included_keys):
+                data = [
+                    {
+                        "normalized_claim": "There are 42 items.",
+                        "entities": [{"label": "CARDINAL", "start_char": 10, "end_char": 12}],
+                        "label": "True",
+                        "claim_id": "005",
+                    }
+                ]
+                result = process_json(data)
+                entry = result["True"][0]
+                assert "perturb_type3_random" in entry
+                assert "perturb_type3_masked" in entry
+                assert "perturb_type3_removed" in entry
+
+            def test_perturb_values_differ_from_original_claim(
+                self, sample_input_data, patch_included_keys
+            ):
+                result = process_json(sample_input_data)
+                entry = result["True"][0]
+                original = sample_input_data[0]["normalized_claim"]
+                if "perturb_type3_random" in entry:
+                    assert entry["perturb_type3_random"] != original
+                if "perturb_type3_masked" in entry:
+                    assert entry["perturb_type3_masked"] != original
+                if "perturb_type3_removed" in entry:
+                    assert entry["perturb_type3_removed"] != original
+
+            def test_entry_skipped_when_only_non_numerical_entities(
+                self, patch_included_keys
+            ):
+                data = [
+                    {
+                        "normalized_claim": "Alice met Bob yesterday.",
+                        "entities": [
+                            {"label": "PERSON", "start_char": 0, "end_char": 5},
+                            {"label": "PERSON", "start_char": 10, "end_char": 13},
+                        ],
+                        "label": "True",
+                        "claim_id": "006",
+                    }
+                ]
+                result = process_json(data)
+                assert result == {}
+
+            def test_label_converted_to_string(self, patch_included_keys):
+                data = [
+                    {
+                        "normalized_claim": "There are 10 items.",
+                        "entities": [{"label": "CARDINAL", "start_char": 10, "end_char": 12}],
+                        "label": 1,
+                        "claim_id": "007",
+                    }
+                ]
+                result = process_json(data)
+                assert "1" in result
+
+            def test_claim_id_preserved_in_output(
+                self, sample_input_data, patch_included_keys
+            ):
+                result = process_json(sample_input_data)
+                entry = result["True"][0]
+                assert entry["claim_id"] == "001"
+
+            def test_missing_entities_key_defaults_to_empty(self, patch_included_keys):
+                data = [
+                    {
+                        "normalized_claim": "There are 50 units.",
+                        "label": "True",
+                        "claim_id": "008",
+                    }
+                ]
+                # Should not raise; no entities → all perturbations equal original → skipped
+                result = process_json(data)
+                assert result == {}

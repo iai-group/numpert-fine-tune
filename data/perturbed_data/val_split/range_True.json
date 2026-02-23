@@ -25,7 +25,7 @@
         "claim_id": "val_000010",
         "normalized_claim": "\"Palin (proposed) a $150 bounty for the severed foreleg of each killed wolf.\"",
         "perturb_type1_True": "\"Palin (proposed) a between $135 and $165 bounty for the severed foreleg of each killed wolf.\"",
-        "perturb_type2_True": "\"Palin (proposed) a between $172.50 and $187.50 bounty for the severed foreleg of each killed wolf.\""
+        "perturb_type2_True": "\"Palin (proposed) a between $172 and $188 bounty for the severed foreleg of each killed wolf.\""
     },
     {
         "country_of_origin": "usa",
@@ -67,8 +67,8 @@
         "label_original": "correct",
         "claim_id": "val_000022",
         "normalized_claim": "“The percentage of persons aged 20 years and above with no formal education or highest level of education less than Grade 7 within each gender group decreased from 19.3% to 16.2%.”",
-        "perturb_type1_True": "“The percentage of persons aged 20 years and above with no formal education or highest level of education less than Grade between 6 and 7 within each gender group decreased from between 17.4% and 21.2% to between 14.6% and 17.8%.”",
-        "perturb_type2_True": "“The percentage of persons aged 20 years and above with no formal education or highest level of education less than Grade between 10 and 11 within each gender group decreased from between 29.0% and 30.9% to between 24.3% and 25.9%.”"
+        "perturb_type1_True": "“The percentage of persons aged 20 years and above with no formal education or highest level of education less than Grade between 6 and 8 within each gender group decreased from between 17% and 22% to between 14% and 18%.”",
+        "perturb_type2_True": "“The percentage of persons aged 20 years and above with no formal education or highest level of education less than Grade between 10 and 12 within each gender group decreased from between 28% and 31% to between 24% and 26%.”"
     },
     {
         "crawled_date": "2022-10-07T00:00:06",
@@ -97,8 +97,8 @@
         "label_original": "true",
         "claim_id": "val_000038",
         "normalized_claim": "The EU parliament has 705 members, all elected.",
-        "perturb_type1_True": "The EU parliament has between 634 and 775 members, all elected.",
-        "perturb_type2_True": "The EU parliament has between 1,022 and 1,163 members, all elected."
+        "perturb_type1_True": "The EU parliament has between 634 and 776 members, all elected.",
+        "perturb_type2_True": "The EU parliament has between 1,022 and 1,164 members, all elected."
     },
     {
         "country_of_origin": "usa",
@@ -111,8 +111,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_000052",
         "normalized_claim": "Palin \"inherited a city with zero debt, but left it with indebtedness of over $22-million.\"",
-        "perturb_type1_True": "Palin \"inherited a city with zero debt, but left it with indebtedness of over between $19.80 and $24.20-million.\"",
-        "perturb_type2_True": "Palin \"inherited a city with zero debt, but left it with indebtedness of over between $25.30 and $27.50-million.\""
+        "perturb_type1_True": "Palin \"inherited a city with zero debt, but left it with indebtedness of over between $19 and $25-million.\"",
+        "perturb_type2_True": "Palin \"inherited a city with zero debt, but left it with indebtedness of over between $25 and $28-million.\""
     },
     {
         "crawled_date": "2016-10-27",
@@ -126,8 +126,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_000054",
         "normalized_claim": "Says Marco Rubio \"has a 98 percent voting record with the Koch brothers.\"",
-        "perturb_type1_True": "Says Marco Rubio \"has a between 88.2 percent and 107.8 percent voting record with the Koch brothers.\"",
-        "perturb_type2_True": "Says Marco Rubio \"has a between 147 percent and 156.8 percent voting record with the Koch brothers.\""
+        "perturb_type1_True": "Says Marco Rubio \"has a between 88 percent and 108 percent voting record with the Koch brothers.\"",
+        "perturb_type2_True": "Says Marco Rubio \"has a between 147 percent and 157 percent voting record with the Koch brothers.\""
     },
     {
         "crawled_date": "2011-12-22",
@@ -199,8 +199,8 @@
         "label_original": "true",
         "claim_id": "val_000065",
         "normalized_claim": "Says Ohio has 77 job training programs spread across 13 state agencies.",
-        "perturb_type1_True": "Says Ohio has between 69 and 84 job training programs spread across between 11 and 14 state agencies.",
-        "perturb_type2_True": "Says Ohio has between 111 and 127 job training programs spread across between 18 and 21 state agencies."
+        "perturb_type1_True": "Says Ohio has between 69 and 85 job training programs spread across between 11 and 15 state agencies.",
+        "perturb_type2_True": "Says Ohio has between 111 and 128 job training programs spread across between 18 and 22 state agencies."
     },
     {
         "crawled_date": "2023-05-25T17:00:55",
@@ -214,8 +214,8 @@
         "label_original": "correct",
         "claim_id": "val_000076",
         "normalized_claim": "\"The matric pass rate increased from 60.6 percent in 2009 to 75.1 percent last year.\"",
-        "perturb_type1_True": "\"The matric pass rate increased from between 54.5 percent and 66.7 percent in 2009 to between 67.6 percent and 82.6 percent last year.\"",
-        "perturb_type2_True": "\"The matric pass rate increased from between 90.9 percent and 97.0 percent in 2009 to between 112.6 percent and 120.2 percent last year.\""
+        "perturb_type1_True": "\"The matric pass rate increased from between 54 percent and 67 percent in 2009 to between 67 percent and 83 percent last year.\"",
+        "perturb_type2_True": "\"The matric pass rate increased from between 90 percent and 97 percent in 2009 to between 112 percent and 121 percent last year.\""
     },
     {
         "country_of_origin": "usa",
@@ -228,8 +228,8 @@
         "label_original": "true",
         "claim_id": "val_000079",
         "normalized_claim": "\"Our average private sector employee pays 23 percent for their health care. Our average city worker in Ohio pays 9 percent.\"",
-        "perturb_type1_True": "\"Our average private sector employee pays between 20.7 percent and 25.3 percent for their health care. Our average city worker in Ohio pays between 8.1 percent and 9.9 percent.\"",
-        "perturb_type2_True": "\"Our average private sector employee pays between 34.5 percent and 36.8 percent for their health care. Our average city worker in Ohio pays between 13.5 percent and 14.4 percent.\""
+        "perturb_type1_True": "\"Our average private sector employee pays between 20 percent and 26 percent for their health care. Our average city worker in Ohio pays between 8 percent and 10 percent.\"",
+        "perturb_type2_True": "\"Our average private sector employee pays between 34 percent and 37 percent for their health care. Our average city worker in Ohio pays between 13 percent and 15 percent.\""
     },
     {
         "crawled_date": "2019-09-06",
@@ -288,8 +288,8 @@
         "label_original": "correct",
         "claim_id": "val_000100",
         "normalized_claim": "“Our broad-based economic growth averaged 5.6% over the last five years...”",
-        "perturb_type1_True": "“Our broad-based economic growth averaged between 5.0% and 6.2% over the last five years...”",
-        "perturb_type2_True": "“Our broad-based economic growth averaged between 8.4% and 9.0% over the last five years...”"
+        "perturb_type1_True": "“Our broad-based economic growth averaged between 5% and 7% over the last five years...”",
+        "perturb_type2_True": "“Our broad-based economic growth averaged between 8% and 9% over the last five years...”"
     },
     {
         "country_of_origin": "usa",
@@ -330,8 +330,8 @@
         "label_original": "true",
         "claim_id": "val_000124",
         "normalized_claim": "Says 88 Texas constables have died in the line of duty.",
-        "perturb_type1_True": "Says between 79 and 96 Texas constables have died in the line of duty.",
-        "perturb_type2_True": "Says between 127 and 145 Texas constables have died in the line of duty."
+        "perturb_type1_True": "Says between 79 and 97 Texas constables have died in the line of duty.",
+        "perturb_type2_True": "Says between 127 and 146 Texas constables have died in the line of duty."
     },
     {
         "country_of_origin": "usa",
@@ -344,8 +344,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_000129",
         "normalized_claim": "Says Bill Nelson \"skipped 45 percent of the hearings on national security.\"",
-        "perturb_type1_True": "Says Bill Nelson \"skipped between 40.5 percent and 49.5 percent of the hearings on national security.\"",
-        "perturb_type2_True": "Says Bill Nelson \"skipped between 67.5 percent and 72 percent of the hearings on national security.\""
+        "perturb_type1_True": "Says Bill Nelson \"skipped between 40 percent and 50 percent of the hearings on national security.\"",
+        "perturb_type2_True": "Says Bill Nelson \"skipped between 67 percent and 72 percent of the hearings on national security.\""
     },
     {
         "country_of_origin": "usa",
@@ -372,8 +372,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_000151",
         "normalized_claim": "\"At $587 apiece, USA would need to bring home about 33,100,000,000 gold medals to pay off our national debt.\"",
-        "perturb_type1_True": "\"At between $528.30 and $645.70 apiece, USA would need to bring home about between 29,790,000,000 and 36,410,000,000 gold medals to pay off our national debt.\"",
-        "perturb_type2_True": "\"At between $675.05 and $733.75 apiece, USA would need to bring home about between 47,995,000,000 and 54,615,000,000 gold medals to pay off our national debt.\""
+        "perturb_type1_True": "\"At between $528 and $646 apiece, USA would need to bring home about between 29,790,000,000 and 36,410,000,000 gold medals to pay off our national debt.\"",
+        "perturb_type2_True": "\"At between $675 and $734 apiece, USA would need to bring home about between 47,995,000,000 and 54,615,000,000 gold medals to pay off our national debt.\""
     },
     {
         "country_of_origin": "usa",
@@ -386,7 +386,7 @@
         "label_original": "mostly-true",
         "claim_id": "val_000159",
         "normalized_claim": "After Britain’s vote to leave the European Union, \"within 24 hours, Americans lost $100,000,000,000 from our 401(k)s.\"",
-        "perturb_type1_True": "After Britain’s vote to leave the European Union, \"within between 21 and 26 hours, Americans lost between $90,000,000,000 and $110,000,000,000 from our 401(k)s.\"",
+        "perturb_type1_True": "After Britain’s vote to leave the European Union, \"within between 21 and 27 hours, Americans lost between $90,000,000,000 and $110,000,000,000 from our 401(k)s.\"",
         "perturb_type2_True": "After Britain’s vote to leave the European Union, \"within between 27 and 30 hours, Americans lost between $115,000,000,000 and $125,000,000,000 from our 401(k)s.\""
     },
     {
@@ -460,8 +460,8 @@
         "label_original": "TRUE.",
         "claim_id": "val_000185",
         "normalized_claim": "Mission Indradhanush, a mass movement in caring for children has covered 528 districts with 3.15 crore children vaccinated.",
-        "perturb_type1_True": "Mission Indradhanush, a mass movement in caring for children has covered between 475 and 580 districts with between 2 and 3.15 crore children vaccinated.",
-        "perturb_type2_True": "Mission Indradhanush, a mass movement in caring for children has covered between 765 and 871 districts with 4.15 crore children vaccinated."
+        "perturb_type1_True": "Mission Indradhanush, a mass movement in caring for children has covered between 475 and 581 districts with between 2 and 4.15 crore children vaccinated.",
+        "perturb_type2_True": "Mission Indradhanush, a mass movement in caring for children has covered between 765 and 872 districts with between 4 and 5.15 crore children vaccinated."
     },
     {
         "country_of_origin": "usa",
@@ -474,8 +474,8 @@
         "label_original": "true",
         "claim_id": "val_000191",
         "normalized_claim": "\"Supreme Court 15 times over the last 120 years has said marriage is a fundamental right\" and never said \"it had to be between a man and a woman.\"",
-        "perturb_type1_True": "\"Supreme Court between 13 and 16 times over the last 120 years has said marriage is a fundamental right\" and never said \"it had to be between a man and a woman.\"",
-        "perturb_type2_True": "\"Supreme Court between 21 and 24 times over the last 120 years has said marriage is a fundamental right\" and never said \"it had to be between a man and a woman.\""
+        "perturb_type1_True": "\"Supreme Court between 13 and 17 times over the last 120 years has said marriage is a fundamental right\" and never said \"it had to be between a man and a woman.\"",
+        "perturb_type2_True": "\"Supreme Court between 21 and 25 times over the last 120 years has said marriage is a fundamental right\" and never said \"it had to be between a man and a woman.\""
     },
     {
         "crawled_date": "2022-10-06T15:00:06",
@@ -489,8 +489,8 @@
         "label_original": "correct",
         "claim_id": "val_000202",
         "normalized_claim": "\"Our tourist arrival numbers for the period January to November 2016 increased to 9,000,000, an increase of just over 1,000,000 arrivals from 2015. This represents a 13% growth in tourism arrivals.\"",
-        "perturb_type1_True": "\"Our tourist arrival numbers for the period January to November 2016 increased to between 8,100,000 and 9,900,000, an increase of just over between 900,000 and 1,100,000 arrivals from 2015. This represents a between 11.7% and 14.3% growth in tourism arrivals.\"",
-        "perturb_type2_True": "\"Our tourist arrival numbers for the period January to November 2016 increased to between 13,050,000 and 14,850,000, an increase of just over between 1,450,000 and 1,650,000 arrivals from 2015. This represents a between 19.5% and 20.8% growth in tourism arrivals.\""
+        "perturb_type1_True": "\"Our tourist arrival numbers for the period January to November 2016 increased to between 8,100,000 and 9,900,000, an increase of just over between 900,000 and 1,100,000 arrivals from 2015. This represents a between 11% and 15% growth in tourism arrivals.\"",
+        "perturb_type2_True": "\"Our tourist arrival numbers for the period January to November 2016 increased to between 13,050,000 and 14,850,000, an increase of just over between 1,450,000 and 1,650,000 arrivals from 2015. This represents a between 19% and 21% growth in tourism arrivals.\""
     },
     {
         "country_of_origin": "usa",
@@ -559,8 +559,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_000236",
         "normalized_claim": "Susie Lee and her husband \"own 17 homes across the country and use their private jet to take vacations,\" and invest in \"companies like Walmart, Halliburton and GEO Group.\"",
-        "perturb_type1_True": "Susie Lee and her husband \"own between 15 and 18 homes across the country and use their private jet to take vacations,\" and invest in \"companies like Walmart, Halliburton and GEO Group.\"",
-        "perturb_type2_True": "Susie Lee and her husband \"own between 24 and 28 homes across the country and use their private jet to take vacations,\" and invest in \"companies like Walmart, Halliburton and GEO Group.\""
+        "perturb_type1_True": "Susie Lee and her husband \"own between 15 and 19 homes across the country and use their private jet to take vacations,\" and invest in \"companies like Walmart, Halliburton and GEO Group.\"",
+        "perturb_type2_True": "Susie Lee and her husband \"own between 24 and 29 homes across the country and use their private jet to take vacations,\" and invest in \"companies like Walmart, Halliburton and GEO Group.\""
     },
     {
         "country_of_origin": "usa",
@@ -644,8 +644,8 @@
         "label_original": "true",
         "claim_id": "val_000276",
         "normalized_claim": "The U.S. has \"5 percent of the world’s population, 25 percent of the world’s known prison population.\"",
-        "perturb_type1_True": "The U.S. has \"between 4.5 percent and 5.5 percent of the world’s population, between 22.5 percent and 27.5 percent of the world’s known prison population.\"",
-        "perturb_type2_True": "The U.S. has \"between 7.5 percent and 8 percent of the world’s population, between 37.5 percent and 40 percent of the world’s known prison population.\""
+        "perturb_type1_True": "The U.S. has \"between 4 percent and 6 percent of the world’s population, between 22 percent and 28 percent of the world’s known prison population.\"",
+        "perturb_type2_True": "The U.S. has \"between 7 percent and 8 percent of the world’s population, between 37 percent and 40 percent of the world’s known prison population.\""
     },
     {
         "country_of_origin": "usa",
@@ -672,8 +672,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_000305",
         "normalized_claim": "\"Less than 5 percent of registered users in states allowing medical marijuana have cancer or AIDS.\"",
-        "perturb_type1_True": "\"Less than between 4.5 percent and 5.5 percent of registered users in states allowing medical marijuana have cancer or AIDS.\"",
-        "perturb_type2_True": "\"Less than between 7.5 percent and 8 percent of registered users in states allowing medical marijuana have cancer or AIDS.\""
+        "perturb_type1_True": "\"Less than between 4 percent and 6 percent of registered users in states allowing medical marijuana have cancer or AIDS.\"",
+        "perturb_type2_True": "\"Less than between 7 percent and 8 percent of registered users in states allowing medical marijuana have cancer or AIDS.\""
     },
     {
         "crawled_date": "2016-10-26",
@@ -715,8 +715,8 @@
         "label_original": "true",
         "claim_id": "val_000321",
         "normalized_claim": "Says Republican U.S. Senate candidate Ted Cruz \"opposes the DREAM Act, which is supported by 85% of Latinos.\"",
-        "perturb_type1_True": "Says Republican U.S. Senate candidate Ted Cruz \"opposes the DREAM Act, which is supported by between 76.5% and 93.5% of Latinos.\"",
-        "perturb_type2_True": "Says Republican U.S. Senate candidate Ted Cruz \"opposes the DREAM Act, which is supported by between 127.5% and 136% of Latinos.\""
+        "perturb_type1_True": "Says Republican U.S. Senate candidate Ted Cruz \"opposes the DREAM Act, which is supported by between 76% and 94% of Latinos.\"",
+        "perturb_type2_True": "Says Republican U.S. Senate candidate Ted Cruz \"opposes the DREAM Act, which is supported by between 127% and 136% of Latinos.\""
     },
     {
         "country_of_origin": "usa",
@@ -745,7 +745,7 @@
         "claim_id": "val_000338",
         "normalized_claim": "Since a new immigration program was implemented, the number of Venezuelans trying to enter the U.S. illegally decreased “from about 1,100 per day to less than 250 per day on average.”",
         "perturb_type1_True": "Since a new immigration program was implemented, the number of Venezuelans trying to enter the U.S. illegally decreased “from about between 990 and 1,210 per day to less than between 225 and 275 per day on average.”",
-        "perturb_type2_True": "Since a new immigration program was implemented, the number of Venezuelans trying to enter the U.S. illegally decreased “from about between 1,595 and 1,815 per day to less than between 362 and 412 per day on average.”"
+        "perturb_type2_True": "Since a new immigration program was implemented, the number of Venezuelans trying to enter the U.S. illegally decreased “from about between 1,595 and 1,815 per day to less than between 362 and 413 per day on average.”"
     },
     {
         "country_of_origin": "usa",
@@ -944,8 +944,8 @@
         "label_original": "true",
         "claim_id": "val_000467",
         "normalized_claim": "Says in the 2016 presidential election, \"I won that one by 42 points -- 42 points -- West Virginia.\"",
-        "perturb_type1_True": "Says in the 2016 presidential election, \"I won that one by between 37 and 46 points -- between 37 and 46 points -- West Virginia.\"",
-        "perturb_type2_True": "Says in the 2016 presidential election, \"I won that one by between 60 and 69 points -- between 60 and 69 points -- West Virginia.\""
+        "perturb_type1_True": "Says in the 2016 presidential election, \"I won that one by between 37 and 47 points -- between 37 and 47 points -- West Virginia.\"",
+        "perturb_type2_True": "Says in the 2016 presidential election, \"I won that one by between 60 and 70 points -- between 60 and 70 points -- West Virginia.\""
     },
     {
         "country_of_origin": "usa",
@@ -958,8 +958,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_000471",
         "normalized_claim": "Last year, \"244 suspected terrorists walked into gun shops and attempted to purchase a firearm; 223 were able to get the firearm.\"",
-        "perturb_type1_True": "Last year, \"between 219 and 268 suspected terrorists walked into gun shops and attempted to purchase a firearm; between 200 and 245 were able to get the firearm.\"",
-        "perturb_type2_True": "Last year, \"between 353 and 402 suspected terrorists walked into gun shops and attempted to purchase a firearm; between 323 and 367 were able to get the firearm.\""
+        "perturb_type1_True": "Last year, \"between 219 and 269 suspected terrorists walked into gun shops and attempted to purchase a firearm; between 200 and 246 were able to get the firearm.\"",
+        "perturb_type2_True": "Last year, \"between 353 and 403 suspected terrorists walked into gun shops and attempted to purchase a firearm; between 323 and 368 were able to get the firearm.\""
     },
     {
         "country_of_origin": "usa",
@@ -972,8 +972,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_000473",
         "normalized_claim": "\"One hundred and ninety-four countries signed the Paris Agreement to control greenhouse gases. Our own voluntary agreement to accomplish the same goal — the Under2 MOU — has 165 signatories, representing a billion people.\"",
-        "perturb_type1_True": "\"One hundred and ninety-four countries signed the Paris Agreement to control greenhouse gases. Our own voluntary agreement to accomplish the same goal — the Under2 MOU — has between 148 and 181 signatories, representing a billion people.\"",
-        "perturb_type2_True": "\"One hundred and ninety-four countries signed the Paris Agreement to control greenhouse gases. Our own voluntary agreement to accomplish the same goal — the Under2 MOU — has between 239 and 272 signatories, representing a billion people.\""
+        "perturb_type1_True": "\"One hundred and ninety-four countries signed the Paris Agreement to control greenhouse gases. Our own voluntary agreement to accomplish the same goal — the Under2 MOU — has between 148 and 182 signatories, representing a billion people.\"",
+        "perturb_type2_True": "\"One hundred and ninety-four countries signed the Paris Agreement to control greenhouse gases. Our own voluntary agreement to accomplish the same goal — the Under2 MOU — has between 239 and 273 signatories, representing a billion people.\""
     },
     {
         "country_of_origin": "usa",
@@ -986,8 +986,8 @@
         "label_original": "true",
         "claim_id": "val_000474",
         "normalized_claim": "“Some states are only getting 50 tests per day, and the Utah Jazz got 58.”",
-        "perturb_type1_True": "“Some states are only getting between 45 and 55 tests per day, and the Utah Jazz got between 52 and 63.”",
-        "perturb_type2_True": "“Some states are only getting between 72 and 82 tests per day, and the Utah Jazz got between 84 and 95.”"
+        "perturb_type1_True": "“Some states are only getting between 45 and 55 tests per day, and the Utah Jazz got between 52 and 64.”",
+        "perturb_type2_True": "“Some states are only getting between 72 and 83 tests per day, and the Utah Jazz got between 84 and 96.”"
     },
     {
         "crawled_date": "2011-10-24",
@@ -1002,7 +1002,7 @@
         "claim_id": "val_000475",
         "normalized_claim": "Says \"if you are shot in the city of Newark, you have over an 80 percent chance that you've been arrested before an average of 10 times.\"",
         "perturb_type1_True": "Says \"if you are shot in the city of Newark, you have over an between 72 percent and 88 percent chance that you've been arrested before an average of between 9 and 11 times.\"",
-        "perturb_type2_True": "Says \"if you are shot in the city of Newark, you have over an between 120 percent and 128 percent chance that you've been arrested before an average of between 14 and 16 times.\""
+        "perturb_type2_True": "Says \"if you are shot in the city of Newark, you have over an between 120 percent and 128 percent chance that you've been arrested before an average of between 14 and 17 times.\""
     },
     {
         "country_of_origin": "usa",
@@ -1029,8 +1029,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_000480",
         "normalized_claim": "\"People show up in the emergency room with a sprained ankle, 25 percent get an opioid prescription.\"",
-        "perturb_type1_True": "\"People show up in the emergency room with a sprained ankle, between 22.5 percent and 27.5 percent get an opioid prescription.\"",
-        "perturb_type2_True": "\"People show up in the emergency room with a sprained ankle, between 37.5 percent and 40 percent get an opioid prescription.\""
+        "perturb_type1_True": "\"People show up in the emergency room with a sprained ankle, between 22 percent and 28 percent get an opioid prescription.\"",
+        "perturb_type2_True": "\"People show up in the emergency room with a sprained ankle, between 37 percent and 40 percent get an opioid prescription.\""
     },
     {
         "country_of_origin": "usa",
@@ -1072,8 +1072,8 @@
         "label_original": "true",
         "claim_id": "val_000487",
         "normalized_claim": "\"In the African-American community today, 68 percent of kids born are born out of wedlock.\"",
-        "perturb_type1_True": "\"In the African-American community today, between 61.2 percent and 74.8 percent of kids born are born out of wedlock.\"",
-        "perturb_type2_True": "\"In the African-American community today, between 102 percent and 108.8 percent of kids born are born out of wedlock.\""
+        "perturb_type1_True": "\"In the African-American community today, between 61 percent and 75 percent of kids born are born out of wedlock.\"",
+        "perturb_type2_True": "\"In the African-American community today, between 102 percent and 109 percent of kids born are born out of wedlock.\""
     },
     {
         "country_of_origin": "usa",
@@ -1188,8 +1188,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_000535",
         "normalized_claim": "“For every dollar in federal taxes my constituents pay, we get a mere 93 cents back.”",
-        "perturb_type1_True": "“For every dollar in federal taxes my constituents pay, we get a mere between 83.70 and 102.30 cents back.”",
-        "perturb_type2_True": "“For every dollar in federal taxes my constituents pay, we get a mere between 106.95 and 116.25 cents back.”"
+        "perturb_type1_True": "“For every dollar in federal taxes my constituents pay, we get a mere between 83 and 103 cents back.”",
+        "perturb_type2_True": "“For every dollar in federal taxes my constituents pay, we get a mere between 106 and 117 cents back.”"
     },
     {
         "country_of_origin": "usa",
@@ -1231,8 +1231,8 @@
         "label_original": "true",
         "claim_id": "val_000541",
         "normalized_claim": "Scunthorpe voted 68.68% to leave the EU.",
-        "perturb_type1_True": "Scunthorpe voted between 61.8% and 75.5% to leave the EU.",
-        "perturb_type2_True": "Scunthorpe voted between 103.0% and 109.9% to leave the EU."
+        "perturb_type1_True": "Scunthorpe voted between 61% and 76% to leave the EU.",
+        "perturb_type2_True": "Scunthorpe voted between 103% and 110% to leave the EU."
     },
     {
         "country_of_origin": "usa",
@@ -1303,8 +1303,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_000610",
         "normalized_claim": "On immigration, \"the president said 22 times, 22 times, that he couldn't do what he eventually did.\"",
-        "perturb_type1_True": "On immigration, \"the president said between 19 and 24 times, between 19 and 24 times, that he couldn't do what he eventually did.\"",
-        "perturb_type2_True": "On immigration, \"the president said between 31 and 36 times, between 31 and 36 times, that he couldn't do what he eventually did.\""
+        "perturb_type1_True": "On immigration, \"the president said between 19 and 25 times, between 19 and 25 times, that he couldn't do what he eventually did.\"",
+        "perturb_type2_True": "On immigration, \"the president said between 31 and 37 times, between 31 and 37 times, that he couldn't do what he eventually did.\""
     },
     {
         "country_of_origin": "usa",
@@ -1318,7 +1318,7 @@
         "claim_id": "val_000620",
         "normalized_claim": "A customer closed out his million-dollar account after his bank refused to validate a 50-cent parking ticket.",
         "perturb_type1_True": "A customer closed out his million-dollar account after his bank refused to validate a between 45 and 55-cent parking ticket.",
-        "perturb_type2_True": "A customer closed out his million-dollar account after his bank refused to validate a between 57.50 and 62.50-cent parking ticket."
+        "perturb_type2_True": "A customer closed out his million-dollar account after his bank refused to validate a between 57 and 63-cent parking ticket."
     },
     {
         "country_of_origin": "usa",
@@ -1346,8 +1346,8 @@
         "label_original": "true",
         "claim_id": "val_000631",
         "normalized_claim": "Says for every dollar the state spent on audits last year, it delivered $64 in cost savings.",
-        "perturb_type1_True": "Says for every dollar the state spent on audits last year, it delivered between $57.60 and $70.40 in cost savings.",
-        "perturb_type2_True": "Says for every dollar the state spent on audits last year, it delivered between $73.60 and $80 in cost savings."
+        "perturb_type1_True": "Says for every dollar the state spent on audits last year, it delivered between $57 and $71 in cost savings.",
+        "perturb_type2_True": "Says for every dollar the state spent on audits last year, it delivered between $73 and $80 in cost savings."
     },
     {
         "crawled_date": "2015-12-29",
@@ -1361,8 +1361,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_000636",
         "normalized_claim": "\"91% of suspected terrorists who attempted to buy guns in America walked away with the weapon they wanted.\"",
-        "perturb_type1_True": "\"between 81.9% and 100.1% of suspected terrorists who attempted to buy guns in America walked away with the weapon they wanted.\"",
-        "perturb_type2_True": "\"between 136.5% and 145.6% of suspected terrorists who attempted to buy guns in America walked away with the weapon they wanted.\""
+        "perturb_type1_True": "\"between 81% and 101% of suspected terrorists who attempted to buy guns in America walked away with the weapon they wanted.\"",
+        "perturb_type2_True": "\"between 136% and 146% of suspected terrorists who attempted to buy guns in America walked away with the weapon they wanted.\""
     },
     {
         "crawled_date": "2007-10-15",
@@ -1461,8 +1461,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_000692",
         "normalized_claim": "\"President Trump has lifted the prospect of voters across Vermont, overseeing a 11,742 decline of Vermont residents on food stamps.\"",
-        "perturb_type1_True": "\"President Trump has lifted the prospect of voters across Vermont, overseeing a between 10,567 and 12,916 decline of Vermont residents on food stamps.\"",
-        "perturb_type2_True": "\"President Trump has lifted the prospect of voters across Vermont, overseeing a between 17,025 and 19,374 decline of Vermont residents on food stamps.\""
+        "perturb_type1_True": "\"President Trump has lifted the prospect of voters across Vermont, overseeing a between 10,567 and 12,917 decline of Vermont residents on food stamps.\"",
+        "perturb_type2_True": "\"President Trump has lifted the prospect of voters across Vermont, overseeing a between 17,025 and 19,375 decline of Vermont residents on food stamps.\""
     },
     {
         "crawled_date": "2014-10-14",
@@ -1476,8 +1476,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_000702",
         "normalized_claim": "Raising the minimum wage to $10.10 an hour \"will destroy between half a million and 1,000,000 jobs.\"",
-        "perturb_type1_True": "Raising the minimum wage to between $9.09 and $11.11 an hour \"will destroy between half a million and 1,000,000 jobs.\"",
-        "perturb_type2_True": "Raising the minimum wage to between $11.62 and $12.62 an hour \"will destroy between half a million and 1,000,000 jobs.\""
+        "perturb_type1_True": "Raising the minimum wage to between $9 and $12 an hour \"will destroy between half a million and 1,000,000 jobs.\"",
+        "perturb_type2_True": "Raising the minimum wage to between $11 and $13 an hour \"will destroy between half a million and 1,000,000 jobs.\""
     },
     {
         "crawled_date": "2018-09-12",
@@ -1505,8 +1505,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_000720",
         "normalized_claim": "Long-term federal investment in U.S. airports is urgent because \"there was a recent survey of the top airports … in the world, and there was not a single U.S. airport that came in the top 25.\"",
-        "perturb_type1_True": "Long-term federal investment in U.S. airports is urgent because \"there was a recent survey of the top airports … in the world, and there was not a single U.S. airport that came in the top between 22 and 27.\"",
-        "perturb_type2_True": "Long-term federal investment in U.S. airports is urgent because \"there was a recent survey of the top airports … in the world, and there was not a single U.S. airport that came in the top between 36 and 41.\""
+        "perturb_type1_True": "Long-term federal investment in U.S. airports is urgent because \"there was a recent survey of the top airports … in the world, and there was not a single U.S. airport that came in the top between 22 and 28.\"",
+        "perturb_type2_True": "Long-term federal investment in U.S. airports is urgent because \"there was a recent survey of the top airports … in the world, and there was not a single U.S. airport that came in the top between 36 and 42.\""
     },
     {
         "crawled_date": "2012-12-19",
@@ -1520,8 +1520,8 @@
         "label_original": "true",
         "claim_id": "val_000723",
         "normalized_claim": "Says the Portland Children’s Levy holds its \"administrative expenses to less than 5 percent.\"",
-        "perturb_type1_True": "Says the Portland Children’s Levy holds its \"administrative expenses to less than between 4.5 percent and 5.5 percent.\"",
-        "perturb_type2_True": "Says the Portland Children’s Levy holds its \"administrative expenses to less than between 7.5 percent and 8 percent.\""
+        "perturb_type1_True": "Says the Portland Children’s Levy holds its \"administrative expenses to less than between 4 percent and 6 percent.\"",
+        "perturb_type2_True": "Says the Portland Children’s Levy holds its \"administrative expenses to less than between 7 percent and 8 percent.\""
     },
     {
         "country_of_origin": "usa",
@@ -1534,8 +1534,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_000735",
         "normalized_claim": "According to the U.S. Census Bureau, 71.2 percent of Hispanic registered voters in Texas and over 86 percent of African American registered voters participated in the 2012 elections.",
-        "perturb_type1_True": "According to the U.S. Census Bureau, between 64.1 percent and 78.3 percent of Hispanic registered voters in Texas and over between 77.4 percent and 94.6 percent of African American registered voters participated in the 2012 elections.",
-        "perturb_type2_True": "According to the U.S. Census Bureau, between 106.8 percent and 113.9 percent of Hispanic registered voters in Texas and over between 129 percent and 137.6 percent of African American registered voters participated in the 2012 elections."
+        "perturb_type1_True": "According to the U.S. Census Bureau, between 64 percent and 79 percent of Hispanic registered voters in Texas and over between 77 percent and 95 percent of African American registered voters participated in the 2012 elections.",
+        "perturb_type2_True": "According to the U.S. Census Bureau, between 106 percent and 114 percent of Hispanic registered voters in Texas and over between 129 percent and 138 percent of African American registered voters participated in the 2012 elections."
     },
     {
         "crawled_date": "2011-12-25",
@@ -1549,8 +1549,8 @@
         "label_original": "true",
         "claim_id": "val_000748",
         "normalized_claim": "Says America spends \"over 17 percent of its GDP on health care costs when our closest competitor nations are spending about 12.\"",
-        "perturb_type1_True": "Says America spends \"over between 15.3 percent and 18.7 percent of its GDP on health care costs when our closest competitor nations are spending about between 10 and 13.\"",
-        "perturb_type2_True": "Says America spends \"over between 25.5 percent and 27.2 percent of its GDP on health care costs when our closest competitor nations are spending about between 17 and 19.\""
+        "perturb_type1_True": "Says America spends \"over between 15 percent and 19 percent of its GDP on health care costs when our closest competitor nations are spending about between 10 and 14.\"",
+        "perturb_type2_True": "Says America spends \"over between 25 percent and 28 percent of its GDP on health care costs when our closest competitor nations are spending about between 17 and 20.\""
     },
     {
         "country_of_origin": "usa",
@@ -1606,8 +1606,8 @@
         "label_original": "TRUE.",
         "claim_id": "val_000755",
         "normalized_claim": "3.8 crore poor women provided with free LPG connections, target raised to 8 crore.",
-        "perturb_type1_True": "Between 2 and 3.8 crore poor women provided with free LPG connections, target raised to between 7 and 8 crore.",
-        "perturb_type2_True": "4.8 crore poor women provided with free LPG connections, target raised to between 11 and 13 crore."
+        "perturb_type1_True": "Between 2 and 4.8 crore poor women provided with free LPG connections, target raised to between 7 and 9 crore.",
+        "perturb_type2_True": "Between 4 and 5.8 crore poor women provided with free LPG connections, target raised to between 11 and 14 crore."
     },
     {
         "country_of_origin": "usa",
@@ -1621,7 +1621,7 @@
         "claim_id": "val_000768",
         "normalized_claim": "\"For every $10,000 invested in business incubators, up to nearly 70 local jobs are generated.\"",
         "perturb_type1_True": "\"For every between $9,000 and $11,000 invested in business incubators, up to nearly between 63 and 77 local jobs are generated.\"",
-        "perturb_type2_True": "\"For every between $11,500 and $12,500 invested in business incubators, up to nearly between 101 and 115 local jobs are generated.\""
+        "perturb_type2_True": "\"For every between $11,500 and $12,500 invested in business incubators, up to nearly between 101 and 116 local jobs are generated.\""
     },
     {
         "country_of_origin": "usa",
@@ -1634,8 +1634,8 @@
         "label_original": "true",
         "claim_id": "val_000769",
         "normalized_claim": "Even \"though men comprise 49% of the population, they hold 80% of the lawmaking power in the Legislature (144 of 181 seats).\"",
-        "perturb_type1_True": "Even \"though men comprise between 44.1% and 53.9% of the population, they hold between 72% and 88% of the lawmaking power in the Legislature (between 129 and 158 of between 162 and 199 seats).\"",
-        "perturb_type2_True": "Even \"though men comprise between 73.5% and 78.4% of the population, they hold between 120% and 128% of the lawmaking power in the Legislature (between 208 and 237 of between 262 and 298 seats).\""
+        "perturb_type1_True": "Even \"though men comprise between 44% and 54% of the population, they hold between 72% and 88% of the lawmaking power in the Legislature (between 129 and 159 of between 162 and 200 seats).\"",
+        "perturb_type2_True": "Even \"though men comprise between 73% and 79% of the population, they hold between 120% and 128% of the lawmaking power in the Legislature (between 208 and 238 of between 262 and 299 seats).\""
     },
     {
         "country_of_origin": "usa",
@@ -1662,8 +1662,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_000786",
         "normalized_claim": "Roughly 500,000 Georgians -- or about 5 percent of the state’s residents -- have gone through a background check to legally obtain a Georgia weapons carry license.",
-        "perturb_type1_True": "Roughly between 450,000 and 550,000 Georgians -- or about between 4.5 percent and 5.5 percent of the state’s residents -- have gone through a background check to legally obtain a Georgia weapons carry license.",
-        "perturb_type2_True": "Roughly between 725,000 and 825,000 Georgians -- or about between 7.5 percent and 8 percent of the state’s residents -- have gone through a background check to legally obtain a Georgia weapons carry license."
+        "perturb_type1_True": "Roughly between 450,000 and 550,000 Georgians -- or about between 4 percent and 6 percent of the state’s residents -- have gone through a background check to legally obtain a Georgia weapons carry license.",
+        "perturb_type2_True": "Roughly between 725,000 and 825,000 Georgians -- or about between 7 percent and 8 percent of the state’s residents -- have gone through a background check to legally obtain a Georgia weapons carry license."
     },
     {
         "crawled_date": "2023-08-26T00:27:02",
@@ -1692,8 +1692,8 @@
         "label_original": "true",
         "claim_id": "val_000801",
         "normalized_claim": "\"When the national debt reaches $15,000,000,000,000, it means that U.S. debt-to-GDP ratio will reach 99.7 percent of our debt and this is $47,900 for every living American.\"",
-        "perturb_type1_True": "\"When the national debt reaches between $13,500,000,000,000 and $16,500,000,000,000, it means that U.S. debt-to-GDP ratio will reach between 89.7 percent and 109.7 percent of our debt and this is between $43,110 and $52,690 for every living American.\"",
-        "perturb_type2_True": "\"When the national debt reaches between $17,250,000,000,000 and $18,750,000,000,000, it means that U.S. debt-to-GDP ratio will reach between 149.6 percent and 159.5 percent of our debt and this is between $55,085 and $59,875 for every living American.\""
+        "perturb_type1_True": "\"When the national debt reaches between $13,500,000,000,000 and $16,500,000,000,000, it means that U.S. debt-to-GDP ratio will reach between 89 percent and 110 percent of our debt and this is between $43,110 and $52,690 for every living American.\"",
+        "perturb_type2_True": "\"When the national debt reaches between $17,250,000,000,000 and $18,750,000,000,000, it means that U.S. debt-to-GDP ratio will reach between 149 percent and 160 percent of our debt and this is between $55,085 and $59,875 for every living American.\""
     },
     {
         "crawled_date": "2013-10-29",
@@ -1765,7 +1765,7 @@
         "claim_id": "val_000861",
         "normalized_claim": "\"We've cut taxes 50 times and look what has happened to our revenues. They've grown.\"",
         "perturb_type1_True": "\"We've cut taxes between 45 and 55 times and look what has happened to our revenues. They've grown.\"",
-        "perturb_type2_True": "\"We've cut taxes between 72 and 82 times and look what has happened to our revenues. They've grown.\""
+        "perturb_type2_True": "\"We've cut taxes between 72 and 83 times and look what has happened to our revenues. They've grown.\""
     },
     {
         "country_of_origin": "usa",
@@ -1778,8 +1778,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_000871",
         "normalized_claim": "\"A small business in my district\" needed \"31 different permits and fees just to be able to expand.\"",
-        "perturb_type1_True": "\"A small business in my district\" needed \"between 27 and 34 different permits and fees just to be able to expand.\"",
-        "perturb_type2_True": "\"A small business in my district\" needed \"between 44 and 51 different permits and fees just to be able to expand.\""
+        "perturb_type1_True": "\"A small business in my district\" needed \"between 27 and 35 different permits and fees just to be able to expand.\"",
+        "perturb_type2_True": "\"A small business in my district\" needed \"between 44 and 52 different permits and fees just to be able to expand.\""
     },
     {
         "country_of_origin": "usa",
@@ -1835,8 +1835,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_000896",
         "normalized_claim": "\"When I became mayor of Los Angeles, we had a 44 percent (high school) graduation rate. I said that was unacceptable. I challenged that notion. I said the mayor needs to be involved with our schools. We need to partner together. As I left, after a number of reforms, we grew our graduation rate from 44 percent to 72.\"",
-        "perturb_type1_True": "\"When I became mayor of Los Angeles, we had a between 39.6 percent and 48.4 percent (high school) graduation rate. I said that was unacceptable. I challenged that notion. I said the mayor needs to be involved with our schools. We need to partner together. As I left, after a number of reforms, we grew our graduation rate from between 39.6 percent and 48.4 percent to between 64 and 79.\"",
-        "perturb_type2_True": "\"When I became mayor of Los Angeles, we had a between 66 percent and 70.4 percent (high school) graduation rate. I said that was unacceptable. I challenged that notion. I said the mayor needs to be involved with our schools. We need to partner together. As I left, after a number of reforms, we grew our graduation rate from between 66 percent and 70.4 percent to between 104 and 118.\""
+        "perturb_type1_True": "\"When I became mayor of Los Angeles, we had a between 39 percent and 49 percent (high school) graduation rate. I said that was unacceptable. I challenged that notion. I said the mayor needs to be involved with our schools. We need to partner together. As I left, after a number of reforms, we grew our graduation rate from between 39 percent and 49 percent to between 64 and 80.\"",
+        "perturb_type2_True": "\"When I became mayor of Los Angeles, we had a between 66 percent and 71 percent (high school) graduation rate. I said that was unacceptable. I challenged that notion. I said the mayor needs to be involved with our schools. We need to partner together. As I left, after a number of reforms, we grew our graduation rate from between 66 percent and 71 percent to between 104 and 119.\""
     },
     {
         "country_of_origin": "usa",
@@ -1865,7 +1865,7 @@
         "claim_id": "val_000906",
         "normalized_claim": "\"One in 10 babies born in this country is born in Texas.\"",
         "perturb_type1_True": "\"One in between 9 and 11 babies born in this country is born in Texas.\"",
-        "perturb_type2_True": "\"One in between 14 and 16 babies born in this country is born in Texas.\""
+        "perturb_type2_True": "\"One in between 14 and 17 babies born in this country is born in Texas.\""
     },
     {
         "country_of_origin": "usa",
@@ -1878,8 +1878,8 @@
         "label_original": "true",
         "claim_id": "val_000917",
         "normalized_claim": "\"Almost 10 percent of Canadians came to visit Florida last year ... (Canadians) buy 7.4 percent of our homes in the state.\"",
-        "perturb_type1_True": "\"Almost between 9 percent and 11 percent of Canadians came to visit Florida last year ... (Canadians) buy between 6.7 percent and 8.1 percent of our homes in the state.\"",
-        "perturb_type2_True": "\"Almost between 15 percent and 16 percent of Canadians came to visit Florida last year ... (Canadians) buy between 11.1 percent and 11.8 percent of our homes in the state.\""
+        "perturb_type1_True": "\"Almost between 9 percent and 11 percent of Canadians came to visit Florida last year ... (Canadians) buy between 6 percent and 9 percent of our homes in the state.\"",
+        "perturb_type2_True": "\"Almost between 15 percent and 16 percent of Canadians came to visit Florida last year ... (Canadians) buy between 11 percent and 12 percent of our homes in the state.\""
     },
     {
         "crawled_date": "2012-12-14",
@@ -1921,8 +1921,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_000955",
         "normalized_claim": "\"When the Constitution was written, (only) 20 to 25 percent of the people in the country could vote.\"",
-        "perturb_type1_True": "\"When the Constitution was written, (only) 20 to between 22.5 percent and 27.5 percent of the people in the country could vote.\"",
-        "perturb_type2_True": "\"When the Constitution was written, (only) 20 to between 37.5 percent and 40 percent of the people in the country could vote.\""
+        "perturb_type1_True": "\"When the Constitution was written, (only) 20 to between 22 percent and 28 percent of the people in the country could vote.\"",
+        "perturb_type2_True": "\"When the Constitution was written, (only) 20 to between 37 percent and 40 percent of the people in the country could vote.\""
     },
     {
         "country_of_origin": "usa",
@@ -1950,8 +1950,8 @@
         "label_original": "true",
         "claim_id": "val_000982",
         "normalized_claim": "\"I saved the taxpayers $2-billion on a bogus Air Force Boeing tanker deal where people went to jail.\"",
-        "perturb_type1_True": "\"I saved the taxpayers between $1.80 and $2.20-billion on a bogus Air Force Boeing tanker deal where people went to jail.\"",
-        "perturb_type2_True": "\"I saved the taxpayers between $2.30 and $2.50-billion on a bogus Air Force Boeing tanker deal where people went to jail.\""
+        "perturb_type1_True": "\"I saved the taxpayers between $1 and $3-billion on a bogus Air Force Boeing tanker deal where people went to jail.\"",
+        "perturb_type2_True": "\"I saved the taxpayers between $2 and $3-billion on a bogus Air Force Boeing tanker deal where people went to jail.\""
     },
     {
         "country_of_origin": "usa",
@@ -2006,8 +2006,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_000992",
         "normalized_claim": "\"The chances of being killed by a refugee committing a terrorist act is 1 in 3,600,000,000.\"",
-        "perturb_type1_True": "\"The chances of being killed by a refugee committing a terrorist act is between 0 and 1 in between 3,240,000,000 and 3,960,000,000.\"",
-        "perturb_type2_True": "\"The chances of being killed by a refugee committing a terrorist act is 1 in between 5,220,000,000 and 5,940,000,000.\""
+        "perturb_type1_True": "\"The chances of being killed by a refugee committing a terrorist act is between 0 and 2 in between 3,240,000,000 and 3,960,000,000.\"",
+        "perturb_type2_True": "\"The chances of being killed by a refugee committing a terrorist act is between 1 and 2 in between 5,220,000,000 and 5,940,000,000.\""
     },
     {
         "country_of_origin": "usa",
@@ -2020,8 +2020,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_000996",
         "normalized_claim": "Says\n\"With nearly 75 percent of Americans supportive of the construction of the pipeline, Schrader needs to explain to Oregon families why he voted against this needed project.\"",
-        "perturb_type1_True": "Says\n\"With nearly between 67.5 percent and 82.5 percent of Americans supportive of the construction of the pipeline, Schrader needs to explain to Oregon families why he voted against this needed project.\"",
-        "perturb_type2_True": "Says\n\"With nearly between 112.5 percent and 120 percent of Americans supportive of the construction of the pipeline, Schrader needs to explain to Oregon families why he voted against this needed project.\""
+        "perturb_type1_True": "Says\n\"With nearly between 67 percent and 83 percent of Americans supportive of the construction of the pipeline, Schrader needs to explain to Oregon families why he voted against this needed project.\"",
+        "perturb_type2_True": "Says\n\"With nearly between 112 percent and 120 percent of Americans supportive of the construction of the pipeline, Schrader needs to explain to Oregon families why he voted against this needed project.\""
     },
     {
         "country_of_origin": "usa",
@@ -2034,8 +2034,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_000997",
         "normalized_claim": "\"55 percent of the people who cast a provisional ballot (in Florida) in the last presidential election -- their vote did not count.\"",
-        "perturb_type1_True": "\"between 49.5 percent and 60.5 percent of the people who cast a provisional ballot (in Florida) in the last presidential election -- their vote did not count.\"",
-        "perturb_type2_True": "\"between 82.5 percent and 88 percent of the people who cast a provisional ballot (in Florida) in the last presidential election -- their vote did not count.\""
+        "perturb_type1_True": "\"between 49 percent and 61 percent of the people who cast a provisional ballot (in Florida) in the last presidential election -- their vote did not count.\"",
+        "perturb_type2_True": "\"between 82 percent and 88 percent of the people who cast a provisional ballot (in Florida) in the last presidential election -- their vote did not count.\""
     },
     {
         "crawled_date": "2022-07-01",
@@ -2092,8 +2092,8 @@
         "label_original": "true",
         "claim_id": "val_001039",
         "normalized_claim": "Congress has 11 percent approval ratings, yet 96.4 percent of incumbent lawmakers were re-elected in 2014.",
-        "perturb_type1_True": "Congress has between 9.9 percent and 12.1 percent approval ratings, yet between 86.8 percent and 106.0 percent of incumbent lawmakers were re-elected in 2014.",
-        "perturb_type2_True": "Congress has between 16.5 percent and 17.6 percent approval ratings, yet between 144.6 percent and 154.2 percent of incumbent lawmakers were re-elected in 2014."
+        "perturb_type1_True": "Congress has between 9 percent and 13 percent approval ratings, yet between 86 percent and 107 percent of incumbent lawmakers were re-elected in 2014.",
+        "perturb_type2_True": "Congress has between 16 percent and 18 percent approval ratings, yet between 144 percent and 155 percent of incumbent lawmakers were re-elected in 2014."
     },
     {
         "country_of_origin": "usa",
@@ -2150,8 +2150,8 @@
         "label_original": "true",
         "claim_id": "val_001075",
         "normalized_claim": "\"We now consume at the federal level 25 percent of the gross domestic product. Historically we were at 20 percent. So we've taken 5 percent away from the private sector.\"",
-        "perturb_type1_True": "\"We now consume at the federal level between 22.5 percent and 27.5 percent of the gross domestic product. Historically we were at between 18 percent and 22 percent. So we've taken between 4.5 percent and 5.5 percent away from the private sector.\"",
-        "perturb_type2_True": "\"We now consume at the federal level between 37.5 percent and 40 percent of the gross domestic product. Historically we were at between 30 percent and 32 percent. So we've taken between 7.5 percent and 8 percent away from the private sector.\""
+        "perturb_type1_True": "\"We now consume at the federal level between 22 percent and 28 percent of the gross domestic product. Historically we were at between 18 percent and 22 percent. So we've taken between 4 percent and 6 percent away from the private sector.\"",
+        "perturb_type2_True": "\"We now consume at the federal level between 37 percent and 40 percent of the gross domestic product. Historically we were at between 30 percent and 32 percent. So we've taken between 7 percent and 8 percent away from the private sector.\""
     },
     {
         "crawled_date": "2023-02-10T22:00:05",
@@ -2207,8 +2207,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_001095",
         "normalized_claim": "Says Romney called Russia our No. 1 enemy.",
-        "perturb_type1_True": "Says Romney called Russia our No. between 0 and 1 enemy.",
-        "perturb_type2_True": "Says Romney called Russia our No. 1 enemy."
+        "perturb_type1_True": "Says Romney called Russia our No. between 0 and 2 enemy.",
+        "perturb_type2_True": "Says Romney called Russia our No. between 1 and 2 enemy."
     },
     {
         "crawled_date": "2015-10-14",
@@ -2236,8 +2236,8 @@
         "label_original": "true",
         "claim_id": "val_001102",
         "normalized_claim": "\"When the City and the Fairmount Park Conservancy invested $5,000,000 in Hunting Park, crime went down 89 percent within a half mile radius of the park over the next three years.\"",
-        "perturb_type1_True": "\"When the City and the Fairmount Park Conservancy invested between $4,500,000 and $5,500,000 in Hunting Park, crime went down between 80.1 percent and 97.9 percent within a half mile radius of the park over the next three years.\"",
-        "perturb_type2_True": "\"When the City and the Fairmount Park Conservancy invested between $5,750,000 and $6,250,000 in Hunting Park, crime went down between 133.5 percent and 142.4 percent within a half mile radius of the park over the next three years.\""
+        "perturb_type1_True": "\"When the City and the Fairmount Park Conservancy invested between $4,500,000 and $5,500,000 in Hunting Park, crime went down between 80 percent and 98 percent within a half mile radius of the park over the next three years.\"",
+        "perturb_type2_True": "\"When the City and the Fairmount Park Conservancy invested between $5,750,000 and $6,250,000 in Hunting Park, crime went down between 133 percent and 143 percent within a half mile radius of the park over the next three years.\""
     },
     {
         "crawled_date": "2021-07-20",
@@ -2265,8 +2265,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_001117",
         "normalized_claim": "Says Texas has \"11 different felonies you can commit with an oyster.\"",
-        "perturb_type1_True": "Says Texas has \"between 9 and 12 different felonies you can commit with an oyster.\"",
-        "perturb_type2_True": "Says Texas has \"between 15 and 18 different felonies you can commit with an oyster.\""
+        "perturb_type1_True": "Says Texas has \"between 9 and 13 different felonies you can commit with an oyster.\"",
+        "perturb_type2_True": "Says Texas has \"between 15 and 19 different felonies you can commit with an oyster.\""
     },
     {
         "crawled_date": "2011-12-12",
@@ -2322,8 +2322,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_001158",
         "normalized_claim": "All 28 members of NATO have \"pledged to spend at least 2 percent of their economy on defense. But only three countries do -- Britain, Greece and us.\"",
-        "perturb_type1_True": "All between 25 and 30 members of NATO have \"pledged to spend at least between 1.8 percent and 2.2 percent of their economy on defense. But only three countries do -- Britain, Greece and us.\"",
-        "perturb_type2_True": "All between 40 and 46 members of NATO have \"pledged to spend at least between 3 percent and 3.2 percent of their economy on defense. But only three countries do -- Britain, Greece and us.\""
+        "perturb_type1_True": "All between 25 and 31 members of NATO have \"pledged to spend at least between 1 percent and 3 percent of their economy on defense. But only three countries do -- Britain, Greece and us.\"",
+        "perturb_type2_True": "All between 40 and 47 members of NATO have \"pledged to spend at least between 3 percent and 4 percent of their economy on defense. But only three countries do -- Britain, Greece and us.\""
     },
     {
         "country_of_origin": "usa",
@@ -2336,8 +2336,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_001163",
         "normalized_claim": "\"There are 4.7 percent of Virginians who are minimum wage earners who are over 25 years of age working full-time and trying to raise a family.\"",
-        "perturb_type1_True": "\"There are between 4.2 percent and 5.2 percent of Virginians who are minimum wage earners who are over 25 years of age working full-time and trying to raise a family.\"",
-        "perturb_type2_True": "\"There are between 7.1 percent and 7.5 percent of Virginians who are minimum wage earners who are over 25 years of age working full-time and trying to raise a family.\""
+        "perturb_type1_True": "\"There are between 4 percent and 6 percent of Virginians who are minimum wage earners who are over 25 years of age working full-time and trying to raise a family.\"",
+        "perturb_type2_True": "\"There are between 7 percent and 8 percent of Virginians who are minimum wage earners who are over 25 years of age working full-time and trying to raise a family.\""
     },
     {
         "country_of_origin": "usa",
@@ -2366,7 +2366,7 @@
         "claim_id": "val_001177",
         "normalized_claim": "“Teachers can only deduct up to $250 for school supplies on their taxes, but billionaires can write off the entire cost of a private jet.”",
         "perturb_type1_True": "“Teachers can only deduct up to between $225 and $275 for school supplies on their taxes, but billionaires can write off the entire cost of a private jet.”",
-        "perturb_type2_True": "“Teachers can only deduct up to between $287.50 and $312.50 for school supplies on their taxes, but billionaires can write off the entire cost of a private jet.”"
+        "perturb_type2_True": "“Teachers can only deduct up to between $287 and $313 for school supplies on their taxes, but billionaires can write off the entire cost of a private jet.”"
     },
     {
         "country_of_origin": "usa",
@@ -2435,8 +2435,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_001233",
         "normalized_claim": "\"During the George W. Bush period, there were 13 attacks on various embassies and consulates around the world. Sixty people died.\"",
-        "perturb_type1_True": "\"During the George W. Bush period, there were between 11 and 14 attacks on various embassies and consulates around the world. Sixty people died.\"",
-        "perturb_type2_True": "\"During the George W. Bush period, there were between 18 and 21 attacks on various embassies and consulates around the world. Sixty people died.\""
+        "perturb_type1_True": "\"During the George W. Bush period, there were between 11 and 15 attacks on various embassies and consulates around the world. Sixty people died.\"",
+        "perturb_type2_True": "\"During the George W. Bush period, there were between 18 and 22 attacks on various embassies and consulates around the world. Sixty people died.\""
     },
     {
         "country_of_origin": "usa",
@@ -2449,8 +2449,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_001247",
         "normalized_claim": "\"Pennsylvania has lost 35 percent of its manufacturing jobs since 2001\" and \"Harrisburg has lost 40 percent of its manufacturing jobs since 2001.\"",
-        "perturb_type1_True": "\"Pennsylvania has lost between 31.5 percent and 38.5 percent of its manufacturing jobs since 2001\" and \"Harrisburg has lost between 36 percent and 44 percent of its manufacturing jobs since 2001.\"",
-        "perturb_type2_True": "\"Pennsylvania has lost between 52.5 percent and 56 percent of its manufacturing jobs since 2001\" and \"Harrisburg has lost between 60 percent and 64 percent of its manufacturing jobs since 2001.\""
+        "perturb_type1_True": "\"Pennsylvania has lost between 31 percent and 39 percent of its manufacturing jobs since 2001\" and \"Harrisburg has lost between 36 percent and 44 percent of its manufacturing jobs since 2001.\"",
+        "perturb_type2_True": "\"Pennsylvania has lost between 52 percent and 56 percent of its manufacturing jobs since 2001\" and \"Harrisburg has lost between 60 percent and 64 percent of its manufacturing jobs since 2001.\""
     },
     {
         "country_of_origin": "usa",
@@ -2491,8 +2491,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_001276",
         "normalized_claim": "\"I have had the challenge during this administration to suspend no less than 37 public officials in about 36 months.\"",
-        "perturb_type1_True": "\"I have had the challenge during this administration to suspend no less than between 33 and 40 public officials in about 36 months.\"",
-        "perturb_type2_True": "\"I have had the challenge during this administration to suspend no less than between 53 and 61 public officials in about 36 months.\""
+        "perturb_type1_True": "\"I have had the challenge during this administration to suspend no less than between 33 and 41 public officials in about 36 months.\"",
+        "perturb_type2_True": "\"I have had the challenge during this administration to suspend no less than between 53 and 62 public officials in about 36 months.\""
     },
     {
         "crawled_date": "2016-12-30",
@@ -2506,8 +2506,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_001277",
         "normalized_claim": "Says Donald Trump's first 17 Cabinet appointments \"have a net worth of more than a third of America.\"",
-        "perturb_type1_True": "Says Donald Trump's first between 15 and 18 Cabinet appointments \"have a net worth of more than a third of America.\"",
-        "perturb_type2_True": "Says Donald Trump's first between 24 and 28 Cabinet appointments \"have a net worth of more than a third of America.\""
+        "perturb_type1_True": "Says Donald Trump's first between 15 and 19 Cabinet appointments \"have a net worth of more than a third of America.\"",
+        "perturb_type2_True": "Says Donald Trump's first between 24 and 29 Cabinet appointments \"have a net worth of more than a third of America.\""
     },
     {
         "crawled_date": "2022-11-10T20:00:07",
@@ -2521,8 +2521,8 @@
         "label_original": "true",
         "claim_id": "val_001278",
         "normalized_claim": "West Virginia is poised to “receive $25M for 160 orphaned well clean-up projects across the state.”",
-        "perturb_type1_True": "West Virginia is poised to “receive between $22.50 and $27.50M for between 144 and 176 orphaned well clean-up projects across the state.”",
-        "perturb_type2_True": "West Virginia is poised to “receive between $28.75 and $31.25M for between 232 and 264 orphaned well clean-up projects across the state.”"
+        "perturb_type1_True": "West Virginia is poised to “receive between $22 and $28M for between 144 and 176 orphaned well clean-up projects across the state.”",
+        "perturb_type2_True": "West Virginia is poised to “receive between $28 and $32M for between 232 and 264 orphaned well clean-up projects across the state.”"
     },
     {
         "country_of_origin": "usa",
@@ -2536,7 +2536,7 @@
         "claim_id": "val_001283",
         "normalized_claim": "Says \"a pack-a-day smoker who quits because of the tax increase will save about $1,650 a year.\"",
         "perturb_type1_True": "Says \"a pack-a-day smoker who quits because of the tax increase will save about between $1,485 and $1,815 a year.\"",
-        "perturb_type2_True": "Says \"a pack-a-day smoker who quits because of the tax increase will save about between $1,897.50 and $2,062.50 a year.\""
+        "perturb_type2_True": "Says \"a pack-a-day smoker who quits because of the tax increase will save about between $1,897 and $2,063 a year.\""
     },
     {
         "country_of_origin": "usa",
@@ -2563,8 +2563,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_001287",
         "normalized_claim": "Says Jon Corzine \"gave away 14 percent raises over 4 years and he stood on the front steps of the Capitol at a public-sector union rally and said, 'I will fight to get you a great contract.’\"",
-        "perturb_type1_True": "Says Jon Corzine \"gave away between 12.6 percent and 15.4 percent raises over 4 years and he stood on the front steps of the Capitol at a public-sector union rally and said, 'I will fight to get you a great contract.’\"",
-        "perturb_type2_True": "Says Jon Corzine \"gave away between 21 percent and 22.4 percent raises over 4 years and he stood on the front steps of the Capitol at a public-sector union rally and said, 'I will fight to get you a great contract.’\""
+        "perturb_type1_True": "Says Jon Corzine \"gave away between 12 percent and 16 percent raises over 4 years and he stood on the front steps of the Capitol at a public-sector union rally and said, 'I will fight to get you a great contract.’\"",
+        "perturb_type2_True": "Says Jon Corzine \"gave away between 21 percent and 23 percent raises over 4 years and he stood on the front steps of the Capitol at a public-sector union rally and said, 'I will fight to get you a great contract.’\""
     },
     {
         "crawled_date": "2022-10-06T15:00:06",
@@ -2592,8 +2592,8 @@
         "label_original": "true",
         "claim_id": "val_001291",
         "normalized_claim": "\"When we say ‘one vote matters,’ it’s not just a saying – it has proven true 141 times in #Ohio over the last five years.\"",
-        "perturb_type1_True": "\"When we say ‘one vote matters,’ it’s not just a saying – it has proven true between 126 and 155 times in #Ohio over the last five years.\"",
-        "perturb_type2_True": "\"When we say ‘one vote matters,’ it’s not just a saying – it has proven true between 204 and 232 times in #Ohio over the last five years.\""
+        "perturb_type1_True": "\"When we say ‘one vote matters,’ it’s not just a saying – it has proven true between 126 and 156 times in #Ohio over the last five years.\"",
+        "perturb_type2_True": "\"When we say ‘one vote matters,’ it’s not just a saying – it has proven true between 204 and 233 times in #Ohio over the last five years.\""
     },
     {
         "country_of_origin": "usa",
@@ -2650,8 +2650,8 @@
         "label_original": "correct",
         "claim_id": "val_001332",
         "normalized_claim": "558 people were killed by the police in 2018, while 201 people died in police custody",
-        "perturb_type1_True": "Between 502 and 613 people were killed by the police in 2018, while between 180 and 221 people died in police custody",
-        "perturb_type2_True": "Between 809 and 920 people were killed by the police in 2018, while between 291 and 331 people died in police custody"
+        "perturb_type1_True": "Between 502 and 614 people were killed by the police in 2018, while between 180 and 222 people died in police custody",
+        "perturb_type2_True": "Between 809 and 921 people were killed by the police in 2018, while between 291 and 332 people died in police custody"
     },
     {
         "crawled_date": "2011-10-20",
@@ -2708,8 +2708,8 @@
         "label_original": "true",
         "claim_id": "val_001360",
         "normalized_claim": "\"A couple retiring today will pay about $119,000 in lifetime Medicare taxes and receive about $357,000 in lifetime Medicare benefits. ... about 3 bucks in benefits for every dollar in taxes.\"",
-        "perturb_type1_True": "\"A couple retiring today will pay about between $107,100 and $130,900 in lifetime Medicare taxes and receive about between $321,300 and $392,700 in lifetime Medicare benefits. ... about between 2.70 and 3.30 bucks in benefits for every dollar in taxes.\"",
-        "perturb_type2_True": "\"A couple retiring today will pay about between $136,850 and $148,750 in lifetime Medicare taxes and receive about between $410,550 and $446,250 in lifetime Medicare benefits. ... about between 3.45 and 3.75 bucks in benefits for every dollar in taxes.\""
+        "perturb_type1_True": "\"A couple retiring today will pay about between $107,100 and $130,900 in lifetime Medicare taxes and receive about between $321,300 and $392,700 in lifetime Medicare benefits. ... about between 2 and 4 bucks in benefits for every dollar in taxes.\"",
+        "perturb_type2_True": "\"A couple retiring today will pay about between $136,850 and $148,750 in lifetime Medicare taxes and receive about between $410,550 and $446,250 in lifetime Medicare benefits. ... about between 3 and 4 bucks in benefits for every dollar in taxes.\""
     },
     {
         "crawled_date": "2020-10-15",
@@ -2723,8 +2723,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_001363",
         "normalized_claim": "\"Nearly 800,000,000 opioid pills were shipped to WV, amounting to 433 pills for every man, woman, and child in the state.”",
-        "perturb_type1_True": "\"Nearly between 720,000,000 and 880,000,000 opioid pills were shipped to WV, amounting to between 389 and 476 pills for every man, woman, and child in the state.”",
-        "perturb_type2_True": "\"Nearly between 1,160,000,000 and 1,320,000,000 opioid pills were shipped to WV, amounting to between 627 and 714 pills for every man, woman, and child in the state.”"
+        "perturb_type1_True": "\"Nearly between 720,000,000 and 880,000,000 opioid pills were shipped to WV, amounting to between 389 and 477 pills for every man, woman, and child in the state.”",
+        "perturb_type2_True": "\"Nearly between 1,160,000,000 and 1,320,000,000 opioid pills were shipped to WV, amounting to between 627 and 715 pills for every man, woman, and child in the state.”"
     },
     {
         "country_of_origin": "usa",
@@ -2809,7 +2809,7 @@
         "claim_id": "val_001409",
         "normalized_claim": "\"McCain lobbied for (a) $10-million pork project honoring conservative justice.\"",
         "perturb_type1_True": "\"McCain lobbied for (a) between $9 and $11-million pork project honoring conservative justice.\"",
-        "perturb_type2_True": "\"McCain lobbied for (a) between $11.50 and $12.50-million pork project honoring conservative justice.\""
+        "perturb_type2_True": "\"McCain lobbied for (a) between $11 and $13-million pork project honoring conservative justice.\""
     },
     {
         "crawled_date": "2018-08-28",
@@ -2865,8 +2865,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_001420",
         "normalized_claim": "Says Wisconsin payday loans have a 574% average annual interest rate, \"exploitative lending that keeps Americans trapped in debt\"",
-        "perturb_type1_True": "Says Wisconsin payday loans have a between 516.6% and 631.4% average annual interest rate, \"exploitative lending that keeps Americans trapped in debt\"",
-        "perturb_type2_True": "Says Wisconsin payday loans have a between 861% and 918.4% average annual interest rate, \"exploitative lending that keeps Americans trapped in debt\""
+        "perturb_type1_True": "Says Wisconsin payday loans have a between 516% and 632% average annual interest rate, \"exploitative lending that keeps Americans trapped in debt\"",
+        "perturb_type2_True": "Says Wisconsin payday loans have a between 861% and 919% average annual interest rate, \"exploitative lending that keeps Americans trapped in debt\""
     },
     {
         "country_of_origin": "usa",
@@ -2879,8 +2879,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_001429",
         "normalized_claim": "When Rick Scott \"was deposed in lawsuits about his company, he took the Fifth 75 times.\"",
-        "perturb_type1_True": "When Rick Scott \"was deposed in lawsuits about his company, he took the Fifth between 67 and 82 times.\"",
-        "perturb_type2_True": "When Rick Scott \"was deposed in lawsuits about his company, he took the Fifth between 108 and 123 times.\""
+        "perturb_type1_True": "When Rick Scott \"was deposed in lawsuits about his company, he took the Fifth between 67 and 83 times.\"",
+        "perturb_type2_True": "When Rick Scott \"was deposed in lawsuits about his company, he took the Fifth between 108 and 124 times.\""
     },
     {
         "crawled_date": "2011-11-30",
@@ -2922,8 +2922,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_001447",
         "normalized_claim": "\"215 members of Congress just voted to let your ISP spy on what type of underwear you buy and sell that data to advertisers.\"",
-        "perturb_type1_True": "\"between 193 and 236 members of Congress just voted to let your ISP spy on what type of underwear you buy and sell that data to advertisers.\"",
-        "perturb_type2_True": "\"between 311 and 354 members of Congress just voted to let your ISP spy on what type of underwear you buy and sell that data to advertisers.\""
+        "perturb_type1_True": "\"between 193 and 237 members of Congress just voted to let your ISP spy on what type of underwear you buy and sell that data to advertisers.\"",
+        "perturb_type2_True": "\"between 311 and 355 members of Congress just voted to let your ISP spy on what type of underwear you buy and sell that data to advertisers.\""
     },
     {
         "country_of_origin": "usa",
@@ -3065,8 +3065,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_001491",
         "normalized_claim": "\"According to Pew Research, 99 percent of the people in Afghanistan support oppressive Sharia law.\"",
-        "perturb_type1_True": "\"According to Pew Research, between 89.1 percent and 108.9 percent of the people in Afghanistan support oppressive Sharia law.\"",
-        "perturb_type2_True": "\"According to Pew Research, between 148.5 percent and 158.4 percent of the people in Afghanistan support oppressive Sharia law.\""
+        "perturb_type1_True": "\"According to Pew Research, between 89 percent and 109 percent of the people in Afghanistan support oppressive Sharia law.\"",
+        "perturb_type2_True": "\"According to Pew Research, between 148 percent and 159 percent of the people in Afghanistan support oppressive Sharia law.\""
     },
     {
         "country_of_origin": "usa",
@@ -3122,8 +3122,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_001580",
         "normalized_claim": "Last year, Democrats won nearly 50% of the vote, yet they hold only 38% of the seats in the state House and 30% of the seats in the state Senate.",
-        "perturb_type1_True": "Last year, Democrats won nearly between 45% and 55% of the vote, yet they hold only between 34.2% and 41.8% of the seats in the state House and between 27% and 33% of the seats in the state Senate.",
-        "perturb_type2_True": "Last year, Democrats won nearly between 75% and 80% of the vote, yet they hold only between 57% and 60.8% of the seats in the state House and between 45% and 48% of the seats in the state Senate."
+        "perturb_type1_True": "Last year, Democrats won nearly between 45% and 55% of the vote, yet they hold only between 34% and 42% of the seats in the state House and between 27% and 33% of the seats in the state Senate.",
+        "perturb_type2_True": "Last year, Democrats won nearly between 75% and 80% of the vote, yet they hold only between 57% and 61% of the seats in the state House and between 45% and 48% of the seats in the state Senate."
     },
     {
         "country_of_origin": "usa",
@@ -3136,8 +3136,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_001586",
         "normalized_claim": "\"Since Barack Obama became president of the United States, 95 percent of economic gains have been made by the richest 1 percent.\"",
-        "perturb_type1_True": "\"Since Barack Obama became president of the United States, between 85.5 percent and 104.5 percent of economic gains have been made by the richest between 0.9 percent and 1.1 percent.\"",
-        "perturb_type2_True": "\"Since Barack Obama became president of the United States, between 142.5 percent and 152 percent of economic gains have been made by the richest between 1.5 percent and 1.6 percent.\""
+        "perturb_type1_True": "\"Since Barack Obama became president of the United States, between 85 percent and 105 percent of economic gains have been made by the richest between 0 percent and 2 percent.\"",
+        "perturb_type2_True": "\"Since Barack Obama became president of the United States, between 142 percent and 152 percent of economic gains have been made by the richest between 1 percent and 2 percent.\""
     },
     {
         "country_of_origin": "usa",
@@ -3208,8 +3208,8 @@
         "label_original": "TRUE",
         "claim_id": "val_001615",
         "normalized_claim": "There were 5 national waterways before 2014. There are 106 national waterways since 2014.",
-        "perturb_type1_True": "There were between 4 and 5 national waterways before 2014. There are between 95 and 116 national waterways since 2014.",
-        "perturb_type2_True": "There were between 7 and 8 national waterways before 2014. There are between 153 and 174 national waterways since 2014."
+        "perturb_type1_True": "There were between 4 and 6 national waterways before 2014. There are between 95 and 117 national waterways since 2014.",
+        "perturb_type2_True": "There were between 7 and 9 national waterways before 2014. There are between 153 and 175 national waterways since 2014."
     },
     {
         "country_of_origin": "usa",
@@ -3222,8 +3222,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_001624",
         "normalized_claim": "\"Of the topfive cities for staged automobile accidents, three are in Florida. … We rank No. 1 in the country in staged auto accidents.\"",
-        "perturb_type1_True": "\"Of the topfive cities for staged automobile accidents, three are in Florida. … We rank No. between 0 and 1 in the country in staged auto accidents.\"",
-        "perturb_type2_True": "\"Of the topfive cities for staged automobile accidents, three are in Florida. … We rank No. 1 in the country in staged auto accidents.\""
+        "perturb_type1_True": "\"Of the topfive cities for staged automobile accidents, three are in Florida. … We rank No. between 0 and 2 in the country in staged auto accidents.\"",
+        "perturb_type2_True": "\"Of the topfive cities for staged automobile accidents, three are in Florida. … We rank No. between 1 and 2 in the country in staged auto accidents.\""
     },
     {
         "country_of_origin": "usa",
@@ -3308,8 +3308,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_001651",
         "normalized_claim": "\"Twenty percent of our electricity currently comes from nuclear power plants. I think there are 104 in the United States, two of them around the coast in California.\"",
-        "perturb_type1_True": "\"Twenty percent of our electricity currently comes from nuclear power plants. I think there are between 93 and 114 in the United States, two of them around the coast in California.\"",
-        "perturb_type2_True": "\"Twenty percent of our electricity currently comes from nuclear power plants. I think there are between 150 and 171 in the United States, two of them around the coast in California.\""
+        "perturb_type1_True": "\"Twenty percent of our electricity currently comes from nuclear power plants. I think there are between 93 and 115 in the United States, two of them around the coast in California.\"",
+        "perturb_type2_True": "\"Twenty percent of our electricity currently comes from nuclear power plants. I think there are between 150 and 172 in the United States, two of them around the coast in California.\""
     },
     {
         "crawled_date": "2022-10-07T09:00:06",
@@ -3338,8 +3338,8 @@
         "label_original": "true",
         "claim_id": "val_001671",
         "normalized_claim": "Says 18 states and the District of Columbia have voted Democratic in six consecutive presidential elections.",
-        "perturb_type1_True": "Says between 16 and 19 states and the District of Columbia have voted Democratic in six consecutive presidential elections.",
-        "perturb_type2_True": "Says between 26 and 29 states and the District of Columbia have voted Democratic in six consecutive presidential elections."
+        "perturb_type1_True": "Says between 16 and 20 states and the District of Columbia have voted Democratic in six consecutive presidential elections.",
+        "perturb_type2_True": "Says between 26 and 30 states and the District of Columbia have voted Democratic in six consecutive presidential elections."
     },
     {
         "crawled_date": "2023-05-25T16:16:26",
@@ -3383,7 +3383,7 @@
         "claim_id": "val_001707",
         "normalized_claim": "In 2018, White House Press Secretary Sarah Huckabee Sanders was listed as one of the 10 \"most admired\" women in the United States.",
         "perturb_type1_True": "In 2018, White House Press Secretary Sarah Huckabee Sanders was listed as one of the between 9 and 11 \"most admired\" women in the United States.",
-        "perturb_type2_True": "In 2018, White House Press Secretary Sarah Huckabee Sanders was listed as one of the between 14 and 16 \"most admired\" women in the United States."
+        "perturb_type2_True": "In 2018, White House Press Secretary Sarah Huckabee Sanders was listed as one of the between 14 and 17 \"most admired\" women in the United States."
     },
     {
         "country_of_origin": "usa",
@@ -3439,8 +3439,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_001762",
         "normalized_claim": "Says Rep. Bruce Braley, D-Iowa, missed \"79 percent of veterans affairs committee hearings.\"",
-        "perturb_type1_True": "Says Rep. Bruce Braley, D-Iowa, missed \"between 71.1 percent and 86.9 percent of veterans affairs committee hearings.\"",
-        "perturb_type2_True": "Says Rep. Bruce Braley, D-Iowa, missed \"between 118.5 percent and 126.4 percent of veterans affairs committee hearings.\""
+        "perturb_type1_True": "Says Rep. Bruce Braley, D-Iowa, missed \"between 71 percent and 87 percent of veterans affairs committee hearings.\"",
+        "perturb_type2_True": "Says Rep. Bruce Braley, D-Iowa, missed \"between 118 percent and 127 percent of veterans affairs committee hearings.\""
     },
     {
         "crawled_date": "2023-05-25T16:29:22",
@@ -3454,8 +3454,8 @@
         "label_original": "correct",
         "claim_id": "val_001763",
         "normalized_claim": "\"[The DA] has brought down the rate of mother to child HIV transmission to just 1.8%, the lowest in the country.\"",
-        "perturb_type1_True": "\"[The DA] has brought down the rate of mother to child HIV transmission to just between 1.6% and 2.0%, the lowest in the country.\"",
-        "perturb_type2_True": "\"[The DA] has brought down the rate of mother to child HIV transmission to just between 2.7% and 2.9%, the lowest in the country.\""
+        "perturb_type1_True": "\"[The DA] has brought down the rate of mother to child HIV transmission to just between 1% and 2%, the lowest in the country.\"",
+        "perturb_type2_True": "\"[The DA] has brought down the rate of mother to child HIV transmission to just between 2% and 3%, the lowest in the country.\""
     },
     {
         "crawled_date": "2023-05-25T16:59:11",
@@ -3585,8 +3585,8 @@
         "label_original": "correct",
         "claim_id": "val_001848",
         "normalized_claim": "“At 29.1%, the Western Cape continues to have the lowest expanded unemployment rate in South Africa ...”",
-        "perturb_type1_True": "“At between 26.2% and 32.0%, the Western Cape continues to have the lowest expanded unemployment rate in South Africa ...”",
-        "perturb_type2_True": "“At between 43.7% and 46.6%, the Western Cape continues to have the lowest expanded unemployment rate in South Africa ...”"
+        "perturb_type1_True": "“At between 26% and 33%, the Western Cape continues to have the lowest expanded unemployment rate in South Africa ...”",
+        "perturb_type2_True": "“At between 43% and 47%, the Western Cape continues to have the lowest expanded unemployment rate in South Africa ...”"
     },
     {
         "crawled_date": "2010-12-26",
@@ -3644,8 +3644,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_001869",
         "normalized_claim": "Says Barack Obama \"is the first president in modern history not to have a single year of 3 percent growth.\"",
-        "perturb_type1_True": "Says Barack Obama \"is the first president in modern history not to have a single year of between 2.7 percent and 3.3 percent growth.\"",
-        "perturb_type2_True": "Says Barack Obama \"is the first president in modern history not to have a single year of between 4.5 percent and 4.8 percent growth.\""
+        "perturb_type1_True": "Says Barack Obama \"is the first president in modern history not to have a single year of between 2 percent and 4 percent growth.\"",
+        "perturb_type2_True": "Says Barack Obama \"is the first president in modern history not to have a single year of between 4 percent and 5 percent growth.\""
     },
     {
         "crawled_date": "2023-05-25T21:10:17",
@@ -3732,8 +3732,8 @@
         "label_original": "correct",
         "claim_id": "val_001928",
         "normalized_claim": "'We put it in our manifesto, to construct 57 mega dams…\"",
-        "perturb_type1_True": "'We put it in our manifesto, to construct between 51 and 62 mega dams…\"",
-        "perturb_type2_True": "'We put it in our manifesto, to construct between 82 and 94 mega dams…\""
+        "perturb_type1_True": "'We put it in our manifesto, to construct between 51 and 63 mega dams…\"",
+        "perturb_type2_True": "'We put it in our manifesto, to construct between 82 and 95 mega dams…\""
     },
     {
         "country_of_origin": "usa",
@@ -3746,8 +3746,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_001931",
         "normalized_claim": "Women \"receive only 77 cents for every dollar a man earns.\"",
-        "perturb_type1_True": "Women \"receive only between 69.30 and 84.70 cents for every dollar a man earns.\"",
-        "perturb_type2_True": "Women \"receive only between 88.55 and 96.25 cents for every dollar a man earns.\""
+        "perturb_type1_True": "Women \"receive only between 69 and 85 cents for every dollar a man earns.\"",
+        "perturb_type2_True": "Women \"receive only between 88 and 97 cents for every dollar a man earns.\""
     },
     {
         "crawled_date": "2022-10-06T21:00:06",
@@ -3761,8 +3761,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_001939",
         "normalized_claim": "\"Welcome 2 Pres Biden’s America where inflation is costing households an extra $175 a month.”",
-        "perturb_type1_True": "\"Welcome 2 Pres Biden’s America where inflation is costing households an extra between $157.50 and $192.50 a month.”",
-        "perturb_type2_True": "\"Welcome 2 Pres Biden’s America where inflation is costing households an extra between $201.25 and $218.75 a month.”"
+        "perturb_type1_True": "\"Welcome 2 Pres Biden’s America where inflation is costing households an extra between $157 and $193 a month.”",
+        "perturb_type2_True": "\"Welcome 2 Pres Biden’s America where inflation is costing households an extra between $201 and $219 a month.”"
     },
     {
         "country_of_origin": "usa",
@@ -3789,8 +3789,8 @@
         "label_original": "true",
         "claim_id": "val_001951",
         "normalized_claim": "Says the unemployment rate for college graduates is 4.4 percent and over 10 percent for noncollege-educated.",
-        "perturb_type1_True": "Says the unemployment rate for college graduates is between 4.0 percent and 4.8 percent and over between 9 percent and 11 percent for noncollege-educated.",
-        "perturb_type2_True": "Says the unemployment rate for college graduates is between 6.6 percent and 7.0 percent and over between 15 percent and 16 percent for noncollege-educated."
+        "perturb_type1_True": "Says the unemployment rate for college graduates is between 3 percent and 5 percent and over between 9 percent and 11 percent for noncollege-educated.",
+        "perturb_type2_True": "Says the unemployment rate for college graduates is between 6 percent and 8 percent and over between 15 percent and 16 percent for noncollege-educated."
     },
     {
         "country_of_origin": "usa",
@@ -3804,7 +3804,7 @@
         "claim_id": "val_001964",
         "normalized_claim": "Postmaster General Louis DeJoy “gave $400,000 to Republicans just this year” and has “between $30 and $75,000,000 in assets of direct competitors to the United States Postal Service.”",
         "perturb_type1_True": "Postmaster General Louis DeJoy “gave between $360,000 and $440,000 to Republicans just this year” and has “between between $27 and $33 and $75,000,000 in assets of direct competitors to the United States Postal Service.”",
-        "perturb_type2_True": "Postmaster General Louis DeJoy “gave between $460,000 and $500,000 to Republicans just this year” and has “between between $34.50 and $37.50 and $75,000,000 in assets of direct competitors to the United States Postal Service.”"
+        "perturb_type2_True": "Postmaster General Louis DeJoy “gave between $460,000 and $500,000 to Republicans just this year” and has “between between $34 and $38 and $75,000,000 in assets of direct competitors to the United States Postal Service.”"
     },
     {
         "country_of_origin": "usa",
@@ -3975,8 +3975,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_002027",
         "normalized_claim": "\"Right now, only 11 percent of the 15,000 child care providers in Texas are certified as meeting quality standards.\"",
-        "perturb_type1_True": "\"Right now, only between 9.9 percent and 12.1 percent of the between 13,500 and 16,500 child care providers in Texas are certified as meeting quality standards.\"",
-        "perturb_type2_True": "\"Right now, only between 16.5 percent and 17.6 percent of the between 21,750 and 24,750 child care providers in Texas are certified as meeting quality standards.\""
+        "perturb_type1_True": "\"Right now, only between 9 percent and 13 percent of the between 13,500 and 16,500 child care providers in Texas are certified as meeting quality standards.\"",
+        "perturb_type2_True": "\"Right now, only between 16 percent and 18 percent of the between 21,750 and 24,750 child care providers in Texas are certified as meeting quality standards.\""
     },
     {
         "crawled_date": "2019-10-15",
@@ -4004,8 +4004,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_002037",
         "normalized_claim": "\"Creating 25 jobs in Umatilla County has the same impact as 500 jobs in the metro region.\"",
-        "perturb_type1_True": "\"Creating between 22 and 27 jobs in Umatilla County has the same impact as between 450 and 550 jobs in the metro region.\"",
-        "perturb_type2_True": "\"Creating between 36 and 41 jobs in Umatilla County has the same impact as between 725 and 825 jobs in the metro region.\""
+        "perturb_type1_True": "\"Creating between 22 and 28 jobs in Umatilla County has the same impact as between 450 and 550 jobs in the metro region.\"",
+        "perturb_type2_True": "\"Creating between 36 and 42 jobs in Umatilla County has the same impact as between 725 and 825 jobs in the metro region.\""
     },
     {
         "country_of_origin": "usa",
@@ -4047,8 +4047,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_002074",
         "normalized_claim": "\"The current school psychologist to student ratio in this country is roughly 1,400 to 1, while experts say it should be at most 700 to 1.\"",
-        "perturb_type1_True": "\"The current school psychologist to student ratio in this country is roughly between 1,260 and 1,540 to between 0 and 1, while experts say it should be at most between 630 and 770 to between 0 and 1.\"",
-        "perturb_type2_True": "\"The current school psychologist to student ratio in this country is roughly between 2,030 and 2,310 to 1, while experts say it should be at most between 1,015 and 1,155 to 1.\""
+        "perturb_type1_True": "\"The current school psychologist to student ratio in this country is roughly between 1,260 and 1,540 to between 0 and 2, while experts say it should be at most between 630 and 770 to between 0 and 2.\"",
+        "perturb_type2_True": "\"The current school psychologist to student ratio in this country is roughly between 2,030 and 2,310 to between 1 and 2, while experts say it should be at most between 1,015 and 1,155 to between 1 and 2.\""
     },
     {
         "country_of_origin": "usa",
@@ -4104,8 +4104,8 @@
         "label_original": "TRUE",
         "claim_id": "val_002106",
         "normalized_claim": "Hyderabad Police seized Rs 8 crore cash withdrawn from BJP’s bank account.",
-        "perturb_type1_True": "Hyderabad Police seized Rs between 7.20 and 8.80 crore cash withdrawn from BJP’s bank account.",
-        "perturb_type2_True": "Hyderabad Police seized Rs between 9.20 and 10 crore cash withdrawn from BJP’s bank account."
+        "perturb_type1_True": "Hyderabad Police seized Rs between 7 and 9 crore cash withdrawn from BJP’s bank account.",
+        "perturb_type2_True": "Hyderabad Police seized Rs between 9 and 10 crore cash withdrawn from BJP’s bank account."
     },
     {
         "crawled_date": "2022-10-06T15:00:06",
@@ -4119,8 +4119,8 @@
         "label_original": "correct",
         "claim_id": "val_002115",
         "normalized_claim": "\"[The DA] has brought down the rate of mother to child HIV transmission to just 1.8%, the lowest in the country.”",
-        "perturb_type1_True": "\"[The DA] has brought down the rate of mother to child HIV transmission to just between 1.6% and 2.0%, the lowest in the country.”",
-        "perturb_type2_True": "\"[The DA] has brought down the rate of mother to child HIV transmission to just between 2.7% and 2.9%, the lowest in the country.”"
+        "perturb_type1_True": "\"[The DA] has brought down the rate of mother to child HIV transmission to just between 1% and 2%, the lowest in the country.”",
+        "perturb_type2_True": "\"[The DA] has brought down the rate of mother to child HIV transmission to just between 2% and 3%, the lowest in the country.”"
     },
     {
         "crawled_date": "2022-10-07T03:00:06",
@@ -4134,8 +4134,8 @@
         "label_original": "True",
         "claim_id": "val_002122",
         "normalized_claim": "Some 91 minutes before stopping the shooter, one or more law enforcement officers went inside Robb Elementary School and rescued their own children.",
-        "perturb_type1_True": "Some between 81 and 100 minutes before stopping the shooter, one or more law enforcement officers went inside Robb Elementary School and rescued their own children.",
-        "perturb_type2_True": "Some between 104 and 113 minutes before stopping the shooter, one or more law enforcement officers went inside Robb Elementary School and rescued their own children."
+        "perturb_type1_True": "Some between 81 and 101 minutes before stopping the shooter, one or more law enforcement officers went inside Robb Elementary School and rescued their own children.",
+        "perturb_type2_True": "Some between 104 and 114 minutes before stopping the shooter, one or more law enforcement officers went inside Robb Elementary School and rescued their own children."
     },
     {
         "country_of_origin": "usa",
@@ -4177,8 +4177,8 @@
         "label_original": "true",
         "claim_id": "val_002133",
         "normalized_claim": "When the New York State Senate voted to legalize abortion in 1970, 12 Republican senators voted in favor of it.",
-        "perturb_type1_True": "When the New York State Senate voted to legalize abortion in 1970, between 10 and 13 Republican senators voted in favor of it.",
-        "perturb_type2_True": "When the New York State Senate voted to legalize abortion in 1970, between 17 and 19 Republican senators voted in favor of it."
+        "perturb_type1_True": "When the New York State Senate voted to legalize abortion in 1970, between 10 and 14 Republican senators voted in favor of it.",
+        "perturb_type2_True": "When the New York State Senate voted to legalize abortion in 1970, between 17 and 20 Republican senators voted in favor of it."
     },
     {
         "country_of_origin": "usa",
@@ -4248,8 +4248,8 @@
         "label_original": "true",
         "claim_id": "val_002176",
         "normalized_claim": "With only 67 bills or so passed into law, \"2013 was the least productive year in congressional history since we’ve been keeping record.\"",
-        "perturb_type1_True": "With only between 60 and 73 bills or so passed into law, \"2013 was the least productive year in congressional history since we’ve been keeping record.\"",
-        "perturb_type2_True": "With only between 97 and 110 bills or so passed into law, \"2013 was the least productive year in congressional history since we’ve been keeping record.\""
+        "perturb_type1_True": "With only between 60 and 74 bills or so passed into law, \"2013 was the least productive year in congressional history since we’ve been keeping record.\"",
+        "perturb_type2_True": "With only between 97 and 111 bills or so passed into law, \"2013 was the least productive year in congressional history since we’ve been keeping record.\""
     },
     {
         "crawled_date": "2014-12-18",
@@ -4277,8 +4277,8 @@
         "label_original": "true",
         "claim_id": "val_002185",
         "normalized_claim": "\"West Virginia’s exports increased for the second year in a row in 2018, reaching $8,100,000,000. Additionally, West Virginia’s export growth rate was 14.2%, nearly double the national average of 7.6%.\"",
-        "perturb_type1_True": "\"West Virginia’s exports increased for the second year in a row in 2018, reaching between $7,290,000,000 and $8,910,000,000. Additionally, West Virginia’s export growth rate was between 12.8% and 15.6%, nearly double the national average of between 6.8% and 8.4%.\"",
-        "perturb_type2_True": "\"West Virginia’s exports increased for the second year in a row in 2018, reaching between $9,315,000,000 and $10,125,000,000. Additionally, West Virginia’s export growth rate was between 21.3% and 22.7%, nearly double the national average of between 11.4% and 12.2%.\""
+        "perturb_type1_True": "\"West Virginia’s exports increased for the second year in a row in 2018, reaching between $7,290,000,000 and $8,910,000,000. Additionally, West Virginia’s export growth rate was between 12% and 16%, nearly double the national average of between 6% and 9%.\"",
+        "perturb_type2_True": "\"West Virginia’s exports increased for the second year in a row in 2018, reaching between $9,315,000,000 and $10,125,000,000. Additionally, West Virginia’s export growth rate was between 21% and 23%, nearly double the national average of between 11% and 13%.\""
     },
     {
         "crawled_date": "2010-10-24",
@@ -4292,8 +4292,8 @@
         "label_original": "true",
         "claim_id": "val_002187",
         "normalized_claim": "Lizbeth Benacquisto \"broke election law 105 times, hiding special interest contributors.\"",
-        "perturb_type1_True": "Lizbeth Benacquisto \"broke election law between 94 and 115 times, hiding special interest contributors.\"",
-        "perturb_type2_True": "Lizbeth Benacquisto \"broke election law between 152 and 173 times, hiding special interest contributors.\""
+        "perturb_type1_True": "Lizbeth Benacquisto \"broke election law between 94 and 116 times, hiding special interest contributors.\"",
+        "perturb_type2_True": "Lizbeth Benacquisto \"broke election law between 152 and 174 times, hiding special interest contributors.\""
     },
     {
         "country_of_origin": "usa",
@@ -4336,8 +4336,8 @@
         "label_original": "true",
         "claim_id": "val_002207",
         "normalized_claim": "Says fewer than 30 percent of Texas college students graduate in four years and only 58 percent graduate within six years.",
-        "perturb_type1_True": "Says fewer than between 27 percent and 33 percent of Texas college students graduate in four years and only between 52.2 percent and 63.8 percent graduate within six years.",
-        "perturb_type2_True": "Says fewer than between 45 percent and 48 percent of Texas college students graduate in four years and only between 87 percent and 92.8 percent graduate within six years."
+        "perturb_type1_True": "Says fewer than between 27 percent and 33 percent of Texas college students graduate in four years and only between 52 percent and 64 percent graduate within six years.",
+        "perturb_type2_True": "Says fewer than between 45 percent and 48 percent of Texas college students graduate in four years and only between 87 percent and 93 percent graduate within six years."
     },
     {
         "country_of_origin": "usa",
@@ -4364,8 +4364,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_002213",
         "normalized_claim": "Since 1938 the minimum wage has been increased \"23 times\" and was raised \"21 times during Democratic congresses, and only twice during Republican ones.\"",
-        "perturb_type1_True": "Since 1938 the minimum wage has been increased \"between 20 and 25 times\" and was raised \"between 18 and 23 times during Democratic congresses, and only twice during Republican ones.\"",
-        "perturb_type2_True": "Since 1938 the minimum wage has been increased \"between 33 and 37 times\" and was raised \"between 30 and 34 times during Democratic congresses, and only twice during Republican ones.\""
+        "perturb_type1_True": "Since 1938 the minimum wage has been increased \"between 20 and 26 times\" and was raised \"between 18 and 24 times during Democratic congresses, and only twice during Republican ones.\"",
+        "perturb_type2_True": "Since 1938 the minimum wage has been increased \"between 33 and 38 times\" and was raised \"between 30 and 35 times during Democratic congresses, and only twice during Republican ones.\""
     },
     {
         "country_of_origin": "usa",
@@ -4519,8 +4519,8 @@
         "label_original": "mostly-true",
         "claim_id": "val_002304",
         "normalized_claim": "Says Chris Abele, opponent in Milwaukee County executive race, \"failed to finish 3 separate colleges, dropping out all 3 times.\"",
-        "perturb_type1_True": "Says Chris Abele, opponent in Milwaukee County executive race, \"failed to finish between 2 and 3 separate colleges, dropping out all between 2 and 3 times.\"",
-        "perturb_type2_True": "Says Chris Abele, opponent in Milwaukee County executive race, \"failed to finish 4 separate colleges, dropping out all 4 times.\""
+        "perturb_type1_True": "Says Chris Abele, opponent in Milwaukee County executive race, \"failed to finish between 2 and 4 separate colleges, dropping out all between 2 and 4 times.\"",
+        "perturb_type2_True": "Says Chris Abele, opponent in Milwaukee County executive race, \"failed to finish between 4 and 5 separate colleges, dropping out all between 4 and 5 times.\""
     },
     {
         "country_of_origin": "usa",
@@ -4547,7 +4547,7 @@
         "label_original": "mostly-true",
         "claim_id": "val_002315",
         "normalized_claim": "Says Rick Scott’s proposal for election reform \"only mandates 48 hours of early voting.\"",
-        "perturb_type1_True": "Says Rick Scott’s proposal for election reform \"only mandates between 43 and 52 hours of early voting.\"",
+        "perturb_type1_True": "Says Rick Scott’s proposal for election reform \"only mandates between 43 and 53 hours of early voting.\"",
         "perturb_type2_True": "Says Rick Scott’s proposal for election reform \"only mandates between 55 and 60 hours of early voting.\""
     },
     {
@@ -4648,7 +4648,7 @@
         "label_original": "true",
         "claim_id": "val_002412",
         "normalized_claim": "The Biden administration \"published a study concluding 4 (of) 5 new cars on the road by 2050 will still require liquid fuels.\"",
-        "perturb_type1_True": "The Biden administration \"published a study concluding between 3 and 4 (of) between 4 and 5 new cars on the road by 2050 will still require liquid fuels.\"",
-        "perturb_type2_True": "The Biden administration \"published a study concluding between 5 and 6 (of) between 7 and 8 new cars on the road by 2050 will still require liquid fuels.\""
+        "perturb_type1_True": "The Biden administration \"published a study concluding between 3 and 5 (of) between 4 and 6 new cars on the road by 2050 will still require liquid fuels.\"",
+        "perturb_type2_True": "The Biden administration \"published a study concluding between 5 and 7 (of) between 7 and 9 new cars on the road by 2050 will still require liquid fuels.\""
     }
 ]
