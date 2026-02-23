@@ -4,12 +4,16 @@ import code.data_preprocessing.perturbations.approximation as approximation
 import code.data_preprocessing.perturbations.negative as negative
 import code.data_preprocessing.perturbations.numeration as numeration
 import code.data_preprocessing.perturbations.obfuscate as obfuscate
-import code.data_preprocessing.perturbations.range as range
+import code.data_preprocessing.perturbations.range as range_pert
 from typing import Any, List, Dict
 from code.data_preprocessing.perturbations.utils.load_save import (
     load_data,
     save_data,
 )
+
+INPUT_TRUE = "data/raw_data/binary_data/spacy_tagged/test_true_claims_tagged_normalized_numbers.json"
+INPUT_FALSE = "data/raw_data/binary_data/spacy_tagged/test_false_claims_tagged_normalized_numbers.json"
+OUTPUT_DIR = "data/perturbed_data/test_split"
 
 
 def remove_unperturbed_claims(
@@ -18,174 +22,113 @@ def remove_unperturbed_claims(
     """Remove claims where perturbations are identical to the normalized claim.
 
     Args:
-        data: List of dictionaries containing claims
-        perturbation_keys: List of keys to check for perturbations
+        data: List of dictionaries containing claims.
+        perturbation_keys: List of keys to check for perturbations.
 
     Returns:
-        Filtered list with unperturbed claims removed
+        Filtered list with unperturbed claims removed.
     """
-    # Handle case where data might be nested in a list
-    if isinstance(data, list) and len(data) > 0 and isinstance(data[0], list):
-        # If data is a list of lists, flatten it
-        flattened_data = []
-        for sublist in data:
-            if isinstance(sublist, list):
-                flattened_data.extend(sublist)
-            else:
-                flattened_data.append(sublist)
-        data = flattened_data
-
     filtered_data = []
     removed_count = 0
 
     for item in data:
-        # Skip if item is not a dictionary
         if not isinstance(item, dict):
             print(f"Warning: Skipping non-dictionary item: {type(item)}")
             continue
 
         normalized_claim = item.get("normalized_claim", "")
-        should_keep = True
-
-        # Check if any perturbation key has the same value as normalized_claim
-        for key in perturbation_keys:
-            if key in item and item[key] == normalized_claim:
-                should_keep = False
-                break
-
-        if should_keep:
-            filtered_data.append(item)
-        else:
+        if any(item.get(key) == normalized_claim for key in perturbation_keys if key in item):
             removed_count += 1
+        else:
+            filtered_data.append(item)
 
     if removed_count > 0:
-        print(f"Removed {removed_count} unperturbed claims from dataset")
+        print(f"Removed {removed_count} unperturbed claims")
 
     return filtered_data
 
 
+def save_splits(
+    results: Dict[str, List[Dict[str, Any]]],
+    name: str,
+    perturbation_keys: List[str],
+) -> None:
+    """Apply fail-safe and save true/false splits for a perturbation module.
+
+    Args:
+        results: Dict with 'true' and 'false' splits from process_json.
+        name: Perturbation name used in the output filename (e.g. 'numeration').
+        perturbation_keys: Keys to check in the fail-safe filter.
+    """
+    for label, split_data in results.items():
+        split_data = remove_unperturbed_claims(split_data, perturbation_keys)
+        if split_data:
+            path = f"{OUTPUT_DIR}/{name}_{label}.json"
+            save_data(split_data, path)
+            print(f"  Saved {len(split_data)} entries to: {path}")
+
+
+def split_by_label(
+    data: List[Dict[str, Any]]
+) -> Dict[str, List[Dict[str, Any]]]:
+    """Split a flat list of entries into true/false dicts by label."""
+    results: Dict[str, List[Dict[str, Any]]] = {}
+    for entry in data:
+        label = entry.get("label", "UNKNOWN")
+        results.setdefault(label, []).append(entry)
+    return results
+
+    
+
 def main() -> None:
     """Main function to execute all perturbation processes."""
-    # Run each perturbation module
-    data_true: List[Dict[str, Any]] = load_data(
-        "data/processed/tagged/true_claims_tagged_normalized_numbers.json"
-    )
-    data_false: List[Dict[str, Any]] = load_data(
-        "data/processed/tagged/false_claims_tagged_normalized_numbers.json"
+    data_true: List[Dict[str, Any]] = load_data(INPUT_TRUE)
+    data_false: List[Dict[str, Any]] = load_data(INPUT_FALSE)
+    data_all = data_true + data_false
+
+    # Approximation — file-based interface, pass true/false separately
+    print("Running approximation perturbations...")
+    approximation.process_claims(INPUT_TRUE, f"{OUTPUT_DIR}/approximation_True.json")
+    approximation.process_claims(INPUT_FALSE, f"{OUTPUT_DIR}/approximation_False.json")
+
+    
+
+# Negative number perturbations
+    print("Running negative number perturbations...")
+    save_splits(
+        split_by_label(negative.process_json(data_all)),
+        name="negative",
+        perturbation_keys=["perturb_type2"],
     )
 
-    # Approximation perturbations_test
-    approximation.process_claims(
-        "data/processed/tagged/true_claims_tagged_normalized_numbers.json",
-        "true_claims_perturbed_approximation.json",
-    )
-    approximation.process_claims(
-        "data/processed/tagged/false_claims_tagged_normalized_numbers.json",
-        "false_claims_perturbed_approximation.json",
+    # Numeration perturbations
+    print("Running numeration perturbations...")
+    save_splits(
+        split_by_label(numeration.process_json(data_all)),
+        name="numeration",
+        perturbation_keys=["perturb_type1", "perturb_type2"],
     )
 
-
-    # Negative number perturbations_test
-    neg_true: List[Dict[str, Any]] = negative.process_json(data_true)
-    neg_false: List[Dict[str, Any]] = negative.process_json(data_false)
-
-    # Apply fail-safe for negative
-    neg_true = remove_unperturbed_claims(
-        neg_true, ["negative_true", "negative_false"]
+    # Range perturbations
+    print("Running range perturbations...")
+    save_splits(
+        split_by_label(range_pert.process_json(data_all)),
+        name="range",
+        perturbation_keys=["perturb_type1", "perturb_type2"],
     )
-    neg_false = remove_unperturbed_claims(
-        neg_false, ["negative_true", "negative_false"]
-    )
-
-    save_data(neg_true, "data/processed/perturbations_test/negative_true.json")
-    save_data(
-        neg_false, "data/processed/perturbations_test/negative_false.json"
-    )
-    print("Negative number perturbations_test completed.")
-
-    # Numeration perturbations_test
-    num_true: List[Dict[str, Any]] = numeration.process_json(data_true)
-    num_false: List[Dict[str, Any]] = numeration.process_json(data_false)
-
-    # Apply fail-safe for numeration
-    num_true = remove_unperturbed_claims(
-        num_true, ["numeration_true", "numeration_false"]
-    )
-    num_false = remove_unperturbed_claims(
-        num_false, ["numeration_true", "numeration_false"]
+    # Obfuscation perturbations
+    print("Running obfuscation perturbations...")
+    save_splits(
+        obfuscate.process_json(data_all),
+        name="obfuscation",
+        perturbation_keys=["perturb_type3_random", "perturb_type3_masked", "perturb_type3_removed"],
     )
 
-    save_data(
-        num_true, "data/processed/perturbations_test/numeration_true.json"
-    )
-    save_data(
-        num_false, "data/processed/perturbations_test/numeration_false.json"
-    )
-    print("Numeration perturbations_test completed.")
-
-    # Obfuscation perturbations_test
-    # The function returns a tuple of three lists
-    (
-        random_data_true,
-        masking_data_true,
-        removal_data_true,
-    ) = obfuscate.process_json(data_true)
-    (
-        random_data_false,
-        masking_data_false,
-        removal_data_false,
-    ) = obfuscate.process_json(data_false)
-
-    # Combine the lists into single lists for true and false perturbations
-    obf_true = random_data_true + masking_data_true + removal_data_true
-    obf_false = random_data_false + masking_data_false + removal_data_false
-
-    # Apply fail-safe for obfuscation using ALL the keys that can be generated
-    # This ensures no matter the perturbation type, it is checked correctly.
-    obf_true = remove_unperturbed_claims(
-        obf_true,
-        ["random_replacement_false", "masking_false", "value_removal_false"],
-    )
-    obf_false = remove_unperturbed_claims(
-        obf_false,
-        ["random_replacement_false", "masking_false", "value_removal_false"],
-    )
-
-    # Save the combined and filtered data
-    save_data(
-        obf_true, "data/processed/perturbations_test/obfuscation_true.json"
-    )
-    save_data(
-        obf_false, "data/processed/perturbations_test/obfuscation_false.json"
-    )
-    print("Obfuscation perturbations_test completed.")
-
-    # Range perturbations_test
-    output_data_true: List[Dict[str, Any]] = range.process_json(data_true)
-    output_data_false: List[Dict[str, Any]] = range.process_json(data_false)
-    # range.fix_currency_placement_in_data(output_data_true)
-    # range.fix_currency_placement_in_data(output_data_false)
-
-    # Apply fail-safe for range
-    output_data_true = remove_unperturbed_claims(
-        output_data_true, ["range_true", "range_false"]
-    )
-    output_data_false = remove_unperturbed_claims(
-        output_data_false, ["range_true", "range_false"]
-    )
-
-    save_data(
-        output_data_true, "data/processed/perturbations_test/range_true.json"
-    )
-    save_data(
-        output_data_false, "data/processed/perturbations_test/range_false.json"
-    )
-    print("Range perturbations_test completed.")
 
 
 if __name__ == "__main__":
     try:
         main()
-        print("All perturbation processes completed successfully.")
+        print("\nAll perturbation processes completed successfully.")
     except Exception as e:
         print(f"Error: {e}")

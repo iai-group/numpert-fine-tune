@@ -163,8 +163,8 @@ def perturb_time(number_text: str, unit: str, truth_value: str) -> str:
         if truth_value == "true"
         else (num + 1.5 * delta, num + 2.5 * delta)
     )
-    lower_formatted, upper_formatted = format_number(lower), format_number(
-        upper
+    lower_formatted, upper_formatted = format_number(lower, integer=True), format_number(
+        upper, integer=True
     )
     return (
         f"between {lower_formatted} and {upper_formatted} {unit}"
