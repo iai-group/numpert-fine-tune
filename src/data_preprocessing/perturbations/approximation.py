@@ -210,6 +210,8 @@ def extract_numeric_spans(text, tokens, ner_tags) -> List[NumericSpan]:
             continue
 
         value = parse_number(tokens[num_idx])
+        if value is None:
+            continue
         approx = approximate_number(value)
 
         numeric_spans.append(

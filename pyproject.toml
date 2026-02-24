@@ -62,13 +62,30 @@ line-length = 80
 target-version = "py311"
 
 [tool.mypy]
-mypy_path = "."
-files = ["src", "tests"]
+python_executable = ".numpert-fine-tune/bin/python"
 explicit_package_bases = true
+no_site_packages = true
 # Somewhat deprecated scripts
 # Exclude the src/metrics directory from mypy analysis entirely until updated
 exclude = ["src/metrics/"]
 
 [[tool.mypy.overrides]]
 module = "sklearn.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "torch.*"
+ignore_missing_imports = true
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = "num2words.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "spacy.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "wandb.*"
 ignore_missing_imports = true
