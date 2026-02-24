@@ -251,7 +251,7 @@ MOCK_INCLUDED_KEYS = ["claim_id", "label", "normalized_claim"]
 @pytest.fixture
 def patch_included_keys():
     with patch(
-        "code.data_preprocessing.perturbations.obfuscate.INCLUDED_KEYS",
+        "src.data_preprocessing.perturbations.obfuscate.INCLUDED_KEYS",
         MOCK_INCLUDED_KEYS,
     ):
         yield
@@ -358,7 +358,7 @@ class TestProcessJson:
     def test_empty_input_returns_empty_dict(self, patch_included_keys):
         """Tests for the obfuscate perturbation module."""
 
-        from code.data_preprocessing.perturbations.obfuscate import (
+        from src.data_preprocessing.perturbations.obfuscate import (
             replace_digits_with_new_sequence,
             random_replacement,
             masking,
@@ -835,7 +835,7 @@ class TestProcessJson:
         @pytest.fixture
         def patch_included_keys():
             with patch(
-                "code.data_preprocessing.perturbations.obfuscate.INCLUDED_KEYS",
+                "src.data_preprocessing.perturbations.obfuscate.INCLUDED_KEYS",
                 MOCK_INCLUDED_KEYS,
             ):
                 yield

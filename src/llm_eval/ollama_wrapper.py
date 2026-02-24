@@ -1,8 +1,8 @@
 """Wrapper for Ollama chat completions and script to run experiments.
 
 Usage:
-    python -m code.llm_eval.ollama_wrapper --models qwen3_32b deepseek_r1 qwen3_32b_think deepseek_r1_think llama3.3_70b llama3.2 mistral --perturbations numeration approximation negative_number random_replacement range masking --host http://localhost:11435 --shot neg-shot --labels true false
-    python -m code.llm_eval.ollama_wrapper --models qwen3_32b deepseek_r1 qwen3_32b_think deepseek_r1_think llama3.3_70b llama3.2 mistral --perturbations numeration approximation negative_number random_replacement range masking --host http://localhost:11434 --shot 0-shot --labels true false
+    python -m src.llm_eval.ollama_wrapper --models qwen3_32b deepseek_r1 qwen3_32b_think deepseek_r1_think llama3.3_70b llama3.2 mistral --perturbations numeration approximation negative_number random_replacement range masking --host http://localhost:11435 --shot neg-shot --labels true false
+    python -m src.llm_eval.ollama_wrapper --models qwen3_32b deepseek_r1 qwen3_32b_think deepseek_r1_think llama3.3_70b llama3.2 mistral --perturbations numeration approximation negative_number random_replacement range masking --host http://localhost:11434 --shot 0-shot --labels true false
 """  # noqa E501
 
 import json

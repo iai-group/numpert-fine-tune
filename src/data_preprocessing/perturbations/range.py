@@ -303,7 +303,19 @@ def get_ordinal(n: int) -> str:
     return f"{n}{suffix}"
 
 
-def format_number(n: float, integer: bool = False) -> str:
+def _is_integer_number(n: float | int) -> bool:
+    """Return True when n is an integer value.
+
+    Works for both int and float without relying on float-only APIs.
+    """
+    if isinstance(n, int):
+        return True
+    if isinstance(n, float):
+        return n.is_integer()
+    return False
+
+
+def format_number(n: float | int, integer: bool = False) -> str:
     """Format a number as a string with comma separation and decimal places.
 
     Args:
@@ -313,10 +325,10 @@ def format_number(n: float, integer: bool = False) -> str:
     Returns:
         The formatted number as a string.
     """
-    return f"{int(n):,}" if integer or n.is_integer() else f"{n:,.1f}"
+    return f"{int(n):,}" if integer or _is_integer_number(n) else f"{n:,.1f}"
 
 
-def format_currency(n: float, unit: str) -> str:
+def format_currency(n: float | int, unit: str) -> str:
     """Format a currency value as a string with the unit and comma separation.
 
     Args:
@@ -327,7 +339,11 @@ def format_currency(n: float, unit: str) -> str:
         The formatted currency value as a string.
     """
     unit_str = f"{unit}" if unit else ""
-    return f"{unit_str}{int(n):,}" if n.is_integer() else f"{unit_str}{n:,.2f}"
+    return (
+        f"{unit_str}{int(n):,}"
+        if _is_integer_number(n)
+        else f"{unit_str}{n:,.2f}"
+    )
 
 
 def perturb_claim(

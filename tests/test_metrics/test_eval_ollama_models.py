@@ -132,7 +132,7 @@ def test_get_result_file_path(
 def test_process_result_file_file_not_found():
     """Test that process_result_file handles non-existent files correctly."""
     with patch(
-        "code.metrics.eval_ollama_models.check_file_exists_and_readable",
+        "src.metrics.eval_ollama_models.check_file_exists_and_readable",
         return_value=(False, "File does not exist"),
     ):
 
@@ -151,7 +151,7 @@ def test_process_result_file_valid_file():
 
     with (
         patch(
-            "code.metrics.eval_ollama_models.check_file_exists_and_readable",
+            "src.metrics.eval_ollama_models.check_file_exists_and_readable",
             return_value=(True, ""),
         ),
         patch("builtins.open", mock_open(read_data="\n".join(json_lines))),
@@ -176,7 +176,7 @@ def test_process_result_file_normalized_claim():
 
     with (
         patch(
-            "code.metrics.eval_ollama_models.check_file_exists_and_readable",
+            "src.metrics.eval_ollama_models.check_file_exists_and_readable",
             return_value=(True, ""),
         ),
         patch("builtins.open", mock_open(read_data="\n".join(json_lines))),
@@ -205,7 +205,7 @@ def test_process_result_file_with_invalid_entries():
 
     with (
         patch(
-            "code.metrics.eval_ollama_models.check_file_exists_and_readable",
+            "src.metrics.eval_ollama_models.check_file_exists_and_readable",
             return_value=(True, ""),
         ),
         patch("builtins.open", mock_open(read_data="\n".join(json_lines))),
@@ -222,10 +222,10 @@ def test_process_result_file_with_invalid_entries():
         assert invalid_entries == 1
 
 
-@patch("code.metrics.eval_ollama_models.process_result_file")
-@patch("code.metrics.eval_ollama_models.get_result_file_path")
+@patch("src.metrics.eval_ollama_models.process_result_file")
+@patch("src.metrics.eval_ollama_models.get_result_file_path")
 @patch("builtins.open", new_callable=mock_open)
-@patch("code.metrics.eval_ollama_models.DeltaEvalTable")
+@patch("src.metrics.eval_ollama_models.DeltaEvalTable")
 def test_evaluate_label_combination(
     mock_delta_eval_table,
     mock_open_file,
@@ -269,8 +269,8 @@ def test_evaluate_label_combination(
     assert mock_open_file.call_count == 1  # Error file and LaTeX file
 
 
-@patch("code.metrics.eval_ollama_models.evaluate_label_combination")
-@patch("code.metrics.eval_ollama_models.get_configuration")
+@patch("src.metrics.eval_ollama_models.evaluate_label_combination")
+@patch("src.metrics.eval_ollama_models.get_configuration")
 @patch("os.path.exists")
 @patch("builtins.open", new_callable=mock_open)
 def test_main(

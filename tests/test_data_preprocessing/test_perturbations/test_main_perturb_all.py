@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, call, patch
 
 import pytest
 
-from code.data_preprocessing.perturbations.main_perturb_all import (
+from src.data_preprocessing.perturbations.main_perturb_all import (
     INPUT_FALSE,
     INPUT_TRUE,
     OUTPUT_DIR,
@@ -280,8 +280,10 @@ class TestSplitByLabel:
 class TestSaveSplits:
     """Tests for the save_splits function."""
 
-    @patch("main.save_data")
-    @patch("main.remove_unperturbed_claims")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.save_data")
+    @patch(
+        "src.data_preprocessing.perturbations.main_perturb_all.remove_unperturbed_claims"
+    )
     def test_calls_save_data_for_each_label(
         self,
         mock_remove: MagicMock,
@@ -296,8 +298,10 @@ class TestSaveSplits:
         save_splits(results, "numeration", ["perturb_type1"], "/out")
         assert mock_save.call_count == 2
 
-    @patch("main.save_data")
-    @patch("main.remove_unperturbed_claims")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.save_data")
+    @patch(
+        "src.data_preprocessing.perturbations.main_perturb_all.remove_unperturbed_claims"
+    )
     def test_output_path_uses_name_and_label(
         self,
         mock_remove: MagicMock,
@@ -311,8 +315,10 @@ class TestSaveSplits:
         assert "numeration" in saved_path
         assert "True" in saved_path
 
-    @patch("main.save_data")
-    @patch("main.remove_unperturbed_claims")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.save_data")
+    @patch(
+        "src.data_preprocessing.perturbations.main_perturb_all.remove_unperturbed_claims"
+    )
     def test_skips_empty_splits_after_filtering(
         self,
         mock_remove: MagicMock,
@@ -324,8 +330,10 @@ class TestSaveSplits:
         save_splits(results, "numeration", ["perturb_type1"], "/out")
         mock_save.assert_not_called()
 
-    @patch("main.save_data")
-    @patch("main.remove_unperturbed_claims")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.save_data")
+    @patch(
+        "src.data_preprocessing.perturbations.main_perturb_all.remove_unperturbed_claims"
+    )
     def test_output_dir_used_in_path(
         self,
         mock_remove: MagicMock,
@@ -345,14 +353,14 @@ class TestSaveSplits:
 class TestRunPerturbations:
     """Tests for the run_perturbations function."""
 
-    @patch("main.obfuscate")
-    @patch("main.range_pert")
-    @patch("main.numeration")
-    @patch("main.negative")
-    @patch("main.approximation")
-    @patch("main.save_splits")
-    @patch("main.split_by_label")
-    @patch("main.load_data")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.obfuscate")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.range_pert")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.numeration")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.negative")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.approximation")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.save_splits")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.split_by_label")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.load_data")
     def test_loads_both_input_files(
         self,
         mock_load: MagicMock,
@@ -377,14 +385,14 @@ class TestRunPerturbations:
         mock_load.assert_any_call("path/true.json")
         mock_load.assert_any_call("path/false.json")
 
-    @patch("main.obfuscate")
-    @patch("main.range_pert")
-    @patch("main.numeration")
-    @patch("main.negative")
-    @patch("main.approximation")
-    @patch("main.save_splits")
-    @patch("main.split_by_label")
-    @patch("main.load_data")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.obfuscate")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.range_pert")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.numeration")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.negative")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.approximation")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.save_splits")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.split_by_label")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.load_data")
     def test_calls_approximation_with_both_inputs(
         self,
         mock_load: MagicMock,
@@ -412,14 +420,14 @@ class TestRunPerturbations:
         ]
         mock_approx.process_claims.assert_has_calls(expected_calls)
 
-    @patch("main.obfuscate")
-    @patch("main.range_pert")
-    @patch("main.numeration")
-    @patch("main.negative")
-    @patch("main.approximation")
-    @patch("main.save_splits")
-    @patch("main.split_by_label")
-    @patch("main.load_data")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.obfuscate")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.range_pert")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.numeration")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.negative")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.approximation")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.save_splits")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.split_by_label")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.load_data")
     def test_calls_all_perturbation_modules(
         self,
         mock_load: MagicMock,
@@ -453,28 +461,28 @@ class TestRunPerturbations:
 class TestMain:
     """Tests for the main CLI entry point."""
 
-    @patch("main.run_perturbations")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.run_perturbations")
     def test_default_split_is_used(self, mock_run: MagicMock) -> None:
         """Verifies that the default split is used when no arg is passed."""
         with patch("sys.argv", ["main.py"]):
             main()
         mock_run.assert_called_once()
 
-    @patch("main.run_perturbations")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.run_perturbations")
     def test_single_split_calls_run_once(self, mock_run: MagicMock) -> None:
         """Verifies that a single split triggers exactly one run."""
         with patch("sys.argv", ["main.py", "--split", "val"]):
             main()
         mock_run.assert_called_once()
 
-    @patch("main.run_perturbations")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.run_perturbations")
     def test_all_split_calls_run_three_times(self, mock_run: MagicMock) -> None:
         """Verifies that '--split all' triggers three separate runs."""
         with patch("sys.argv", ["main.py", "--split", "all"]):
             main()
         assert mock_run.call_count == 3
 
-    @patch("main.run_perturbations")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.run_perturbations")
     def test_all_split_covers_train_val_test(self, mock_run: MagicMock) -> None:
         """Verifies that all three split names are passed when using 'all'."""
         with patch("sys.argv", ["main.py", "--split", "all"]):
@@ -484,7 +492,7 @@ class TestMain:
         for split in ["train", "val", "test"]:
             assert any(split in p for p in input_trues)
 
-    @patch("main.run_perturbations")
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.run_perturbations")
     def test_correct_paths_passed_for_test_split(
         self, mock_run: MagicMock
     ) -> None:

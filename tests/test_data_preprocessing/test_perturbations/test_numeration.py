@@ -75,21 +75,21 @@ class TestNumerationPerturbation:
         result = numeration_perturbation("no digits here", "PERCENT", "false")
         assert result == "no digits here"
 
-    @patch("code.data_preprocessing.perturbations.numeration.num2words")
+    @patch("src.data_preprocessing.perturbations.numeration.num2words")
     def test_numeration_perturbation_percent(self, mock_num2words):
         """Test numeration_perturbation with a percent value."""
         mock_num2words.return_value = "fifty-five"
         result = numeration_perturbation("50%", "PERCENT", "false")
         assert result == "fifty-five percent"
 
-    @patch("code.data_preprocessing.perturbations.numeration.num2words")
+    @patch("src.data_preprocessing.perturbations.numeration.num2words")
     def test_numeration_perturbation_money(self, mock_num2words):
         """Test numeration_perturbation with a money value."""
         mock_num2words.return_value = "one hundred ten"
         result = numeration_perturbation("$100", "MONEY", "false")
         assert result == "one hundred ten dollars"
 
-    @patch("code.data_preprocessing.perturbations.numeration.num2words")
+    @patch("src.data_preprocessing.perturbations.numeration.num2words")
     def test_numeration_perturbation_cardinal_with_unit(self, mock_num2words):
         """Test numeration_perturbation with a cardinal number and unit."""
         mock_num2words.return_value = "eleven"
@@ -101,7 +101,7 @@ class TestNumerationPerturbation:
         result = numeration_perturbation("50%", "PERCENT", "true")
         assert result == "fifty percent"
 
-    @patch("code.data_preprocessing.perturbations.numeration.num2words")
+    @patch("src.data_preprocessing.perturbations.numeration.num2words")
     def test_numeration_perturbation_with_commas(self, mock_num2words):
         """Test numeration_perturbation with numbers containing commas."""
         mock_num2words.return_value = "one thousand one hundred"
@@ -111,7 +111,7 @@ class TestNumerationPerturbation:
     def test_numeration_perturbation_exception_handling(self):
         """Test numeration_perturbation handles exceptions gracefully."""
         with patch(
-            "code.data_preprocessing.perturbations.numeration.num2words",
+            "src.data_preprocessing.perturbations.numeration.num2words",
             side_effect=Exception("test error"),
         ):
             with patch("builtins.print") as mock_print:
@@ -196,7 +196,7 @@ class TestProcessEntity:
         assert changed is False
 
     @patch(
-        "code.data_preprocessing.perturbations.numeration.numeration_perturbation"  # noqa: E501
+        "src.data_preprocessing.perturbations.numeration.numeration_perturbation"  # noqa: E501
     )
     def test_process_entity_no_change(self, mock_perturbation):
         """Test process_entity does not change numerical entities."""
@@ -213,7 +213,7 @@ class TestProcessEntity:
         assert changed is False
 
     @patch(
-        "code.data_preprocessing.perturbations.numeration.numeration_perturbation"  # noqa: E501
+        "src.data_preprocessing.perturbations.numeration.numeration_perturbation"  # noqa: E501
     )
     def test_process_entity_with_change(self, mock_perturbation):
         """Test process_entity modifies numerical entities."""
@@ -239,7 +239,7 @@ class TestProcessSentence:
         result = process_sentence(content, "false")
         assert result is None
 
-    @patch("code.data_preprocessing.perturbations.numeration.process_entity")
+    @patch("src.data_preprocessing.perturbations.numeration.process_entity")
     def test_process_sentence_with_changes(self, mock_process_entity):
         """Test process_sentence applies changes to entities."""
         mock_process_entity.return_value = ("Modified sentence", True)
@@ -274,32 +274,32 @@ class TestConstants:
 class TestProcessJsonWithLabel:
     """Test process_json function with label-based key naming."""
 
-    @patch("code.data_preprocessing.perturbations.numeration.process_sentence")
+    @patch("src.data_preprocessing.perturbations.numeration.process_sentence")
     def test_process_json_label_used_in_key(self, mock_process_sentence):
         """Test process_json uses label in output key names."""
         mock_process_sentence.side_effect = ["true result", "false result"]
         input_data = [{"id": 1, "label": "True"}]
         with patch(
-            "code.data_preprocessing.perturbations.numeration.INCLUDED_KEYS",
+            "src.data_preprocessing.perturbations.numeration.INCLUDED_KEYS",
             ["id", "label"],
         ):
             result = process_json(input_data)
         assert "perturb_type1_True" in result[0]
         assert "perturb_type2_True" in result[0]
 
-    @patch("code.data_preprocessing.perturbations.numeration.process_sentence")
+    @patch("src.data_preprocessing.perturbations.numeration.process_sentence")
     def test_process_json_unknown_label_fallback(self, mock_process_sentence):
         """Test process_json falls back to UNKNOWN when label is missing."""
         mock_process_sentence.side_effect = [None, "false result"]
         input_data = [{"id": 1}]
         with patch(
-            "code.data_preprocessing.perturbations.numeration.INCLUDED_KEYS",
+            "src.data_preprocessing.perturbations.numeration.INCLUDED_KEYS",
             ["id"],
         ):
             result = process_json(input_data)
         assert "perturb_type2_UNKNOWN" in result[0]
 
-    @patch("code.data_preprocessing.perturbations.numeration.process_sentence")
+    @patch("src.data_preprocessing.perturbations.numeration.process_sentence")
     def test_process_json_multiple_entries(self, mock_process_sentence):
         """Test process_json processes multiple entries correctly."""
         mock_process_sentence.side_effect = [
@@ -316,7 +316,7 @@ class TestProcessJsonWithLabel:
             {"id": 3, "label": "True"},
         ]
         with patch(
-            "code.data_preprocessing.perturbations.numeration.INCLUDED_KEYS",
+            "src.data_preprocessing.perturbations.numeration.INCLUDED_KEYS",
             ["id", "label"],
         ):
             result = process_json(input_data)
@@ -324,7 +324,7 @@ class TestProcessJsonWithLabel:
         assert result[0]["id"] == 1
         assert result[1]["id"] == 3
 
-    @patch("code.data_preprocessing.perturbations.numeration.process_sentence")
+    @patch("src.data_preprocessing.perturbations.numeration.process_sentence")
     def test_process_json_excluded_keys_not_present(
         self, mock_process_sentence
     ):
@@ -334,7 +334,7 @@ class TestProcessJsonWithLabel:
             {"id": 1, "label": "True", "extra_field": "should_be_excluded"}
         ]
         with patch(
-            "code.data_preprocessing.perturbations.numeration.INCLUDED_KEYS",
+            "src.data_preprocessing.perturbations.numeration.INCLUDED_KEYS",
             ["id", "label"],
         ):
             result = process_json(input_data)
@@ -376,14 +376,14 @@ class TestNumerationPerturbationEdgeCases:
         # Default is 'true', so no modification but converts to words
         assert "fifty" in result
 
-    @patch("code.data_preprocessing.perturbations.numeration.num2words")
+    @patch("src.data_preprocessing.perturbations.numeration.num2words")
     def test_numeration_perturbation_date(self, mock_num2words):
         """Test numeration_perturbation with a date value."""
         mock_num2words.return_value = "two thousand twenty-five"
         result = numeration_perturbation("2020", "DATE", "false")
         assert "two thousand twenty-five" in result
 
-    @patch("code.data_preprocessing.perturbations.numeration.num2words")
+    @patch("src.data_preprocessing.perturbations.numeration.num2words")
     def test_numeration_perturbation_money_singular(self, mock_num2words):
         """Test numeration_perturbation with $1 (singular dollar)."""
         mock_num2words.return_value = "one"
@@ -409,7 +409,7 @@ class TestProcessSentenceEdgeCases:
         except KeyError:
             pass
 
-    @patch("code.data_preprocessing.perturbations.numeration.process_entity")
+    @patch("src.data_preprocessing.perturbations.numeration.process_entity")
     def test_process_sentence_no_perturbation_made(self, mock_process_entity):
         """Test process_sentence returns None when no perturbation is made."""
         mock_process_entity.return_value = ("Original sentence", False)
@@ -420,7 +420,7 @@ class TestProcessSentenceEdgeCases:
         result = process_sentence(content, "false")
         assert result is None
 
-    @patch("code.data_preprocessing.perturbations.numeration.process_entity")
+    @patch("src.data_preprocessing.perturbations.numeration.process_entity")
     def test_process_sentence_entities_sorted_reverse(
         self, mock_process_entity
     ):

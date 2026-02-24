@@ -171,9 +171,7 @@ class TestExaggerateNumber:
         result = exaggerate_number(10000)
         assert result > 0
 
-    @patch(
-        "code.data_preprocessing.perturbations.approximation" ".random.choice"
-    )
+    @patch("src.data_preprocessing.perturbations.approximation.random.choice")
     def test_zero_uses_random_choice(self, mock_choice):
         """Verifies zero exaggeration uses random.choice."""
         mock_choice.return_value = 10.0

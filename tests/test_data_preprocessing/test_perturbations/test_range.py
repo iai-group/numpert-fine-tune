@@ -314,3 +314,32 @@ def test_perturb_cardinal_small_number():
     bound."""
     out = rng.range_perturbation("5", "CARDINAL", "true")
     assert out in ("between 4 and 6", "between 5 and 6")
+    
+def test_is_integer_number_with_int():
+    """Test _is_integer_number with integer input."""
+    assert rng._is_integer_number(5) is True
+    assert rng._is_integer_number(0) is True
+    assert rng._is_integer_number(-10) is True
+
+
+def test_is_integer_number_with_float_integer_value():
+    """Test _is_integer_number with float that represents an integer."""
+    assert rng._is_integer_number(5.0) is True
+    assert rng._is_integer_number(0.0) is True
+    assert rng._is_integer_number(-10.0) is True
+
+
+def test_is_integer_number_with_float_decimal_value():
+    """Test _is_integer_number with float that has decimal part."""
+    assert rng._is_integer_number(5.5) is False
+    assert rng._is_integer_number(0.1) is False
+    assert rng._is_integer_number(-10.25) is False
+    assert rng._is_integer_number(1.0001) is False
+
+
+def test_is_integer_number_with_other_type():
+    """Test _is_integer_number with unsupported type."""
+    assert rng._is_integer_number("5") is False
+    assert rng._is_integer_number(None) is False
+    assert rng._is_integer_number([5]) is False
+

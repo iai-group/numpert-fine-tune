@@ -181,7 +181,7 @@ def test_initialize_spacy():
     # Test successful initialization
     with (
         patch(
-            "code.data_preprocessing.raw_dataset_preprocessing.process_tag_claims_spacy.is_model_available"  # noqa: E501
+            "src.data_preprocessing.raw_dataset_preprocessing.process_tag_claims_spacy.is_model_available"  # noqa: E501
         ) as mock_available,
         patch("spacy.load") as mock_load,
     ):
@@ -196,10 +196,10 @@ def test_initialize_spacy():
     # Test when model needs to be downloaded
     with (
         patch(
-            "code.data_preprocessing.raw_dataset_preprocessing.process_tag_claims_spacy.is_model_available"  # noqa: E501
+            "src.data_preprocessing.raw_dataset_preprocessing.process_tag_claims_spacy.is_model_available"  # noqa: E501
         ) as mock_available,
         patch(
-            "code.data_preprocessing.raw_dataset_preprocessing.process_tag_claims_spacy.download"  # noqa: E501
+            "src.data_preprocessing.raw_dataset_preprocessing.process_tag_claims_spacy.download"  # noqa: E501
         ) as mock_download,
         patch("spacy.load") as mock_load,
     ):
@@ -215,7 +215,7 @@ def test_initialize_spacy():
     # Test when loading fails
     with (
         patch(
-            "code.data_preprocessing.raw_dataset_preprocessing.process_tag_claims_spacy.is_model_available"  # noqa: E501
+            "src.data_preprocessing.raw_dataset_preprocessing.process_tag_claims_spacy.is_model_available"  # noqa: E501
         ) as mock_available,
         patch("spacy.load") as mock_load,
     ):
@@ -273,7 +273,7 @@ def test_process_data(mock_spacy_model):
 
     # Mock initialize_spacy
     with patch(
-        "code.data_preprocessing.raw_dataset_preprocessing.process_tag_claims_spacy.initialize_spacy"  # noqa: E501
+        "src.data_preprocessing.raw_dataset_preprocessing.process_tag_claims_spacy.initialize_spacy"  # noqa: E501
     ) as mock_init:
         mock_init.return_value = mock_spacy_model
 
@@ -303,7 +303,7 @@ def test_process_data_failed_initialization():
     """Test handling of failed spaCy initialization."""
     # Test handling of failed spaCy initialization
     with patch(
-        "code.data_preprocessing.raw_dataset_preprocessing.process_tag_claims_spacy.initialize_spacy"  # noqa: E501
+        "src.data_preprocessing.raw_dataset_preprocessing.process_tag_claims_spacy.initialize_spacy"  # noqa: E501
     ) as mock_init:
         mock_init.return_value = None
 

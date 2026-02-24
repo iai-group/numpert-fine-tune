@@ -82,7 +82,7 @@ def test_process_json_basic():
         }
     ]
     with patch(
-        "code.data_preprocessing.perturbations.negative.INCLUDED_KEYS",
+        "src.data_preprocessing.perturbations.negative.INCLUDED_KEYS",
         ["claim_id"],
     ):
         result = process_json(input_data)
@@ -101,7 +101,7 @@ def test_process_json_excludes_unperturbed():
         }
     ]
     with patch(
-        "code.data_preprocessing.perturbations.negative.INCLUDED_KEYS", []
+        "src.data_preprocessing.perturbations.negative.INCLUDED_KEYS", []
     ):
         result = process_json(input_data)
     assert result == []
@@ -118,7 +118,7 @@ def test_process_json_unknown_label():
         }
     ]
     with patch(
-        "code.data_preprocessing.perturbations.negative.INCLUDED_KEYS", []
+        "src.data_preprocessing.perturbations.negative.INCLUDED_KEYS", []
     ):
         result = process_json(input_data)
     assert len(result) == 1
@@ -149,7 +149,7 @@ def test_process_json_multiple_entries():
         },
     ]
     with patch(
-        "code.data_preprocessing.perturbations.negative.INCLUDED_KEYS", []
+        "src.data_preprocessing.perturbations.negative.INCLUDED_KEYS", []
     ):
         result = process_json(input_data)
     assert len(result) == 2
@@ -171,7 +171,7 @@ def test_process_json_included_keys_filtering():
         }
     ]
     with patch(
-        "code.data_preprocessing.perturbations.negative.INCLUDED_KEYS",
+        "src.data_preprocessing.perturbations.negative.INCLUDED_KEYS",
         ["claim_id"],
     ):
         result = process_json(input_data)
