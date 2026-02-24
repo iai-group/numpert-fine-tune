@@ -60,3 +60,15 @@ ignore = ["D104", "D211"]
 [tool.ruff]
 line-length = 80
 target-version = "py311"
+
+[tool.mypy]
+mypy_path = "."
+files = ["src", "tests"]
+explicit_package_bases = true
+# Somewhat deprecated scripts
+# Exclude the src/metrics directory from mypy analysis entirely until updated
+exclude = ["src/metrics/"]
+
+[[tool.mypy.overrides]]
+module = "sklearn.*"
+ignore_missing_imports = true

@@ -12,7 +12,7 @@ import argparse
 import sys
 from pathlib import Path
 from collections import defaultdict
-from typing import Dict, List, Tuple, Any, Optional
+from typing import Dict, List, Tuple, Any, Optional, Union
 import re
 
 
@@ -22,7 +22,7 @@ class ResponseValidator:
     def __init__(self, debug_mode: bool = False):
         """Initialize the validator with optional debug mode."""
         self.debug_mode = debug_mode
-        self.debug_samples = []
+        self.debug_samples: List[Dict[str, Any]] = []
 
     def extract_label_from_json(self, content: str) -> Optional[bool]:
         """Try to extract label by parsing content as complete JSON."""
@@ -163,7 +163,7 @@ class JsonlProcessor:
         self.validator = ResponseValidator(debug_mode)
         self.parser = CustomIdParser()
         self.debug_mode = debug_mode
-        self.failed_custom_ids = defaultdict(
+        self.failed_custom_ids: Dict[str, List[str]] = defaultdict(
             list
         )  # Track failed custom IDs by error type
 
@@ -254,7 +254,7 @@ class JsonlProcessor:
     ) -> Tuple[List[Dict], Dict[str, int], Dict[str, List[str]]]:
         """Process entire JSONL file."""
         processed_data = []
-        error_counts = defaultdict(int)
+        error_counts: Dict[str, int] = defaultdict(int)
         self.failed_custom_ids = defaultdict(list)  # Reset for each file
 
         print(f"📖 Reading file: {filepath}")
@@ -564,24 +564,24 @@ class ClassificationMetricsRunner:
         self.formatter = ResultsFormatter()
 
     def get_output_filename(
-        self, input_path: str, output_dir: str = None
+        self, input_path: Union[str, Path], output_dir: Optional[Union[str, Path]] = None
     ) -> str:
         """Generate output filename with RESULTS_ prefix."""
-        input_path = Path(input_path)
+        input_path_obj: Path = Path(input_path)
 
         if output_dir:
-            output_dir = Path(output_dir)
-            output_dir.mkdir(parents=True, exist_ok=True)
-            return str(output_dir / f"RESULTS_{input_path.stem}.json")
+            output_dir_obj: Path = Path(output_dir)
+            output_dir_obj.mkdir(parents=True, exist_ok=True)
+            return str(output_dir_obj / f"RESULTS_{input_path_obj.stem}.json")
         else:
-            return str(input_path.parent / f"RESULTS_{input_path.stem}.json")
+            return str(input_path_obj.parent / f"RESULTS_{input_path_obj.stem}.json")
 
-    def find_jsonl_files(self, directory: str) -> List[str]:
+    def find_jsonl_files(self, directory: Union[str, Path]) -> List[str]:
         """Find all JSONL files in a directory."""
-        directory = Path(directory)
-        jsonl_files = []
+        directory_path: Path = Path(directory)
+        jsonl_files: List[str] = []
 
-        for file_path in directory.rglob("*.jsonl"):
+        for file_path in directory_path.rglob("*.jsonl"):
             jsonl_files.append(str(file_path))
 
         return sorted(jsonl_files)
