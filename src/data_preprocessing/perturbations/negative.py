@@ -37,7 +37,8 @@ def negative_number_perturbation(
                 number_start, number_end = number_match.span()
                 new_text = (
                     original_text[:number_start]
-                    + "-" + number_match.group()
+                    + "-"
+                    + number_match.group()
                     + original_text[number_end:]
                 )
                 perturbed_claim = (
@@ -59,7 +60,9 @@ def process_json(input_data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
 
         if perturbed_claim != claim:
             label: str = entry.get("label", "UNKNOWN")
-            new_entry = {key: entry[key] for key in INCLUDED_KEYS if key in entry}
+            new_entry = {
+                key: entry[key] for key in INCLUDED_KEYS if key in entry
+            }
             new_entry[f"perturb_type2_{label}"] = perturbed_claim
             output_data.append(new_entry)
 

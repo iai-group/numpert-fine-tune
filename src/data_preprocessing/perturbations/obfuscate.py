@@ -79,8 +79,12 @@ def random_replacement(claim: str, entities: List[Dict[str, Any]]) -> str:
         if entity["label"] in NUMERICAL_LABELS:
             start = entity["start_char"]
             end = entity["end_char"]
-            new_text = replace_digits_with_new_sequence(perturbed_claim[start:end])
-            perturbed_claim = perturbed_claim[:start] + new_text + perturbed_claim[end:]
+            new_text = replace_digits_with_new_sequence(
+                perturbed_claim[start:end]
+            )
+            perturbed_claim = (
+                perturbed_claim[:start] + new_text + perturbed_claim[end:]
+            )
     return perturbed_claim
 
 
@@ -104,7 +108,9 @@ def masking(claim: str, entities: List[Dict[str, Any]]) -> str:
                 "#" if char in chars_to_mask else char
                 for char in perturbed_claim[start:end]
             )
-            perturbed_claim = perturbed_claim[:start] + new_text + perturbed_claim[end:]
+            perturbed_claim = (
+                perturbed_claim[:start] + new_text + perturbed_claim[end:]
+            )
     return perturbed_claim
 
 
@@ -130,8 +136,8 @@ def value_removal(claim: str, entities: List[Dict[str, Any]]) -> str:
 def process_json(
     input_data: List[Dict[str, Any]],
 ) -> Dict[str, List[Dict[str, Any]]]:
-    """Returns a dict with 'true' and 'false' splits, each entry containing
-    all applicable obfuscation perturbation types as keys.
+    """Returns a dict with 'true' and 'false' splits, each entry containing all
+    applicable obfuscation perturbation types as keys.
 
     Args:
         input_data: List of input data entries.
@@ -150,7 +156,10 @@ def process_json(
         perturbed_masked = masking(claim, entities)
         perturbed_removed = value_removal(claim, entities)
 
-        if all(p == claim for p in [perturbed_random, perturbed_masked, perturbed_removed]):
+        if all(
+            p == claim
+            for p in [perturbed_random, perturbed_masked, perturbed_removed]
+        ):
             continue
 
         base_entry = {key: entry[key] for key in INCLUDED_KEYS if key in entry}

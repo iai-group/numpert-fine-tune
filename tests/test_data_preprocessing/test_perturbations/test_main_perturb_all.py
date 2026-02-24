@@ -157,9 +157,7 @@ class TestRemoveUnperturbedClaims:
         self, sample_claims: list[dict]
     ) -> None:
         """Verifies that non-existent keys cause no claims to be removed."""
-        result = remove_unperturbed_claims(
-            sample_claims, ["nonexistent_key"]
-        )
+        result = remove_unperturbed_claims(sample_claims, ["nonexistent_key"])
         assert len(result) == len(sample_claims)
 
     def test_skips_non_dict_items(self, capsys: pytest.CaptureFixture) -> None:
@@ -470,18 +468,14 @@ class TestMain:
         mock_run.assert_called_once()
 
     @patch("main.run_perturbations")
-    def test_all_split_calls_run_three_times(
-        self, mock_run: MagicMock
-    ) -> None:
+    def test_all_split_calls_run_three_times(self, mock_run: MagicMock) -> None:
         """Verifies that '--split all' triggers three separate runs."""
         with patch("sys.argv", ["main.py", "--split", "all"]):
             main()
         assert mock_run.call_count == 3
 
     @patch("main.run_perturbations")
-    def test_all_split_covers_train_val_test(
-        self, mock_run: MagicMock
-    ) -> None:
+    def test_all_split_covers_train_val_test(self, mock_run: MagicMock) -> None:
         """Verifies that all three split names are passed when using 'all'."""
         with patch("sys.argv", ["main.py", "--split", "all"]):
             main()

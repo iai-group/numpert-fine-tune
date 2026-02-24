@@ -1,10 +1,14 @@
-"""hf_dataset_instructions.py"""
+"""hf_dataset_instructions.py."""
+
 from datasets import Dataset, concatenate_datasets
 from enum import Enum
 from pathlib import Path
 from typing import List, Union, Optional, Dict
 import json
-from src.numpert_prompt.prompt import FACT_CHECK_SYSTEM_PROMPT, FACT_CHECK_USER_PROMPT
+from src.numpert_prompt.prompt import (
+    FACT_CHECK_SYSTEM_PROMPT,
+    FACT_CHECK_USER_PROMPT,
+)
 
 
 class PerturbationType(Enum):
@@ -127,7 +131,7 @@ def convert_to_conversations(
 
         # Fill in the prompt template placeholders
         evidence = example["doc"]
-        
+
         user_content = FACT_CHECK_USER_PROMPT.format(
             examples="",  # No few-shot examples in this setup
             claim=example["claim"],
@@ -137,12 +141,14 @@ def convert_to_conversations(
         conversations.append({"role": "user", "content": user_content})
 
         # Convert label to JSON format: "True" -> '{"label": true}', "False" -> '{"label": false}'
-        json_label = '{"label": true}' if example["label"] == "True" else '{"label": false}'
+        json_label = (
+            '{"label": true}'
+            if example["label"] == "True"
+            else '{"label": false}'
+        )
 
         # Assistant response (only for training)
-        conversations.append(
-            {"role": "assistant", "content": json_label}
-        )
+        conversations.append({"role": "assistant", "content": json_label})
 
         # Build the final entry
         entry = {

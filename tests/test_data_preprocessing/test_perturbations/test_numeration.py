@@ -269,12 +269,12 @@ class TestConstants:
             "TIME": 60,
         }
         assert perturbation_factors == expected
+
+
 class TestProcessJsonWithLabel:
     """Test process_json function with label-based key naming."""
 
-    @patch(
-        "code.data_preprocessing.perturbations.numeration.process_sentence"
-    )
+    @patch("code.data_preprocessing.perturbations.numeration.process_sentence")
     def test_process_json_label_used_in_key(self, mock_process_sentence):
         """Test process_json uses label in output key names."""
         mock_process_sentence.side_effect = ["true result", "false result"]
@@ -287,9 +287,7 @@ class TestProcessJsonWithLabel:
         assert "perturb_type1_True" in result[0]
         assert "perturb_type2_True" in result[0]
 
-    @patch(
-        "code.data_preprocessing.perturbations.numeration.process_sentence"
-    )
+    @patch("code.data_preprocessing.perturbations.numeration.process_sentence")
     def test_process_json_unknown_label_fallback(self, mock_process_sentence):
         """Test process_json falls back to UNKNOWN when label is missing."""
         mock_process_sentence.side_effect = [None, "false result"]
@@ -301,9 +299,7 @@ class TestProcessJsonWithLabel:
             result = process_json(input_data)
         assert "perturb_type2_UNKNOWN" in result[0]
 
-    @patch(
-        "code.data_preprocessing.perturbations.numeration.process_sentence"
-    )
+    @patch("code.data_preprocessing.perturbations.numeration.process_sentence")
     def test_process_json_multiple_entries(self, mock_process_sentence):
         """Test process_json processes multiple entries correctly."""
         mock_process_sentence.side_effect = [
@@ -328,15 +324,15 @@ class TestProcessJsonWithLabel:
         assert result[0]["id"] == 1
         assert result[1]["id"] == 3
 
-    @patch(
-        "code.data_preprocessing.perturbations.numeration.process_sentence"
-    )
+    @patch("code.data_preprocessing.perturbations.numeration.process_sentence")
     def test_process_json_excluded_keys_not_present(
         self, mock_process_sentence
     ):
         """Test process_json excludes keys not in INCLUDED_KEYS."""
         mock_process_sentence.side_effect = ["true result", None]
-        input_data = [{"id": 1, "label": "True", "extra_field": "should_be_excluded"}]
+        input_data = [
+            {"id": 1, "label": "True", "extra_field": "should_be_excluded"}
+        ]
         with patch(
             "code.data_preprocessing.perturbations.numeration.INCLUDED_KEYS",
             ["id", "label"],
@@ -360,7 +356,8 @@ class TestModifyNumberEdgeCases:
         assert result == 1100  # 1000 * 1.1 = 1100
 
     def test_modify_number_quantity_entity(self):
-        """Test modify_number with QUANTITY entity type (uses default factor)."""
+        """Test modify_number with QUANTITY entity type (uses default
+        factor)."""
         result = modify_number(50.0, "QUANTITY", "false")
         assert result == 51.0  # 50 + 1 (default factor)
 
@@ -403,7 +400,8 @@ class TestProcessSentenceEdgeCases:
     """Additional edge case tests for process_sentence."""
 
     def test_process_sentence_no_normalized_claim_key(self):
-        """Test process_sentence with missing normalized_claim raises KeyError."""
+        """Test process_sentence with missing normalized_claim raises
+        KeyError."""
         content = {"entities": []}
         try:
             process_sentence(content, "false")
@@ -472,4 +470,3 @@ class TestAdjustEntityBoundsEdgeCases:
         entity = {"label": "MONEY"}
         start, end = adjust_entity_bounds(sentence, entity, 1, 4)
         assert start == 0  # Adjusted to include €
-

@@ -304,13 +304,13 @@ def test_range_perturbation_indian_denominations_preserve_unit(
         f"Expected '{expected_unit}' in result '{result}' "
         f"for input '{text}' with type '{entity_type}'"
     )
-    assert "between" in result.lower(), (
-        f"Expected 'between' in perturbed result '{result}'"
-    )
+    assert (
+        "between" in result.lower()
+    ), f"Expected 'between' in perturbed result '{result}'"
 
 
 def test_perturb_cardinal_small_number():
-    """Test cardinal perturbation with a small number rounds to zero lower bound."""
+    """Test cardinal perturbation with a small number rounds to zero lower
+    bound."""
     out = rng.range_perturbation("5", "CARDINAL", "true")
     assert out in ("between 4 and 6", "between 5 and 6")
-

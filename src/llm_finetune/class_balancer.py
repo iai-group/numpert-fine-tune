@@ -1,6 +1,4 @@
-"""
-class_balancer.py
-"""
+"""class_balancer.py."""
 
 from datasets import Dataset
 from typing import List
@@ -70,7 +68,9 @@ class DatasetBalancer:
     def _categorize_examples(self):
         """Categorize all examples by type."""
         # First pass: identify original examples and their labels
-        original_labels = {}  # claim_id -> original label (True/False as boolean)
+        original_labels = (
+            {}
+        )  # claim_id -> original label (True/False as boolean)
 
         for idx in range(len(self.dataset)):
             example = self.dataset[idx]

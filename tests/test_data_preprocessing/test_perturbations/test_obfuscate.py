@@ -17,6 +17,7 @@ from src.data_preprocessing.perturbations.obfuscate import (
 # Fixtures
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture
 def cardinal_entity():
     return [{"label": "CARDINAL", "start_char": 10, "end_char": 13}]
@@ -52,6 +53,7 @@ def sample_input_data():
 # ---------------------------------------------------------------------------
 # replace_digits_with_new_sequence
 # ---------------------------------------------------------------------------
+
 
 class TestReplaceDigitsWithNewSequence:
     def test_returns_different_value(self):
@@ -105,6 +107,7 @@ class TestReplaceDigitsWithNewSequence:
 # random_replacement
 # ---------------------------------------------------------------------------
 
+
 class TestRandomReplacement:
     def test_replaces_numerical_entity(self):
         claim = "There are 100 apples."
@@ -151,6 +154,7 @@ class TestRandomReplacement:
 # masking
 # ---------------------------------------------------------------------------
 
+
 class TestMasking:
     def test_masks_digits(self):
         claim = "There are 100 apples."
@@ -195,6 +199,7 @@ class TestMasking:
 # ---------------------------------------------------------------------------
 # value_removal
 # ---------------------------------------------------------------------------
+
 
 class TestValueRemoval:
     def test_removes_numerical_entity(self):
@@ -288,13 +293,17 @@ class TestProcessJson:
         data = [
             {
                 "normalized_claim": "There were 500 people.",
-                "entities": [{"label": "CARDINAL", "start_char": 11, "end_char": 14}],
+                "entities": [
+                    {"label": "CARDINAL", "start_char": 11, "end_char": 14}
+                ],
                 "label": "True",
                 "claim_id": "001",
             },
             {
                 "normalized_claim": "Only 10 attended.",
-                "entities": [{"label": "CARDINAL", "start_char": 5, "end_char": 7}],
+                "entities": [
+                    {"label": "CARDINAL", "start_char": 5, "end_char": 7}
+                ],
                 "label": "False",
                 "claim_id": "002",
             },
@@ -316,7 +325,9 @@ class TestProcessJson:
         data = [
             {
                 "normalized_claim": "There are 50 units.",
-                "entities": [{"label": "CARDINAL", "start_char": 10, "end_char": 12}],
+                "entities": [
+                    {"label": "CARDINAL", "start_char": 10, "end_char": 12}
+                ],
                 "claim_id": "003",
             }
         ]
@@ -356,7 +367,6 @@ class TestProcessJson:
             NUMERICAL_LABELS,
         )
 
-
         # ---------------------------------------------------------------------------
         # Fixtures
         # ---------------------------------------------------------------------------
@@ -365,11 +375,9 @@ class TestProcessJson:
         def cardinal_entity():
             return [{"label": "CARDINAL", "start_char": 10, "end_char": 13}]
 
-
         @pytest.fixture
         def non_numerical_entity():
             return [{"label": "PERSON", "start_char": 0, "end_char": 5}]
-
 
         @pytest.fixture
         def multiple_entities():
@@ -377,7 +385,6 @@ class TestProcessJson:
                 {"label": "CARDINAL", "start_char": 0, "end_char": 3},
                 {"label": "MONEY", "start_char": 14, "end_char": 18},
             ]
-
 
         @pytest.fixture
         def sample_input_data():
@@ -391,7 +398,6 @@ class TestProcessJson:
                     "claim_id": "001",
                 }
             ]
-
 
         # ---------------------------------------------------------------------------
         # replace_digits_with_new_sequence
@@ -487,7 +493,6 @@ class TestProcessJson:
                 assert len(result) == 2
                 assert all(c.isdigit() for c in result)
 
-
         # ---------------------------------------------------------------------------
         # random_replacement
         # ---------------------------------------------------------------------------
@@ -495,7 +500,9 @@ class TestProcessJson:
         class TestRandomReplacement:
             def test_replaces_numerical_entity(self):
                 claim = "There are 100 apples."
-                entities = [{"label": "CARDINAL", "start_char": 10, "end_char": 13}]
+                entities = [
+                    {"label": "CARDINAL", "start_char": 10, "end_char": 13}
+                ]
                 result = random_replacement(claim, entities)
                 assert result != claim
 
@@ -511,7 +518,9 @@ class TestProcessJson:
             def test_all_numerical_labels_are_replaced(self):
                 for label in NUMERICAL_LABELS:
                     claim = "Value is 99 units."
-                    entities = [{"label": label, "start_char": 9, "end_char": 11}]
+                    entities = [
+                        {"label": label, "start_char": 9, "end_char": 11}
+                    ]
                     result = random_replacement(claim, entities)
                     assert result != claim
 
@@ -523,7 +532,9 @@ class TestProcessJson:
 
             def test_result_length_same_as_original_for_same_digit_count(self):
                 claim = "There are 42 cats."
-                entities = [{"label": "CARDINAL", "start_char": 10, "end_char": 12}]
+                entities = [
+                    {"label": "CARDINAL", "start_char": 10, "end_char": 12}
+                ]
                 result = random_replacement(claim, entities)
                 assert len(result) == len(claim)
 
@@ -535,7 +546,9 @@ class TestProcessJson:
 
             def test_text_outside_entity_unchanged(self):
                 claim = "There are 100 apples in the basket."
-                entities = [{"label": "CARDINAL", "start_char": 10, "end_char": 13}]
+                entities = [
+                    {"label": "CARDINAL", "start_char": 10, "end_char": 13}
+                ]
                 result = random_replacement(claim, entities)
                 assert result[:10] == claim[:10]
                 assert result[13:] == claim[13:]
@@ -553,10 +566,14 @@ class TestProcessJson:
 
             def test_entity_at_start_of_claim(self):
                 claim = "100 people attended."
-                entities = [{"label": "CARDINAL", "start_char": 0, "end_char": 3}]
+                entities = [
+                    {"label": "CARDINAL", "start_char": 0, "end_char": 3}
+                ]
                 result = random_replacement(claim, entities)
                 assert result[3:] == claim[3:]
-                assert result[:3] != "100" or True  # Digit replacement attempted
+                assert (
+                    result[:3] != "100" or True
+                )  # Digit replacement attempted
 
             def test_entity_at_end_of_claim(self):
                 claim = "The year was 2020"
@@ -583,7 +600,6 @@ class TestProcessJson:
                 assert " and " in result
                 assert "are values." in result
 
-
         # ---------------------------------------------------------------------------
         # masking
         # ---------------------------------------------------------------------------
@@ -591,7 +607,9 @@ class TestProcessJson:
         class TestMasking:
             def test_masks_digits(self):
                 claim = "There are 100 apples."
-                entities = [{"label": "CARDINAL", "start_char": 10, "end_char": 13}]
+                entities = [
+                    {"label": "CARDINAL", "start_char": 10, "end_char": 13}
+                ]
                 result = masking(claim, entities)
                 assert "###" in result
 
@@ -602,7 +620,9 @@ class TestProcessJson:
                 assert "," not in result[8:16]
                 assert "." not in result[8:16]
 
-            def test_non_numerical_entity_not_masked(self, non_numerical_entity):
+            def test_non_numerical_entity_not_masked(
+                self, non_numerical_entity
+            ):
                 claim = "Alice went to the store."
                 assert masking(claim, non_numerical_entity) == claim
 
@@ -619,7 +639,9 @@ class TestProcessJson:
             def test_all_numerical_labels_masked(self):
                 for label in NUMERICAL_LABELS:
                     claim = "Value is 99 units."
-                    entities = [{"label": label, "start_char": 9, "end_char": 11}]
+                    entities = [
+                        {"label": label, "start_char": 9, "end_char": 11}
+                    ]
                     result = masking(claim, entities)
                     assert "##" in result
 
@@ -630,20 +652,26 @@ class TestProcessJson:
 
             def test_masking_result_same_length(self):
                 claim = "There are 100 apples."
-                entities = [{"label": "CARDINAL", "start_char": 10, "end_char": 13}]
+                entities = [
+                    {"label": "CARDINAL", "start_char": 10, "end_char": 13}
+                ]
                 result = masking(claim, entities)
                 assert len(result) == len(claim)
 
             def test_text_outside_entity_unchanged(self):
                 claim = "There are 100 apples."
-                entities = [{"label": "CARDINAL", "start_char": 10, "end_char": 13}]
+                entities = [
+                    {"label": "CARDINAL", "start_char": 10, "end_char": 13}
+                ]
                 result = masking(claim, entities)
                 assert result[:10] == claim[:10]
                 assert result[13:] == claim[13:]
 
             def test_masking_does_not_introduce_digits(self):
                 claim = "There are 42 cats."
-                entities = [{"label": "CARDINAL", "start_char": 10, "end_char": 12}]
+                entities = [
+                    {"label": "CARDINAL", "start_char": 10, "end_char": 12}
+                ]
                 result = masking(claim, entities)
                 assert not any(c.isdigit() for c in result[10:12])
 
@@ -666,7 +694,9 @@ class TestProcessJson:
 
             def test_percent_value_masked(self):
                 claim = "Growth was 12.5%."
-                entities = [{"label": "PERCENT", "start_char": 11, "end_char": 15}]
+                entities = [
+                    {"label": "PERCENT", "start_char": 11, "end_char": 15}
+                ]
                 result = masking(claim, entities)
                 assert "12" not in result[11:15]
                 assert "." not in result[11:15]
@@ -674,11 +704,12 @@ class TestProcessJson:
             def test_masking_idempotent_on_already_masked(self):
                 # Masking twice should give same result as masking once
                 claim = "There are 100 apples."
-                entities = [{"label": "CARDINAL", "start_char": 10, "end_char": 13}]
+                entities = [
+                    {"label": "CARDINAL", "start_char": 10, "end_char": 13}
+                ]
                 once = masking(claim, entities)
                 twice = masking(once, entities)
                 assert once == twice
-
 
         # ---------------------------------------------------------------------------
         # value_removal
@@ -687,11 +718,15 @@ class TestProcessJson:
         class TestValueRemoval:
             def test_removes_numerical_entity(self):
                 claim = "There are 100 apples."
-                entities = [{"label": "CARDINAL", "start_char": 10, "end_char": 14}]
+                entities = [
+                    {"label": "CARDINAL", "start_char": 10, "end_char": 14}
+                ]
                 result = value_removal(claim, entities)
                 assert "100" not in result
 
-            def test_non_numerical_entity_not_removed(self, non_numerical_entity):
+            def test_non_numerical_entity_not_removed(
+                self, non_numerical_entity
+            ):
                 claim = "Alice went to the store."
                 assert value_removal(claim, non_numerical_entity) == claim
 
@@ -701,7 +736,9 @@ class TestProcessJson:
 
             def test_no_double_spaces_after_removal(self):
                 claim = "There are 100 apples."
-                entities = [{"label": "CARDINAL", "start_char": 10, "end_char": 14}]
+                entities = [
+                    {"label": "CARDINAL", "start_char": 10, "end_char": 14}
+                ]
                 result = value_removal(claim, entities)
                 assert "  " not in result
 
@@ -713,26 +750,34 @@ class TestProcessJson:
             def test_all_numerical_labels_removed(self):
                 for label in NUMERICAL_LABELS:
                     claim = "Value is 99 units."
-                    entities = [{"label": label, "start_char": 9, "end_char": 11}]
+                    entities = [
+                        {"label": label, "start_char": 9, "end_char": 11}
+                    ]
                     result = value_removal(claim, entities)
                     assert "99" not in result
 
             def test_result_is_stripped(self):
                 claim = "100 is the amount."
-                entities = [{"label": "CARDINAL", "start_char": 0, "end_char": 3}]
+                entities = [
+                    {"label": "CARDINAL", "start_char": 0, "end_char": 3}
+                ]
                 result = value_removal(claim, entities)
                 assert not result.startswith(" ")
 
             def test_removal_at_end_of_claim(self):
                 claim = "The total is 500"
-                entities = [{"label": "CARDINAL", "start_char": 13, "end_char": 16}]
+                entities = [
+                    {"label": "CARDINAL", "start_char": 13, "end_char": 16}
+                ]
                 result = value_removal(claim, entities)
                 assert "500" not in result
                 assert not result.endswith(" ")
 
             def test_removal_leaves_readable_text(self):
                 claim = "There were 42 casualties."
-                entities = [{"label": "CARDINAL", "start_char": 11, "end_char": 13}]
+                entities = [
+                    {"label": "CARDINAL", "start_char": 11, "end_char": 13}
+                ]
                 result = value_removal(claim, entities)
                 assert "There were" in result
                 assert "casualties." in result
@@ -753,9 +798,13 @@ class TestProcessJson:
                 result = value_removal("", [])
                 assert result == ""
 
-            def test_claim_only_number_returns_empty_or_whitespace_stripped(self):
+            def test_claim_only_number_returns_empty_or_whitespace_stripped(
+                self,
+            ):
                 claim = "500"
-                entities = [{"label": "CARDINAL", "start_char": 0, "end_char": 3}]
+                entities = [
+                    {"label": "CARDINAL", "start_char": 0, "end_char": 3}
+                ]
                 result = value_removal(claim, entities)
                 assert result.strip() == ""
 
@@ -777,13 +826,11 @@ class TestProcessJson:
                 assert "Alice" in result
                 assert "5" not in result
 
-
         # ---------------------------------------------------------------------------
         # process_json
         # ---------------------------------------------------------------------------
 
         MOCK_INCLUDED_KEYS = ["claim_id", "label", "normalized_claim"]
-
 
         @pytest.fixture
         def patch_included_keys():
@@ -793,17 +840,20 @@ class TestProcessJson:
             ):
                 yield
 
-
         class TestProcessJson:
             def test_returns_dict(self, sample_input_data, patch_included_keys):
                 result = process_json(sample_input_data)
                 assert isinstance(result, dict)
 
-            def test_label_key_present(self, sample_input_data, patch_included_keys):
+            def test_label_key_present(
+                self, sample_input_data, patch_included_keys
+            ):
                 result = process_json(sample_input_data)
                 assert "True" in result
 
-            def test_perturbed_keys_added(self, sample_input_data, patch_included_keys):
+            def test_perturbed_keys_added(
+                self, sample_input_data, patch_included_keys
+            ):
                 result = process_json(sample_input_data)
                 entry = result["True"][0]
                 perturbation_keys = {
@@ -813,7 +863,9 @@ class TestProcessJson:
                 }
                 assert perturbation_keys & entry.keys()
 
-            def test_skips_entry_with_no_perturbation(self, patch_included_keys):
+            def test_skips_entry_with_no_perturbation(
+                self, patch_included_keys
+            ):
                 # No numerical entities → all perturbations equal original → skipped
                 data = [
                     {
@@ -830,13 +882,25 @@ class TestProcessJson:
                 data = [
                     {
                         "normalized_claim": "There were 500 people.",
-                        "entities": [{"label": "CARDINAL", "start_char": 11, "end_char": 14}],
+                        "entities": [
+                            {
+                                "label": "CARDINAL",
+                                "start_char": 11,
+                                "end_char": 14,
+                            }
+                        ],
                         "label": "True",
                         "claim_id": "001",
                     },
                     {
                         "normalized_claim": "Only 10 attended.",
-                        "entities": [{"label": "CARDINAL", "start_char": 5, "end_char": 7}],
+                        "entities": [
+                            {
+                                "label": "CARDINAL",
+                                "start_char": 5,
+                                "end_char": 7,
+                            }
+                        ],
                         "label": "False",
                         "claim_id": "002",
                     },
@@ -858,14 +922,22 @@ class TestProcessJson:
                 data = [
                     {
                         "normalized_claim": "There are 50 units.",
-                        "entities": [{"label": "CARDINAL", "start_char": 10, "end_char": 12}],
+                        "entities": [
+                            {
+                                "label": "CARDINAL",
+                                "start_char": 10,
+                                "end_char": 12,
+                            }
+                        ],
                         "claim_id": "003",
                     }
                 ]
                 result = process_json(data)
                 assert "UNKNOWN" in result
 
-            def test_random_key_only_added_when_different(self, patch_included_keys):
+            def test_random_key_only_added_when_different(
+                self, patch_included_keys
+            ):
                 # Entity with no digits → random_replacement returns original
                 data = [
                     {
@@ -889,17 +961,31 @@ class TestProcessJson:
             def test_empty_input_returns_empty_dict(self, patch_included_keys):
                 assert process_json([]) == {}
 
-            def test_multiple_entries_same_label_grouped(self, patch_included_keys):
+            def test_multiple_entries_same_label_grouped(
+                self, patch_included_keys
+            ):
                 data = [
                     {
                         "normalized_claim": "There were 500 people.",
-                        "entities": [{"label": "CARDINAL", "start_char": 11, "end_char": 14}],
+                        "entities": [
+                            {
+                                "label": "CARDINAL",
+                                "start_char": 11,
+                                "end_char": 14,
+                            }
+                        ],
                         "label": "True",
                         "claim_id": "001",
                     },
                     {
                         "normalized_claim": "About 200 attended.",
-                        "entities": [{"label": "CARDINAL", "start_char": 6, "end_char": 9}],
+                        "entities": [
+                            {
+                                "label": "CARDINAL",
+                                "start_char": 6,
+                                "end_char": 9,
+                            }
+                        ],
                         "label": "True",
                         "claim_id": "002",
                     },
@@ -921,11 +1007,19 @@ class TestProcessJson:
                 entry = result["True"][0]
                 assert "perturb_type3_removed" in entry
 
-            def test_extra_keys_not_included_from_entry(self, patch_included_keys):
+            def test_extra_keys_not_included_from_entry(
+                self, patch_included_keys
+            ):
                 data = [
                     {
                         "normalized_claim": "There are 50 units.",
-                        "entities": [{"label": "CARDINAL", "start_char": 10, "end_char": 12}],
+                        "entities": [
+                            {
+                                "label": "CARDINAL",
+                                "start_char": 10,
+                                "end_char": 12,
+                            }
+                        ],
                         "label": "True",
                         "claim_id": "003",
                         "extra_field": "should_not_appear",
@@ -935,11 +1029,19 @@ class TestProcessJson:
                 entry = result["True"][0]
                 assert "extra_field" not in entry
 
-            def test_all_perturb_keys_when_entity_has_digits(self, patch_included_keys):
+            def test_all_perturb_keys_when_entity_has_digits(
+                self, patch_included_keys
+            ):
                 data = [
                     {
                         "normalized_claim": "There are 42 items.",
-                        "entities": [{"label": "CARDINAL", "start_char": 10, "end_char": 12}],
+                        "entities": [
+                            {
+                                "label": "CARDINAL",
+                                "start_char": 10,
+                                "end_char": 12,
+                            }
+                        ],
                         "label": "True",
                         "claim_id": "005",
                     }
@@ -971,7 +1073,11 @@ class TestProcessJson:
                         "normalized_claim": "Alice met Bob yesterday.",
                         "entities": [
                             {"label": "PERSON", "start_char": 0, "end_char": 5},
-                            {"label": "PERSON", "start_char": 10, "end_char": 13},
+                            {
+                                "label": "PERSON",
+                                "start_char": 10,
+                                "end_char": 13,
+                            },
                         ],
                         "label": "True",
                         "claim_id": "006",
@@ -984,7 +1090,13 @@ class TestProcessJson:
                 data = [
                     {
                         "normalized_claim": "There are 10 items.",
-                        "entities": [{"label": "CARDINAL", "start_char": 10, "end_char": 12}],
+                        "entities": [
+                            {
+                                "label": "CARDINAL",
+                                "start_char": 10,
+                                "end_char": 12,
+                            }
+                        ],
                         "label": 1,
                         "claim_id": "007",
                     }
@@ -999,7 +1111,9 @@ class TestProcessJson:
                 entry = result["True"][0]
                 assert entry["claim_id"] == "001"
 
-            def test_missing_entities_key_defaults_to_empty(self, patch_included_keys):
+            def test_missing_entities_key_defaults_to_empty(
+                self, patch_included_keys
+            ):
                 data = [
                     {
                         "normalized_claim": "There are 50 units.",

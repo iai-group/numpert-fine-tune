@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""
-Upload a finetuned model (merged, LoRA adapter, or checkpoint) to HuggingFace Hub.
+"""Upload a finetuned model (merged, LoRA adapter, or checkpoint) to HuggingFace
+Hub.
+
 Requires HF_TOKEN to be set in the environment, or active huggingface-cli login.
 """
 
@@ -14,6 +15,7 @@ def check_auth():
     """Verify HF authentication is available, exit with clear message if not."""
     try:
         from huggingface_hub import whoami
+
         user = whoami()
         return user["name"]
     except Exception:
@@ -27,8 +29,8 @@ def check_auth():
 
 
 def detect_upload_type(model_path: Path) -> str:
-    """
-    Heuristically determine what kind of model model_path this is.
+    """Heuristically determine what kind of model model_path this is.
+
     Returns: 'merged', 'lora', or 'checkpoint'
     """
     files = set(f.name for f in model_path.iterdir())
@@ -38,13 +40,19 @@ def detect_upload_type(model_path: Path) -> str:
         return "lora"
 
     # Trainer checkpoint: has optimizer/scheduler/trainer state files
-    checkpoint_markers = {"optimizer.pt", "scheduler.pt", "trainer_state.json", "training_args.bin"}
+    checkpoint_markers = {
+        "optimizer.pt",
+        "scheduler.pt",
+        "trainer_state.json",
+        "training_args.bin",
+    }
     if checkpoint_markers & files:
         return "checkpoint"
 
     # Merged model: has config.json + model weights
     if "config.json" in files and any(
-        f.endswith((".bin", ".safetensors")) or f.startswith("model-") for f in files
+        f.endswith((".bin", ".safetensors")) or f.startswith("model-")
+        for f in files
     ):
         return "merged"
 
@@ -96,13 +104,22 @@ def upload(args):
     # For checkpoints: skip optimizer/scheduler bloat unless explicitly requested
     ignore_patterns = None
     if upload_type == "checkpoint" and not args.include_optimizer_states:
-        ignore_patterns = ["optimizer.pt", "optimizer.bin", "scheduler.pt", "rng_state*.pth"]
+        ignore_patterns = [
+            "optimizer.pt",
+            "optimizer.bin",
+            "scheduler.pt",
+            "rng_state*.pth",
+        ]
         print(
             "[i] Skipping optimizer/scheduler states (pass --include-optimizer-states to keep them)."
         )
 
     # Upload
-    display_path = Path(*model_path.parts[-3:]) if len(model_path.parts) >= 3 else model_path
+    display_path = (
+        Path(*model_path.parts[-3:])
+        if len(model_path.parts) >= 3
+        else model_path
+    )
     print(f"\n[→] Uploading from: .../{display_path}")
     print("    This may take a while for large models...\n")
 

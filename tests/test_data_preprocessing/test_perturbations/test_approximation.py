@@ -1,4 +1,5 @@
 """Tests for the approximation perturbation module."""
+
 import json
 import math
 import pytest
@@ -171,8 +172,7 @@ class TestExaggerateNumber:
         assert result > 0
 
     @patch(
-        "code.data_preprocessing.perturbations.approximation"
-        ".random.choice"
+        "code.data_preprocessing.perturbations.approximation" ".random.choice"
     )
     def test_zero_uses_random_choice(self, mock_choice):
         """Verifies zero exaggeration uses random.choice."""
@@ -441,7 +441,10 @@ class TestIsSentenceStart:
         assert is_sentence_start("End of sentence.") is True
 
     def test_ends_with_exclamation(self):
-        """Verifies text ending with ! is sentence start."""
+        """Verifies text ending with !
+
+        is sentence start.
+        """
         assert is_sentence_start("Wow!") is True
 
     def test_mid_sentence(self):
@@ -633,9 +636,7 @@ class TestProcessClaims:
         """Verifies output file is created."""
         input_file = tmp_path / "input.json"
         output_file = tmp_path / "output.json"
-        input_file.write_text(
-            json.dumps(self._make_claims()), encoding="utf-8"
-        )
+        input_file.write_text(json.dumps(self._make_claims()), encoding="utf-8")
         process_claims(str(input_file), str(output_file))
         assert output_file.exists()
 
@@ -643,9 +644,7 @@ class TestProcessClaims:
         """Verifies output contains expected perturbed keys."""
         input_file = tmp_path / "input.json"
         output_file = tmp_path / "output.json"
-        input_file.write_text(
-            json.dumps(self._make_claims()), encoding="utf-8"
-        )
+        input_file.write_text(json.dumps(self._make_claims()), encoding="utf-8")
         process_claims(str(input_file), str(output_file))
         result = json.loads(output_file.read_text(encoding="utf-8"))
         assert len(result) > 0
@@ -674,9 +673,7 @@ class TestProcessClaims:
         """Verifies tokens/NER tags excluded from output."""
         input_file = tmp_path / "input.json"
         output_file = tmp_path / "output.json"
-        input_file.write_text(
-            json.dumps(self._make_claims()), encoding="utf-8"
-        )
+        input_file.write_text(json.dumps(self._make_claims()), encoding="utf-8")
         process_claims(str(input_file), str(output_file))
         result = json.loads(output_file.read_text(encoding="utf-8"))
         if result:

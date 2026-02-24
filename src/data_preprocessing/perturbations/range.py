@@ -164,9 +164,9 @@ def perturb_time(number_text: str, unit: str, truth_value: str) -> str:
         if truth_value == "true"
         else (num + 1.5 * delta, num + 2.5 * delta)
     )
-    lower_formatted, upper_formatted = format_number(math.floor(lower), integer=True), format_number(
-        math.ceil(upper), integer=True
-    )
+    lower_formatted, upper_formatted = format_number(
+        math.floor(lower), integer=True
+    ), format_number(math.ceil(upper), integer=True)
     return (
         f"between {lower_formatted} and {upper_formatted} {unit}"
         if lower_formatted != upper_formatted
@@ -192,9 +192,9 @@ def perturb_percent(number_text: str, unit: str, truth_value: str) -> str:
         if truth_value == "true"
         else (num * 1.5, num * 1.6)
     )
-    lower_formatted, upper_formatted = format_number(math.floor(lower)), format_number(
-        math.ceil(upper)
-    )
+    lower_formatted, upper_formatted = format_number(
+        math.floor(lower)
+    ), format_number(math.ceil(upper))
     unit_str = f" {unit}" if unit and not unit.startswith("%") else unit
     if lower_formatted == upper_formatted:
         return f"{lower_formatted}{unit_str}"
@@ -379,8 +379,12 @@ def process_json(input_data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         label = entry.get("label", "UNKNOWN")
         perturbed_entry = dict(entry)
 
-        perturbed_entry[f"perturb_type1_{label}"] = perturb_claim(claim_text, entities, "true")
-        perturbed_entry[f"perturb_type2_{label}"] = perturb_claim(claim_text, entities, "false")
+        perturbed_entry[f"perturb_type1_{label}"] = perturb_claim(
+            claim_text, entities, "true"
+        )
+        perturbed_entry[f"perturb_type2_{label}"] = perturb_claim(
+            claim_text, entities, "false"
+        )
 
         for key_to_remove in ["ner_tags", "tokens", "entities"]:
             perturbed_entry.pop(key_to_remove, None)

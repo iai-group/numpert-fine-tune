@@ -74,7 +74,9 @@ def test_process_json_basic():
     input_data = [
         {
             "normalized_claim": "The success rate is 50%.",
-            "entities": [{"label": "PERCENT", "start_char": 18, "end_char": 21}],
+            "entities": [
+                {"label": "PERCENT", "start_char": 18, "end_char": 21}
+            ],
             "label": "True",
             "claim_id": "1",
         }
@@ -110,7 +112,9 @@ def test_process_json_unknown_label():
     input_data = [
         {
             "normalized_claim": "The success rate is 50%.",
-            "entities": [{"label": "PERCENT", "start_char": 18, "end_char": 21}],
+            "entities": [
+                {"label": "PERCENT", "start_char": 18, "end_char": 21}
+            ],
         }
     ]
     with patch(
@@ -126,7 +130,9 @@ def test_process_json_multiple_entries():
     input_data = [
         {
             "normalized_claim": "The success rate is 50%.",
-            "entities": [{"label": "PERCENT", "start_char": 18, "end_char": 21}],
+            "entities": [
+                {"label": "PERCENT", "start_char": 18, "end_char": 21}
+            ],
             "label": "True",
         },
         {
@@ -136,7 +142,9 @@ def test_process_json_multiple_entries():
         },
         {
             "normalized_claim": "Accuracy increased by 10%.",
-            "entities": [{"label": "PERCENT", "start_char": 21, "end_char": 24}],
+            "entities": [
+                {"label": "PERCENT", "start_char": 21, "end_char": 24}
+            ],
             "label": "False",
         },
     ]
@@ -154,7 +162,9 @@ def test_process_json_included_keys_filtering():
     input_data = [
         {
             "normalized_claim": "The success rate is 50%.",
-            "entities": [{"label": "PERCENT", "start_char": 18, "end_char": 21}],
+            "entities": [
+                {"label": "PERCENT", "start_char": 18, "end_char": 21}
+            ],
             "label": "True",
             "claim_id": "abc",
             "extra_field": "should_be_excluded",
@@ -168,6 +178,3 @@ def test_process_json_included_keys_filtering():
     assert "claim_id" in result[0]
     assert "extra_field" not in result[0]
     assert "normalized_claim" not in result[0]
-
-
-

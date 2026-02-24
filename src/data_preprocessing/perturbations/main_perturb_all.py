@@ -207,9 +207,7 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    splits = (
-        ["train", "val", "test"] if args.split == "all" else [args.split]
-    )
+    splits = ["train", "val", "test"] if args.split == "all" else [args.split]
 
     for split in splits:
         input_true, input_false, output_dir = get_paths(split)
