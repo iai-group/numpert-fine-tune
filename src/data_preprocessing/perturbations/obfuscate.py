@@ -13,8 +13,6 @@ from src.data_preprocessing.perturbations.utils.load_save import (
     save_data,
     INCLUDED_KEYS,
 )
-import argparse
-import os
 
 # Numerical entity labels
 NUMERICAL_LABELS = {
@@ -43,20 +41,18 @@ def replace_digits_with_new_sequence(original_text: str) -> str:
     original_digits = "".join(c for c in original_text if c.isdigit())
 
     if not original_digits:
-        return original_text  # No digits to replace
+        return original_text
 
     while True:
         new_digits = []
         for i in range(len(original_digits)):
             if i == 0:
-                new_digit = random.choice(string.digits[1:])  # No leading zero
+                new_digit = random.choice(string.digits[1:])
             else:
                 new_digit = random.choice(string.digits)
             new_digits.append(new_digit)
-        new_digits_str = "".join(new_digits)
-
-        if new_digits_str != original_digits:
-            break  # Ensure the new digits are different
+        if "".join(new_digits) != original_digits:
+            break
 
     new_text_list = list(original_text)
     digit_pos = 0
@@ -83,18 +79,13 @@ def random_replacement(claim: str, entities: List[Dict[str, Any]]) -> str:
         if entity["label"] in NUMERICAL_LABELS:
             start = entity["start_char"]
             end = entity["end_char"]
-            original_text = perturbed_claim[start:end]
-            new_text = replace_digits_with_new_sequence(original_text)
-            perturbed_claim = (
-                perturbed_claim[:start] + new_text + perturbed_claim[end:]
-            )
+            new_text = replace_digits_with_new_sequence(perturbed_claim[start:end])
+            perturbed_claim = perturbed_claim[:start] + new_text + perturbed_claim[end:]
     return perturbed_claim
 
 
 def masking(claim: str, entities: List[Dict[str, Any]]) -> str:
-    """Mask numerical values in the claim.
-
-    Replace digits, commas, and periods in the claim with '#' symbols.
+    """Mask numerical values in the claim with '#' symbols.
 
     Args:
         claim: The original claim text.
@@ -109,13 +100,11 @@ def masking(claim: str, entities: List[Dict[str, Any]]) -> str:
         if entity["label"] in NUMERICAL_LABELS:
             start = entity["start_char"]
             end = entity["end_char"]
-            original_text = perturbed_claim[start:end]
             new_text = "".join(
-                "#" if char in chars_to_mask else char for char in original_text
+                "#" if char in chars_to_mask else char
+                for char in perturbed_claim[start:end]
             )
-            perturbed_claim = (
-                perturbed_claim[:start] + new_text + perturbed_claim[end:]
-            )
+            perturbed_claim = perturbed_claim[:start] + new_text + perturbed_claim[end:]
     return perturbed_claim
 
 
@@ -135,95 +124,44 @@ def value_removal(claim: str, entities: List[Dict[str, Any]]) -> str:
             start = entity["start_char"]
             end = entity["end_char"]
             perturbed_claim = perturbed_claim[:start] + perturbed_claim[end:]
-    perturbed_claim = " ".join(perturbed_claim.split())
-    return perturbed_claim
+    return " ".join(perturbed_claim.split())
 
 
 def process_json(
-    input_data: List[Dict[str, Any]]
-) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]], List[Dict[str, Any]]]:
-    """Returns three separate lists for each perturbation type.
+    input_data: List[Dict[str, Any]],
+) -> Dict[str, List[Dict[str, Any]]]:
+    """Returns a dict with 'true' and 'false' splits, each entry containing
+    all applicable obfuscation perturbation types as keys.
 
     Args:
         input_data: List of input data entries.
 
     Returns:
-        A tuple containing:
-        - List of entries with random replacements.
-        - List of entries with masked values.
-        - List of entries with removed values.
+        Dict with gold label keys mapping to lists of perturbed entries.
     """
-    random_replacement_data = []
-    masking_data = []
-    value_removal_data = []
+    results: Dict[str, List[Dict[str, Any]]] = {}
 
     for entry in input_data:
         claim: str = entry["normalized_claim"]
         entities: List[Dict[str, Any]] = entry.get("entities", [])
+        label: str = str(entry.get("label", "UNKNOWN"))
 
-        perturbed_claim1 = random_replacement(claim, entities)
-        perturbed_claim2 = masking(claim, entities)
-        perturbed_claim3 = value_removal(claim, entities)
+        perturbed_random = random_replacement(claim, entities)
+        perturbed_masked = masking(claim, entities)
+        perturbed_removed = value_removal(claim, entities)
+
+        if all(p == claim for p in [perturbed_random, perturbed_masked, perturbed_removed]):
+            continue
 
         base_entry = {key: entry[key] for key in INCLUDED_KEYS if key in entry}
 
-        if perturbed_claim1 != claim:
-            random_entry = base_entry.copy()
-            random_entry["random_replacement_false"] = perturbed_claim1
-            random_replacement_data.append(random_entry)
+        if perturbed_random != claim:
+            base_entry["perturb_type3_random"] = perturbed_random
+        if perturbed_masked != claim:
+            base_entry["perturb_type3_masked"] = perturbed_masked
+        if perturbed_removed != claim:
+            base_entry["perturb_type3_removed"] = perturbed_removed
 
-        if perturbed_claim2 != claim:
-            masking_entry = base_entry.copy()
-            masking_entry["masking_false"] = perturbed_claim2
-            masking_data.append(masking_entry)
+        results.setdefault(label, []).append(base_entry)
 
-        if perturbed_claim3 != claim:
-            removal_entry = base_entry.copy()
-            removal_entry["value_removal_false"] = perturbed_claim3
-            value_removal_data.append(removal_entry)
-
-    return random_replacement_data, masking_data, value_removal_data
-
-
-def main() -> None:
-    """Main function to execute the obfuscation perturbation process."""
-    parser = argparse.ArgumentParser(
-        description="Apply obfuscation perturbations to claims."
-    )
-    parser.add_argument(
-        "--input", "-i", type=str, help="Path to input JSON file"
-    )
-    parser.add_argument(
-        "--output_dir",
-        "-o",
-        type=str,
-        help="Directory to save output JSON files",
-    )
-    args = parser.parse_args()
-
-    os.makedirs(args.output_dir, exist_ok=True)
-
-    base_name = os.path.basename(args.input).split(".")[0]
-    random_output = os.path.join(
-        args.output_dir, f"{base_name}_random_replacement.json"
-    )
-    masking_output = os.path.join(args.output_dir, f"{base_name}_masking.json")
-    removal_output = os.path.join(
-        args.output_dir, f"{base_name}_value_removal.json"
-    )
-
-    data: List[Dict[str, Any]] = load_data(args.input)
-
-    random_data, masking_data, removal_data = process_json(data)
-
-    save_data(random_data, random_output)
-    save_data(masking_data, masking_output)
-    save_data(removal_data, removal_output)
-
-    print(f"Random replacement data saved to: {random_output}")
-    print(f"Masking data saved to: {masking_output}")
-    print(f"Value removal data saved to: {removal_output}")
-
-
-if __name__ == "__main__":
-    main()
+    return results

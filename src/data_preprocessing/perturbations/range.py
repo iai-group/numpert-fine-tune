@@ -6,6 +6,7 @@ percentages, monetary values, time durations, and more.
 """
 
 import logging
+import math
 import re
 from typing import Optional, Any, List, Dict
 
@@ -163,8 +164,8 @@ def perturb_time(number_text: str, unit: str, truth_value: str) -> str:
         if truth_value == "true"
         else (num + 1.5 * delta, num + 2.5 * delta)
     )
-    lower_formatted, upper_formatted = format_number(lower), format_number(
-        upper
+    lower_formatted, upper_formatted = format_number(math.floor(lower), integer=True), format_number(
+        math.ceil(upper), integer=True
     )
     return (
         f"between {lower_formatted} and {upper_formatted} {unit}"
@@ -191,8 +192,8 @@ def perturb_percent(number_text: str, unit: str, truth_value: str) -> str:
         if truth_value == "true"
         else (num * 1.5, num * 1.6)
     )
-    lower_formatted, upper_formatted = format_number(lower), format_number(
-        upper
+    lower_formatted, upper_formatted = format_number(math.floor(lower)), format_number(
+        math.ceil(upper)
     )
     unit_str = f" {unit}" if unit and not unit.startswith("%") else unit
     if lower_formatted == upper_formatted:
@@ -220,8 +221,8 @@ def perturb_money(number_text: str, unit: str, truth_value: str) -> str:
         if truth_value == "true"
         else (num + 1.5 * delta, num + 2.5 * delta)
     )
-    lower_formatted = format_currency(lower, unit)
-    upper_formatted = format_currency(upper, unit)
+    lower_formatted = format_currency(math.floor(lower), unit)
+    upper_formatted = format_currency(math.ceil(upper), unit)
     return (
         f"between {lower_formatted} and {upper_formatted}"
         if lower_formatted != upper_formatted
@@ -246,8 +247,8 @@ def perturb_cardinal(number_text: str, truth_value: str) -> str:
         if truth_value == "true"
         else (num * 1.45, num * 1.65)
     )
-    lower_formatted = format_number(lower, integer=True)
-    upper_formatted = format_number(upper, integer=True)
+    lower_formatted = format_number(math.floor(lower), integer=True)
+    upper_formatted = format_number(math.ceil(upper), integer=True)
     return (
         f"between {lower_formatted} and {upper_formatted}"
         if lower_formatted != upper_formatted
@@ -375,11 +376,11 @@ def process_json(input_data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     for entry in input_data:
         claim_text = entry.get("normalized_claim", "")
         entities = entry.get("entities", [])
+        label = entry.get("label", "UNKNOWN")
         perturbed_entry = dict(entry)
 
-        for truth_value in ["true", "false"]:
-            perturbed_claim = perturb_claim(claim_text, entities, truth_value)
-            perturbed_entry[f"range_{truth_value}"] = perturbed_claim
+        perturbed_entry[f"perturb_type1_{label}"] = perturb_claim(claim_text, entities, "true")
+        perturbed_entry[f"perturb_type2_{label}"] = perturb_claim(claim_text, entities, "false")
 
         for key_to_remove in ["ner_tags", "tokens", "entities"]:
             perturbed_entry.pop(key_to_remove, None)

@@ -41,7 +41,7 @@ def test_range_perturbation_handles_currency_prefix_even_if_cardinal():
             "around 33 percent",
             "PERCENT",
             "true",
-            "around between 29.7 percent and 36.3 percent",
+            "around between 29 percent and 37 percent",
         ),
     ],
 )
@@ -53,7 +53,7 @@ def test_perturb_percent(text, entity_type, truth_value, expected):
 def test_perturb_time_supported_unit_true():
     """Test range perturbation for time with a supported unit."""
     out = rng.range_perturbation("3 hours", "TIME", "true")
-    assert out == "between 2.7 and 3.3 hours"
+    assert out == "between 2 and 4 hours"
 
 
 def test_perturb_time_unsupported_unit_unmodified():
@@ -139,3 +139,178 @@ def test_perturb_claim_context_currency_symbol_and_capitalization():
     ]
     out2 = rng.perturb_claim(claim2, entities2, "true")
     assert out2.startswith("Between 45% and 55%")
+
+
+# Tests for Indian monetary denominations (lakh and crore)
+
+
+def test_range_perturbation_lakh_cardinal_true():
+    """Test that lakh is preserved in range perturbation for CARDINAL type."""
+    result = rng.range_perturbation("5 lakh", "CARDINAL", "true")
+    assert "between" in result.lower()
+    assert "lakh" in result.lower()
+
+
+def test_range_perturbation_lakh_cardinal_false():
+    """Test that lakh is preserved in false range perturbation for CARDINAL."""
+    result = rng.range_perturbation("5 lakh", "CARDINAL", "false")
+    assert "between" in result.lower()
+    assert "lakh" in result.lower()
+
+
+def test_range_perturbation_crore_cardinal_true():
+    """Test that crore is preserved in range perturbation for CARDINAL type."""
+    result = rng.range_perturbation("2 crore", "CARDINAL", "true")
+    assert "between" in result.lower()
+    assert "crore" in result.lower()
+
+
+def test_range_perturbation_crore_cardinal_false():
+    """Test that crore is preserved in false range perturbation for CARDINAL."""
+    result = rng.range_perturbation("2 crore", "CARDINAL", "false")
+    assert "between" in result.lower()
+    assert "crore" in result.lower()
+
+
+def test_range_perturbation_rupee_lakh_money_true():
+    """Test that ₹ and lakh are preserved in MONEY range perturbation."""
+    result = rng.range_perturbation("₹5 lakh", "MONEY", "true")
+    assert "between" in result.lower()
+    assert "₹" in result
+    assert "lakh" in result.lower()
+
+
+def test_range_perturbation_rupee_lakh_money_false():
+    """Test that ₹ and lakh are preserved in false MONEY range perturbation."""
+    result = rng.range_perturbation("₹5 lakh", "MONEY", "false")
+    assert "between" in result.lower()
+    assert "₹" in result
+    assert "lakh" in result.lower()
+
+
+def test_range_perturbation_rupee_crore_money_true():
+    """Test that ₹ and crore are preserved in MONEY range perturbation."""
+    result = rng.range_perturbation("₹2 crore", "MONEY", "true")
+    assert "between" in result.lower()
+    assert "₹" in result
+    assert "crore" in result.lower()
+
+
+def test_range_perturbation_rupee_crore_money_false():
+    """Test that ₹ and crore are preserved in false MONEY range perturbation."""
+    result = rng.range_perturbation("₹2 crore", "MONEY", "false")
+    assert "between" in result.lower()
+    assert "₹" in result
+    assert "crore" in result.lower()
+
+
+def test_perturb_claim_with_lakh():
+    """Test claim perturbation preserves lakh denomination."""
+    claim = "The property costs 10 lakh rupees."
+    start = claim.index("10")
+    end = start + len("10 lakh")
+    entities = [
+        {
+            "text": "10 lakh",
+            "label": "CARDINAL",
+            "start_char": start,
+            "end_char": end,
+        }
+    ]
+    result = rng.perturb_claim(claim, entities, "true")
+    assert "lakh" in result.lower()
+    assert "between" in result.lower()
+
+
+def test_perturb_claim_with_crore():
+    """Test claim perturbation preserves crore denomination."""
+    claim = "The budget allocation is 5 crore rupees."
+    start = claim.index("5")
+    end = start + len("5 crore")
+    entities = [
+        {
+            "text": "5 crore",
+            "label": "CARDINAL",
+            "start_char": start,
+            "end_char": end,
+        }
+    ]
+    result = rng.perturb_claim(claim, entities, "true")
+    assert "crore" in result.lower()
+    assert "between" in result.lower()
+
+
+def test_perturb_claim_with_rupee_lakh():
+    """Test claim perturbation with rupee symbol and lakh."""
+    claim = "He invested ₹25 lakh in company shares."
+    start = claim.index("₹")
+    end = claim.index("lakh") + len("lakh")
+    entities = [
+        {
+            "text": "₹25 lakh",
+            "label": "MONEY",
+            "start_char": start,
+            "end_char": end,
+        }
+    ]
+    result = rng.perturb_claim(claim, entities, "true")
+    assert "₹" in result
+    assert "lakh" in result.lower()
+    assert "between" in result.lower()
+
+
+def test_perturb_claim_with_rupee_crore():
+    """Test claim perturbation with rupee symbol and crore."""
+    claim = "The donation was ₹15 crore to the hospital."
+    start = claim.index("₹")
+    end = claim.index("crore") + len("crore")
+    entities = [
+        {
+            "text": "₹15 crore",
+            "label": "MONEY",
+            "start_char": start,
+            "end_char": end,
+        }
+    ]
+    result = rng.perturb_claim(claim, entities, "true")
+    assert "₹" in result
+    assert "crore" in result.lower()
+    assert "between" in result.lower()
+
+
+@pytest.mark.parametrize(
+    "text,entity_type,truth_value,expected_unit",
+    [
+        ("5 lakh", "CARDINAL", "true", "lakh"),
+        ("5 lakh", "CARDINAL", "false", "lakh"),
+        ("10 lakh", "CARDINAL", "true", "lakh"),
+        ("10 lakh", "CARDINAL", "false", "lakh"),
+        ("2 crore", "CARDINAL", "true", "crore"),
+        ("2 crore", "CARDINAL", "false", "crore"),
+        ("50 crore", "CARDINAL", "true", "crore"),
+        ("50 crore", "CARDINAL", "false", "crore"),
+        ("₹5 lakh", "MONEY", "true", "lakh"),
+        ("₹5 lakh", "MONEY", "false", "lakh"),
+        ("₹1 crore", "MONEY", "true", "crore"),
+        ("₹1 crore", "MONEY", "false", "crore"),
+    ],
+)
+def test_range_perturbation_indian_denominations_preserve_unit(
+    text, entity_type, truth_value, expected_unit
+):
+    """Parametrized test to verify Indian monetary units are preserved."""
+    result = rng.range_perturbation(text, entity_type, truth_value)
+    assert expected_unit.lower() in result.lower(), (
+        f"Expected '{expected_unit}' in result '{result}' "
+        f"for input '{text}' with type '{entity_type}'"
+    )
+    assert "between" in result.lower(), (
+        f"Expected 'between' in perturbed result '{result}'"
+    )
+
+
+def test_perturb_cardinal_small_number():
+    """Test cardinal perturbation with a small number rounds to zero lower bound."""
+    out = rng.range_perturbation("5", "CARDINAL", "true")
+    assert out in ("between 4 and 6", "between 5 and 6")
+

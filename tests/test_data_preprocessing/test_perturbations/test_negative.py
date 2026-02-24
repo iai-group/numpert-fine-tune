@@ -1,6 +1,8 @@
 """Tests for the negative perturbation."""
 
 import json
+import pytest
+from unittest.mock import patch, MagicMock
 
 from src.data_preprocessing.perturbations.negative import (
     load_data,
@@ -10,65 +12,162 @@ from src.data_preprocessing.perturbations.negative import (
 )
 
 
-def test_negative_number_perturbation():
-    """Test the negative number perturbation function."""
+def test_negative_number_perturbation_positive_integer():
+    """Test that a positive integer percentage is made negative."""
     claim = "The success rate is 50%."
     entities = [{"label": "PERCENT", "start_char": 18, "end_char": 21}]
     expected_output = "The success rate is -50%."
     assert negative_number_perturbation(claim, entities) == expected_output
 
+
+def test_negative_number_perturbation_already_negative():
+    """Test that an already negative percentage is left unchanged."""
     claim = "The success rate is -50%."
     entities = [{"label": "PERCENT", "start_char": 18, "end_char": 22}]
     expected_output = "The success rate is -50%."
     assert negative_number_perturbation(claim, entities) == expected_output
 
+
+def test_negative_number_perturbation_float():
+    """Test that a positive float percentage is made negative."""
     claim = "The success rate is 50.5%."
     entities = [{"label": "PERCENT", "start_char": 18, "end_char": 23}]
     expected_output = "The success rate is -50.5%."
     assert negative_number_perturbation(claim, entities) == expected_output
 
 
-def test_process_json():
-    """Test the process_json function."""
-    input_data = {
-        "url1": {
-            "claim": "The success rate is 50%.",
-            "entities": [
-                {"label": "PERCENT", "start_char": 18, "end_char": 21}
-            ],
+def test_negative_number_perturbation_no_percent_entity():
+    """Test that non-PERCENT entities are not perturbed."""
+    claim = "There are 100 apples."
+    entities = [{"label": "CARDINAL", "start_char": 10, "end_char": 13}]
+    assert negative_number_perturbation(claim, entities) == claim
+
+
+def test_negative_number_perturbation_empty_entities():
+    """Test that a claim with no entities is returned unchanged."""
+    claim = "The success rate is 50%."
+    entities = []
+    assert negative_number_perturbation(claim, entities) == claim
+
+
+def test_negative_number_perturbation_multiple_percent_entities():
+    """Test that multiple PERCENT entities are all made negative."""
+    claim = "Rates are 30% and 70%."
+    entities = [
+        {"label": "PERCENT", "start_char": 10, "end_char": 13},
+        {"label": "PERCENT", "start_char": 18, "end_char": 21},
+    ]
+    result = negative_number_perturbation(claim, entities)
+    assert "-30%" in result
+    assert "-70%" in result
+
+
+def test_negative_number_perturbation_no_number_in_entity():
+    """Test that a PERCENT entity without a number is returned unchanged."""
+    claim = "The rate is about half."
+    entities = [{"label": "PERCENT", "start_char": 11, "end_char": 22}]
+    assert negative_number_perturbation(claim, entities) == claim
+
+
+def test_process_json_basic():
+    """Test process_json with entries that should be perturbed."""
+    input_data = [
+        {
+            "normalized_claim": "The success rate is 50%.",
+            "entities": [{"label": "PERCENT", "start_char": 18, "end_char": 21}],
+            "label": "True",
+            "claim_id": "1",
+        }
+    ]
+    with patch(
+        "code.data_preprocessing.perturbations.negative.INCLUDED_KEYS",
+        ["claim_id"],
+    ):
+        result = process_json(input_data)
+    assert len(result) == 1
+    assert result[0]["perturb_type2_True"] == "The success rate is -50%."
+    assert result[0]["claim_id"] == "1"
+
+
+def test_process_json_excludes_unperturbed():
+    """Test that process_json excludes entries without changes."""
+    input_data = [
+        {
+            "normalized_claim": "The company had no percentage.",
+            "entities": [],
+            "label": "True",
+        }
+    ]
+    with patch(
+        "code.data_preprocessing.perturbations.negative.INCLUDED_KEYS", []
+    ):
+        result = process_json(input_data)
+    assert result == []
+
+
+def test_process_json_unknown_label():
+    """Test process_json uses UNKNOWN when label is missing."""
+    input_data = [
+        {
+            "normalized_claim": "The success rate is 50%.",
+            "entities": [{"label": "PERCENT", "start_char": 18, "end_char": 21}],
+        }
+    ]
+    with patch(
+        "code.data_preprocessing.perturbations.negative.INCLUDED_KEYS", []
+    ):
+        result = process_json(input_data)
+    assert len(result) == 1
+    assert "perturb_type2_UNKNOWN" in result[0]
+
+
+def test_process_json_multiple_entries():
+    """Test process_json with multiple entries, some perturbed and some not."""
+    input_data = [
+        {
+            "normalized_claim": "The success rate is 50%.",
+            "entities": [{"label": "PERCENT", "start_char": 18, "end_char": 21}],
+            "label": "True",
         },
-        "url2": {
-            "claim": "The success rate is 70%.",
-            "entities": [
-                {"label": "PERCENT", "start_char": 18, "end_char": 21}
-            ],
+        {
+            "normalized_claim": "No numbers here.",
+            "entities": [],
+            "label": "False",
         },
-    }
-    expected_output = {
-        "url1": {"negative_number_false": "The success rate is -50%."},
-        "url2": {"negative_number_false": "The success rate is -70%."},
-    }
-    assert process_json(input_data) == expected_output
+        {
+            "normalized_claim": "Accuracy increased by 10%.",
+            "entities": [{"label": "PERCENT", "start_char": 21, "end_char": 24}],
+            "label": "False",
+        },
+    ]
+    with patch(
+        "code.data_preprocessing.perturbations.negative.INCLUDED_KEYS", []
+    ):
+        result = process_json(input_data)
+    assert len(result) == 2
+    assert result[0]["perturb_type2_True"] == "The success rate is -50%."
+    assert result[1]["perturb_type2_False"] == "Accuracy increased by -10%."
 
 
-def test_load_data(tmp_path):
-    """Test the load_data function."""
-    data = {"key": "value"}
-    file_path = tmp_path / "test.json"
-    with open(file_path, "w", encoding="utf-8") as f:
-        json.dump(data, f)
+def test_process_json_included_keys_filtering():
+    """Test that process_json only includes keys from INCLUDED_KEYS."""
+    input_data = [
+        {
+            "normalized_claim": "The success rate is 50%.",
+            "entities": [{"label": "PERCENT", "start_char": 18, "end_char": 21}],
+            "label": "True",
+            "claim_id": "abc",
+            "extra_field": "should_be_excluded",
+        }
+    ]
+    with patch(
+        "code.data_preprocessing.perturbations.negative.INCLUDED_KEYS",
+        ["claim_id"],
+    ):
+        result = process_json(input_data)
+    assert "claim_id" in result[0]
+    assert "extra_field" not in result[0]
+    assert "normalized_claim" not in result[0]
 
-    loaded_data = load_data(file_path)
-    assert loaded_data == data
 
 
-def test_save_data(tmp_path):
-    """Test the save_data function."""
-    data = {"key": "value"}
-    file_path = tmp_path / "test.json"
-    save_data(data, file_path)
-
-    with open(file_path, "r", encoding="utf-8") as f:
-        loaded_data = json.load(f)
-
-    assert loaded_data == data
