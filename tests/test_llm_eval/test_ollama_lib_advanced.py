@@ -49,7 +49,7 @@ class TestOllamaLLMThinking:
         mock_ollama_client.chat.return_value = mock_response
 
         with patch(
-            "code.llm_eval.ollama_wrapper.Client",
+            "src.llm_eval.ollama_wrapper.Client",
             return_value=mock_ollama_client,
         ):
             llm = OllamaLLM(config_path=temp_config_file)
@@ -83,7 +83,7 @@ class TestOllamaLLMThinking:
             mock_ollama_client.chat.return_value = mock_response
 
             with patch(
-                "code.llm_eval.ollama_wrapper.Client",
+                "src.llm_eval.ollama_wrapper.Client",
                 return_value=mock_ollama_client,
             ):
                 llm = OllamaLLM(config_path=config_path)
@@ -119,7 +119,7 @@ class TestOllamaLLMThinking:
             mock_ollama_client.chat.return_value = mock_response
 
             with patch(
-                "code.llm_eval.ollama_wrapper.Client",
+                "src.llm_eval.ollama_wrapper.Client",
                 return_value=mock_ollama_client,
             ):
                 llm = OllamaLLM(config_path=config_path)
@@ -151,7 +151,7 @@ class TestOllamaLLMEdgeCases:
 
         try:
             with patch(
-                "code.llm_eval.ollama_wrapper.Client",
+                "src.llm_eval.ollama_wrapper.Client",
                 return_value=mock_ollama_client,
             ):
                 llm = OllamaLLM(config_path=config_path)
@@ -181,7 +181,7 @@ class TestOllamaLLMEdgeCases:
 
         try:
             with patch(
-                "code.llm_eval.ollama_wrapper.Client",
+                "src.llm_eval.ollama_wrapper.Client",
                 return_value=mock_ollama_client,
             ):
                 llm = OllamaLLM(config_path=config_path)
@@ -202,7 +202,7 @@ class TestOllamaLLMEdgeCases:
         mock_ollama_client.chat.return_value = mock_response
 
         with patch(
-            "code.llm_eval.ollama_wrapper.Client",
+            "src.llm_eval.ollama_wrapper.Client",
             return_value=mock_ollama_client,
         ):
             llm = OllamaLLM(config_path=temp_config_file)
@@ -227,7 +227,7 @@ class TestOllamaLLMEdgeCases:
         mock_ollama_client.chat.return_value = mock_response
 
         with patch(
-            "code.llm_eval.ollama_wrapper.Client",
+            "src.llm_eval.ollama_wrapper.Client",
             return_value=mock_ollama_client,
         ):
             llm = OllamaLLM(config_path=temp_config_file)
@@ -251,7 +251,7 @@ class TestOllamaLLMEdgeCases:
         ]
 
         with patch(
-            "code.llm_eval.ollama_wrapper.Client",
+            "src.llm_eval.ollama_wrapper.Client",
             return_value=mock_ollama_client,
         ):
             llm = OllamaLLM(config_path=temp_config_file)
@@ -261,7 +261,7 @@ class TestOllamaLLMEdgeCases:
             # First call should pull model and succeed on retry
             with (
                 patch("builtins.print"),
-                patch("code.llm_eval.ollama_wrapper.logging"),
+                patch("src.llm_eval.ollama_wrapper.logging"),
             ):
                 response1 = llm.chat(messages)
 
@@ -279,7 +279,7 @@ class TestOllamaLLMEdgeCases:
         ]
 
         with patch(
-            "code.llm_eval.ollama_wrapper.Client",
+            "src.llm_eval.ollama_wrapper.Client",
             return_value=mock_ollama_client,
         ):
             llm = OllamaLLM(config_path=temp_config_file)
@@ -290,7 +290,7 @@ class TestOllamaLLMEdgeCases:
             with pytest.raises(ResponseError):
                 with (
                     patch("builtins.print"),
-                    patch("code.llm_eval.ollama_wrapper.logging"),
+                    patch("src.llm_eval.ollama_wrapper.logging"),
                 ):
                     llm.chat(messages)
 
@@ -303,7 +303,7 @@ class TestOllamaLLMEdgeCases:
         mock_ollama_client.chat.side_effect = socket.timeout("Network timeout")
 
         with patch(
-            "code.llm_eval.ollama_wrapper.Client",
+            "src.llm_eval.ollama_wrapper.Client",
             return_value=mock_ollama_client,
         ):
             llm = OllamaLLM(config_path=temp_config_file)
@@ -333,7 +333,7 @@ class TestOllamaLLMEdgeCases:
             )
 
             with patch(
-                "code.llm_eval.ollama_wrapper.Client",
+                "src.llm_eval.ollama_wrapper.Client",
                 return_value=mock_ollama_client,
             ):
                 llm = OllamaLLM(config_path=config_path)
@@ -343,7 +343,7 @@ class TestOllamaLLMEdgeCases:
                 with pytest.raises(ResponseError):  # Will fail on retry
                     with (
                         patch("builtins.print"),
-                        patch("code.llm_eval.ollama_wrapper.logging"),
+                        patch("src.llm_eval.ollama_wrapper.logging"),
                     ):
                         llm.chat(messages)
 
@@ -380,7 +380,7 @@ class TestOllamaLLMConfiguration:
             mock_ollama_client.chat.return_value = mock_response
 
             with patch(
-                "code.llm_eval.ollama_wrapper.Client",
+                "src.llm_eval.ollama_wrapper.Client",
                 return_value=mock_ollama_client,
             ):
                 llm = OllamaLLM(config_path=config_path)
@@ -422,7 +422,7 @@ class TestOllamaLLMConfiguration:
             mock_ollama_client.chat.return_value = mock_response
 
             with patch(
-                "code.llm_eval.ollama_wrapper.Client",
+                "src.llm_eval.ollama_wrapper.Client",
                 return_value=mock_ollama_client,
             ):
                 llm = OllamaLLM(config_path=config_path)

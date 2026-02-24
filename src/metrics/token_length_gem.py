@@ -278,9 +278,11 @@ class MisclassificationTokenAnalyzer:
                         continue
 
                     # Extract token counts
-                    total_tokens, completion_tokens, reasoning_tokens = (
-                        self.extract_token_counts(record)
-                    )
+                    (
+                        total_tokens,
+                        completion_tokens,
+                        reasoning_tokens,
+                    ) = self.extract_token_counts(record)
 
                     if all(
                         t is None

@@ -8,6 +8,7 @@ from src.numpert_prompt.prompt import (
     FEW_SHOT_EXAMPLES,
     FACT_CHECK_USER_PROMPT,
     NEGATIVE_EXAMPLES,
+    PromptType,
     get_fact_check_system_prompt,
     get_fact_check_user_prompt,
 )
@@ -22,7 +23,7 @@ class TestPromptConstants:
         assert len(FACT_CHECK_SYSTEM_PROMPT) > 0
 
         # Check for key phrases
-        assert "fact checker" in FACT_CHECK_SYSTEM_PROMPT.lower()
+        assert "fact-checker" in FACT_CHECK_SYSTEM_PROMPT.lower()
         assert "true or false" in FACT_CHECK_SYSTEM_PROMPT.lower()
         assert "evidence" in FACT_CHECK_SYSTEM_PROMPT.lower()
 
@@ -100,7 +101,7 @@ class TestGetFactCheckUserPrompt:
         evidence = "Scientific observations show that the sky appears blue"
 
         result = get_fact_check_user_prompt(
-            claim=claim, evidence=evidence, include_negative_examples=False
+            claim=claim, evidence=evidence, prompt_type=PromptType.FEW_SHOT
         )
 
         assert isinstance(result, str)
@@ -115,7 +116,7 @@ class TestGetFactCheckUserPrompt:
         evidence = "At standard atmospheric pressure, water boils at 100°C"
 
         result = get_fact_check_user_prompt(
-            claim=claim, evidence=evidence, include_negative_examples=False
+            claim=claim, evidence=evidence, prompt_type=PromptType.FEW_SHOT
         )
 
         # Should contain few-shot examples but not negative examples
@@ -130,7 +131,9 @@ class TestGetFactCheckUserPrompt:
         evidence = "Scientific analysis shows the moon is made of rock"
 
         result = get_fact_check_user_prompt(
-            claim=claim, evidence=evidence, include_negative_examples=True
+            claim=claim,
+            evidence=evidence,
+            prompt_type=PromptType.FEW_SHOT_WITH_NEGATIVE,
         )
 
         # Should contain both few-shot and negative examples
@@ -145,7 +148,7 @@ class TestGetFactCheckUserPrompt:
         evidence = "Evidence with $pecial ch@racters: 100% true (maybe?)"
 
         result = get_fact_check_user_prompt(
-            claim=claim, evidence=evidence, include_negative_examples=False
+            claim=claim, evidence=evidence, prompt_type=PromptType.FEW_SHOT
         )
 
         assert claim in result
@@ -155,7 +158,7 @@ class TestGetFactCheckUserPrompt:
     def test_empty_strings(self):
         """Test handling of empty claim and evidence."""
         result = get_fact_check_user_prompt(
-            claim="", evidence="", include_negative_examples=False
+            claim="", evidence="", prompt_type=PromptType.FEW_SHOT
         )
 
         assert isinstance(result, str)
@@ -168,7 +171,7 @@ class TestGetFactCheckUserPrompt:
         evidence = "This is evidence\nthat spans\nseveral lines"
 
         result = get_fact_check_user_prompt(
-            claim=claim, evidence=evidence, include_negative_examples=False
+            claim=claim, evidence=evidence, prompt_type=PromptType.FEW_SHOT
         )
 
         assert claim in result
@@ -181,7 +184,7 @@ class TestGetFactCheckUserPrompt:
         evidence = "Very long evidence " * 100  # 1900+ characters
 
         result = get_fact_check_user_prompt(
-            claim=claim, evidence=evidence, include_negative_examples=False
+            claim=claim, evidence=evidence, prompt_type=PromptType.FEW_SHOT
         )
 
         assert claim in result
@@ -196,7 +199,7 @@ class TestGetFactCheckUserPrompt:
         evidence = "Évidence wïth spëcial chars: データ日本語"
 
         result = get_fact_check_user_prompt(
-            claim=claim, evidence=evidence, include_negative_examples=False
+            claim=claim, evidence=evidence, prompt_type=PromptType.FEW_SHOT
         )
 
         assert claim in result
@@ -204,27 +207,29 @@ class TestGetFactCheckUserPrompt:
         assert isinstance(result, str)
 
     def test_boolean_parameter_types(self):
-        """Test that include_negative_examples accepts boolean values."""
+        """Test that prompt_type accepts PromptType enum values."""
         claim = "Test claim"
         evidence = "Test evidence"
 
-        # Test with True
-        result_true = get_fact_check_user_prompt(
-            claim=claim, evidence=evidence, include_negative_examples=True
+        # Test with FEW_SHOT_WITH_NEGATIVE
+        result_with_neg = get_fact_check_user_prompt(
+            claim=claim,
+            evidence=evidence,
+            prompt_type=PromptType.FEW_SHOT_WITH_NEGATIVE,
         )
 
-        # Test with False
-        result_false = get_fact_check_user_prompt(
-            claim=claim, evidence=evidence, include_negative_examples=False
+        # Test with FEW_SHOT
+        result_few_shot = get_fact_check_user_prompt(
+            claim=claim, evidence=evidence, prompt_type=PromptType.FEW_SHOT
         )
 
         # Both should work and return strings
-        assert isinstance(result_true, str)
-        assert isinstance(result_false, str)
+        assert isinstance(result_with_neg, str)
+        assert isinstance(result_few_shot, str)
 
-        # Results should be identical since NEGATIVE_EXAMPLES is empty
-        assert NEGATIVE_EXAMPLES in result_true
-        assert NEGATIVE_EXAMPLES not in result_false
+        # Result with negative should include NEGATIVE_EXAMPLES
+        assert NEGATIVE_EXAMPLES in result_with_neg
+        assert NEGATIVE_EXAMPLES not in result_few_shot
 
 
 class TestParameterCombinations:
@@ -234,17 +239,16 @@ class TestParameterCombinations:
     """
 
     def test_both_parameters_true_true(self):
-        """Test with both parameters True.
+        """Test with FEW_SHOT_WITH_NEGATIVE prompt type.
 
-        Checks prompt includes few-shot examples.
+        Checks prompt includes few-shot and negative examples.
         """
         claim = "Test claim for TT combination"
         evidence = "Test evidence for TT combination"
         result = get_fact_check_user_prompt(
             claim=claim,
             evidence=evidence,
-            include_few_shot_examples=True,
-            include_negative_examples=True,
+            prompt_type=PromptType.FEW_SHOT_WITH_NEGATIVE,
         )
         assert isinstance(result, str)
         assert claim in result
@@ -252,7 +256,7 @@ class TestParameterCombinations:
         assert FEW_SHOT_EXAMPLES in result
 
     def test_both_parameters_true_false(self):
-        """Test with few_shot True, negative_examples False.
+        """Test with FEW_SHOT prompt type.
 
         Checks prompt includes few-shot examples.
         """
@@ -261,8 +265,7 @@ class TestParameterCombinations:
         result = get_fact_check_user_prompt(
             claim=claim,
             evidence=evidence,
-            include_few_shot_examples=True,
-            include_negative_examples=False,
+            prompt_type=PromptType.FEW_SHOT,
         )
         assert isinstance(result, str)
         assert claim in result
@@ -270,7 +273,7 @@ class TestParameterCombinations:
         assert FEW_SHOT_EXAMPLES in result
 
     def test_both_parameters_false_true(self):
-        """Test with few_shot False, negative_examples True.
+        """Test with ZERO_SHOT prompt type.
 
         Checks prompt does not include few-shot or negative examples.
         """
@@ -279,8 +282,7 @@ class TestParameterCombinations:
         result = get_fact_check_user_prompt(
             claim=claim,
             evidence=evidence,
-            include_few_shot_examples=False,
-            include_negative_examples=True,
+            prompt_type=PromptType.ZERO_SHOT,
         )
         assert isinstance(result, str)
         assert claim in result
@@ -288,7 +290,7 @@ class TestParameterCombinations:
         assert FEW_SHOT_EXAMPLES not in result
 
     def test_both_parameters_false_false(self):
-        """Test with both parameters False.
+        """Test with ZERO_SHOT prompt type.
 
         Checks prompt does not include any examples.
         """
@@ -297,8 +299,7 @@ class TestParameterCombinations:
         result = get_fact_check_user_prompt(
             claim=claim,
             evidence=evidence,
-            include_few_shot_examples=False,
-            include_negative_examples=False,
+            prompt_type=PromptType.ZERO_SHOT,
         )
         assert isinstance(result, str)
         assert claim in result
@@ -316,12 +317,11 @@ class TestParameterCombinations:
             evidence=evidence,
         )
 
-        # Call with explicit defaults
+        # Call with explicit default (FEW_SHOT)
         result_explicit = get_fact_check_user_prompt(
             claim=claim,
             evidence=evidence,
-            include_few_shot_examples=True,
-            include_negative_examples=False,
+            prompt_type=PromptType.FEW_SHOT,
         )
 
         # Should be identical
@@ -334,32 +334,30 @@ class TestParameterCombinations:
         evidence = "Consistency test evidence"
 
         # Test multiple calls with same parameters
-        results_tt = [
+        results_few_shot_neg = [
             get_fact_check_user_prompt(
                 claim=claim,
                 evidence=evidence,
-                include_few_shot_examples=True,
-                include_negative_examples=True,
+                prompt_type=PromptType.FEW_SHOT_WITH_NEGATIVE,
             )
             for _ in range(3)
         ]
 
-        results_ff = [
+        results_zero_shot = [
             get_fact_check_user_prompt(
                 claim=claim,
                 evidence=evidence,
-                include_few_shot_examples=False,
-                include_negative_examples=False,
+                prompt_type=PromptType.ZERO_SHOT,
             )
             for _ in range(3)
         ]
 
         # All results with same parameters should be identical
-        assert all(r == results_tt[0] for r in results_tt)
-        assert all(r == results_ff[0] for r in results_ff)
+        assert all(r == results_few_shot_neg[0] for r in results_few_shot_neg)
+        assert all(r == results_zero_shot[0] for r in results_zero_shot)
 
         # Results with different parameters should be different
-        assert results_tt[0] != results_ff[0]
+        assert results_few_shot_neg[0] != results_zero_shot[0]
 
     def test_examples_behavior_with_different_combinations(self):
         """Test that examples are handled correctly across combinations."""  # noqa: E501
@@ -367,21 +365,25 @@ class TestParameterCombinations:
         evidence = "Examples behavior evidence"
 
         # Get results for all combinations
-        result_tt = get_fact_check_user_prompt(claim, evidence, True, True)
-        result_tf = get_fact_check_user_prompt(claim, evidence, True, False)
-        result_ft = get_fact_check_user_prompt(claim, evidence, False, True)
-        result_ff = get_fact_check_user_prompt(claim, evidence, False, False)
+        result_few_shot_neg = get_fact_check_user_prompt(
+            claim, evidence, PromptType.FEW_SHOT_WITH_NEGATIVE
+        )
+        result_few_shot = get_fact_check_user_prompt(
+            claim, evidence, PromptType.FEW_SHOT
+        )
+        result_zero_shot = get_fact_check_user_prompt(
+            claim, evidence, PromptType.ZERO_SHOT
+        )
 
-        # When include_few_shot_examples=True, should have examples
-        assert FEW_SHOT_EXAMPLES in result_tt
-        assert FEW_SHOT_EXAMPLES in result_tf
+        # FEW_SHOT types should have examples
+        assert FEW_SHOT_EXAMPLES in result_few_shot_neg
+        assert FEW_SHOT_EXAMPLES in result_few_shot
 
-        # When include_few_shot_examples=False, should NOT have examples
-        assert FEW_SHOT_EXAMPLES not in result_ft
-        assert FEW_SHOT_EXAMPLES not in result_ff
+        # ZERO_SHOT should NOT have examples
+        assert FEW_SHOT_EXAMPLES not in result_zero_shot
 
         # All results should be strings
-        for r in [result_tt, result_tf, result_ft, result_ff]:
+        for r in [result_few_shot_neg, result_few_shot, result_zero_shot]:
             assert isinstance(r, str)
 
     def test_prompt_length_differences(self):
@@ -393,10 +395,10 @@ class TestParameterCombinations:
         evidence = "Length test evidence"
 
         result_with_examples = get_fact_check_user_prompt(
-            claim, evidence, include_few_shot_examples=True
+            claim, evidence, prompt_type=PromptType.FEW_SHOT
         )
         result_without_examples = get_fact_check_user_prompt(
-            claim, evidence, include_few_shot_examples=False
+            claim, evidence, prompt_type=PromptType.ZERO_SHOT
         )
 
         # Prompt with examples should be longer
@@ -418,7 +420,7 @@ class TestPromptIntegration:
         user_prompt = get_fact_check_user_prompt(
             claim="Test claim",
             evidence="Test evidence",
-            include_negative_examples=False,
+            prompt_type=PromptType.FEW_SHOT,
         )
 
         # Both should mention JSON format (through the pred structure)
@@ -438,7 +440,7 @@ class TestPromptIntegration:
         # Multiple calls should return identical results
         results = [
             get_fact_check_user_prompt(
-                claim=claim, evidence=evidence, include_negative_examples=False
+                claim=claim, evidence=evidence, prompt_type=PromptType.FEW_SHOT
             )
             for _ in range(5)
         ]
@@ -452,7 +454,7 @@ class TestPromptIntegration:
         user_prompt = get_fact_check_user_prompt(
             claim="Test",
             evidence="Test evidence",
-            include_negative_examples=True,
+            prompt_type=PromptType.FEW_SHOT_WITH_NEGATIVE,
         )
 
         # Should contain the few-shot example format
@@ -468,26 +470,26 @@ class TestPromptEdgeCases:
         """Test behavior with non-string inputs."""
         # Should work with numbers (converted to strings by format)
         result = get_fact_check_user_prompt(
-            claim=123, evidence=456.789, include_negative_examples=False
+            claim=123, evidence=456.789, prompt_type=PromptType.FEW_SHOT
         )
 
         assert "123" in result
         assert "456.789" in result
 
     def test_non_boolean_include_negative_examples(self):
-        """Test behavior with non-boolean include_negative_examples."""
-        # Should work with truthy/falsy values
-        result_truthy = get_fact_check_user_prompt(
-            claim="test", evidence="test", include_negative_examples=1  # truthy
+        """Test behavior with different PromptType enum values."""
+        # Should work with all PromptType values
+        result_few_shot = get_fact_check_user_prompt(
+            claim="test", evidence="test", prompt_type=PromptType.FEW_SHOT
         )
 
-        result_falsy = get_fact_check_user_prompt(
-            claim="test", evidence="test", include_negative_examples=0  # falsy
+        result_zero_shot = get_fact_check_user_prompt(
+            claim="test", evidence="test", prompt_type=PromptType.ZERO_SHOT
         )
 
         # Both should return strings
-        assert isinstance(result_truthy, str)
-        assert isinstance(result_falsy, str)
+        assert isinstance(result_few_shot, str)
+        assert isinstance(result_zero_shot, str)
 
 
 class TestPromptFormatting:
@@ -517,7 +519,7 @@ class TestPromptFormatting:
         result = get_fact_check_user_prompt(
             claim="JSON test",
             evidence="JSON evidence",
-            include_negative_examples=False,
+            prompt_type=PromptType.FEW_SHOT,
         )
 
         # Should specify exact JSON format
@@ -530,7 +532,7 @@ class TestPromptFormatting:
         result = get_fact_check_user_prompt(
             claim="Example test",
             evidence="Example evidence",
-            include_negative_examples=False,
+            prompt_type=PromptType.FEW_SHOT,
         )
 
         # Should include the few-shot example

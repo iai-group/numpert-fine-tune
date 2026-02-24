@@ -47,7 +47,6 @@ def test_check_file_exists_and_readable(
         patch("os.path.isfile", return_value=is_file),
         patch("os.path.getsize", return_value=size),
     ):
-
         if exists and is_file and size > 0:
             json_content = '{"valid": true}' if json_valid else "invalid json"
             m = mock_open(read_data=json_content)
@@ -75,7 +74,12 @@ def test_check_file_exists_and_readable(
 
 def test_get_configuration():
     """Test that get_configuration returns the expected configuration."""
-    perturbations, models, short_pert_names = get_configuration()
+    (
+        perturbations,
+        models,
+        short_pert_names,
+        model_display_names,
+    ) = get_configuration()
 
     assert "normalized_claim" in perturbations
     assert "approximation" in perturbations
@@ -88,6 +92,10 @@ def test_get_configuration():
     assert short_pert_names["normalized_claim"] == "original"
     assert short_pert_names["approximation"] == "approx"
     assert len(short_pert_names) == 7
+
+    assert "deepseek-r1:32b" in model_display_names
+    assert model_display_names["deepseek-r1:32b"] == "DeepSeek-R1-32B"
+    assert len(model_display_names) == 7
 
 
 @pytest.mark.parametrize(
@@ -135,7 +143,6 @@ def test_process_result_file_file_not_found():
         "src.metrics.eval_ollama_models.check_file_exists_and_readable",
         return_value=(False, "File does not exist"),
     ):
-
         result = process_result_file(
             "nonexistent.jsonl", "approx", "true", "false"
         )
@@ -156,10 +163,13 @@ def test_process_result_file_valid_file():
         ),
         patch("builtins.open", mock_open(read_data="\n".join(json_lines))),
     ):
-
-        true_labels, pred_labels, line_count, valid_entries, invalid_entries = (
-            process_result_file("valid.jsonl", "approximation", "true", "false")
-        )
+        (
+            true_labels,
+            pred_labels,
+            line_count,
+            valid_entries,
+            invalid_entries,
+        ) = process_result_file("valid.jsonl", "approximation", "true", "false")
 
         assert set(true_labels) == set(["True", "False"])
         assert set(pred_labels) == set(["True", "False"])
@@ -181,11 +191,14 @@ def test_process_result_file_normalized_claim():
         ),
         patch("builtins.open", mock_open(read_data="\n".join(json_lines))),
     ):
-
-        true_labels, pred_labels, line_count, valid_entries, invalid_entries = (
-            process_result_file(
-                "valid.jsonl", "normalized_claim", "true", "true"
-            )
+        (
+            true_labels,
+            pred_labels,
+            line_count,
+            valid_entries,
+            invalid_entries,
+        ) = process_result_file(
+            "valid.jsonl", "normalized_claim", "true", "true"
         )
 
         assert true_labels == ["True"]
@@ -210,10 +223,13 @@ def test_process_result_file_with_invalid_entries():
         ),
         patch("builtins.open", mock_open(read_data="\n".join(json_lines))),
     ):
-
-        true_labels, pred_labels, line_count, valid_entries, invalid_entries = (
-            process_result_file("valid.jsonl", "approximation", "true", "false")
-        )
+        (
+            true_labels,
+            pred_labels,
+            line_count,
+            valid_entries,
+            invalid_entries,
+        ) = process_result_file("valid.jsonl", "approximation", "true", "false")
 
         assert true_labels == ["True"]
         assert pred_labels == ["False"]
@@ -225,9 +241,7 @@ def test_process_result_file_with_invalid_entries():
 @patch("src.metrics.eval_ollama_models.process_result_file")
 @patch("src.metrics.eval_ollama_models.get_result_file_path")
 @patch("builtins.open", new_callable=mock_open)
-@patch("src.metrics.eval_ollama_models.DeltaEvalTable")
 def test_evaluate_label_combination(
-    mock_delta_eval_table,
     mock_open_file,
     mock_get_result_file_path,
     mock_process_result_file,
@@ -235,7 +249,6 @@ def test_evaluate_label_combination(
     """Test that evaluate_label_combination correctly processes results."""
     # Setup mocks
     mock_table = MagicMock()
-    mock_delta_eval_table.return_value = mock_table
     mock_process_result_file.return_value = (["True"], ["True"], 1, 1, 0)
     mock_get_result_file_path.return_value = "test/path.jsonl"
 
@@ -249,6 +262,10 @@ def test_evaluate_label_combination(
         "normalized_claim": "original",
         "approximation": "approx",
     }
+    model_display_names = {
+        "model1": "Model-1",
+        "model2": "Model-2",
+    }
     error_file = mock_open_file.return_value
 
     # Call function
@@ -260,18 +277,17 @@ def test_evaluate_label_combination(
         models,
         short_pert_names,
         error_file,
+        model_display_names,
+        mock_table,
     )
 
     # Assertions
-    assert mock_delta_eval_table.call_count == 1
     assert mock_table.add_result.call_count == 4  # 2 models * 2 perturbations
-    assert mock_table.to_latex.call_count == 1
-    assert mock_open_file.call_count == 1  # Error file and LaTeX file
 
 
 @patch("src.metrics.eval_ollama_models.evaluate_label_combination")
 @patch("src.metrics.eval_ollama_models.get_configuration")
-@patch("os.path.exists")
+@patch("pathlib.Path.exists")
 @patch("builtins.open", new_callable=mock_open)
 def test_main(
     mock_open_file,
@@ -286,6 +302,7 @@ def test_main(
         ["normalized_claim", "approximation"],
         ["model1", "model2"],
         {"normalized_claim": "original", "approximation": "approx"},
+        {"model1": "Model-1", "model2": "Model-2"},
     )
 
     # Call main
@@ -293,16 +310,28 @@ def test_main(
 
     # Assertions
     assert mock_get_configuration.call_count == 1
-    assert mock_open_file.call_count == 1
     assert (
-        mock_evaluate_label_combination.call_count == 4
-    )  # 2 orig labels * 2 pert labels
+        mock_open_file.call_count == 5
+    )  # 1 error file + 4 latex files (2*2 label combinations)
+    assert (
+        mock_evaluate_label_combination.call_count == 16
+    )  # 2 orig labels * 2 pert labels * 4 shots
 
 
-@patch("os.path.exists")
-def test_main_base_dir_not_exists(mock_path_exists):
+@patch("pathlib.Path.exists")
+@patch("src.metrics.eval_ollama_models.get_configuration")
+@patch("builtins.open", new_callable=mock_open)
+def test_main_base_dir_not_exists(
+    mock_open_file, mock_get_configuration, mock_path_exists
+):
     """Test that main handles missing base directory correctly."""
     mock_path_exists.return_value = False
+    mock_get_configuration.return_value = (
+        ["normalized_claim"],
+        ["model1"],
+        {"normalized_claim": "original"},
+        {"model1": "Model-1"},
+    )
 
     # Call main
     main()

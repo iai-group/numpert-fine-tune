@@ -357,9 +357,13 @@ class TestRunPerturbations:
     @patch("src.data_preprocessing.perturbations.main_perturb_all.range_pert")
     @patch("src.data_preprocessing.perturbations.main_perturb_all.numeration")
     @patch("src.data_preprocessing.perturbations.main_perturb_all.negative")
-    @patch("src.data_preprocessing.perturbations.main_perturb_all.approximation")
+    @patch(
+        "src.data_preprocessing.perturbations.main_perturb_all.approximation"
+    )
     @patch("src.data_preprocessing.perturbations.main_perturb_all.save_splits")
-    @patch("src.data_preprocessing.perturbations.main_perturb_all.split_by_label")
+    @patch(
+        "src.data_preprocessing.perturbations.main_perturb_all.split_by_label"
+    )
     @patch("src.data_preprocessing.perturbations.main_perturb_all.load_data")
     def test_loads_both_input_files(
         self,
@@ -389,9 +393,13 @@ class TestRunPerturbations:
     @patch("src.data_preprocessing.perturbations.main_perturb_all.range_pert")
     @patch("src.data_preprocessing.perturbations.main_perturb_all.numeration")
     @patch("src.data_preprocessing.perturbations.main_perturb_all.negative")
-    @patch("src.data_preprocessing.perturbations.main_perturb_all.approximation")
+    @patch(
+        "src.data_preprocessing.perturbations.main_perturb_all.approximation"
+    )
     @patch("src.data_preprocessing.perturbations.main_perturb_all.save_splits")
-    @patch("src.data_preprocessing.perturbations.main_perturb_all.split_by_label")
+    @patch(
+        "src.data_preprocessing.perturbations.main_perturb_all.split_by_label"
+    )
     @patch("src.data_preprocessing.perturbations.main_perturb_all.load_data")
     def test_calls_approximation_with_both_inputs(
         self,
@@ -424,9 +432,13 @@ class TestRunPerturbations:
     @patch("src.data_preprocessing.perturbations.main_perturb_all.range_pert")
     @patch("src.data_preprocessing.perturbations.main_perturb_all.numeration")
     @patch("src.data_preprocessing.perturbations.main_perturb_all.negative")
-    @patch("src.data_preprocessing.perturbations.main_perturb_all.approximation")
+    @patch(
+        "src.data_preprocessing.perturbations.main_perturb_all.approximation"
+    )
     @patch("src.data_preprocessing.perturbations.main_perturb_all.save_splits")
-    @patch("src.data_preprocessing.perturbations.main_perturb_all.split_by_label")
+    @patch(
+        "src.data_preprocessing.perturbations.main_perturb_all.split_by_label"
+    )
     @patch("src.data_preprocessing.perturbations.main_perturb_all.load_data")
     def test_calls_all_perturbation_modules(
         self,
@@ -461,28 +473,36 @@ class TestRunPerturbations:
 class TestMain:
     """Tests for the main CLI entry point."""
 
-    @patch("src.data_preprocessing.perturbations.main_perturb_all.run_perturbations")
+    @patch(
+        "src.data_preprocessing.perturbations.main_perturb_all.run_perturbations"
+    )
     def test_default_split_is_used(self, mock_run: MagicMock) -> None:
         """Verifies that the default split is used when no arg is passed."""
         with patch("sys.argv", ["main.py"]):
             main()
         mock_run.assert_called_once()
 
-    @patch("src.data_preprocessing.perturbations.main_perturb_all.run_perturbations")
+    @patch(
+        "src.data_preprocessing.perturbations.main_perturb_all.run_perturbations"
+    )
     def test_single_split_calls_run_once(self, mock_run: MagicMock) -> None:
         """Verifies that a single split triggers exactly one run."""
         with patch("sys.argv", ["main.py", "--split", "val"]):
             main()
         mock_run.assert_called_once()
 
-    @patch("src.data_preprocessing.perturbations.main_perturb_all.run_perturbations")
+    @patch(
+        "src.data_preprocessing.perturbations.main_perturb_all.run_perturbations"
+    )
     def test_all_split_calls_run_three_times(self, mock_run: MagicMock) -> None:
         """Verifies that '--split all' triggers three separate runs."""
         with patch("sys.argv", ["main.py", "--split", "all"]):
             main()
         assert mock_run.call_count == 3
 
-    @patch("src.data_preprocessing.perturbations.main_perturb_all.run_perturbations")
+    @patch(
+        "src.data_preprocessing.perturbations.main_perturb_all.run_perturbations"
+    )
     def test_all_split_covers_train_val_test(self, mock_run: MagicMock) -> None:
         """Verifies that all three split names are passed when using 'all'."""
         with patch("sys.argv", ["main.py", "--split", "all"]):
@@ -492,7 +512,9 @@ class TestMain:
         for split in ["train", "val", "test"]:
             assert any(split in p for p in input_trues)
 
-    @patch("src.data_preprocessing.perturbations.main_perturb_all.run_perturbations")
+    @patch(
+        "src.data_preprocessing.perturbations.main_perturb_all.run_perturbations"
+    )
     def test_correct_paths_passed_for_test_split(
         self, mock_run: MagicMock
     ) -> None:

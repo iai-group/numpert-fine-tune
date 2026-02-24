@@ -206,16 +206,18 @@ def eval_experiment(
     )
 
 
-def get_configuration() -> Tuple[
-    List[str],
-    Dict[str, List[str]],
-    Dict[str, str],
-    List[str],
-    Dict[str, str],
-    List[str],
-    List[str],
-    Dict[str, str],
-]:
+def get_configuration() -> (
+    Tuple[
+        List[str],
+        Dict[str, List[str]],
+        Dict[str, str],
+        List[str],
+        Dict[str, str],
+        List[str],
+        List[str],
+        Dict[str, str],
+    ]
+):
     """Get configuration for perturbation evaluation.
 
     Returns:

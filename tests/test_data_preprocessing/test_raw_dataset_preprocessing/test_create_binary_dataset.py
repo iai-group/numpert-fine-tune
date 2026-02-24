@@ -16,8 +16,10 @@ def test_remove_label_basic():
             {"id": 3, "label": "A"},
         ]
     )
-    filtered_json, dropped, remaining = remove_label(input_data, "A")
-    expected = json.dumps([{"id": 1, "label": "B"}], indent=4)
+    filtered_json, dropped, remaining = remove_label(input_data, "A", "test")
+    expected = json.dumps(
+        [{"id": 2, "label": "B", "claim_id": "test_000001"}], indent=4
+    )
     assert filtered_json == expected
     assert dropped == 2
     assert remaining == 1
@@ -31,11 +33,11 @@ def test_remove_label_no_removal():
             {"id": 2, "label": "B"},
         ]
     )
-    filtered_json, dropped, remaining = remove_label(input_data, "C")
+    filtered_json, dropped, remaining = remove_label(input_data, "C", "test")
     expected = json.dumps(
         [
-            {"id": 0, "label": "A"},
-            {"id": 1, "label": "B"},
+            {"id": 1, "label": "A", "claim_id": "test_000001"},
+            {"id": 2, "label": "B", "claim_id": "test_000002"},
         ],
         indent=4,
     )
@@ -52,7 +54,7 @@ def test_remove_label_all_removed():
             {"id": 2, "label": "A"},
         ]
     )
-    filtered_json, dropped, remaining = remove_label(input_data, "A")
+    filtered_json, dropped, remaining = remove_label(input_data, "A", "test")
     expected = json.dumps([], indent=4)
     assert filtered_json == expected
     assert dropped == 2
@@ -62,7 +64,7 @@ def test_remove_label_all_removed():
 def test_remove_label_empty_input():
     """Test removing a label from an empty JSON dataset."""
     input_data = json.dumps([])
-    filtered_json, dropped, remaining = remove_label(input_data, "A")
+    filtered_json, dropped, remaining = remove_label(input_data, "A", "test")
     expected = json.dumps([], indent=4)
     assert filtered_json == expected
     assert dropped == 0
@@ -77,8 +79,8 @@ def test_remove_label_missing_label_key():
             {"id": 2, "label": "B"},
         ]
     )
-    filtered_json, dropped, remaining = remove_label(input_data, "B")
-    expected = json.dumps([{"id": 0}], indent=4)
+    filtered_json, dropped, remaining = remove_label(input_data, "B", "test")
+    expected = json.dumps([{"id": 1, "claim_id": "test_000001"}], indent=4)
     assert filtered_json == expected
     assert dropped == 1
     assert remaining == 1
@@ -94,11 +96,11 @@ def test_remove_label_mixed_entries():
             {"id": 4, "label": "A"},
         ]
     )
-    filtered_json, dropped, remaining = remove_label(input_data, "A")
+    filtered_json, dropped, remaining = remove_label(input_data, "A", "test")
     expected = json.dumps(
         [
-            {"id": 1},
-            {"id": 2, "label": "B"},
+            {"id": 2, "claim_id": "test_000001"},
+            {"id": 3, "label": "B", "claim_id": "test_000002"},
         ],
         indent=4,
     )
@@ -116,8 +118,10 @@ def test_remove_label_non_string_label():
             {"id": 3, "label": 123},
         ]
     )
-    filtered_json, dropped, remaining = remove_label(input_data, 123)
-    expected = json.dumps([{"id": 1, "label": "B"}], indent=4)
+    filtered_json, dropped, remaining = remove_label(input_data, 123, "test")
+    expected = json.dumps(
+        [{"id": 2, "label": "B", "claim_id": "test_000001"}], indent=4
+    )
     assert filtered_json == expected
     assert dropped == 2
     assert remaining == 1
@@ -133,8 +137,10 @@ def test_remove_label_nested_json():
             {"id": 3, "label": nested},
         ]
     )
-    filtered_json, dropped, remaining = remove_label(input_data, nested)
-    expected = json.dumps([{"id": 1, "label": "B"}], indent=4)
+    filtered_json, dropped, remaining = remove_label(input_data, nested, "test")
+    expected = json.dumps(
+        [{"id": 2, "label": "B", "claim_id": "test_000001"}], indent=4
+    )
     assert filtered_json == expected
     assert dropped == 2
     assert remaining == 1
@@ -143,4 +149,4 @@ def test_remove_label_nested_json():
 def test_remove_label_invalid_json():
     """Test handling invalid JSON input."""
     with pytest.raises(json.JSONDecodeError):
-        remove_label("not a json", "A")
+        remove_label("not a json", "A", "test")

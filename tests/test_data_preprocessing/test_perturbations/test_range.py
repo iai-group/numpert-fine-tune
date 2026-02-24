@@ -314,7 +314,8 @@ def test_perturb_cardinal_small_number():
     bound."""
     out = rng.range_perturbation("5", "CARDINAL", "true")
     assert out in ("between 4 and 6", "between 5 and 6")
-    
+
+
 def test_is_integer_number_with_int():
     """Test _is_integer_number with integer input."""
     assert rng._is_integer_number(5) is True
@@ -342,4 +343,3 @@ def test_is_integer_number_with_other_type():
     assert rng._is_integer_number("5") is False
     assert rng._is_integer_number(None) is False
     assert rng._is_integer_number([5]) is False
-

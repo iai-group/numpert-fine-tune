@@ -237,7 +237,9 @@ def test_constraint_enforcement():
     if violations == 0:
         print("\n✅ TEST 3 PASSED (All constraints satisfied)")
     else:
-        print(f"\n⚠️  TEST 3 WARNING ({violations} batches violate constraints)")
+        print(
+            f"\n⚠️  TEST 3 WARNING ({violations} batches violate constraints)"
+        )
 
 
 def test_default_vs_custom():

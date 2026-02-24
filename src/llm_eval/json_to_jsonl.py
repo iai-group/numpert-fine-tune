@@ -304,13 +304,13 @@ def create_consolidated_jsonl(  # noqa: C901
                     # Add structured output format if requested
                     if args.response_format_openai:
                         if is_gemini:
-                            body["response_format"] = (
-                                get_gemini_response_format()
-                            )
+                            body[
+                                "response_format"
+                            ] = get_gemini_response_format()
                         else:
-                            body["response_format"] = (
-                                get_openai_response_format()
-                            )
+                            body[
+                                "response_format"
+                            ] = get_openai_response_format()
 
                     # Configure model-specific parameters
                     if not (is_reasoning and args.enable_reasoning):
