@@ -199,10 +199,9 @@ class DeltaEvalTable:
                 )
                 lines.append("\\midrule")
                 for m in sorted(models):
-                    full_model_name = m + "_" + section
-                    if m + "_" + section in scores:
+                    if m in scores:
                         row_cells = self.emit_row(
-                            full_model_name,
+                            m,
                             best_scores,
                             best_original,
                             scores,
