@@ -165,11 +165,11 @@ def process_json(
         base_entry = {key: entry[key] for key in INCLUDED_KEYS if key in entry}
 
         if perturbed_random != claim:
-            base_entry["perturb_type3_random"] = perturbed_random
+            base_entry[f"perturb_type3_random_{label}"] = perturbed_random
         if perturbed_masked != claim:
-            base_entry["perturb_type3_masked"] = perturbed_masked
+            base_entry[f"perturb_type3_masked_{label}"] = perturbed_masked
         if perturbed_removed != claim:
-            base_entry["perturb_type3_removed"] = perturbed_removed
+            base_entry[f"perturb_type3_removed_{label}"] = perturbed_removed
 
         results.setdefault(label, []).append(base_entry)
 

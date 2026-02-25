@@ -270,9 +270,9 @@ class TestProcessJson:
         result = process_json(sample_input_data)
         entry = result["True"][0]
         perturbation_keys = {
-            "perturb_type3_random",
-            "perturb_type3_masked",
-            "perturb_type3_removed",
+            "perturb_type3_random_True",
+            "perturb_type3_masked_True",
+            "perturb_type3_removed_True",
         }
         assert perturbation_keys & entry.keys()
 
@@ -353,7 +353,7 @@ class TestProcessJson:
         result = process_json(data)
         if "True" in result:
             entry = result["True"][0]
-            assert "perturb_type3_random" not in entry
+            assert "perturb_type3_random_True" not in entry
 
     def test_empty_input_returns_empty_dict(self, patch_included_keys):
         """Tests for the obfuscate perturbation module."""
@@ -857,9 +857,9 @@ class TestProcessJson:
                 result = process_json(sample_input_data)
                 entry = result["True"][0]
                 perturbation_keys = {
-                    "perturb_type3_random",
-                    "perturb_type3_masked",
-                    "perturb_type3_removed",
+                    "perturb_type3_random_True",
+                    "perturb_type3_masked_True",
+                    "perturb_type3_removed_True",
                 }
                 assert perturbation_keys & entry.keys()
 
@@ -956,7 +956,7 @@ class TestProcessJson:
                 result = process_json(data)
                 if "True" in result:
                     entry = result["True"][0]
-                    assert "perturb_type3_random" not in entry
+                    assert "perturb_type3_random_True" not in entry
 
             def test_empty_input_returns_empty_dict(self, patch_included_keys):
                 assert process_json([]) == {}
@@ -998,14 +998,14 @@ class TestProcessJson:
             ):
                 result = process_json(sample_input_data)
                 entry = result["True"][0]
-                assert "perturb_type3_masked" in entry
+                assert "perturb_type3_masked_True" in entry
 
             def test_removed_key_present_when_entity_has_digits(
                 self, sample_input_data, patch_included_keys
             ):
                 result = process_json(sample_input_data)
                 entry = result["True"][0]
-                assert "perturb_type3_removed" in entry
+                assert "perturb_type3_removed_True" in entry
 
             def test_extra_keys_not_included_from_entry(
                 self, patch_included_keys
@@ -1048,9 +1048,9 @@ class TestProcessJson:
                 ]
                 result = process_json(data)
                 entry = result["True"][0]
-                assert "perturb_type3_random" in entry
-                assert "perturb_type3_masked" in entry
-                assert "perturb_type3_removed" in entry
+                assert "perturb_type3_random_True" in entry
+                assert "perturb_type3_masked_True" in entry
+                assert "perturb_type3_removed_True" in entry
 
             def test_perturb_values_differ_from_original_claim(
                 self, sample_input_data, patch_included_keys
@@ -1058,12 +1058,12 @@ class TestProcessJson:
                 result = process_json(sample_input_data)
                 entry = result["True"][0]
                 original = sample_input_data[0]["normalized_claim"]
-                if "perturb_type3_random" in entry:
-                    assert entry["perturb_type3_random"] != original
-                if "perturb_type3_masked" in entry:
-                    assert entry["perturb_type3_masked"] != original
-                if "perturb_type3_removed" in entry:
-                    assert entry["perturb_type3_removed"] != original
+                if "perturb_type3_random_True" in entry:
+                    assert entry["perturb_type3_random_True"] != original
+                if "perturb_type3_masked_True" in entry:
+                    assert entry["perturb_type3_masked_True"] != original
+                if "perturb_type3_removed_True" in entry:
+                    assert entry["perturb_type3_removed_True"] != original
 
             def test_entry_skipped_when_only_non_numerical_entities(
                 self, patch_included_keys
