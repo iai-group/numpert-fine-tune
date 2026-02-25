@@ -114,8 +114,8 @@ class DatasetBalancer:
 
     def _extract_label(self, example):
         """Extract label from example."""
-        if "ground_truth" in example:
-            return example["ground_truth"]
+        if "label" in example:
+            return example["label"]
         else:
             # Extract from last assistant message
             last_msg = example["conversations"][-1]

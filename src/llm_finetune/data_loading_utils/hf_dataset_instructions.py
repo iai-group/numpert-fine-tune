@@ -245,7 +245,7 @@ if __name__ == "__main__":
     for p_type, count in perturb_counts.most_common():
         print(f"  {p_type:30s}: {count}")
 
-    label_counts = Counter(dataset["ground_truth"])
+    label_counts = Counter(dataset["label"])
     print("\nLabel distribution:")
     for label, count in label_counts.most_common():
         print(f"  {label:30s}: {count}")

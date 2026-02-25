@@ -56,14 +56,14 @@ def convert_to_conversations(
         )
 
         # Assistant response (always included — SFT needs it for training,
-        # evaluation uses ground_truth for scoring)
+        # evaluation uses label for scoring)
         conversations.append({"role": "assistant", "content": json_label})
 
         entry: Dict = {
             "conversations": conversations,
             "claim_id": example["claim_id"],
             "perturbation_type": example["perturbation_type"],
-            "ground_truth": json_label,
+            "label": json_label,
         }
         messages.append(entry)
 

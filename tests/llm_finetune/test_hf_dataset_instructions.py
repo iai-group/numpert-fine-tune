@@ -546,7 +546,7 @@ class TestConvertToConversations:
         assert "conversations" in first
         assert "claim_id" in first
         assert "perturbation_type" in first
-        assert "ground_truth" in first
+        assert "label" in first
 
         conv = first["conversations"]
         assert len(conv) == 3  # system, user, assistant
@@ -573,16 +573,16 @@ class TestConvertToConversations:
         user_msg = conversations[0]["conversations"][1]["content"]
         assert numeration_true_example["doc"] not in user_msg
 
-    def test_ground_truth_json_format(self, numeration_true_example):
-        """ground_truth should be JSON-formatted label."""
+    def test_label_json_format(self, numeration_true_example):
+        """label should be JSON-formatted."""
         expanded = expand_perturbations([numeration_true_example])
         conversations = convert_to_conversations(expanded, split="train")
 
         orig = [c for c in conversations if c["perturbation_type"] == "original"][0]
-        assert orig["ground_truth"] == '{"label": true}'
+        assert orig["label"] == '{"label": true}'
 
         t2 = [c for c in conversations if c["perturbation_type"] == "perturb_type2"][0]
-        assert t2["ground_truth"] == '{"label": false}'
+        assert t2["label"] == '{"label": false}'
 
 
 # ---------------------------------------------------------------------------
@@ -692,7 +692,7 @@ class TestLoadFactCheckingData:
         for i, ex in enumerate(dataset):
             print(
                 f"  [{i}] {ex['perturbation_type']:25s} "
-                f"ground_truth={ex['ground_truth']}  claim_id={ex['claim_id']}"
+                f"label={ex['label']}  claim_id={ex['claim_id']}"
             )
 
         # original + type1
@@ -705,7 +705,7 @@ class TestLoadFactCheckingData:
 
         # All labels must be False (type2 would have introduced True)
         assert all(
-            lbl == '{"label": false}' for lbl in dataset["ground_truth"]
+            lbl == '{"label": false}' for lbl in dataset["label"]
         ), "type1-only from False file must produce only False labels"
 
         print("✓ type1-only from False file yields only False labels")
@@ -737,7 +737,7 @@ class TestLoadFactCheckingData:
 
         print(f"Dataset size: {len(dataset)}")
         perturb_dist = Counter(dataset["perturbation_type"])
-        label_dist = Counter(dataset["ground_truth"])
+        label_dist = Counter(dataset["label"])
         for pt, count in perturb_dist.most_common():
             print(f"  {pt}: {count}")
         print(f"  Labels: {dict(label_dist)}")
@@ -762,7 +762,7 @@ class TestLoadFactCheckingData:
         assert len(type2_entries) == 1
         assert type2_entries[0]["claim_id"] == "train_000001"
         # type2 from True file flips label → False
-        assert type2_entries[0]["ground_truth"] == '{"label": false}'
+        assert type2_entries[0]["label"] == '{"label": false}'
 
         print("✓ Mixed selective loading correct")
 

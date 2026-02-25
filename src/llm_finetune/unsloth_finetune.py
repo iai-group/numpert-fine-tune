@@ -360,7 +360,7 @@ def finetune(
         print(f"  {p_type:30s}: {count:5d} ({100*count/len(train_data):5.1f}%)")
 
     # Show label distribution
-    train_label_dist = Counter(train_data["ground_truth"])
+    train_label_dist = Counter(train_data["label"])
     print("\nTrain label distribution:")
     for label, count in train_label_dist.most_common():
         print(f"  {label:30s}: {count:5d} ({100*count/len(train_data):5.1f}%)")
@@ -405,7 +405,7 @@ def finetune(
                 print(
                     f"  Perturbation: {example.get('perturbation_type', 'N/A')}"
                 )
-                print(f"  Ground truth: {example.get('ground_truth', 'N/A')}")
+                print(f"  Label: {example.get('label', 'N/A')}")
                 print(f"  Conversation structure:")
 
                 for j, msg in enumerate(conv):
@@ -586,7 +586,7 @@ def finetune(
         print("=" * 80 + "\n")
 
     # Remove ALL non-tensor columns - keep only 'text' for SFTTrainer
-    # String columns like claim_id, perturbation_type, ground_truth cause tensor errors
+    # String columns like claim_id, perturbation_type, label cause tensor errors
 
     # If using the custom sampler, we also can to keep metadata
     # until after the sampler is initialized
@@ -933,7 +933,7 @@ def inference(
 
     # Prepare for predictions
     predictions = []  # Will contain None for parse failures
-    ground_truths = list(test_data["ground_truth"])
+    true_labels = list(test_data["label"])
     raw_outputs = []  # Store raw outputs for debugging
 
     # Create output directory
@@ -962,7 +962,7 @@ def inference(
                     "index": idx,
                     "claim_id": test_data[idx]["claim_id"],
                     "perturbation_type": test_data[idx]["perturbation_type"],
-                    "ground_truth": test_data[idx]["ground_truth"],
+                    "label": test_data[idx]["label"],
                     "full_prompt": prompts[idx],  # Full input
                     "raw_response": text,  # Model output only
                 }
@@ -1021,7 +1021,7 @@ def inference(
                     "index": i,
                     "claim_id": test_data[i]["claim_id"],
                     "perturbation_type": test_data[i]["perturbation_type"],
-                    "ground_truth": test_data[i]["ground_truth"],
+                    "label": test_data[i]["label"],
                     "full_prompt": prompt_text,  # Full input
                     "raw_response": decoded,  # Model output only
                 }
@@ -1052,7 +1052,7 @@ def inference(
     ]
 
     valid_predictions = [labels_extracted[i] for i in valid_indices]
-    valid_ground_truths = [ground_truths[i] for i in valid_indices]
+    valid_true_labels = [true_labels[i] for i in valid_indices]
 
     n_total = len(labels_extracted)
     n_valid = len(valid_predictions)
@@ -1086,15 +1086,15 @@ def inference(
         f1_macro = 0.0
         f1_weighted = 0.0
     else:
-        accuracy = accuracy_score(valid_ground_truths, valid_predictions)
+        accuracy = accuracy_score(valid_true_labels, valid_predictions)
         f1_macro = f1_score(
-            valid_ground_truths,
+            valid_true_labels,
             valid_predictions,
             average="macro",
             zero_division=0,
         )
         f1_weighted = f1_score(
-            valid_ground_truths,
+            valid_true_labels,
             valid_predictions,
             average="weighted",
             zero_division=0,
@@ -1107,7 +1107,7 @@ def inference(
         print("\nClassification Report:")
         print(
             classification_report(
-                valid_ground_truths, valid_predictions, labels=VALID_LABELS
+                valid_true_labels, valid_predictions, labels=VALID_LABELS
             )
         )
 
@@ -1125,7 +1125,7 @@ def inference(
     # Count correct/total for valid predictions
     for i in valid_indices:
         pred = labels_extracted[i]
-        gt = ground_truths[i]
+        gt = true_labels[i]
         p_type = test_data[i]["perturbation_type"]
         perturb_metrics[p_type]["total"] += 1
         if pred == gt:
@@ -1164,7 +1164,7 @@ def inference(
         {
             "claim_id": test_data["claim_id"],
             "perturbation_type": test_data["perturbation_type"],
-            "ground_truth": ground_truths,
+            "label": true_labels,
             "prediction": [
                 p if p is not None else "PARSE_FAILURE"
                 for p in labels_extracted
@@ -1213,7 +1213,7 @@ def inference(
                 "index": i,
                 "claim_id": test_data[i]["claim_id"],
                 "perturbation_type": test_data[i]["perturbation_type"],
-                "ground_truth": ground_truths[i],
+                "label": true_labels[i],
                 "raw_output": raw_outputs[i],
             }
             for i in parse_failure_indices
