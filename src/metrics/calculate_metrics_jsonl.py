@@ -564,7 +564,9 @@ class ClassificationMetricsRunner:
         self.formatter = ResultsFormatter()
 
     def get_output_filename(
-        self, input_path: Union[str, Path], output_dir: Optional[Union[str, Path]] = None
+        self,
+        input_path: Union[str, Path],
+        output_dir: Optional[Union[str, Path]] = None,
     ) -> str:
         """Generate output filename with RESULTS_ prefix."""
         input_path_obj: Path = Path(input_path)
@@ -574,7 +576,9 @@ class ClassificationMetricsRunner:
             output_dir_obj.mkdir(parents=True, exist_ok=True)
             return str(output_dir_obj / f"RESULTS_{input_path_obj.stem}.json")
         else:
-            return str(input_path_obj.parent / f"RESULTS_{input_path_obj.stem}.json")
+            return str(
+                input_path_obj.parent / f"RESULTS_{input_path_obj.stem}.json"
+            )
 
     def find_jsonl_files(self, directory: Union[str, Path]) -> List[str]:
         """Find all JSONL files in a directory."""

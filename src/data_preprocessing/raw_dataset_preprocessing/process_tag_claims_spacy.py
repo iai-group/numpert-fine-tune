@@ -4,7 +4,7 @@ import spacy
 import json
 import logging
 import re
-from word2number import w2n
+from word2number import w2n  # type: ignore
 from spacy.cli import download
 from spacy.language import Language
 from typing import Set, Any, Dict, List, Optional, Tuple

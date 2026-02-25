@@ -8,7 +8,7 @@ import json
 import re
 import argparse
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 
 def remove_gold_verdict(evidence: str) -> str:
@@ -137,7 +137,7 @@ def find_json_files(directory: Path) -> List[Path]:
 
 
 def process_folder(  # noqa: C901
-    input_dir: Path, output_dir: Path = None, dry_run: bool = False
+    input_dir: Path, output_dir: Optional[Path] = None, dry_run: bool = False
 ) -> None:
     """Process all JSON files in the input directory and its subdirectories.
 
