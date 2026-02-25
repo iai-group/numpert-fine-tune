@@ -41,7 +41,7 @@ echo ""
 echo "Working directory: $(pwd)"
 echo ""
     
-bash ./scripts/train/model_configs/qwen3_8b_normal_b.sh
+bash ./scripts/train/model_configs/qwen3_8b_normal_b_no_type2f.sh
 
 # Print completion information
 echo ""
