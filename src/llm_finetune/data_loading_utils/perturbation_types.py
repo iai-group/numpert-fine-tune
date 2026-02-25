@@ -2,8 +2,8 @@
 
 Perturbation taxonomy enum, convenience sets, and per-file load configuration.
 
-These are leaf-level definitions with no internal dependencies, so they can
-be imported from anywhere without risking circular imports.
+These are leaf-level definitions with no internal dependencies, so they can be
+imported from anywhere without risking circular imports.
 """
 
 from __future__ import annotations

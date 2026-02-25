@@ -22,7 +22,7 @@ class ResponseValidator:
     def __init__(self, debug_mode: bool = False):
         """Initialize the validator with optional debug mode."""
         self.debug_mode = debug_mode
-        self.debug_samples: List[Dict[str, Any]] = []
+        self.debug_samples: List[str] = []
 
     def extract_label_from_json(self, content: str) -> Optional[bool]:
         """Try to extract label by parsing content as complete JSON."""
@@ -223,6 +223,8 @@ class JsonlProcessor:
             if content_error:
                 self.failed_custom_ids[content_error].append(custom_id)
                 return None, content_error
+
+            assert content is not None  # guaranteed by no content_error
 
             # Validate and extract prediction
             prediction, validation_error = self.validator.validate_and_extract(
@@ -591,7 +593,7 @@ class ClassificationMetricsRunner:
         return sorted(jsonl_files)
 
     def process_single_file(
-        self, input_file: str, output_path: str = None
+        self, input_file: str, output_path: Optional[str] = None
     ) -> None:
         """Process a single JSONL file."""
         print(f"🔄 Processing file: {input_file}")
@@ -638,7 +640,9 @@ class ClassificationMetricsRunner:
 
                 traceback.print_exc()
 
-    def process_directory(self, input_dir: str, output_dir: str = None) -> None:
+    def process_directory(
+        self, input_dir: str, output_dir: Optional[str] = None
+    ) -> None:
         """Process all JSONL files in a directory."""
         print(f"🔄 Processing directory: {input_dir}")
 

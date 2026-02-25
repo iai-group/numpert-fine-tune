@@ -162,7 +162,7 @@ class TestRemoveUnperturbedClaims:
 
     def test_skips_non_dict_items(self, capsys: pytest.CaptureFixture) -> None:
         """Verifies that non-dict items are skipped with a warning."""
-        data = [
+        data: list = [
             "not a dict",
             {"normalized_claim": "X.", "perturb_type1": "Y.", "label": "True"},
         ]

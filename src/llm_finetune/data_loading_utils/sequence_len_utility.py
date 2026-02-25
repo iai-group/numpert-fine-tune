@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 from collections import Counter
-from typing import Dict, List
+from typing import Dict, List, Optional
 import numpy as np
 
 from src.llm_finetune.data_loading_utils.hf_dataset_instructions import (
@@ -16,7 +16,7 @@ def analyze_sequence_lengths(
     tokenizer,
     split: str = "train",
     expand_perturbations: bool = True,
-    max_examples: int = None,
+    max_examples: Optional[int] = None,
 ) -> Dict:
     """Analyze the distribution of sequence lengths in your dataset.
 

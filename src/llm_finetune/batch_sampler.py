@@ -2,7 +2,7 @@
 
 from torch.utils.data import Sampler
 from collections import defaultdict
-from typing import List
+from typing import Any, Dict, List, Optional
 import random
 
 
@@ -52,11 +52,11 @@ class EnhancedPerturbationBatchSampler(Sampler):
         self.rng = random.Random(seed)
 
         # Group indices
-        self.claim_id_groups = defaultdict(
+        self.claim_id_groups: Dict[str, Dict[str, Any]] = defaultdict(
             lambda: {"original": None, "perturbed": []}
         )
-        self.original_indices = []
-        self.perturbed_indices = []
+        self.original_indices: List[int] = []
+        self.perturbed_indices: List[int] = []
 
         for idx in range(len(dataset)):
             claim_id = dataset[idx]["claim_id"]

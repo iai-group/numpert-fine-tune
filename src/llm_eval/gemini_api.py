@@ -110,7 +110,7 @@ def get_processed_ids(output_file: str) -> Set[str]:
     Returns:
         A set of custom_ids that have already been processed.
     """
-    processed_ids = set()
+    processed_ids: set[str] = set()
 
     if not os.path.exists(output_file):
         return processed_ids
@@ -348,7 +348,7 @@ def create_output_record(
 
     # Optionally include thoughts in the response
     if result["thoughts"] and result["thoughts"].strip():
-        response_body["choices"][0]["message"]["thoughts"] = result["thoughts"]
+        response_body["choices"][0]["message"]["thoughts"] = result["thoughts"]  # type: ignore[index]
 
     return {
         "custom_id": custom_id,

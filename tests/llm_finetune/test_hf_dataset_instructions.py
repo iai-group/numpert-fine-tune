@@ -157,9 +157,11 @@ def print_separator(title: str):
     print("=" * 80)
 
 
-def print_example(example: Dict, index: int = None):
+def print_example(example: Dict, index: int = None):  # type: ignore[assignment]
     """Pretty print an example."""
-    prefix = f"--- Example {index} ---" if index is not None else "--- Example ---"
+    prefix = (
+        f"--- Example {index} ---" if index is not None else "--- Example ---"
+    )
     print(f"\n{prefix}")
     for key, value in example.items():
         if key == "conversations":
@@ -209,10 +211,12 @@ class TestDetectPerturbKey:
 
     def test_type3_keys_without_label_suffix(self):
         assert (
-            _detect_perturb_key("perturb_type3_random") == "perturb_type3_random"
+            _detect_perturb_key("perturb_type3_random")
+            == "perturb_type3_random"
         )
         assert (
-            _detect_perturb_key("perturb_type3_masked") == "perturb_type3_masked"
+            _detect_perturb_key("perturb_type3_masked")
+            == "perturb_type3_masked"
         )
         assert (
             _detect_perturb_key("perturb_type3_removed")
@@ -258,7 +262,11 @@ class TestDetermineLabel:
         assert _determine_perturbed_label("perturb_type2", False) == "True"
 
     def test_type3_always_false(self):
-        for t3 in ["perturb_type3_random", "perturb_type3_masked", "perturb_type3_removed"]:
+        for t3 in [
+            "perturb_type3_random",
+            "perturb_type3_masked",
+            "perturb_type3_removed",
+        ]:
             assert _determine_perturbed_label(t3, True) == "False"
             assert _determine_perturbed_label(t3, False) == "False"
 
@@ -285,7 +293,9 @@ class TestParseFileConfig:
         ]
 
     def test_path_with_types_full_name(self):
-        cfg = parse_file_config("obf.json:perturb_type3_random,perturb_type3_masked")
+        cfg = parse_file_config(
+            "obf.json:perturb_type3_random,perturb_type3_masked"
+        )
         assert cfg.path == "obf.json"
         assert cfg.perturb_types == [
             PerturbationType.PERTURB_TYPE3_RANDOM,
@@ -339,7 +349,8 @@ class TestExpandPerturbations:
     """Test perturbation expansion with the new key format."""
 
     def test_expand_numeration_true(self, numeration_true_example):
-        """numeration_True.json: original True + type1 (True) + type2 (False)."""
+        """numeration_True.json: original True + type1 (True) + type2
+        (False)."""
         print_separator("TEST: Expand numeration True example")
 
         expanded = expand_perturbations([numeration_true_example])
@@ -363,7 +374,8 @@ class TestExpandPerturbations:
         assert t2[0]["label"] == "False"  # value-modifying → flipped
 
     def test_expand_approximation_false(self, approximation_false_example):
-        """approximation_False.json: original False + type1 (False) + type2 (True)."""
+        """approximation_False.json: original False + type1 (False) + type2
+        (True)."""
         print_separator("TEST: Expand approximation False example")
 
         expanded = expand_perturbations([approximation_false_example])
@@ -384,7 +396,8 @@ class TestExpandPerturbations:
         assert t2[0]["label"] == "True"  # value-modifying → flipped
 
     def test_expand_obfuscation_true(self, obfuscation_true_example):
-        """obfuscation_True.json: original True + 3 type3 variants (all False)."""
+        """obfuscation_True.json: original True + 3 type3 variants (all
+        False)."""
         print_separator("TEST: Expand obfuscation True example")
 
         expanded = expand_perturbations([obfuscation_true_example])
@@ -396,7 +409,11 @@ class TestExpandPerturbations:
         assert len(expanded) == 4  # original + 3 type3 variants
 
         # All type3 perturbations should be False
-        type3 = [e for e in expanded if e["perturbation_type"].startswith("perturb_type3")]
+        type3 = [
+            e
+            for e in expanded
+            if e["perturbation_type"].startswith("perturb_type3")
+        ]
         assert len(type3) == 3
         assert all(e["label"] == "False" for e in type3)
 
@@ -450,9 +467,7 @@ class TestExpandPerturbations:
         - type2 (value-modifying) would flip to True
         Selecting only type1 should therefore produce *only* False labels.
         """
-        print_separator(
-            "TEST: Selective type1 from False dataset (no type2)"
-        )
+        print_separator("TEST: Selective type1 from False dataset (no type2)")
 
         expanded = expand_perturbations(
             [approximation_false_example],
@@ -485,8 +500,8 @@ class TestExpandPerturbations:
     ):
         """Compare type1-only vs all-types from a False-label example.
 
-        Loading all types introduces a True-labeled entry (type2);
-        filtering to type1-only must eliminate it.
+        Loading all types introduces a True-labeled entry (type2); filtering to
+        type1-only must eliminate it.
         """
         all_expanded = expand_perturbations([approximation_false_example])
         type1_only = expand_perturbations(
@@ -574,14 +589,20 @@ class TestConvertToConversations:
         assert numeration_true_example["doc"] not in user_msg
 
     def test_label_json_format(self, numeration_true_example):
-        """label should be JSON-formatted."""
+        """Label should be JSON-formatted."""
         expanded = expand_perturbations([numeration_true_example])
         conversations = convert_to_conversations(expanded, split="train")
 
-        orig = [c for c in conversations if c["perturbation_type"] == "original"][0]
+        orig = [
+            c for c in conversations if c["perturbation_type"] == "original"
+        ][0]
         assert orig["label"] == '{"label": true}'
 
-        t2 = [c for c in conversations if c["perturbation_type"] == "perturb_type2"][0]
+        t2 = [
+            c
+            for c in conversations
+            if c["perturbation_type"] == "perturb_type2"
+        ][0]
         assert t2["label"] == '{"label": false}'
 
 
@@ -617,9 +638,7 @@ class TestLoadFactCheckingData:
         )
 
         assert len(dataset) == 1
-        assert all(
-            p == "original" for p in dataset["perturbation_type"]
-        )
+        assert all(p == "original" for p in dataset["perturbation_type"])
 
     def test_load_multiple_files(self, temp_json_files):
         dataset = load_fact_checking_data(
@@ -777,7 +796,9 @@ class TestLoadFactCheckingData:
         assert len(dataset) == 3  # original + type1 + type2
 
     def test_no_paths_or_configs_raises(self):
-        with pytest.raises(ValueError, match="Either json_paths or file_configs"):
+        with pytest.raises(
+            ValueError, match="Either json_paths or file_configs"
+        ):
             load_fact_checking_data()
 
 
@@ -803,7 +824,7 @@ class TestLoadTrainAndValidation:
 
         assert "train" in datasets
         assert "validation" in datasets
-        assert len(datasets["train"]) == 6   # 2 files × 3 expanded each
+        assert len(datasets["train"]) == 6  # 2 files × 3 expanded each
         assert len(datasets["validation"]) == 3
 
         print("✓ Train and validation loaded correctly")

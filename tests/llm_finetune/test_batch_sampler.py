@@ -1,6 +1,7 @@
 import pytest
 from datasets import Dataset
 from collections import Counter, defaultdict
+from typing import Any, Dict, List
 import sys
 import os
 
@@ -49,7 +50,11 @@ def create_mock_dataset(
             )
 
         # Perturbations
-        perturb_types = ["perturb_type1", "perturb_type2", "perturb_type3_random"]
+        perturb_types = [
+            "perturb_type1",
+            "perturb_type2",
+            "perturb_type3_random",
+        ]
         for j in range(perturbations_per_claim):
             examples.append(
                 {
@@ -66,9 +71,9 @@ def create_mock_dataset(
     return Dataset.from_list(examples)
 
 
-def analyze_batches(batches: list, dataset: Dataset) -> dict:
+def analyze_batches(batches: list, dataset: Dataset) -> Dict[str, Any]:
     """Analyze batch statistics."""
-    stats = {
+    stats: Dict[str, Any] = {
         "num_batches": len(batches),
         "batch_sizes": [len(b) for b in batches],
         "total_examples": sum(len(b) for b in batches),
@@ -83,7 +88,7 @@ def analyze_batches(batches: list, dataset: Dataset) -> dict:
     }
 
     # Track which claim_ids appear in which batches (to check for original repetition)
-    claim_id_to_batches = defaultdict(
+    claim_id_to_batches: Dict[str, Dict[str, List[int]]] = defaultdict(
         lambda: {"original_in": [], "perturbed_in": []}
     )
 

@@ -13,6 +13,7 @@ try:
     from src.numpert_prompt.prompt import (
         get_fact_check_system_prompt,
         get_fact_check_user_prompt,
+        PromptType,
     )
 except ImportError:
     try:
@@ -20,12 +21,14 @@ except ImportError:
         from src.numpert_prompt.prompt import (
             get_fact_check_system_prompt,
             get_fact_check_user_prompt,
+            PromptType,
         )
     except ImportError:
         # If both fail, try importing from llm_eval in the same directory
         from src.numpert_prompt.prompt import (
             get_fact_check_system_prompt,
             get_fact_check_user_prompt,
+            PromptType,
         )
 
 
@@ -164,19 +167,13 @@ def get_gemini_response_format():
 
 def get_structured_prompt_for_gemini(claim, evidence, few_shot=False) -> str:
     """Get a more explicit prompt for Gemini structured output."""
+    prompt_type = (
+        PromptType.FEW_SHOT if few_shot else PromptType.NEGATIVE_SYNTHETIC_ALL
+    )
     base_prompt = get_fact_check_user_prompt(
         claim=claim,
         evidence=evidence,
-        include_few_shot_examples=few_shot,
-        include_negative_examples=False,
-        include_negative_examples_synthetic_all_combined=not few_shot,
-        include_negative_examples_synthetic_all_combined_with_reasoning=False,
-        include_perturb_approx_negative_example=False,
-        include_perturb_range_negative_example=False,
-        include_perturb_numeration_negative_example=False,
-        include_perturb_negation_negative_example=False,
-        include_perturb_random_negative_example=False,
-        include_perturb_masking_negative_example=False,
+        prompt_type=prompt_type,
     )
     return f"""{base_prompt}"""
 
@@ -274,19 +271,15 @@ def create_consolidated_jsonl(  # noqa: C901
 
                         # set include_few_shot_examples
                         # to args.few_shot explicitly
+                        prompt_type = (
+                            PromptType.FEW_SHOT
+                            if args.few_shot
+                            else PromptType.NEGATIVE_SYNTHETIC_ALL
+                        )
                         user_content = get_fact_check_user_prompt(
                             claim=claim,
                             evidence=evidence,
-                            include_few_shot_examples=args.few_shot,
-                            include_negative_examples=False,
-                            include_negative_examples_synthetic_all_combined=not args.few_shot,
-                            include_negative_examples_synthetic_all_combined_with_reasoning=False,
-                            include_perturb_approx_negative_example=False,
-                            include_perturb_range_negative_example=False,
-                            include_perturb_numeration_negative_example=False,
-                            include_perturb_negation_negative_example=False,
-                            include_perturb_random_negative_example=False,
-                            include_perturb_masking_negative_example=False,
+                            prompt_type=prompt_type,
                         )
 
                     # Create the body for the batch request
@@ -407,19 +400,15 @@ def create_jsonl_from_json(  # noqa: C901
                         claim, evidence, args.few_shot
                     )
                 else:
+                    prompt_type = (
+                        PromptType.FEW_SHOT
+                        if args.few_shot
+                        else PromptType.NEGATIVE_SYNTHETIC_ALL
+                    )
                     user_content = get_fact_check_user_prompt(
                         claim=claim,
                         evidence=evidence,
-                        include_few_shot_examples=args.few_shot,
-                        include_negative_examples=False,
-                        include_negative_examples_synthetic_all_combined=not args.few_shot,
-                        include_negative_examples_synthetic_all_combined_with_reasoning=False,
-                        include_perturb_approx_negative_example=False,
-                        include_perturb_range_negative_example=False,
-                        include_perturb_numeration_negative_example=False,
-                        include_perturb_negation_negative_example=False,
-                        include_perturb_random_negative_example=False,
-                        include_perturb_masking_negative_example=False,
+                        prompt_type=prompt_type,
                     )
 
                 body = {

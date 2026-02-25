@@ -90,7 +90,7 @@ class MisclassificationTokenAnalyzer:
         self.verbose = verbose
         self.correct_metrics = TokenMetrics()
         self.incorrect_metrics = TokenMetrics()
-        self.processing_errors = []
+        self.processing_errors: list[str] = []
 
     def extract_ground_truth(self, custom_id: str) -> bool:
         """

@@ -110,9 +110,7 @@ def expand_perturbations(
     allowed_base_types: Optional[set] = None
     if allowed_types is not None:
         allowed_base_types = {
-            t.value
-            for t in allowed_types
-            if t != PerturbationType.ORIGINAL
+            t.value for t in allowed_types if t != PerturbationType.ORIGINAL
         }
 
     expanded: List[Dict] = []

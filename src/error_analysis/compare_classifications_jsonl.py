@@ -134,7 +134,7 @@ def compare_classifications(
     details: bool = False,
 ) -> List:
     """Return IDs (or full tuples) where file1 correct and file2 incorrect."""
-    improved = []
+    improved: list = []
     for cid in set(file1) & set(file2):
         pred1, corr1 = file1[cid]
         pred2, corr2 = file2[cid]

@@ -1,7 +1,7 @@
 """conversation.py.
 
-Convert expanded perturbation examples into the conversation format
-expected by HuggingFace SFTTrainer.
+Convert expanded perturbation examples into the conversation format expected by
+HuggingFace SFTTrainer.
 """
 
 from __future__ import annotations

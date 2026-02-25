@@ -43,11 +43,13 @@ class DatasetBalancer:
         self.rng = random.Random(seed)
 
         # Categorize examples
-        self.original_true_indices = []
-        self.original_false_indices = []
-        self.t_to_t_indices = []  # True → True perturbations
-        self.t_to_f_indices = []  # True → False perturbations
-        self.f_to_f_indices = []  # False → False perturbations (*_true only)
+        self.original_true_indices: List[int] = []
+        self.original_false_indices: List[int] = []
+        self.t_to_t_indices: List[int] = []  # True → True perturbations
+        self.t_to_f_indices: List[int] = []  # True → False perturbations
+        self.f_to_f_indices: List[
+            int
+        ] = []  # False → False perturbations (*_true only)
 
         self._categorize_examples()
 

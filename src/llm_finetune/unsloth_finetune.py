@@ -38,6 +38,12 @@ from unsloth import is_bfloat16_supported
 from unsloth.chat_templates import train_on_responses_only
 import wandb
 import argparse
+
+try:
+    from vllm import LLM, SamplingParams
+except ImportError:  # vllm is optional (GPU-only)
+    LLM = None  # type: ignore[assignment,misc]
+    SamplingParams = None  # type: ignore[assignment,misc]
 import os
 from tqdm import tqdm
 import pandas as pd
@@ -1113,7 +1119,7 @@ def inference(
 
     # Per-perturbation analysis (only on valid predictions)
     print("\nPer-Perturbation Type Analysis:")
-    perturb_metrics = defaultdict(
+    perturb_metrics: Dict[str, Dict[str, int]] = defaultdict(
         lambda: {"correct": 0, "total": 0, "failures": 0}
     )
 
@@ -1250,16 +1256,12 @@ if __name__ == "__main__":
     parser.add_argument(
         "--val_json",
         nargs="+",
-        help=(
-            "Path(s) to validation JSON files. Same format as --train_json."
-        ),
+        help=("Path(s) to validation JSON files. Same format as --train_json."),
     )
     parser.add_argument(
         "--test_json",
         nargs="+",
-        help=(
-            "Path(s) to test JSON files. Same format as --train_json."
-        ),
+        help=("Path(s) to test JSON files. Same format as --train_json."),
     )
 
     # Model configuration
