@@ -85,7 +85,11 @@ def numeration_perturbation(
                 unit = ""  # No additional unit for MONEY entities
             else:
                 number_str = match.group(1)
-                unit = match.group(2) if match.lastindex is not None and match.lastindex >= 2 else ""
+                unit = (
+                    match.group(2)
+                    if match.lastindex is not None and match.lastindex >= 2
+                    else ""
+                )
             # Remove unwanted characters and convert to float
             clean_number_str = number_str.replace(",", "")
             number = float(clean_number_str)
