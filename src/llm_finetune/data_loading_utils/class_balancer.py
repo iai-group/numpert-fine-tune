@@ -17,7 +17,7 @@ class DatasetBalancer:
     - Balance True/False labels
     - Control perturbed:non-perturbed ratio
     - Control T→F vs F→F ratio among false perturbations
-    - Only uses *_true perturbations for F→F (more similar to original)
+    - Only uses structure-preserving (type1) perturbations for F→F
     """
 
     def __init__(
@@ -106,10 +106,11 @@ class DatasetBalancer:
             elif original_is_true and not current_is_true:
                 self.t_to_f_indices.append(idx)
             elif not original_is_true and not current_is_true:
-                # Only use *_true perturbations for F→F (more similar to original)
-                if perturb_type.endswith("_true"):
+                # Only use structure-preserving (type1) perturbations for F→F
+                # (these are most similar to the original claim)
+                if perturb_type == "perturb_type1":
                     self.f_to_f_indices.append(idx)
-                # Ignore *_false perturbations for F→F
+                # Ignore type2/type3 perturbations for F→F
 
     def _extract_label(self, example):
         """Extract label from example."""

@@ -14,12 +14,14 @@ import numpy as np
 from datetime import datetime
 
 from src.llm_finetune.config import prefix
-from src.llm_finetune.hf_dataset_instructions import (
+from src.llm_finetune.data_loading_utils.hf_dataset_instructions import (
     load_fact_checking_data,
     load_train_and_validation,
     PerturbationType,
+    FileLoadConfig,
+    parse_file_config,
 )
-from src.llm_finetune.class_balancer import DatasetBalancer
+from src.llm_finetune.data_loading_utils.class_balancer import DatasetBalancer
 from src.llm_finetune.batch_sampler import EnhancedPerturbationBatchSampler
 
 
@@ -136,8 +138,10 @@ def get_model_name_arg(model_name):
 
 
 def finetune(
-    train_json_paths: List[str],
-    val_json_paths: List[str],
+    train_json_paths: Optional[List[str]] = None,
+    val_json_paths: Optional[List[str]] = None,
+    train_file_configs: Optional[List[FileLoadConfig]] = None,
+    val_file_configs: Optional[List[FileLoadConfig]] = None,
     model_name: str = "llama-3.2-3b-instruct",
     perturb_type_names: str = "",
     rank: int = 32,
@@ -324,6 +328,8 @@ def finetune(
     datasets = load_train_and_validation(
         train_json_paths=train_json_paths,
         val_json_paths=val_json_paths,
+        train_file_configs=train_file_configs,
+        val_file_configs=val_file_configs,
         expand_perturbations_flag=expand_perturbations,
         include_doc=True,
     )
@@ -801,7 +807,8 @@ def extract_label_from_response(text: str) -> Optional[str]:
 
 
 def inference(
-    test_json_paths: List[str],
+    test_json_paths: Optional[List[str]] = None,
+    test_file_configs: Optional[List[FileLoadConfig]] = None,
     model_name: str = "llama-3.2-3b-instruct",
     rank: int = 32,
     start_epoch: int = 0,
@@ -886,6 +893,7 @@ def inference(
     print("Loading test data...")
     test_data = load_fact_checking_data(
         json_paths=test_json_paths,
+        file_configs=test_file_configs,
         split="test",
         expand_perturbations_flag=expand_perturbations,
         include_doc=True,
@@ -1229,15 +1237,29 @@ if __name__ == "__main__":
         help="Mode: finetune or inference",
     )
 
-    # Data paths
+    # Data paths — supports per-file perturbation type control.
+    # Format: path/to/file.json[:type1,type2,...] (see parse_file_config)
     parser.add_argument(
-        "--train_json", nargs="+", help="Path(s) to training JSON files"
+        "--train_json",
+        nargs="+",
+        help=(
+            "Path(s) to training JSON files. Supports per-file type control: "
+            "path.json:type1,type2  (see FileLoadConfig)"
+        ),
     )
     parser.add_argument(
-        "--val_json", nargs="+", help="Path(s) to validation JSON files"
+        "--val_json",
+        nargs="+",
+        help=(
+            "Path(s) to validation JSON files. Same format as --train_json."
+        ),
     )
     parser.add_argument(
-        "--test_json", nargs="+", help="Path(s) to test JSON files"
+        "--test_json",
+        nargs="+",
+        help=(
+            "Path(s) to test JSON files. Same format as --train_json."
+        ),
     )
 
     # Model configuration
@@ -1367,9 +1389,13 @@ if __name__ == "__main__":
                 "--train_json and --val_json are required for finetuning"
             )
 
+        # Parse file configs (supports path:type1,type2 notation)
+        train_configs = [parse_file_config(p) for p in args.train_json]
+        val_configs = [parse_file_config(p) for p in args.val_json]
+
         finetune(
-            train_json_paths=args.train_json,
-            val_json_paths=args.val_json,
+            train_file_configs=train_configs,
+            val_file_configs=val_configs,
             model_name=args.model,
             perturb_type_names=args.perturb_type_names,
             rank=args.rank,
@@ -1396,8 +1422,11 @@ if __name__ == "__main__":
         if not args.test_json:
             parser.error("--test_json is required for inference")
 
+        # Parse file configs for test data
+        test_configs = [parse_file_config(p) for p in args.test_json]
+
         inference(
-            test_json_paths=args.test_json,
+            test_file_configs=test_configs,
             model_name=args.model,
             rank=args.rank,
             start_epoch=args.start_epoch,

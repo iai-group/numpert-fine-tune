@@ -49,7 +49,7 @@ def create_mock_dataset(
             )
 
         # Perturbations
-        perturb_types = ["numeration_true", "approximation_false", "range_true"]
+        perturb_types = ["perturb_type1", "perturb_type2", "perturb_type3_random"]
         for j in range(perturbations_per_claim):
             examples.append(
                 {
@@ -394,7 +394,7 @@ class TestEnhancedPerturbationBatchSampler:
                 {
                     "claim_id": "small_claim",
                     "perturbation_type": (
-                        "original" if i == 0 else "numeration_false"
+                        "original" if i == 0 else "perturb_type2"
                     ),
                     "conversations": [{"role": "assistant", "content": "True"}],
                 }
@@ -406,7 +406,7 @@ class TestEnhancedPerturbationBatchSampler:
                 {
                     "claim_id": "medium_claim",
                     "perturbation_type": (
-                        "original" if i == 0 else "approximation_true"
+                        "original" if i == 0 else "perturb_type1"
                     ),
                     "conversations": [{"role": "assistant", "content": "True"}],
                 }
@@ -539,7 +539,7 @@ class TestEnhancedPerturbationBatchSampler:
             examples.append(
                 {
                     "claim_id": claim_id,
-                    "perturbation_type": "numeration_false",
+                    "perturbation_type": "perturb_type2",
                     "conversations": [
                         {"role": "assistant", "content": "False"}
                     ],
@@ -561,7 +561,7 @@ class TestEnhancedPerturbationBatchSampler:
             examples.append(
                 {
                     "claim_id": f"only_pert_{i}",
-                    "perturbation_type": "approximation_true",
+                    "perturbation_type": "perturb_type1",
                     "conversations": [{"role": "assistant", "content": "True"}],
                 }
             )

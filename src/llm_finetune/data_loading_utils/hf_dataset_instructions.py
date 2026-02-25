@@ -1,48 +1,71 @@
-"""hf_dataset_instructions.py."""
+"""hf_dataset_instructions.py.
 
-from datasets import Dataset, concatenate_datasets
-from enum import Enum
-from pathlib import Path
-from typing import List, Union, Optional, Dict
+High-level data loading API for the NumPert fine-tuning pipeline.
+
+This module is the **orchestration layer** that wires together:
+  - :mod:`perturbation_types` — enum, convenience sets, ``FileLoadConfig``
+  - :mod:`perturbation_logic`  — key detection, label logic, expansion
+  - :mod:`conversation`        — SFTTrainer conversation formatting
+
+All public symbols from those sub-modules are re-exported here so that
+existing imports continue to work unchanged.
+"""
+
+from __future__ import annotations
+
 import json
-from src.numpert_prompt.prompt import (
-    FACT_CHECK_SYSTEM_PROMPT,
-    FACT_CHECK_USER_PROMPT,
+from datasets import Dataset
+from pathlib import Path
+from typing import Dict, List, Optional, Union
+
+# Re-export taxonomy & config -------------------------------------------
+from src.llm_finetune.data_loading_utils.perturbation_types import (  # noqa: F401
+    PerturbationType,
+    STRUCTURE_PRESERVING_TYPES,
+    VALUE_MODIFYING_TYPES,
+    OBFUSCATION_TYPES,
+    ALL_PERTURB_TYPES,
+    FileLoadConfig,
+    parse_file_config,
+)
+
+# Re-export perturbation logic ------------------------------------------
+from src.llm_finetune.data_loading_utils.perturbation_logic import (  # noqa: F401
+    _PERTURB_KEY_RE,
+    _detect_perturb_key,
+    _normalize_label,
+    _determine_perturbed_label,
+    expand_perturbations,
+)
+
+# Re-export conversation formatting -------------------------------------
+from src.llm_finetune.data_loading_utils.conversation import (  # noqa: F401
+    convert_to_conversations,
 )
 
 
-class PerturbationType(Enum):
-    """Enumeration of perturbation types."""
-
-    NUMERATION_TRUE = "numeration_true"
-    NUMERATION_FALSE = "numeration_false"
-    APPROXIMATION_TRUE = "approximation_true"
-    APPROXIMATION_FALSE = "approximation_false"
-    RANGE_TRUE = "range_true"
-    RANGE_FALSE = "range_false"
-    MASKING_FALSE = "masking_false"
-    RANDOM_REPLACEMENT_FALSE = "random_replacement_false"
-    ORIGINAL = "original"  # For non-perturbed claims
+# ---------------------------------------------------------------------------
+# JSON loading
+# ---------------------------------------------------------------------------
 
 
 def load_json_files(file_paths: Union[str, List[str]]) -> List[Dict]:
     """Load one or multiple JSON files.
 
     Args:
-        file_paths: Single file path or list of file paths
+        file_paths: Single file path or list of file paths.
 
     Returns:
-        List of all examples from all files
+        List of all examples from all files.
     """
     if isinstance(file_paths, str):
         file_paths = [file_paths]
 
-    all_examples = []
+    all_examples: List[Dict] = []
     for file_path in file_paths:
         path = Path(file_path)
         with open(path, "r", encoding="utf-8") as f:
             data = json.load(f)
-            # Handle both single object and array of objects
             if isinstance(data, list):
                 all_examples.extend(data)
             else:
@@ -51,198 +74,130 @@ def load_json_files(file_paths: Union[str, List[str]]) -> List[Dict]:
     return all_examples
 
 
-def expand_perturbations(examples: List[Dict]) -> List[Dict]:
-    """Expand each example into multiple examples based on available
-    perturbation types. Each example will have the claim_id and
-    perturbation_type for tracking.
-
-    Args:
-        examples: List of raw examples from JSON
-
-    Returns:
-        Expanded list with one entry per perturbation type
-    """
-    expanded = []
-
-    perturbation_types = [
-        e.value for e in PerturbationType if e != PerturbationType.ORIGINAL
-    ]
-
-    for example in examples:
-        # Add original claim (using normalized_claim)
-        original_entry = {
-            "claim_id": example["claim_id"],
-            "claim": example["normalized_claim"],
-            "doc": example["doc"],
-            "label": example["label"],
-            "perturbation_type": PerturbationType.ORIGINAL.value,
-            "url": example.get("url", ""),
-            "taxonomy_label": example.get("taxonomy_label", ""),
-        }
-        expanded.append(original_entry)
-
-        # Add perturbed versions if they exist
-        for perturb_type in perturbation_types:
-            if perturb_type in example and example[perturb_type]:
-                # Determine label based on perturbation type
-                # *_true perturbations should have the same label as original
-                # *_false perturbations should have label "False"
-                if perturb_type.endswith("_true"):
-                    perturb_label = example["label"]
-                else:  # ends with '_false'
-                    perturb_label = "False"
-
-                perturbed_entry = {
-                    "claim_id": example["claim_id"],
-                    "claim": example[perturb_type],
-                    "doc": example["doc"],
-                    "label": perturb_label,
-                    "perturbation_type": perturb_type,
-                    "url": example.get("url", ""),
-                    "taxonomy_label": example.get("taxonomy_label", ""),
-                }
-                expanded.append(perturbed_entry)
-
-    return expanded
-
-
-def convert_to_conversations(
-    examples: List[Dict], split: str = "train", include_doc: bool = True
-) -> List[Dict]:
-    """Convert examples to conversation format for SFTTrainer.
-
-    Args:
-        examples: List of expanded examples
-        split: "train" or "validation"
-        include_doc: Whether to include the evidence document in the prompt
-
-    Returns:
-        List of examples in conversation format
-    """
-    messages = []
-
-    for example in examples:
-        conversations = []
-
-        # System message
-        conversations.append(
-            {"role": "system", "content": FACT_CHECK_SYSTEM_PROMPT}
-        )
-
-        # Fill in the prompt template placeholders
-        evidence = example["doc"]
-
-        user_content = FACT_CHECK_USER_PROMPT.format(
-            examples="",  # No few-shot examples in this setup
-            claim=example["claim"],
-            evidence=evidence,
-        )
-
-        conversations.append({"role": "user", "content": user_content})
-
-        # Convert label to JSON format: "True" -> '{"label": true}', "False" -> '{"label": false}'
-        json_label = (
-            '{"label": true}'
-            if example["label"] == "True"
-            else '{"label": false}'
-        )
-
-        # Assistant response (only for training)
-        conversations.append({"role": "assistant", "content": json_label})
-
-        # Build the final entry
-        entry = {
-            "conversations": conversations,
-            "claim_id": example["claim_id"],
-            "perturbation_type": example["perturbation_type"],
-            "ground_truth": json_label,  # Always include ground_truth in JSON format
-        }
-
-        messages.append(entry)
-
-    return messages
+# ---------------------------------------------------------------------------
+# High-level loading API
+# ---------------------------------------------------------------------------
 
 
 def load_fact_checking_data(
-    json_paths: Union[str, List[str]],
-    split: str = "train",  # "train", "validation", or "test"
+    json_paths: Union[str, List[str], None] = None,
+    file_configs: Optional[List[FileLoadConfig]] = None,
+    split: str = "train",
     expand_perturbations_flag: bool = True,
     include_doc: bool = True,
 ) -> Dataset:
-    """Load fact-checking data from JSON files and convert to conversation
-    format.
+    """Load fact-checking data and convert to conversation format.
+
+    Supports two calling conventions:
+
+    1. **Simple** (backward-compatible) — pass *json_paths* to load all
+       perturbation types from every file::
+
+           load_fact_checking_data(json_paths=["approx_True.json"])
+
+    2. **Per-file control** — pass *file_configs* to choose which
+       perturbation types to load from each file::
+
+           load_fact_checking_data(file_configs=[
+               FileLoadConfig("approx_True.json",
+                   [PerturbationType.PERTURB_TYPE1,
+                    PerturbationType.PERTURB_TYPE2]),
+               FileLoadConfig("approx_False.json",
+                   [PerturbationType.PERTURB_TYPE1]),
+           ])
 
     Args:
-        json_paths: Single JSON file path or list of paths
-        split: "train", "validation", or "test"
-        expand_perturbations_flag: Whether to expand perturbations into separate examples
-        include_doc: Whether to include evidence document in prompts
+        json_paths: Path(s) to JSON files (loads all types from each).
+        file_configs: List of :class:`FileLoadConfig` for per-file control.
+        split: ``"train"``, ``"validation"``, or ``"test"``.
+        expand_perturbations_flag: Whether to expand perturbation keys into
+            separate examples.
+        include_doc: Whether to include evidence documents in prompts.
 
     Returns:
-        HuggingFace Dataset ready for SFTTrainer
+        HuggingFace Dataset ready for SFTTrainer.
     """
-    # Treat "test" the same as "validation" (both include assistant response for consistency)
+    if file_configs is None and json_paths is not None:
+        if isinstance(json_paths, str):
+            json_paths = [json_paths]
+        file_configs = [FileLoadConfig(path=p) for p in json_paths]
+
+    if file_configs is None:
+        raise ValueError("Either json_paths or file_configs must be provided")
+
     effective_split = "validation" if split == "test" else split
 
-    # Load raw examples from JSON files
-    raw_examples = load_json_files(json_paths)
+    all_processed: List[Dict] = []
 
-    # Expand perturbations if requested
-    if expand_perturbations_flag:
-        processed_examples = expand_perturbations(raw_examples)
-    else:
-        # Just use normalized_claim as-is
-        processed_examples = []
-        for example in raw_examples:
-            processed_examples.append(
-                {
-                    "claim_id": example["claim_id"],
-                    "claim": example["normalized_claim"],
-                    "doc": example["doc"],
-                    "label": example["label"],
-                    "perturbation_type": PerturbationType.ORIGINAL.value,
-                    "url": example.get("url", ""),
-                    "taxonomy_label": example.get("taxonomy_label", ""),
-                }
+    for config in file_configs:
+        raw_examples = load_json_files(config.path)
+
+        if expand_perturbations_flag:
+            processed = expand_perturbations(
+                raw_examples, allowed_types=config.perturb_types
             )
+        else:
+            # Original claims only — no expansion
+            processed = []
+            for example in raw_examples:
+                label_str = _normalize_label(example["label"])
+                processed.append(
+                    {
+                        "claim_id": example["claim_id"],
+                        "claim": example["normalized_claim"],
+                        "doc": example["doc"],
+                        "label": label_str,
+                        "perturbation_type": PerturbationType.ORIGINAL.value,
+                        "url": example.get("url", ""),
+                        "taxonomy_label": example.get("taxonomy_label", ""),
+                    }
+                )
+
+        all_processed.extend(processed)
 
     # Convert to conversation format
     conversation_data = convert_to_conversations(
-        processed_examples, split=effective_split, include_doc=include_doc
+        all_processed, split=effective_split, include_doc=include_doc
     )
 
-    # Create HuggingFace Dataset
-    dataset = Dataset.from_list(conversation_data)
-
-    return dataset
+    return Dataset.from_list(conversation_data)
 
 
 def load_train_and_validation(
-    train_json_paths: Union[str, List[str]],
-    val_json_paths: Union[str, List[str]],
+    train_json_paths: Union[str, List[str], None] = None,
+    val_json_paths: Union[str, List[str], None] = None,
+    train_file_configs: Optional[List[FileLoadConfig]] = None,
+    val_file_configs: Optional[List[FileLoadConfig]] = None,
     expand_perturbations_flag: bool = True,
     include_doc: bool = True,
 ) -> Dict[str, Dataset]:
     """Load both training and validation datasets.
 
+    Accepts either simple paths (backward-compatible) or
+    :class:`FileLoadConfig` lists for per-file type control.
+
     Args:
-        train_json_paths: Path(s) to training JSON files
-        val_json_paths: Path(s) to validation JSON files
-        expand_perturbations_flag: Whether to expand perturbations
-        include_doc: Whether to include evidence documents
+        train_json_paths: Path(s) to training JSON files.
+        val_json_paths: Path(s) to validation JSON files.
+        train_file_configs: Per-file configs for training data.
+        val_file_configs: Per-file configs for validation data.
+        expand_perturbations_flag: Whether to expand perturbations.
+        include_doc: Whether to include evidence documents.
 
     Returns:
-        Dictionary with "train" and "validation" datasets
+        Dictionary with ``"train"`` and ``"validation"`` datasets.
     """
     train_dataset = load_fact_checking_data(
-        train_json_paths,
+        json_paths=train_json_paths,
+        file_configs=train_file_configs,
         split="train",
         expand_perturbations_flag=expand_perturbations_flag,
         include_doc=include_doc,
     )
 
     val_dataset = load_fact_checking_data(
-        val_json_paths,
+        json_paths=val_json_paths,
+        file_configs=val_file_configs,
         split="validation",
         expand_perturbations_flag=expand_perturbations_flag,
         include_doc=include_doc,
@@ -251,56 +206,46 @@ def load_train_and_validation(
     return {"train": train_dataset, "validation": val_dataset}
 
 
+# ---------------------------------------------------------------------------
+# CLI entry point (for quick inspection)
+# ---------------------------------------------------------------------------
+
 if __name__ == "__main__":
-    # Example usage: Load single file
-    train_dataset = load_fact_checking_data(
-        json_paths="data/train.json",
+    import sys
+    from collections import Counter
+
+    if len(sys.argv) < 2:
+        print(
+            "Usage: python -m src.llm_finetune.data_loading_utils"
+            ".hf_dataset_instructions <file_config> [file_config ...]"
+        )
+        print("  file_config format: path/to/file.json[:type1,type2,...]")
+        print(
+            "  Example: data/perturbed_data/train_split/"
+            "approximation_True.json:type1,type2"
+        )
+        sys.exit(1)
+
+    configs = [parse_file_config(arg) for arg in sys.argv[1:]]
+    print(f"Loading {len(configs)} file(s):")
+    for c in configs:
+        print(f"  {c}")
+
+    dataset = load_fact_checking_data(
+        file_configs=configs,
         split="train",
         expand_perturbations_flag=True,
     )
 
-    print(f"Dataset size: {len(train_dataset)}")
-    print(f"\nDataset features: {train_dataset.features}")
+    print(f"\nDataset size: {len(dataset)}")
+    print(f"Features: {list(dataset.features.keys())}")
 
-    # Print sample conversations
-    print("\n" + "=" * 80)
-    print("SAMPLE CONVERSATIONS:")
-    print("=" * 80)
+    perturb_counts = Counter(dataset["perturbation_type"])
+    print("\nPerturbation type distribution:")
+    for p_type, count in perturb_counts.most_common():
+        print(f"  {p_type:30s}: {count}")
 
-    for i in range(min(3, len(train_dataset))):
-        print(f"\n{'='*80}")
-        print(f"Example {i+1}:")
-        print(f"Claim ID: {train_dataset[i]['claim_id']}")
-        print(f"Perturbation Type: {train_dataset[i]['perturbation_type']}")
-        print(f"\nConversation:")
-        for msg in train_dataset[i]["conversations"]:
-            print(f"\n[{msg['role'].upper()}]")
-            print(
-                f"{msg['content'][:200]}..."
-                if len(msg["content"]) > 200
-                else msg["content"]
-            )
-
-    # Example: Load multiple files with train/val split
-    print("\n" + "=" * 80)
-    print("LOADING TRAIN AND VALIDATION:")
-    print("=" * 80)
-
-    datasets = load_train_and_validation(
-        train_json_paths=["data/train_1.json", "data/train_2.json"],
-        val_json_paths="data/val.json",
-        expand_perturbations_flag=True,
-    )
-
-    print(f"\nTrain dataset size: {len(datasets['train'])}")
-    print(f"Validation dataset size: {len(datasets['validation'])}")
-
-    # Show distribution of perturbation types
-    print("\n" + "=" * 80)
-    print("PERTURBATION TYPE DISTRIBUTION (Train):")
-    print("=" * 80)
-    from collections import Counter
-
-    perturb_counts = Counter(datasets["train"]["perturbation_type"])
-    for perturb_type, count in perturb_counts.most_common():
-        print(f"{perturb_type}: {count}")
+    label_counts = Counter(dataset["ground_truth"])
+    print("\nLabel distribution:")
+    for label, count in label_counts.most_common():
+        print(f"  {label:30s}: {count}")

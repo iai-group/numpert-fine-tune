@@ -1,7 +1,7 @@
 import pytest
 from datasets import Dataset
 from collections import Counter
-from src.llm_finetune.class_balancer import DatasetBalancer
+from src.llm_finetune.data_loading_utils.class_balancer import DatasetBalancer
 
 
 def print_separator(title: str):
@@ -51,12 +51,10 @@ def create_mock_dataset(
             }
         )
 
-        # T→T perturbations (use *_true perturbation types)
+        # T→T perturbations (type1 = structure-preserving, keeps True label)
         for j in range(n_t_to_t_per_original):
             perturb_types = [
-                "numeration_true",
-                "approximation_true",
-                "range_true",
+                "perturb_type1",
             ]
             examples.append(
                 {
@@ -76,14 +74,12 @@ def create_mock_dataset(
                 }
             )
 
-        # T→F perturbations (use *_false perturbation types)
+        # T→F perturbations (type2 = value-modifying, flips to False; type3 = obfuscation)
         for j in range(n_t_to_f_per_original):
             perturb_types = [
-                "numeration_false",
-                "approximation_false",
-                "range_false",
-                "masking_false",
-                "random_replacement_false",
+                "perturb_type2",
+                "perturb_type3_random",
+                "perturb_type3_masked",
             ]
             examples.append(
                 {
@@ -120,12 +116,10 @@ def create_mock_dataset(
             }
         )
 
-        # F→F (*_true) perturbations - preferred, more similar to original
+        # F→F type1 perturbations - preferred, structure-preserving
         for j in range(n_f_to_f_true_per_original):
             perturb_types = [
-                "numeration_true",
-                "approximation_true",
-                "range_true",
+                "perturb_type1",
             ]
             examples.append(
                 {
@@ -145,12 +139,12 @@ def create_mock_dataset(
                 }
             )
 
-        # F→F (*_false) perturbations - exaggerated, should be ignored by balancer
+        # F→F type3 perturbations - obfuscation, should be ignored by balancer
         for j in range(n_f_to_f_false_per_original):
             perturb_types = [
-                "numeration_false",
-                "approximation_false",
-                "range_false",
+                "perturb_type3_random",
+                "perturb_type3_masked",
+                "perturb_type3_removed",
             ]
             examples.append(
                 {
@@ -214,7 +208,7 @@ def analyze_dataset(dataset: Dataset) -> dict:
                 stats["t_to_f"] += 1
             elif not original_was_true and label == "False":
                 # Check if it's *_true or *_false perturbation
-                if perturb_type.endswith("_true"):
+                if perturb_type == "perturb_type1":
                     stats["f_to_f_true"] += 1
                 else:
                     stats["f_to_f_false"] += 1
@@ -490,9 +484,9 @@ class TestDatasetBalancer:
 
         print("\n✓ Test passed: Handles insufficient perturbations gracefully")
 
-    def test_f_to_f_only_uses_true_perturbations(self):
-        """Test that F→F only uses *_true perturbations, ignores *_false."""
-        print_separator("TEST: F→F Uses Only *_true Perturbations")
+    def test_f_to_f_only_uses_type1_perturbations(self):
+        """Test that F→F only uses type1 perturbations, ignores type3."""
+        print_separator("TEST: F→F Uses Only type1 Perturbations")
 
         dataset = create_mock_dataset(
             n_original_true=50,
@@ -507,7 +501,7 @@ class TestDatasetBalancer:
         print_stats(input_stats, "Input Dataset")
 
         print(
-            f"\nNote: Input has {input_stats['f_to_f_false']} F→F (*_false) perturbations"
+            f"\nNote: Input has {input_stats['f_to_f_false']} F→F (type3) perturbations"
         )
         print(f"      These should NOT be included in the output")
 
@@ -528,12 +522,12 @@ class TestDatasetBalancer:
 
         assert (
             output_stats["f_to_f_false"] == 0
-        ), "F→F (*_false) should not be included!"
+        ), "F→F (type3) should not be included!"
         assert (
             output_stats["f_to_f_true"] == 25
-        ), "F→F should only use *_true perturbations"
+        ), "F→F should only use type1 perturbations"
 
-        print("\n✓ Test passed: F→F correctly uses only *_true perturbations")
+        print("\n✓ Test passed: F→F correctly uses only type1 perturbations")
 
     def test_edge_case_zero_perturb_ratio(self):
         """Test with perturb_ratio = 0 (only originals)"""

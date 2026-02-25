@@ -45,11 +45,11 @@ def create_mock_dataset(n_claims=10, perturbations_per_claim=5):
 
         # Add perturbations
         perturb_types = [
-            "numeration_true",
-            "approximation_true",
-            "range_false",
-            "masking_false",
-            "random_replacement_false",
+            "perturb_type1",
+            "perturb_type2",
+            "perturb_type3_random",
+            "perturb_type3_masked",
+            "perturb_type3_removed",
         ]
 
         for p_idx in range(perturbations_per_claim):
