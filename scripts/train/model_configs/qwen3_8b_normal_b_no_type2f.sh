@@ -169,7 +169,6 @@ echo ""
 # Build command
 
 CMD="uv run python -m src.llm_finetune.unsloth_finetune\
-    --mode finetune \
     --train_json ${TRAIN_JSON[@]} \
     --val_json ${VAL_JSON[@]} \
     --model ${MODEL} \

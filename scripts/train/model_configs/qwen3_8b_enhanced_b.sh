@@ -151,7 +151,6 @@ echo ""
 # Run from the numpert-fine-tune directory (parent of src/)
 # uv pip install scikit-learn --upgrade
 CMD="uv run python -m src.llm_finetune.unsloth_finetune\
-    --mode finetune \
     --train_json ${TRAIN_JSON[@]} \
     --val_json ${VAL_JSON[@]} \
     --model ${MODEL} \

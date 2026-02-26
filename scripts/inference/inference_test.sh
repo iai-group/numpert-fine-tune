@@ -119,8 +119,7 @@ cd "$SCRIPT_DIR"
 
 OUTPUT_DIR="numpert-fine-tune/inference_tests/qwen3-8b_test"
 
-CMD="python -m src.llm_finetune.unsloth_finetune_test_bench \
-    --mode inference \
+CMD="python -m src.llm_finetune.unsloth_inference \
     --test_json ${TEST_JSON[@]} \
     --model ${MODEL} \
     --output_dir ${OUTPUT_DIR}"
