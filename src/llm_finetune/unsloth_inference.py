@@ -130,31 +130,39 @@ def inference(  # noqa: C901
 
     # 1. Check if the user provided a direct path to a local folder
     if os.path.isdir(model_name):
-        print(f"📂 Mode: Direct local folder")
+        print("📂 Mode: Direct local folder")
         model_name_arg = model_name
 
-    # 2. If start_epoch > 0, look for the checkpoint in the training output directory
+    # 2. If start_epoch > 0, look for the checkpoint in the training
+    # output directory
     elif start_epoch > 0:
         # Construct the path matching the training save logic:
         # {prefix}tuned_models/epoch-{epoch}/{name}/...
 
         # Path A: Correct path based on finetune() save_dir logic
-        trained_path = f"{prefix}tuned_models/epoch-{start_epoch}/{model_name}{quant_status}/lora_numpert{rank_postfix}"
+        trained_path = (
+            f"{prefix}tuned_models/epoch-{start_epoch}"
+            f"/{model_name}{quant_status}"
+            f"/lora_numpert{rank_postfix}"
+        )
 
         if os.path.exists(trained_path):
-            print(f"📂 Mode: Found training checkpoint (Standard)")
+            print("📂 Mode: Found training checkpoint (Standard)")
             model_name_arg = trained_path
         else:
             print(
-                f"⚠️ Warning: Checkpoint for epoch {start_epoch} not found locally."
+                "⚠️ Warning: Checkpoint for epoch "
+                f"{start_epoch} not found locally."
             )
             print(f"   Checked: {trained_path}")
-            print(f"   Attempting to load '{model_name}' from Hugging Face...")
+            print(
+                f"   Attempting to load '{model_name}'" " from Hugging Face..."
+            )
             model_name_arg = get_model_name_arg(model_name)
 
     # 3. Default to Hugging Face Hub or mapped alias
     else:
-        print(f"☁️ Mode: Hugging Face / Alias")
+        print("☁️ Mode: Hugging Face / Alias")
         model_name_arg = get_model_name_arg(model_name)
 
     print(f"Loading model from: {model_name_arg}\n")
@@ -217,10 +225,11 @@ def inference(  # noqa: C901
 
     if too_long > 0:
         print(
-            f"⚠️  WARNING: {too_long}/{len(test_data)} examples exceed max_seq_length!"
+            f"⚠️  WARNING: {too_long}/{len(test_data)} examples"
+            " exceed max_seq_length!"
         )
     else:
-        print(f"✅ All examples fit within max_seq_length")
+        print("✅ All examples fit within max_seq_length")
 
     # Prepare for predictions
     predictions = []  # Will contain None for parse failures
@@ -229,7 +238,10 @@ def inference(  # noqa: C901
 
     # Create output directory
     vllm_suffix = "-vllm" if use_vllm else ""
-    pred_dir = f"{output_dir}/{model_name}{rank_postfix}{quant_status}-epoch-{start_epoch}{vllm_suffix}"
+    pred_dir = (
+        f"{output_dir}/{model_name}{rank_postfix}"
+        f"{quant_status}-epoch-{start_epoch}{vllm_suffix}"
+    )
     os.makedirs(pred_dir, exist_ok=True)
 
     # Run inference
@@ -350,20 +362,24 @@ def inference(  # noqa: C901
     n_failures = len(parse_failure_indices)
 
     # Report parse failures
-    print(f"\n📊 Parse Results:")
+    print("\n📊 Parse Results:")
     print(
-        f"   Successfully parsed: {n_valid}/{n_total} ({100*n_valid/n_total:.1f}%)"
+        f"   Successfully parsed: {n_valid}/{n_total}"
+        f" ({100*n_valid/n_total:.1f}%)"
     )
     print(
-        f"   Parse failures: {n_failures}/{n_total} ({100*n_failures/n_total:.1f}%)"
+        f"   Parse failures: {n_failures}/{n_total}"
+        f" ({100*n_failures/n_total:.1f}%)"
     )
 
     if n_failures > 0:
         print(
-            f"\n⚠️  WARNING: {n_failures} responses could not be parsed and are EXCLUDED from metrics."
+            f"\n⚠️  WARNING: {n_failures} responses could not"
+            " be parsed and are EXCLUDED from metrics."
         )
         print(
-            "    Check inference_details.json and parse_failures.json for details."
+            "    Check inference_details.json and"
+            " parse_failures.json for details."
         )
 
     # Calculate metrics (only on valid predictions)
@@ -424,7 +440,9 @@ def inference(  # noqa: C901
 
     for p_type in sorted(perturb_metrics.keys()):
         metrics = perturb_metrics[p_type]
-        total_with_failures = metrics["total"] + metrics["failures"]
+        total_with_failures = (  # noqa: F841
+            metrics["total"] + metrics["failures"]
+        )
         acc = (
             metrics["correct"] / metrics["total"] if metrics["total"] > 0 else 0
         )
@@ -434,7 +452,8 @@ def inference(  # noqa: C901
             else ""
         )
         print(
-            f"  {p_type:30s}: {acc:.4f} ({metrics['correct']}/{metrics['total']}){failure_note}"
+            f"  {p_type:30s}: {acc:.4f}"
+            f" ({metrics['correct']}/{metrics['total']}){failure_note}"
         )
 
     print("=" * 80 + "\n")
@@ -447,7 +466,8 @@ def inference(  # noqa: C901
         with open(failures_path, "w") as f:
             json.dump(failures_info, f, indent=2)
         print(
-            f"Parse failure details (with full prompts) saved to: {failures_path}\n"
+            f"Parse failure details (with full prompts)"
+            f" saved to: {failures_path}\n"
         )
 
     # Save predictions CSV
@@ -479,7 +499,10 @@ def inference(  # noqa: C901
         "parse_failures": n_failures,
         "parse_failure_rate": n_failures / n_total if n_total > 0 else 0,
         "valid_output_rate": n_valid / n_total if n_total > 0 else 0,
-        "note": f"Metrics computed on {n_valid}/{n_total} parseable responses only.",
+        "note": (
+            f"Metrics computed on {n_valid}/{n_total}"
+            " parseable responses only."
+        ),
         "per_perturbation": {
             p_type: {
                 "accuracy": m["correct"] / m["total"] if m["total"] > 0 else 0,

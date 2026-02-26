@@ -185,7 +185,7 @@ def finetune(  # noqa: C901
     else:
         if resume_model is None:
             raise ValueError(
-                f"--resume_model is required when start_epoch > 1. "
+                "--resume_model is required when start_epoch > 1. "
                 "Provide the path to a previously saved merged model."
             )
         model_name_arg = resume_model
@@ -605,7 +605,7 @@ def finetune(  # noqa: C901
         )
 
         if truncation_pct > 10:
-            print(f"\n❌ ERROR: >10% of data will be truncated!")
+            print("\n❌ ERROR: >10% of data will be truncated!")
             raise ValueError(
                 "Too much data truncation - increase max_seq_length"
             )
@@ -630,7 +630,11 @@ def finetune(  # noqa: C901
     # Initialize wandb
     run = wandb.init(
         project="numpert_finetune",
-        name=f"{model_name}{quant_status}_epoch_{start_epoch}→{target_epoch}_(r{rank})_{perturb_type_names}",
+        name=(
+            f"{model_name}{quant_status}_epoch_"
+            f"{start_epoch}→{target_epoch}"
+            f"_(r{rank})_{perturb_type_names}"
+        ),
         config={
             "model": model_name,
             "rank": rank,
@@ -751,7 +755,7 @@ def finetune(  # noqa: C901
         save_method="merged_16bit",
     )
     print(f"Merged model saved to: {merged_path}")
-    print(f"✅ Training complete")
+    print("✅ Training complete")
     print(f"   Started at epoch: {start_epoch}")
     print(f"   Trained for: {int(trainer.state.epoch)} epochs")
     print(f"   Final epoch reached: {actual_final_epoch}")
@@ -759,7 +763,9 @@ def finetune(  # noqa: C901
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Fine-tune fact-checking models with numerical perturbations"
+        description=(
+            "Fine-tune fact-checking models with numerical perturbations"
+        ),
     )
 
     # Data paths — supports per-file perturbation type control.
@@ -801,7 +807,10 @@ if __name__ == "__main__":
         "--resume_model",
         type=str,
         default=None,
-        help="Path to a previously saved merged model to resume training from (required when start_epoch > 1)",
+        help=(
+            "Path to a previously saved merged model to resume training"
+            " from (required when start_epoch > 1)"
+        ),
     )
     parser.add_argument(
         "--num_train_epochs",
@@ -886,7 +895,10 @@ if __name__ == "__main__":
     parser.add_argument(
         "--debug",
         action="store_true",
-        help="Enable debug output for conversation format and tokenization/masking",
+        help=(
+            "Enable debug output for conversation format"
+            " and tokenization/masking"
+        ),
     )
 
     args = parser.parse_args()

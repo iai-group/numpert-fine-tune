@@ -44,7 +44,7 @@ def debug_repr(s: str) -> str:
     return f"{repr(s)} | bytes: {bytes_hex(s)}"
 
 
-def main():
+def main():  # noqa: C901
     p = argparse.ArgumentParser(
         description="Find duplicate custom_id entries in a JSONL file."
     )

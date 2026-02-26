@@ -6,7 +6,6 @@ Requires HF_TOKEN to be set in the environment, or active huggingface-cli login.
 """
 
 import argparse
-import os
 import sys
 from pathlib import Path
 
@@ -76,15 +75,17 @@ def upload(args):
     upload_type = args.type or detect_upload_type(model_path)
     if upload_type == "unknown":
         print(
-            f"[WARN] Could not auto-detect model_path type (merged/lora/checkpoint).\n"
-            f"       Pass --type explicitly if the upload looks wrong."
+            "[WARN] Could not auto-detect model_path type "
+            "(merged/lora/checkpoint).\n"
+            "       Pass --type explicitly if the upload looks wrong."
         )
     else:
         print(f"[✓] Upload type detected: {upload_type}")
 
     repo_id = build_repo_id(args)
     private = not args.public
-    print(f"[✓] Visibility: {'public' if args.public else 'private'}")
+    visibility = "public" if args.public else "private"
+    print(f"[✓] Visibility: {visibility}")
 
     api = HfApi()
 
@@ -96,12 +97,13 @@ def upload(args):
             private=private,
             exist_ok=True,
         )
-        print(f"[✓] Repo ready")
+        print("[✓] Repo ready")
     except Exception as e:
         print(f"[ERROR] Failed to create/access repo: {e}")
         sys.exit(1)
 
-    # For checkpoints: skip optimizer/scheduler bloat unless explicitly requested
+    # For checkpoints: skip optimizer/scheduler bloat unless
+    # explicitly requested
     ignore_patterns = None
     if upload_type == "checkpoint" and not args.include_optimizer_states:
         ignore_patterns = [
@@ -111,7 +113,8 @@ def upload(args):
             "rng_state*.pth",
         ]
         print(
-            "[i] Skipping optimizer/scheduler states (pass --include-optimizer-states to keep them)."
+            "[i] Skipping optimizer/scheduler states "
+            "(pass --include-optimizer-states to keep them)."
         )
 
     # Upload
@@ -135,19 +138,21 @@ def upload(args):
         print(f"[ERROR] Upload failed: {e}")
         sys.exit(1)
 
-    print(f"\n[✓] Upload complete!\n")
+    print("\n[✓] Upload complete!\n")
 
     # Contextual reminders based on upload type
     if upload_type == "lora":
         print(
             "[i] Note: You uploaded LoRA adapter weights.\n"
             "    Users will need the base model + 'peft' to load this.\n"
-            "    Consider also uploading a merged model for broader usability.\n"
+            "    Consider also uploading a merged model for broader "
+            "usability.\n"
         )
     elif upload_type == "checkpoint":
         print(
             "[i] Note: You uploaded a training checkpoint.\n"
-            "    This is useful for resuming training but is NOT directly\n"
+            "    This is useful for resuming training but is NOT "
+            "directly\n"
             "    loadable as a standard inference model.\n"
         )
 
@@ -168,24 +173,29 @@ Examples:
   python upload_to_hf.py ./merged_model my-model --namespace my-org --public
 
   # Upload a specific checkpoint, keeping optimizer states
-  python upload_to_hf.py ./checkpoint-1000 my-model-ckpt1000 --type checkpoint --include-optimizer-states
+  python upload_to_hf.py ./checkpoint-1000 my-model-ckpt1000
+  --type checkpoint
+  --include-optimizer-states
         """,
     )
 
     parser.add_argument(
         "--model_path",
         default=None,
-        help="Path to the model model_path (merged model, LoRA weights, or checkpoint).",
+        help="Path to the model model_path (merged model, LoRA weights, "
+        "or checkpoint).",
     )
     parser.add_argument(
         "--model_name",
         default=None,
-        help="Name of the model repo on HuggingFace (e.g. 'my-llama-finetune').",
+        help="Name of the model repo on HuggingFace "
+        "(e.g. 'my-llama-finetune').",
     )
     parser.add_argument(
         "--namespace",
         default=None,
-        help="Org or username namespace to upload under. Defaults to your HF username.",
+        help="Org or username namespace to upload under. "
+        "Defaults to your HF username.",
     )
     parser.add_argument(
         "--type",
@@ -208,7 +218,8 @@ Examples:
         "--include-optimizer-states",
         action="store_true",
         default=False,
-        help="For checkpoints: include optimizer/scheduler state files (large, only needed for resuming training).",
+        help="For checkpoints: include optimizer/scheduler state files "
+        "(large, only needed for resuming training).",
     )
 
     args = parser.parse_args()
