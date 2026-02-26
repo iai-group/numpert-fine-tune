@@ -1,5 +1,5 @@
 import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 """Tests for the obfuscate perturbation module."""
 
@@ -355,7 +355,9 @@ class TestProcessJson:
             entry = result["True"][0]
             assert "perturb_type3_random_True" not in entry
 
-    def test_empty_input_returns_empty_dict(self, patch_included_keys):
+    def test_empty_input_returns_empty_dict(  # noqa: C901
+        self, patch_included_keys
+    ):
         """Tests for the obfuscate perturbation module."""
 
         from src.data_preprocessing.perturbations.obfuscate import (

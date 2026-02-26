@@ -1,7 +1,5 @@
 import pytest
-from unittest.mock import Mock, MagicMock, patch
-from collections import namedtuple
-import numpy as np
+from unittest.mock import Mock, patch
 
 from src.llm_finetune.data_loading_utils.sequence_len_utility import (
     analyze_sequence_lengths,
@@ -33,7 +31,6 @@ def mock_tokenizer():
 @pytest.fixture
 def mock_dataset():
     """Create a mock HuggingFace dataset."""
-    Dataset = namedtuple("Dataset", ["select"])
 
     def create_example(idx, seq_len=100, has_evidence=True):
         evidence_text = (
@@ -80,12 +77,16 @@ def mock_tokenizer_with_lengths():
 
     lengths = {
         "formatted text": 150,
-        "This is claim 0 Evidence: This is evidence text with multiple tokens for testing": 30,
-        "This is claim 0 Evidence: This is evidence text with multiple tokens for testing".split(
-            "Evidence:"
-        )[
-            1
-        ].strip(): 15,
+        (
+            "This is claim 0 Evidence: This is evidence text with "
+            "multiple tokens for testing"
+        ): 30,
+        (
+            "This is claim 0 Evidence: This is evidence text with "
+            "multiple tokens for testing"
+        )
+        .split("Evidence:")[1]
+        .strip(): 15,
     }
 
     def mock_apply_chat_template(
@@ -104,7 +105,8 @@ def mock_tokenizer_with_lengths():
 
 
 @patch(
-    "src.llm_finetune.data_loading_utils.sequence_len_utility.load_fact_checking_data"
+    "src.llm_finetune.data_loading_utils.sequence_len_utility"
+    ".load_fact_checking_data"
 )
 @patch("src.llm_finetune.data_loading_utils.sequence_len_utility.plt")
 def test_analyze_sequence_lengths_basic(
@@ -128,14 +130,14 @@ def test_analyze_sequence_lengths_basic(
 
 
 @patch(
-    "src.llm_finetune.data_loading_utils.sequence_len_utility.load_fact_checking_data"
+    "src.llm_finetune.data_loading_utils.sequence_len_utility"
+    ".load_fact_checking_data"
 )
 @patch("src.llm_finetune.data_loading_utils.sequence_len_utility.plt")
 def test_analyze_sequence_lengths_stats_calculation(
     mock_plt, mock_load_data, mock_tokenizer_with_lengths
 ):
     """Test that statistics are correctly calculated."""
-    Dataset = namedtuple("Dataset", ["select"])
 
     class MockDataset:
         def __init__(self):
@@ -186,7 +188,8 @@ def test_analyze_sequence_lengths_stats_calculation(
 
 
 @patch(
-    "src.llm_finetune.data_loading_utils.sequence_len_utility.load_fact_checking_data"
+    "src.llm_finetune.data_loading_utils.sequence_len_utility"
+    ".load_fact_checking_data"
 )
 @patch("src.llm_finetune.data_loading_utils.sequence_len_utility.plt")
 def test_analyze_sequence_lengths_max_examples(
@@ -236,7 +239,8 @@ def test_analyze_sequence_lengths_max_examples(
 
 
 @patch(
-    "src.llm_finetune.data_loading_utils.sequence_len_utility.load_fact_checking_data"
+    "src.llm_finetune.data_loading_utils.sequence_len_utility"
+    ".load_fact_checking_data"
 )
 @patch("src.llm_finetune.data_loading_utils.sequence_len_utility.plt")
 def test_analyze_sequence_lengths_too_long_examples(
@@ -286,13 +290,14 @@ def test_analyze_sequence_lengths_too_long_examples(
 
 
 @patch(
-    "src.llm_finetune.data_loading_utils.sequence_len_utility.load_fact_checking_data"
+    "src.llm_finetune.data_loading_utils.sequence_len_utility"
+    ".load_fact_checking_data"
 )
 @patch("src.llm_finetune.data_loading_utils.sequence_len_utility.plt")
 def test_analyze_sequence_lengths_recommended_length(
     mock_plt, mock_load_data, mock_tokenizer_with_lengths
 ):
-    """Test that recommended_max_seq_length rounds to nearest 1024."""
+    """Test that recommended_max_seq_length rounds to 1024."""
 
     class MockDataset:
         def __init__(self):
@@ -332,7 +337,8 @@ def test_analyze_sequence_lengths_recommended_length(
 
 
 @patch(
-    "src.llm_finetune.data_loading_utils.sequence_len_utility.load_fact_checking_data"
+    "src.llm_finetune.data_loading_utils.sequence_len_utility"
+    ".load_fact_checking_data"
 )
 @patch("src.llm_finetune.data_loading_utils.sequence_len_utility.plt")
 def test_analyze_sequence_lengths_split_parameter(
@@ -377,7 +383,8 @@ def test_analyze_sequence_lengths_split_parameter(
 
 
 @patch(
-    "src.llm_finetune.data_loading_utils.sequence_len_utility.load_fact_checking_data"
+    "src.llm_finetune.data_loading_utils.sequence_len_utility"
+    ".load_fact_checking_data"
 )
 @patch("src.llm_finetune.data_loading_utils.sequence_len_utility.plt")
 def test_analyze_sequence_lengths_expand_perturbations_flag(
@@ -421,7 +428,8 @@ def test_analyze_sequence_lengths_expand_perturbations_flag(
 
 
 @patch(
-    "src.llm_finetune.data_loading_utils.sequence_len_utility.load_fact_checking_data"
+    "src.llm_finetune.data_loading_utils.sequence_len_utility"
+    ".load_fact_checking_data"
 )
 @patch("src.llm_finetune.data_loading_utils.sequence_len_utility.plt.savefig")
 def test_analyze_sequence_lengths_saves_plot(

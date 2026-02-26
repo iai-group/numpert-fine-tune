@@ -1,10 +1,7 @@
 """Tests for the approximation perturbation module."""
 
 import json
-import math
-import pytest
-from pathlib import Path
-from unittest.mock import patch, mock_open
+from unittest.mock import patch
 
 from src.data_preprocessing.perturbations.approximation import (
     approximate_number,

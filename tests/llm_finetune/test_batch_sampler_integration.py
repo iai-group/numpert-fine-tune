@@ -131,15 +131,12 @@ def test_custom_sampler_basic():
 
         print(f"\n  Batch {batch_idx}:")
         print(f"    Size: {len(batch_indices)}")
-        print(
-            f"    Unique claim_ids: {unique_claims} ({'✅' if unique_claims == 1 else '❌ FAIL'})"
-        )
-        print(
-            f"    Has original: {has_original} ({'✅' if has_original else '❌ FAIL'})"
-        )
-        print(
-            f"    Has perturbed: {has_perturbed} ({'✅' if has_perturbed else '❌ FAIL'})"
-        )
+        msg1 = "✅" if unique_claims == 1 else "❌ FAIL"
+        print(f"    Unique claim_ids: {unique_claims} ({msg1})")
+        msg2 = "✅" if has_original else "❌ FAIL"
+        print(f"    Has original: {has_original} ({msg2})")
+        msg3 = "✅" if has_perturbed else "❌ FAIL"
+        print(f"    Has perturbed: {has_perturbed} ({msg3})")
         print(f"    Perturbation types: {perturb_types}")
 
     print("\n✅ TEST 1 PASSED\n")
@@ -190,9 +187,8 @@ def test_large_claim_splitting():
     if original_count == 1:
         print("\n✅ TEST 2 PASSED (Original appears exactly once)")
     else:
-        print(
-            f"\n❌ TEST 2 FAILED (Original should appear exactly once, found {original_count})"
-        )
+        msg = f"Original should appear exactly once, found {original_count}"
+        print(f"\n❌ TEST 2 FAILED ({msg})")
 
 
 def test_constraint_enforcement():
@@ -289,22 +285,21 @@ def test_default_vs_custom():
         matched_claim_diversity
     )
 
-    print(f"\n  Mixed batching:")
-    print(f"    Average unique claim_ids per batch: {avg_mixed_diversity:.2f}")
-    print(f"    (Higher is more diverse - batches mix different claims)")
+    print("\n  Mixed batching:")
+    avg_str = f"{avg_mixed_diversity:.2f}"
+    print(f"    Average unique claim_ids per batch: {avg_str}")
+    print("    (Higher is more diverse - batches mix different claims)")
 
-    print(f"\n  Matched batching:")
-    print(
-        f"    Average unique claim_ids per batch: {avg_matched_diversity:.2f}"
-    )
-    print(f"    (Should be close to 1.0 - batches focus on single claim)")
+    print("\n  Matched batching:")
+    avg_str2 = f"{avg_matched_diversity:.2f}"
+    print(f"    Average unique claim_ids per batch: {avg_str2}")
+    print("    (Should be close to 1.0 - batches focus on single claim)")
 
     if avg_matched_diversity < 1.5:
         print("\n✅ TEST 4 PASSED (Claim matching working correctly)")
     else:
-        print(
-            f"\n❌ TEST 4 FAILED (Expected ~1.0, got {avg_matched_diversity:.2f})"
-        )
+        avg_val = f"{avg_matched_diversity:.2f}"
+        print(f"\n❌ TEST 4 FAILED (Expected ~1.0, got {avg_val})")
 
 
 def run_all_tests():

@@ -164,8 +164,9 @@ def main(
     with open(summary_file, "a") as summary_f:
         if not file_exists:
             summary_f.write(
-                "perturbation\tanalyze_errors\tavg_prompt_0shot\tavg_reasoning_0shot\t"
-                "avg_prompt_negshot\tavg_reasoning_negshot\n"
+                "perturbation\tanalyze_errors\tavg_prompt_0shot\t"
+                "avg_reasoning_0shot\tavg_prompt_negshot\t"
+                "avg_reasoning_negshot\n"
             )
         with open(combined_file, "w") as out_f:
             header = (
@@ -203,11 +204,13 @@ def main(
                     ]
                     num_entries += 1
                     out_f.write(
-                        f"{claim_id}\t{data1['claim']}\t{data1['evidence']}\t"
-                        f"{data1['thoughts']}\t{data1['prompt_tokens_length']}\t"
+                        f"{claim_id}\t{data1['claim']}\t"
+                        f"{data1['evidence']}\t{data1['thoughts']}\t"
+                        f"{data1['prompt_tokens_length']}\t"
                         f"{data1['reasoning_tokens_length']}\t"
-                        f"{data1['ground_truth']}\t{data1['prediction']}\t"
-                        f"{data2['thoughts']}\t{data2['prompt_tokens_length']}\t"
+                        f"{data1['ground_truth']}\t"
+                        f"{data1['prediction']}\t{data2['thoughts']}\t"
+                        f"{data2['prompt_tokens_length']}\t"
                         f"{data2['reasoning_tokens_length']}\t"
                         f"{data2['ground_truth']}\t{data2['prediction']}\n"
                     )

@@ -2,8 +2,6 @@ import pytest
 from datasets import Dataset
 from collections import Counter, defaultdict
 from typing import Any, Dict, List
-import sys
-import os
 
 from src.llm_finetune.batch_sampler import EnhancedPerturbationBatchSampler
 
@@ -87,7 +85,8 @@ def analyze_batches(batches: list, dataset: Dataset) -> Dict[str, Any]:
         "claim_id_repeated_across_batches": {},
     }
 
-    # Track which claim_ids appear in which batches (to check for original repetition)
+    # Track which claim_ids appear in which batches
+    # (to check for original repetition)
     claim_id_to_batches: Dict[str, Dict[str, List[int]]] = defaultdict(
         lambda: {"original_in": [], "perturbed_in": []}
     )
@@ -139,23 +138,25 @@ def print_batch_stats(stats: dict, title: str = "Batch Statistics"):
     print(f"\n{title}:")
     print(f"  Number of batches: {stats['num_batches']}")
     print(f"  Total examples: {stats['total_examples']}")
+    batch_sizes = stats["batch_sizes"]
+    min_size = min(batch_sizes) if batch_sizes else 0
+    max_size = max(batch_sizes) if batch_sizes else 0
+    avg_size = (sum(batch_sizes) / len(batch_sizes)) if batch_sizes else 0
     print(
-        f"  Batch sizes: min={min(stats['batch_sizes']) if stats['batch_sizes'] else 0}, "
-        f"max={max(stats['batch_sizes']) if stats['batch_sizes'] else 0}, "
-        f"avg={sum(stats['batch_sizes'])/len(stats['batch_sizes']) if stats['batch_sizes'] else 0:.1f}"
+        f"  Batch sizes: min={min_size}, " f"max={max_size}, avg={avg_size:.1f}"
     )
     print(f"\n  Batches with original: {stats['batches_with_original']}")
     print(f"  Batches with perturbed: {stats['batches_with_perturbed']}")
     print(f"  Batches with both: {stats['batches_with_both']}")
 
     if stats["claim_id_repeated_across_batches"]:
-        print(f"\n  ⚠️  WARNING: Originals repeated across batches!")
+        print("\n  ⚠️  WARNING: Originals repeated across batches!")
         for claim_id, batch_indices in stats[
             "claim_id_repeated_across_batches"
         ].items():
             print(f"    {claim_id}: appears in batches {batch_indices}")
     else:
-        print(f"\n  ✓ No originals repeated across batches")
+        print("\n  ✓ No originals repeated across batches")
 
 
 class TestEnhancedPerturbationBatchSampler:
@@ -196,8 +197,8 @@ class TestEnhancedPerturbationBatchSampler:
         dataset = create_mock_dataset(n_claims=10, perturbations_per_claim=2)
 
         print(f"\nDataset size: {len(dataset)}")
-        print(f"Examples per claim: 3 (1 original + 2 perturbed)")
-        print(f"Batch size: 8 (can fit 2+ claims per batch)")
+        print("Examples per claim: 3 (1 original + 2 perturbed)")
+        print("Batch size: 8 (can fit 2+ claims per batch)")
 
         sampler = EnhancedPerturbationBatchSampler(
             dataset=dataset,
@@ -234,10 +235,10 @@ class TestEnhancedPerturbationBatchSampler:
         # 1 original + 20 perturbed = 21 examples
 
         print(f"\nDataset size: {len(dataset)}")
-        print(f"Single claim with 1 original + 20 perturbed = 21 examples")
-        print(f"Batch size: 8")
-        print(f"Expected: 3 batches (8 + 8 + 5)")
-        print(f"Original should only appear in first batch!")
+        print("Single claim with 1 original + 20 perturbed = 21 examples")
+        print("Batch size: 8")
+        print("Expected: 3 batches (8 + 8 + 5)")
+        print("Original should only appear in first batch!")
 
         sampler = EnhancedPerturbationBatchSampler(
             dataset=dataset,
@@ -256,29 +257,26 @@ class TestEnhancedPerturbationBatchSampler:
         assert stats["num_batches"] == 3
 
         # First batch should have the original
-        assert (
-            stats["original_count_per_batch"][0] == 1
-        ), "First batch should contain the original"
+        msg1 = "First batch should contain the original"
+        assert stats["original_count_per_batch"][0] == 1, msg1
 
         # Subsequent batches should NOT have the original
         for i in range(1, stats["num_batches"]):
-            assert (
-                stats["original_count_per_batch"][i] == 0
-            ), f"Batch {i} should NOT contain original (original already used)"
+            msg_i = f"Batch {i} should NOT contain original (used already)"
+            assert stats["original_count_per_batch"][i] == 0, msg_i
 
         # CRITICAL: No original should be repeated
-        assert (
-            len(stats["claim_id_repeated_across_batches"]) == 0
-        ), "Original should NEVER be repeated across batches!"
+        msg_repeat = "Original should NEVER be repeated across batches!"
+        assert len(stats["claim_id_repeated_across_batches"]) == 0, msg_repeat
 
         # All batches should have the same claim_id
         for batch_claim_ids in stats["claim_ids_per_batch"]:
-            assert (
-                len(set(batch_claim_ids)) == 1
-            ), "All examples in all batches should be from the same claim_id"
+            msg_same = "All examples should be from same claim_id"
+            assert len(set(batch_claim_ids)) == 1, msg_same
 
         print(
-            "\n✓ Test passed: Large claims split correctly without repeating original"
+            "\n✓ Test passed: Large claims split correctly "
+            "without repeating original"
         )
 
     def test_no_split_large_claims(self):
@@ -288,9 +286,9 @@ class TestEnhancedPerturbationBatchSampler:
         dataset = create_mock_dataset(n_claims=1, perturbations_per_claim=20)
 
         print(f"\nDataset size: {len(dataset)} (1 claim with 21 examples)")
-        print(f"Batch size: 8")
-        print(f"split_large_claims: False")
-        print(f"Expected: Only first 8 examples used")
+        print("Batch size: 8")
+        print("split_large_claims: False")
+        print("Expected: Only first 8 examples used")
 
         sampler = EnhancedPerturbationBatchSampler(
             dataset=dataset,
@@ -310,7 +308,8 @@ class TestEnhancedPerturbationBatchSampler:
         assert stats["batch_sizes"][0] == 8
 
         print(
-            "\n✓ Test passed: Large claims truncated when split_large_claims=False"
+            "\n✓ Test passed: Large claims truncated when "
+            "split_large_claims=False"
         )
 
     def test_drop_last(self):
@@ -321,9 +320,9 @@ class TestEnhancedPerturbationBatchSampler:
         # 10 * 3 = 30 examples
 
         print(f"\nDataset size: {len(dataset)}")
-        print(f"Batch size: 8")
-        print(f"drop_last: True")
-        print(f"Expected: 3 batches of size 8 (last 6 examples dropped)")
+        print("Batch size: 8")
+        print("drop_last: True")
+        print("Expected: 3 batches of size 8 (last 6 examples dropped)")
 
         sampler = EnhancedPerturbationBatchSampler(
             dataset=dataset,
@@ -340,9 +339,8 @@ class TestEnhancedPerturbationBatchSampler:
 
         # Should have 3 complete batches (30 / 8 = 3 remainder 6)
         assert stats["num_batches"] == 3
-        assert all(
-            size == 8 for size in stats["batch_sizes"]
-        ), "All batches should have exactly batch_size examples"
+        msg_drop = "All batches should have exactly batch_size examples"
+        assert all(size == 8 for size in stats["batch_sizes"]), msg_drop
 
         print("\n✓ Test passed: drop_last works correctly")
 
@@ -373,16 +371,15 @@ class TestEnhancedPerturbationBatchSampler:
         batches2 = list(sampler2)
 
         # Batches should be different due to different seeds
-        assert (
-            batches1 != batches2
-        ), "Different seeds should produce different batch orders"
+        msg_seed = "Different seeds should produce different batch orders"
+        assert batches1 != batches2, msg_seed
 
         # But should have same total examples
         assert sum(len(b) for b in batches1) == sum(len(b) for b in batches2)
 
         print(f"\nBatches from seed 42: {len(batches1)} batches")
         print(f"Batches from seed 99: {len(batches2)} batches")
-        print(f"Batch orders are different: ✓")
+        print("Batch orders are different: ✓")
 
         print("\n✓ Test passed: Shuffle works correctly")
 
@@ -435,10 +432,10 @@ class TestEnhancedPerturbationBatchSampler:
         # Total: 2 + 6 + 16 = 24 examples
 
         print(f"\nDataset size: {len(dataset)}")
-        print(f"  Small claim: 2 examples")
-        print(f"  Medium claim: 6 examples")
-        print(f"  Large claim: 16 examples")
-        print(f"Batch size: 8")
+        print("  Small claim: 2 examples")
+        print("  Medium claim: 6 examples")
+        print("  Large claim: 16 examples")
+        print("Batch size: 8")
 
         sampler = EnhancedPerturbationBatchSampler(
             dataset=dataset,
@@ -474,7 +471,8 @@ class TestEnhancedPerturbationBatchSampler:
             include_original=False,  # No originals!
         )
 
-        print(f"\nDataset size: {len(dataset)} (only perturbed, no originals)")
+        msg_ds = "(only perturbed, no originals)"
+        print(f"\nDataset size: {len(dataset)} {msg_ds}")
 
         sampler = EnhancedPerturbationBatchSampler(
             dataset=dataset,
@@ -513,7 +511,7 @@ class TestEnhancedPerturbationBatchSampler:
         len1 = len(sampler1)
         len2 = len(sampler2)
 
-        print(f"\nDataset: 30 examples, batch_size: 8")
+        print("\nDataset: 30 examples, batch_size: 8")
         print(f"Without drop_last: {len1} batches (expected: 4)")
         print(f"With drop_last: {len2} batches (expected: 3)")
 
@@ -572,10 +570,10 @@ class TestEnhancedPerturbationBatchSampler:
             )
 
         dataset = Dataset.from_list(examples)
-        print(f"\nDataset composition:")
-        print(f"  Normal claims (orig + pert): 5 claims × 2 = 10 examples")
-        print(f"  Only originals: 10 examples")
-        print(f"  Only perturbed: 10 examples")
+        print("\nDataset composition:")
+        print("  Normal claims (orig + pert): 5 claims × 2 = 10 examples")
+        print("  Only originals: 10 examples")
+        print("  Only perturbed: 10 examples")
         print(f"  Total: {len(dataset)} examples")
 
         # Test WITHOUT constraints
@@ -593,15 +591,19 @@ class TestEnhancedPerturbationBatchSampler:
         batches_no_constraints = list(sampler_no_constraints)
         stats_no_constraints = analyze_batches(batches_no_constraints, dataset)
 
-        print(
-            f"Batches with both: {stats_no_constraints['batches_with_both']}/{stats_no_constraints['num_batches']}"
+        n_both = stats_no_constraints["batches_with_both"]
+        n_total = stats_no_constraints["num_batches"]
+        print(f"Batches with both: {n_both}/{n_total}")
+        n_only_orig = (
+            stats_no_constraints["batches_with_original"]
+            - stats_no_constraints["batches_with_both"]
         )
-        print(
-            f"Batches with only original: {stats_no_constraints['batches_with_original'] - stats_no_constraints['batches_with_both']}"
+        print(f"Batches with only original: {n_only_orig}")
+        n_only_pert = (
+            stats_no_constraints["batches_with_perturbed"]
+            - stats_no_constraints["batches_with_both"]
         )
-        print(
-            f"Batches with only perturbed: {stats_no_constraints['batches_with_perturbed'] - stats_no_constraints['batches_with_both']}"
-        )
+        print(f"Batches with only perturbed: {n_only_pert}")
 
         # Test WITH constraints
         print("\n--- With Constraints ---")
@@ -620,21 +622,26 @@ class TestEnhancedPerturbationBatchSampler:
             batches_with_constraints, dataset
         )
 
-        print(
-            f"Batches with both: {stats_with_constraints['batches_with_both']}/{stats_with_constraints['num_batches']}"
+        n_both2 = stats_with_constraints["batches_with_both"]
+        n_total2 = stats_with_constraints["num_batches"]
+        print(f"Batches with both: {n_both2}/{n_total2}")
+        n_only_orig2 = (
+            stats_with_constraints["batches_with_original"]
+            - stats_with_constraints["batches_with_both"]
         )
-        print(
-            f"Batches with only original: {stats_with_constraints['batches_with_original'] - stats_with_constraints['batches_with_both']}"
+        print(f"Batches with only original: {n_only_orig2}")
+        n_only_pert2 = (
+            stats_with_constraints["batches_with_perturbed"]
+            - stats_with_constraints["batches_with_both"]
         )
-        print(
-            f"Batches with only perturbed: {stats_with_constraints['batches_with_perturbed'] - stats_with_constraints['batches_with_both']}"
-        )
+        print(f"Batches with only perturbed: {n_only_pert2}")
 
         # Verify that constraints improved the situation
+        msg_constr = "Constraints should increase batches with both types"
         assert (
             stats_with_constraints["batches_with_both"]
             >= stats_no_constraints["batches_with_both"]
-        ), "Constraints should increase batches with both types"
+        ), msg_constr
 
         print("\n✓ Test passed: Constraint enforcement attempts to fix batches")
 
@@ -642,7 +649,7 @@ class TestEnhancedPerturbationBatchSampler:
         """Test behavior when constraints cannot be satisfied."""
         print_separator("TEST: Constraints Cannot Be Satisfied")
 
-        # Create dataset with ONLY originals (impossible to have perturbed in each batch)
+        # Create dataset with ONLY originals (no perturbed examples)
         examples = []
         for i in range(20):
             examples.append(
@@ -654,9 +661,8 @@ class TestEnhancedPerturbationBatchSampler:
             )
 
         dataset = Dataset.from_list(examples)
-        print(
-            f"\nDataset: {len(dataset)} examples (ALL originals, no perturbed)"
-        )
+        msg_ex = "(ALL originals, no perturbed)"
+        print(f"\nDataset: {len(dataset)} examples {msg_ex}")
 
         # Try to enforce having perturbed in each batch (impossible)
         sampler = EnhancedPerturbationBatchSampler(
@@ -672,20 +678,21 @@ class TestEnhancedPerturbationBatchSampler:
         stats = analyze_batches(batches, dataset)
 
         print(
-            f"\nWarnings should be shown above about batches missing perturbed examples"
+            "\nWarnings should be shown above about batches "
+            "missing perturbed examples"
         )
-        print(
-            f"Batches with perturbed: {stats['batches_with_perturbed']}/{stats['num_batches']}"
-        )
+        n_pert = stats["batches_with_perturbed"]
+        n_all = stats["num_batches"]
+        print(f"Batches with perturbed: {n_pert}/{n_all}")
 
         # Should still create batches, just with warnings
         assert stats["num_batches"] > 0
-        assert (
-            stats["batches_with_perturbed"] == 0
-        )  # Impossible to have perturbed
+        # Impossible to have perturbed
+        assert stats["batches_with_perturbed"] == 0
 
         print(
-            "\n✓ Test passed: Impossible constraints handled gracefully with warnings"
+            "\n✓ Test passed: Impossible constraints "
+            "handled gracefully with warnings"
         )
 
 

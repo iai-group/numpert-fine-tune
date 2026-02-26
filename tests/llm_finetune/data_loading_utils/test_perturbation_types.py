@@ -104,10 +104,11 @@ class TestFileLoadConfig:
         """Test __repr__ with specific perturbation types."""
         types = [PerturbationType.PERTURB_TYPE1, PerturbationType.PERTURB_TYPE2]
         config = FileLoadConfig(path="test.json", perturb_types=types)
-        assert (
-            repr(config)
-            == "FileLoadConfig(path='test.json', perturb_types=['perturb_type1', 'perturb_type2'])"
+        expected = (
+            "FileLoadConfig(path='test.json', "
+            "perturb_types=['perturb_type1', 'perturb_type2'])"
         )
+        assert repr(config) == expected
 
 
 class TestParseFileConfig:

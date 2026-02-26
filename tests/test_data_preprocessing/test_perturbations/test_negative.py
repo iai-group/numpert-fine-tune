@@ -1,8 +1,6 @@
 """Tests for the negative perturbation."""
 
-import json
-import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 from src.data_preprocessing.perturbations.negative import (
     negative_number_perturbation,
