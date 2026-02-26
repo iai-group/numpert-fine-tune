@@ -69,7 +69,7 @@ def extract_label_from_openai_response(data: dict) -> Optional[bool]:
         return None
 
 
-def load_jsonl_predictions(  #noqa: C901
+def load_jsonl_predictions(  # noqa: C901
     filepath: Path, verbose: bool = False
 ) -> Dict[str, bool]:
     """Load JSONL and map custom_id -> predicted_label (bool)."""

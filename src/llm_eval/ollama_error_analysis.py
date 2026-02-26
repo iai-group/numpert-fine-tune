@@ -169,12 +169,14 @@ def main(
             )
         with open(combined_file, "w") as out_f:
             header = (
-                "claim_id\tclaim\tdoc\tthoughts_0shot\tprompt_tokens_length_0shot\t"
-                "reasoning_tokens_length_0shot\tground_truth_0shot\tprediction_0shot\t"  # noqa: E501
-                "thoughts_negshot\tprompt_tokens_length_negshot\t"
+                "claim_id\tclaim\tdoc\tthoughts_0shot\t"
+                "prompt_tokens_length_0shot\t"
+                "reasoning_tokens_length_0shot\tground_truth_0shot\t"
+                "prediction_0shot\tthoughts_negshot\t"
+                "prompt_tokens_length_negshot\t"
                 "reasoning_tokens_length_negshot\tground_truth_negshot\t"
                 "prediction_negshot\n"
-            )  # noqa: E501
+            )
             out_f.write(header)
             prompt_token_length_0shot = 0
             reasoning_token_length_0shot = 0
@@ -203,9 +205,10 @@ def main(
                     out_f.write(
                         f"{claim_id}\t{data1['claim']}\t{data1['evidence']}\t"
                         f"{data1['thoughts']}\t{data1['prompt_tokens_length']}\t"
-                        f"{data1['reasoning_tokens_length']}\t{data1['ground_truth']}\t"  # noqa: E501
-                        f"{data1['prediction']}\t{data2['thoughts']}\t"
-                        f"{data2['prompt_tokens_length']}\t{data2['reasoning_tokens_length']}\t"  # noqa: E501
+                        f"{data1['reasoning_tokens_length']}\t"
+                        f"{data1['ground_truth']}\t{data1['prediction']}\t"
+                        f"{data2['thoughts']}\t{data2['prompt_tokens_length']}\t"
+                        f"{data2['reasoning_tokens_length']}\t"
                         f"{data2['ground_truth']}\t{data2['prediction']}\n"
                     )
             # Calculate averages
@@ -233,8 +236,9 @@ def main(
             # Write to summary TSV file
 
             summary_f.write(
-                f"{perturb}\t{analyze_errors}\t{avg_prompt_0shot}\t{avg_reasoning_0shot}\t"
-                f"{avg_prompt_negshot}\t{avg_reasoning_negshot}\n"
+                f"{perturb}\t{analyze_errors}\t{avg_prompt_0shot}\t"
+                f"{avg_reasoning_0shot}\t{avg_prompt_negshot}\t"
+                f"{avg_reasoning_negshot}\n"
             )
 
 

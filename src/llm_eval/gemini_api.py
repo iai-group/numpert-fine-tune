@@ -348,7 +348,9 @@ def create_output_record(
 
     # Optionally include thoughts in the response
     if result["thoughts"] and result["thoughts"].strip():
-        response_body["choices"][0]["message"]["thoughts"] = result["thoughts"]  # type: ignore[index]
+        response_body["choices"][0]["message"]["thoughts"] = (
+            result["thoughts"]  # type: ignore[index]
+        )
 
     return {
         "custom_id": custom_id,

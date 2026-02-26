@@ -8,7 +8,8 @@ The output filename is automatically generated from the two input files.
 import argparse
 import json
 from pathlib import Path
-import src.error_analysis.compare_classifications_jsonl as cmp  # rename your original script to compare_script.py
+
+import src.error_analysis.compare_classifications_jsonl as cmp
 
 
 def load_jsonl_raw(filepath: Path):
