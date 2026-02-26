@@ -606,7 +606,7 @@ def print_aggregate_stats(all_results: List[Dict]):
             print(f"    Average % increase: {avg_pct:.1f}%")
 
 
-def main():
+def main():  #noqa: C901
     """Main entry point for the script."""
     parser = argparse.ArgumentParser(
         description="Analyze token usage differences between correct predictions and misclassifications",

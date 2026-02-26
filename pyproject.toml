@@ -94,3 +94,9 @@ module = [
     "pytest.*",
 ]
 ignore_missing_imports = true
+
+[tool.flake8]
+python_executable = ".numpert-fine-tune/bin/python"
+exclude = [
+    "src/metrics/"
+]

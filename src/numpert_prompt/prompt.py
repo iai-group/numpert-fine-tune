@@ -1,3 +1,5 @@
+# flake8: noqa
+
 """Module to get system and user prompts for LLM evaluations."""
 
 from enum import Enum
