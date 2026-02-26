@@ -7,8 +7,8 @@ import sys
 import time
 import os
 from typing import Dict, List, Optional, Any, Set
-import google.genai as genai
-from google.genai import types
+import google.genai as genai  # type: ignore[import]
+from google.genai import types  # type: ignore[import]
 
 
 def parse_arguments() -> argparse.Namespace:
@@ -290,7 +290,7 @@ def process_with_gemini(  # noqa: C901
 
 def create_output_record(
     custom_id: str, result: Dict[str, Any], model_name: str
-) -> Dict:
+) -> Dict[str, Any]:
     """Create output record in OpenAI batch format.
 
     Args:
@@ -327,7 +327,7 @@ def create_output_record(
             "rejected_prediction_tokens": 0,
         }
 
-    response_body = {
+    response_body: Dict[str, Any] = {
         "model": model_name,
         "choices": [
             {
@@ -348,9 +348,11 @@ def create_output_record(
 
     # Optionally include thoughts in the response
     if result["thoughts"] and result["thoughts"].strip():
-        response_body["choices"][0]["message"]["thoughts"] = (
-            result["thoughts"]  # type: ignore[index]
-        )
+        response_body["choices"][0]["message"][
+            "thoughts"
+        ] = result[  # noqa: E501
+            "thoughts"
+        ]
 
     return {
         "custom_id": custom_id,

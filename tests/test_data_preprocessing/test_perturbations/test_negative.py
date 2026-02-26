@@ -5,8 +5,6 @@ import pytest
 from unittest.mock import patch, MagicMock
 
 from src.data_preprocessing.perturbations.negative import (
-    load_data,
-    save_data,
     negative_number_perturbation,
     process_json,
 )
