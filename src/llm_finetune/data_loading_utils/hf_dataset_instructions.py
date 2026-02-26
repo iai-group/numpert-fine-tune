@@ -19,7 +19,7 @@ from pathlib import Path
 from typing import Dict, List, Optional, Union
 
 # Re-export taxonomy & config -------------------------------------------
-from src.llm_finetune.data_loading_utils.perturbation_types import (  # noqa: F401
+from src.llm_finetune.data_loading_utils.perturbation_types import (  # noqa
     PerturbationType,
     STRUCTURE_PRESERVING_TYPES,
     VALUE_MODIFYING_TYPES,
@@ -30,7 +30,7 @@ from src.llm_finetune.data_loading_utils.perturbation_types import (  # noqa: F4
 )
 
 # Re-export perturbation logic ------------------------------------------
-from src.llm_finetune.data_loading_utils.perturbation_logic import (  # noqa: F401
+from src.llm_finetune.data_loading_utils.perturbation_logic import (  # noqa
     _PERTURB_KEY_RE,
     _detect_perturb_key,
     _normalize_label,
@@ -147,7 +147,9 @@ def load_fact_checking_data(
                         "claim": example["normalized_claim"],
                         "doc": example["doc"],
                         "label": label_str,
-                        "perturbation_type": PerturbationType.ORIGINAL_NORMALIZED.value,
+                        "perturbation_type": (
+                            PerturbationType.ORIGINAL_NORMALIZED.value
+                        ),
                         "url": example.get("url", ""),
                         "taxonomy_label": example.get("taxonomy_label", ""),
                     }

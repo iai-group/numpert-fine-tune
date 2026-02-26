@@ -105,9 +105,14 @@ def parse_file_config(config_str: str) -> FileLoadConfig:
             try:
                 perturb_types.append(PerturbationType(full_name))
             except ValueError:
+                valid_types = [
+                    t.value
+                    for t in PerturbationType
+                    if t != PerturbationType.ORIGINAL_NORMALIZED
+                ]
                 raise ValueError(
                     f"Unknown perturbation type: {name!r}. "
-                    f"Valid types: {[t.value for t in PerturbationType if t != PerturbationType.ORIGINAL_NORMALIZED]}"
+                    f"Valid types: {valid_types}"
                 )
         return FileLoadConfig(path=path, perturb_types=perturb_types)
     return FileLoadConfig(path=config_str)

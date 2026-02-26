@@ -246,9 +246,9 @@ class OllamaLLM:
         ]
 
 
-def process_claim(
+def process_claim(  # noqa: C901
     llm, claim, evidence, perturb_type, shot, perturb
-):  # noqa: C901
+):
     """Process a single claim with the LLM and return results.
 
     Args:

@@ -98,7 +98,7 @@ def extract_label_from_response(text: str) -> Optional[str]:
         return None
 
 
-def inference(
+def inference(  # noqa: C901
     test_json_paths: Optional[List[str]] = None,
     test_file_configs: Optional[List[FileLoadConfig]] = None,
     model_name: str = "llama-3.2-3b-instruct",

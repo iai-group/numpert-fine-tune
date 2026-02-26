@@ -63,7 +63,8 @@ def _determine_perturbed_label(
     """Determine the correct label for a perturbed claim.
 
     Args:
-        base_type: One of the ``PerturbationType`` values (e.g. ``"perturb_type1"``).
+        base_type: One of the ``PerturbationType`` values
+            (e.g. ``"perturb_type1"``).
         original_label_bool: The original claim's truth value.
 
     Returns:
@@ -99,7 +100,8 @@ def expand_perturbations(
     Args:
         examples: Raw examples loaded from a JSON file.
         allowed_types: If not ``None``, only these perturbation types will
-            be included.  ``PerturbationType.ORIGINAL_NORMALIZED`` is always included
+            be included.
+            ``PerturbationType.ORIGINAL_NORMALIZED`` is always included
             regardless.
 
     Returns:

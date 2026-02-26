@@ -2,7 +2,7 @@
 
 from torch.utils.data import Sampler
 from collections import defaultdict
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 import random
 
 
@@ -31,12 +31,16 @@ class EnhancedPerturbationBatchSampler(Sampler):
     ):
         """
         Args:
-            dataset: HuggingFace Dataset with 'claim_id' and 'perturbation_type' columns
+            dataset: HuggingFace Dataset with 'claim_id' and
+                'perturbation_type' columns
             batch_size: Number of examples per batch
             batch_match_claim_id: Try to group same claim_id in batches
-            split_large_claims: Split claims with >batch_size examples across batches
-            ensure_original_in_batch: Ensure each batch has at least one original
-            ensure_perturbed_in_batch: Ensure each batch has at least one perturbed
+            split_large_claims: Split claims with >batch_size examples
+                across batches
+            ensure_original_in_batch: Ensure each batch has at least
+                one original
+            ensure_perturbed_in_batch: Ensure each batch has at least
+                one perturbed
             shuffle: Whether to shuffle the data
             seed: Random seed
             drop_last: Whether to drop last incomplete batch
@@ -70,7 +74,7 @@ class EnhancedPerturbationBatchSampler(Sampler):
                 self.perturbed_indices.append(idx)
 
         print(f"\n{'='*80}")
-        print(f"EnhancedPerturbationBatchSampler initialized:")
+        print("EnhancedPerturbationBatchSampler initialized:")
         print(f"  Total examples: {len(dataset)}")
         print(f"  Unique claim_ids: {len(self.claim_id_groups)}")
         print(f"  Original examples: {len(self.original_indices)}")
@@ -115,7 +119,8 @@ class EnhancedPerturbationBatchSampler(Sampler):
             if self.shuffle:
                 self.rng.shuffle(perturbed_indices)
 
-            # All indices for this claim (original comes first, then perturbations)
+            # All indices for this claim (original comes first,
+            # then perturbations)
             claim_indices = []
             if original_idx is not None:
                 claim_indices.append(original_idx)
@@ -128,7 +133,8 @@ class EnhancedPerturbationBatchSampler(Sampler):
             # If claim is too large and splitting is enabled
             elif self.split_large_claims:
                 # Split into multiple batches with balanced mix
-                # IMPORTANT: Original only goes in the first batch, never repeated
+                # IMPORTANT: Original only goes in the first batch,
+                # never repeated
 
                 remaining_perturbed = perturbed_indices.copy()
                 original_used = False
@@ -178,7 +184,7 @@ class EnhancedPerturbationBatchSampler(Sampler):
 
         return batches
 
-    def _enforce_batch_constraints(
+    def _enforce_batch_constraints(  # noqa: C901
         self, batches: List[List[int]]
     ) -> List[List[int]]:
         """Enforce constraints that batches should have both original and
@@ -279,7 +285,8 @@ class EnhancedPerturbationBatchSampler(Sampler):
             if not fixed:
                 # Couldn't fix, but still add the batch with a warning
                 print(
-                    f"  ⚠️  Warning: Batch {batch_idx} has no original example (couldn't fix)"
+                    f"  ⚠️  Warning: Batch {batch_idx} has no"
+                    " original example (couldn't fix)"
                 )
 
             fixed_batches.append(batch)
@@ -324,7 +331,8 @@ class EnhancedPerturbationBatchSampler(Sampler):
             if not fixed:
                 # Couldn't fix, but still add the batch with a warning
                 print(
-                    f"  ⚠️  Warning: Batch {batch_idx} has no perturbed example (couldn't fix)"
+                    f"  ⚠️  Warning: Batch {batch_idx} has no"
+                    " perturbed example (couldn't fix)"
                 )
 
             fixed_batches.append(batch)

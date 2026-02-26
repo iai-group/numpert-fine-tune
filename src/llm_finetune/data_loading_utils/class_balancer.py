@@ -2,7 +2,6 @@
 
 from datasets import Dataset
 from typing import List
-from collections import defaultdict
 import random
 
 # JSON format labels
@@ -32,8 +31,10 @@ class DatasetBalancer:
         Args:
             dataset: Full expanded dataset with all perturbations
             balance_labels: Whether to balance True/False distribution
-            perturb_ratio: Ratio of perturbed to non-perturbed examples (1.0 = 1:1)
-            false_perturb_t_to_f_ratio: Among False perturbed examples, ratio that should be T→F
+            perturb_ratio: Ratio of perturbed to non-perturbed examples
+                (1.0 = 1:1)
+            false_perturb_t_to_f_ratio: Among False perturbed examples,
+                ratio that should be T→F
             seed: Random seed
         """
         self.dataset = dataset
@@ -135,12 +136,12 @@ class DatasetBalancer:
         print("DATASET BALANCING")
         print("=" * 80)
 
-        print(f"Configuration:")
+        print("Configuration:")
         print(f"  Balance labels: {self.balance_labels}")
         print(f"  Perturb ratio: {self.perturb_ratio}")
         print(f"  False perturb T→F ratio: {self.false_perturb_t_to_f_ratio}")
 
-        print(f"\nOriginal distribution:")
+        print("\nOriginal distribution:")
         print(f"  Original True: {len(self.original_true_indices)}")
         print(f"  Original False: {len(self.original_false_indices)}")
         print(f"  T→T perturbations: {len(self.t_to_t_indices)}")
@@ -176,30 +177,39 @@ class DatasetBalancer:
 
         print(f"\nAfter perturb_ratio ({self.perturb_ratio}):")
         print(
-            f"  True: {n_original_true} original + {n_target_t_to_t} T→T = {initial_true_total} total"
+            f"  True: {n_original_true} original"
+            f" + {n_target_t_to_t} T→T"
+            f" = {initial_true_total} total"
         )
         print(
-            f"  False: {n_original_false} original + {n_target_t_to_f} T→F + {n_target_f_to_f} F→F = {initial_false_total} total"
+            f"  False: {n_original_false} original"
+            f" + {n_target_t_to_f} T→F"
+            f" + {n_target_f_to_f} F→F"
+            f" = {initial_false_total} total"
         )
 
-        # Step 2: Apply label balancing if requested (downsample majority class proportionally)
+        # Step 2: Apply label balancing if requested
+        # (downsample majority class proportionally)
         if self.balance_labels:
             # Handle edge case where one class has zero examples
             if initial_true_total == 0 or initial_false_total == 0:
                 print(
-                    f"\n⚠️  WARNING: Cannot balance labels when one class has 0 examples!"
+                    "\n⚠️  WARNING: Cannot balance labels"
+                    " when one class has 0 examples!"
                 )
                 print(
-                    f"     True total: {initial_true_total}, False total: {initial_false_total}"
+                    f"     True total: {initial_true_total},"
+                    f" False total: {initial_false_total}"
                 )
-                print(f"     Proceeding without balancing.")
+                print("     Proceeding without balancing.")
             else:
                 min_total = min(initial_true_total, initial_false_total)
 
                 if initial_true_total > initial_false_total:
                     # Downsample True proportionally
                     print(
-                        f"\n⚙️  Downsampling True class from {initial_true_total} to {min_total}"
+                        f"\n⚙️  Downsampling True class"
+                        f" from {initial_true_total} to {min_total}"
                     )
                     downsample_ratio = min_total / initial_true_total
                     n_original_true = int(n_original_true * downsample_ratio)
@@ -208,14 +218,15 @@ class DatasetBalancer:
                 elif initial_false_total > initial_true_total:
                     # Downsample False proportionally
                     print(
-                        f"\n⚙️  Downsampling False class from {initial_false_total} to {min_total}"
+                        f"\n⚙️  Downsampling False class"
+                        f" from {initial_false_total} to {min_total}"
                     )
                     downsample_ratio = min_total / initial_false_total
                     n_original_false = int(n_original_false * downsample_ratio)
                     n_target_t_to_f = int(n_target_t_to_f * downsample_ratio)
                     n_target_f_to_f = int(n_target_f_to_f * downsample_ratio)
 
-        print(f"\nFinal target distribution:")
+        print("\nFinal target distribution:")
         print(f"  Original True: {n_original_true}")
         print(f"  Original False: {n_original_false}")
         print(f"  T→T perturbations: {n_target_t_to_t}")
@@ -229,10 +240,12 @@ class DatasetBalancer:
         # Safe percentage calculation
         if final_total > 0:
             print(
-                f"  True total: {final_true} ({100*final_true/final_total:.1f}%)"
+                f"  True total: {final_true}"
+                f" ({100*final_true/final_total:.1f}%)"
             )
             print(
-                f"  False total: {final_false} ({100*final_false/final_total:.1f}%)"
+                f"  False total: {final_false}"
+                f" ({100*final_false/final_total:.1f}%)"
             )
         else:
             print(f"  True total: {final_true}")
@@ -275,7 +288,8 @@ class DatasetBalancer:
         # Handle case where no indices were selected
         if len(selected_indices) == 0:
             print(
-                f"\n⚠️  WARNING: No indices selected! Returning empty dataset."
+                "\n⚠️  WARNING: No indices selected!"
+                " Returning empty dataset."
             )
             print("=" * 80 + "\n")
             return Dataset.from_list([])
@@ -291,13 +305,15 @@ class DatasetBalancer:
         )
         actual_false = len(selected_indices) - actual_true
 
-        print(f"\nActual final label distribution:")
+        print("\nActual final label distribution:")
         if len(selected_indices) > 0:
             print(
-                f"  True: {actual_true} ({100*actual_true/len(selected_indices):.1f}%)"
+                f"  True: {actual_true}"
+                f" ({100*actual_true/len(selected_indices):.1f}%)"
             )
             print(
-                f"  False: {actual_false} ({100*actual_false/len(selected_indices):.1f}%)"
+                f"  False: {actual_false}"
+                f" ({100*actual_false/len(selected_indices):.1f}%)"
             )
         else:
             print(f"  True: {actual_true}")

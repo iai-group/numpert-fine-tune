@@ -1,13 +1,9 @@
 import matplotlib.pyplot as plt
-from collections import Counter
 from typing import Dict, List, Optional
 import numpy as np
 
 from src.llm_finetune.data_loading_utils.hf_dataset_instructions import (
     load_fact_checking_data,
-    load_train_and_validation,
-    PerturbationType,
-    FileLoadConfig,
 )
 
 
@@ -99,7 +95,7 @@ def analyze_sequence_lengths(
     }
 
     # Print statistics
-    print(f"\nSequence Length Statistics:")
+    print("\nSequence Length Statistics:")
     print(f"  Total examples: {stats['total_examples']}")
     print(f"  Min length: {stats['min_length']:,} tokens")
     print(f"  Max length: {stats['max_length']:,} tokens")
@@ -114,30 +110,35 @@ def analyze_sequence_lengths(
         )
     if doc_lengths:
         print(
-            f"  Mean evidence doc length: {stats['mean_doc_length']:,.1f} tokens"
+            "  Mean evidence doc length:"
+            f" {stats['mean_doc_length']:,.1f} tokens"
         )
 
     # Show distribution
-    print(f"\nLength Distribution:")
+    print("\nLength Distribution:")
     bins = [0, 1024, 2048, 4096, 8192, 16384, 32768]
     for i in range(len(bins) - 1):
-        count = sum(1 for l in sequence_lengths if bins[i] <= l < bins[i + 1])
+        count = sum(
+            1 for length in sequence_lengths if bins[i] <= length < bins[i + 1]
+        )
         pct = 100 * count / len(sequence_lengths)
         print(
-            f"  {bins[i]:>6,} - {bins[i+1]:>6,} tokens: {count:>5} ({pct:>5.1f}%)"
+            f"  {bins[i]:>6,} - {bins[i+1]:>6,} tokens:"
+            f" {count:>5} ({pct:>5.1f}%)"
         )
 
     # Warn about very long sequences
     if too_long_examples:
         print(
-            f"\n⚠️  WARNING: {len(too_long_examples)} examples exceed 8,192 tokens!"
+            f"\n⚠️  WARNING: {len(too_long_examples)}"
+            " examples exceed 8,192 tokens!"
         )
-        print(f"  Longest examples:")
+        print("  Longest examples:")
         for ex in sorted(
             too_long_examples, key=lambda x: x["length"], reverse=True
         )[:5]:
             print(
-                f"    - claim_id={ex['claim_id']}, length={ex['length']:,} tokens"
+                f"  - claim_id={ex['claim_id']}, length={ex['length']:,} tokens"
             )
 
     # Recommend max_seq_length
@@ -145,7 +146,7 @@ def analyze_sequence_lengths(
         np.ceil(stats["p99_length"] / 1024) * 1024
     )  # Round up to nearest 1024
     print(f"\n💡 RECOMMENDED max_seq_length: {recommended_length:,} tokens")
-    print(f"   (Covers 99% of examples)")
+    print("   (Covers 99% of examples)")
 
     # Plot distribution
     plt.figure(figsize=(12, 5))

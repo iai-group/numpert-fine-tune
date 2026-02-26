@@ -1,8 +1,6 @@
 """Fine-tuning for fact-checking models with numerical perturbations."""
 
-import json
 from typing import Optional, List
-import torch
 from torch.utils.data import DataLoader
 from collections import Counter
 from datetime import datetime
@@ -53,7 +51,8 @@ class PerturbationAwareSFTTrainer(SFTTrainer):
         """
         Args:
             use_custom_sampler: Whether to use EnhancedPerturbationBatchSampler
-            pre_built_batch_sampler: Pre-built batch sampler (created before columns removed)
+            pre_built_batch_sampler: Pre-built batch sampler (created
+                before columns removed)
         """
         super().__init__(*args, **kwargs)
 
@@ -121,7 +120,7 @@ def get_model_name_arg(model_name):
     return model_name
 
 
-def finetune(
+def finetune(  # noqa: C901
     train_json_paths: Optional[List[str]] = None,
     val_json_paths: Optional[List[str]] = None,
     train_file_configs: Optional[List[FileLoadConfig]] = None,
@@ -187,7 +186,7 @@ def finetune(
         if resume_model is None:
             raise ValueError(
                 f"--resume_model is required when start_epoch > 1. "
-                f"Provide the path to a previously saved merged model."
+                "Provide the path to a previously saved merged model."
             )
         model_name_arg = resume_model
 
@@ -266,7 +265,7 @@ def finetune(
             full_text = tokenizer.apply_chat_template(
                 conv,
                 tokenize=False,
-                add_generation_prompt=False,  # Crucial: False includes the EOS token
+                add_generation_prompt=False,  # EOS token: use False
             )
 
             # 2. Format the prompt only (Instruction + Generation Header)
@@ -294,7 +293,8 @@ def finetune(
             labels = [-100] * len(input_ids)
             prompt_len = len(prompt_tokens["input_ids"])
 
-            # Only unmask tokens from the end of the prompt to the end of the full sequence
+            # Only unmask tokens from the end of the prompt to the
+            # end of the full sequence
             for i in range(prompt_len, len(input_ids)):
                 labels[i] = input_ids[i]
 
@@ -375,7 +375,8 @@ def finetune(
 
             print(f"\n  Conversations with assistant response: {has_assistant}")
             print(
-                f"  Conversations WITHOUT assistant response: {missing_assistant}"
+                "  Conversations WITHOUT assistant"
+                f" response: {missing_assistant}"
             )
 
             # Show sample conversations
@@ -390,7 +391,7 @@ def finetune(
                     f"  Perturbation: {example.get('perturbation_type', 'N/A')}"
                 )
                 print(f"  Label: {example.get('label', 'N/A')}")
-                print(f"  Conversation structure:")
+                print("  Conversation structure:")
 
                 for j, msg in enumerate(conv):
                     role = msg["role"]
@@ -403,10 +404,11 @@ def finetune(
 
                 # Check if last message is assistant
                 if conv[-1]["role"] == "assistant":
-                    print(f"  ✅ Last message is from assistant")
+                    print("  ✅ Last message is from assistant")
                 else:
                     print(
-                        f"  ❌ Last message is NOT from assistant (role: {conv[-1]['role']})"
+                        f"  ❌ Last message is NOT from"
+                        f" assistant (role: {conv[-1]['role']})"
                     )
 
         # Debug both datasets
@@ -445,7 +447,8 @@ def finetune(
 
     # Fix for "AttributeError: 'list' object has no attribute 'tolist'"
     # Unsloth's train_on_responses_only expects numpy arrays, not python lists.
-    # We only format the tensor columns so 'claim_id' remains a string for the sampler.
+    # We only format the tensor columns so 'claim_id' remains a
+    # string for the sampler.
     tensor_cols = ["input_ids", "attention_mask", "labels"]
     train_data.set_format(
         type="numpy", columns=tensor_cols, output_all_columns=True
@@ -487,14 +490,16 @@ def finetune(
                 input_ids = example["input_ids"]
 
                 # Show first 10 tokens
-                print(f"\n  First 10 tokens (should be masked):")
+                print("\n  First 10 tokens (should be masked):")
                 for j in range(min(10, len(input_ids))):
                     token_id = input_ids[j]
                     label = labels[j]
                     token_text = tokenizer.decode([token_id])
                     mask_status = "MASKED" if label == -100 else "TRAIN"
                     print(
-                        f"    [{j}] {mask_status:7s} | token_id={token_id:5d} | {repr(token_text)}"
+                        f"    [{j}] {mask_status:7s} | "
+                        f"token_id={token_id:5d} | "
+                        f"{repr(token_text)}"
                     )
 
                 # Find transition from masked to trainable
@@ -506,7 +511,8 @@ def finetune(
 
                 if transition_idx:
                     print(
-                        f"\n  Transition point (first trainable token at index {transition_idx}):"
+                        f"\n  Transition point (first trainable"
+                        f" token at index {transition_idx}):"
                     )
                     start = max(0, transition_idx - 3)
                     end = min(len(input_ids), transition_idx + 3)
@@ -519,11 +525,13 @@ def finetune(
                             " <-- TRANSITION" if j == transition_idx else ""
                         )
                         print(
-                            f"    [{j}] {mask_status:7s} | token_id={token_id:5d} | {repr(token_text)}{marker}"
+                            f"    [{j}] {mask_status:7s} | "
+                            f"token_id={token_id:5d} | "
+                            f"{repr(token_text)}{marker}"
                         )
 
                 # Decode full texts
-                print(f"\n  Full input (decoded):")
+                print("\n  Full input (decoded):")
                 full_text = tokenizer.decode(input_ids)
                 print(f"    {repr(full_text[:200])}...")
 
@@ -534,7 +542,7 @@ def finetune(
                     if labels[j] != -100
                 ]
                 trainable_text = tokenizer.decode(trainable_ids)
-                print(f"\n  Trainable portion (what model learns from):")
+                print("\n  Trainable portion (what model learns from):")
                 print(f"    {repr(trainable_text)}")
 
         debug_tokenization(train_data, "TRAINING")
@@ -545,12 +553,14 @@ def finetune(
         print("END DEBUG")
         print("=" * 80 + "\n")
 
-    # Create batch sampler BEFORE removing columns (needs claim_id, perturbation_type)
+    # Create batch sampler BEFORE removing columns
+    # (needs claim_id, perturbation_type)
     pre_built_batch_sampler = None
     if batch_match_claim_id:
         print("\n" + "=" * 80)
         print(
-            "🔧 Creating EnhancedPerturbationBatchSampler (before column removal)"
+            "\U0001f527 Creating EnhancedPerturbationBatchSampler"
+            " (before column removal)"
         )
         print("=" * 80)
         pre_built_batch_sampler = EnhancedPerturbationBatchSampler(
@@ -565,7 +575,8 @@ def finetune(
             drop_last=False,
         )
         print(
-            f"✅ Batch sampler created with {len(pre_built_batch_sampler)} batches"
+            f"\u2705 Batch sampler created with"
+            f" {len(pre_built_batch_sampler)} batches"
         )
         print("=" * 80 + "\n")
 
@@ -574,9 +585,6 @@ def finetune(
 
     # If using the custom sampler, we also can to keep metadata
     # until after the sampler is initialized
-    model_inputs = {"input_ids", "attention_mask", "labels", "text"}
-    sampler_metadata = {"claim_id", "perturbation_type"}
-
     columns_to_keep = {"input_ids", "attention_mask", "labels"}
     train_data = train_data.remove_columns(
         [c for c in train_data.column_names if c not in columns_to_keep]
@@ -592,8 +600,8 @@ def finetune(
     if truncated_count > 0:
         truncation_pct = 100 * truncated_count / total_count
         print(
-            f"\n⚠️  WARNING: {truncated_count}/{total_count} examples ({truncation_pct:.1f}%) "
-            f"exceed max_seq_length!"
+            f"\n\u26a0\ufe0f  WARNING: {truncated_count}/{total_count} examples"
+            f" ({truncation_pct:.1f}%) exceed max_seq_length!"
         )
 
         if truncation_pct > 10:
@@ -603,11 +611,15 @@ def finetune(
             )
     else:
         print(
-            f"\n✅ All examples fit within max_seq_length ({max_seq_length:,} tokens)"
+            "\n\u2705 All examples fit within max_seq_length"
+            f" ({max_seq_length:,} tokens)"
         )
 
     # Create output directory (used for checkpoints and final model)
-    base_dir = f"{prefix}models/{model_name}_{model_name_timestamp}_{perturb_type_names}"
+    base_dir = (
+        f"{prefix}models/"
+        f"{model_name}_{model_name_timestamp}_{perturb_type_names}"
+    )
     output_dir = f"{base_dir}/checkpoints{rank_postfix}"
     if not os.path.exists(output_dir):
         os.makedirs(output_dir, exist_ok=True)
