@@ -21,7 +21,9 @@ from typing import List, Optional
 class PerturbationType(Enum):
     """Perturbation types aligned with PERTURBATIONS.md naming."""
 
-    ORIGINAL_NORMALIZED = "original_normalized"  # normalized_claim key only (no perturbation)
+    ORIGINAL_NORMALIZED = (
+        "original_normalized"  # normalized_claim key only (no perturbation)
+    )
     PERTURB_TYPE1 = "perturb_type1"  # Structure-preserving
     PERTURB_TYPE2 = "perturb_type2"  # Value-modifying
     PERTURB_TYPE3_RANDOM = "perturb_type3_random"  # Obfuscation: random

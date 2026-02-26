@@ -13,7 +13,9 @@ def mock_tokenizer():
     """Create a mock tokenizer for testing."""
     tokenizer = Mock()
 
-    def mock_apply_chat_template(conversations, tokenize=False, add_generation_prompt=False):
+    def mock_apply_chat_template(
+        conversations, tokenize=False, add_generation_prompt=False
+    ):
         return "formatted text"
 
     def mock_tokenize(text, return_tensors=None, add_special_tokens=True):
@@ -79,12 +81,16 @@ def mock_tokenizer_with_lengths():
     lengths = {
         "formatted text": 150,
         "This is claim 0 Evidence: This is evidence text with multiple tokens for testing": 30,
-        "This is claim 0 Evidence: This is evidence text with multiple tokens for testing".split("Evidence:")[
+        "This is claim 0 Evidence: This is evidence text with multiple tokens for testing".split(
+            "Evidence:"
+        )[
             1
         ].strip(): 15,
     }
 
-    def mock_apply_chat_template(conversations, tokenize=False, add_generation_prompt=False):
+    def mock_apply_chat_template(
+        conversations, tokenize=False, add_generation_prompt=False
+    ):
         return "formatted text"
 
     def mock_tokenize(text, return_tensors=None, add_special_tokens=True):
@@ -187,6 +193,7 @@ def test_analyze_sequence_lengths_max_examples(
     mock_plt, mock_load_data, mock_tokenizer_with_lengths
 ):
     """Test max_examples parameter limits dataset size."""
+
     class MockDataset:
         def __init__(self):
             self.data = [
@@ -236,6 +243,7 @@ def test_analyze_sequence_lengths_too_long_examples(
     mock_plt, mock_load_data, mock_tokenizer_with_lengths
 ):
     """Test detection of sequences exceeding 8192 tokens."""
+
     class MockDataset:
         def __init__(self):
             self.data = [
@@ -285,6 +293,7 @@ def test_analyze_sequence_lengths_recommended_length(
     mock_plt, mock_load_data, mock_tokenizer_with_lengths
 ):
     """Test that recommended_max_seq_length rounds to nearest 1024."""
+
     class MockDataset:
         def __init__(self):
             self.data = [
@@ -330,6 +339,7 @@ def test_analyze_sequence_lengths_split_parameter(
     mock_plt, mock_load_data, mock_tokenizer_with_lengths
 ):
     """Test that split parameter is passed to data loader."""
+
     class MockDataset:
         def __init__(self):
             self.data = [
@@ -374,6 +384,7 @@ def test_analyze_sequence_lengths_expand_perturbations_flag(
     mock_plt, mock_load_data, mock_tokenizer_with_lengths
 ):
     """Test that expand_perturbations flag is passed correctly."""
+
     class MockDataset:
         def __init__(self):
             self.data = [
@@ -417,6 +428,7 @@ def test_analyze_sequence_lengths_saves_plot(
     mock_savefig, mock_load_data, mock_tokenizer_with_lengths
 ):
     """Test that plot is saved with correct filename."""
+
     class MockDataset:
         def __init__(self):
             self.data = [

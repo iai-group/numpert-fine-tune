@@ -5,8 +5,6 @@ import pytest
 """Tests for conversation.py module."""
 
 
-
-
 from src.llm_finetune.data_loading_utils.conversation import (
     convert_to_conversations,
 )
@@ -42,8 +40,12 @@ def sample_examples():
     ]
 
 
-@patch("src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_SYSTEM_PROMPT")
-@patch("src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_USER_PROMPT")
+@patch(
+    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_SYSTEM_PROMPT"
+)
+@patch(
+    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_USER_PROMPT"
+)
 def test_convert_to_conversations_basic(
     mock_user_prompt,
     mock_system_prompt,
@@ -70,8 +72,12 @@ def test_convert_to_conversations_basic(
     assert all("label" in entry for entry in result)
 
 
-@patch("src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_SYSTEM_PROMPT")
-@patch("src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_USER_PROMPT")
+@patch(
+    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_SYSTEM_PROMPT"
+)
+@patch(
+    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_USER_PROMPT"
+)
 def test_convert_to_conversations_structure(
     mock_user_prompt,
     mock_system_prompt,
@@ -97,8 +103,12 @@ def test_convert_to_conversations_structure(
     assert conv[2]["role"] == "assistant"
 
 
-@patch("src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_SYSTEM_PROMPT")
-@patch("src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_USER_PROMPT")
+@patch(
+    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_SYSTEM_PROMPT"
+)
+@patch(
+    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_USER_PROMPT"
+)
 def test_convert_to_conversations_label_true(
     mock_user_prompt,
     mock_system_prompt,
@@ -118,8 +128,12 @@ def test_convert_to_conversations_label_true(
     assert result[0]["conversations"][2]["content"] == '{"label": true}'
 
 
-@patch("src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_SYSTEM_PROMPT")
-@patch("src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_USER_PROMPT")
+@patch(
+    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_SYSTEM_PROMPT"
+)
+@patch(
+    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_USER_PROMPT"
+)
 def test_convert_to_conversations_label_false(
     mock_user_prompt,
     mock_system_prompt,
@@ -139,8 +153,12 @@ def test_convert_to_conversations_label_false(
     assert result[0]["conversations"][2]["content"] == '{"label": false}'
 
 
-@patch("src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_SYSTEM_PROMPT")
-@patch("src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_USER_PROMPT")
+@patch(
+    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_SYSTEM_PROMPT"
+)
+@patch(
+    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_USER_PROMPT"
+)
 def test_convert_to_conversations_include_doc_true(
     mock_user_prompt,
     mock_system_prompt,
@@ -163,8 +181,12 @@ def test_convert_to_conversations_include_doc_true(
     assert sample_examples[0]["doc"] in user_content
 
 
-@patch("src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_SYSTEM_PROMPT")
-@patch("src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_USER_PROMPT")
+@patch(
+    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_SYSTEM_PROMPT"
+)
+@patch(
+    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_USER_PROMPT"
+)
 def test_convert_to_conversations_include_doc_false(
     mock_user_prompt,
     mock_system_prompt,
@@ -187,8 +209,12 @@ def test_convert_to_conversations_include_doc_false(
     assert sample_examples[0]["doc"] not in user_content
 
 
-@patch("src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_SYSTEM_PROMPT")
-@patch("src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_USER_PROMPT")
+@patch(
+    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_SYSTEM_PROMPT"
+)
+@patch(
+    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_USER_PROMPT"
+)
 def test_convert_to_conversations_preserves_metadata(
     mock_user_prompt,
     mock_system_prompt,
@@ -212,8 +238,12 @@ def test_convert_to_conversations_preserves_metadata(
         )
 
 
-@patch("src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_SYSTEM_PROMPT")
-@patch("src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_USER_PROMPT")
+@patch(
+    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_SYSTEM_PROMPT"
+)
+@patch(
+    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_USER_PROMPT"
+)
 def test_convert_to_conversations_empty_input(
     mock_user_prompt,
     mock_system_prompt,
@@ -231,8 +261,12 @@ def test_convert_to_conversations_empty_input(
     assert result == []
 
 
-@patch("src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_SYSTEM_PROMPT")
-@patch("src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_USER_PROMPT")
+@patch(
+    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_SYSTEM_PROMPT"
+)
+@patch(
+    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_USER_PROMPT"
+)
 def test_convert_to_conversations_split_parameter(
     mock_user_prompt,
     mock_system_prompt,

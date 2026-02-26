@@ -361,7 +361,11 @@ class TestExpandPerturbations:
 
         assert len(expanded) == 3  # original + type1 + type2
 
-        orig = [e for e in expanded if e["perturbation_type"] == "original_normalized"]
+        orig = [
+            e
+            for e in expanded
+            if e["perturbation_type"] == "original_normalized"
+        ]
         assert len(orig) == 1
         assert orig[0]["label"] == "True"
 
@@ -386,7 +390,11 @@ class TestExpandPerturbations:
 
         assert len(expanded) == 3
 
-        orig = [e for e in expanded if e["perturbation_type"] == "original_normalized"]
+        orig = [
+            e
+            for e in expanded
+            if e["perturbation_type"] == "original_normalized"
+        ]
         assert orig[0]["label"] == "False"
 
         t1 = [e for e in expanded if e["perturbation_type"] == "perturb_type1"]
@@ -594,7 +602,9 @@ class TestConvertToConversations:
         conversations = convert_to_conversations(expanded, split="train")
 
         orig = [
-            c for c in conversations if c["perturbation_type"] == "original_normalized"
+            c
+            for c in conversations
+            if c["perturbation_type"] == "original_normalized"
         ][0]
         assert orig["label"] == '{"label": true}'
 
@@ -638,7 +648,9 @@ class TestLoadFactCheckingData:
         )
 
         assert len(dataset) == 1
-        assert all(p == "original_normalized" for p in dataset["perturbation_type"])
+        assert all(
+            p == "original_normalized" for p in dataset["perturbation_type"]
+        )
 
     def test_load_multiple_files(self, temp_json_files):
         dataset = load_fact_checking_data(
@@ -922,13 +934,21 @@ class TestBooleanLabelHandling:
 
     def test_bool_true_label_becomes_string(self, numeration_true_example):
         expanded = expand_perturbations([numeration_true_example])
-        orig = [e for e in expanded if e["perturbation_type"] == "original_normalized"][0]
+        orig = [
+            e
+            for e in expanded
+            if e["perturbation_type"] == "original_normalized"
+        ][0]
         assert orig["label"] == "True"
         assert isinstance(orig["label"], str)
 
     def test_bool_false_label_becomes_string(self, approximation_false_example):
         expanded = expand_perturbations([approximation_false_example])
-        orig = [e for e in expanded if e["perturbation_type"] == "original_normalized"][0]
+        orig = [
+            e
+            for e in expanded
+            if e["perturbation_type"] == "original_normalized"
+        ][0]
         assert orig["label"] == "False"
         assert isinstance(orig["label"], str)
 

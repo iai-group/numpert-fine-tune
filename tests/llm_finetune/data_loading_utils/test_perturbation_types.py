@@ -19,12 +19,23 @@ class TestPerturbationType:
 
     def test_enum_values(self) -> None:
         """Test that all enum values are correctly defined."""
-        assert PerturbationType.ORIGINAL_NORMALIZED.value == "original_normalized"
+        assert (
+            PerturbationType.ORIGINAL_NORMALIZED.value == "original_normalized"
+        )
         assert PerturbationType.PERTURB_TYPE1.value == "perturb_type1"
         assert PerturbationType.PERTURB_TYPE2.value == "perturb_type2"
-        assert PerturbationType.PERTURB_TYPE3_RANDOM.value == "perturb_type3_random"
-        assert PerturbationType.PERTURB_TYPE3_MASKED.value == "perturb_type3_masked"
-        assert PerturbationType.PERTURB_TYPE3_REMOVED.value == "perturb_type3_removed"
+        assert (
+            PerturbationType.PERTURB_TYPE3_RANDOM.value
+            == "perturb_type3_random"
+        )
+        assert (
+            PerturbationType.PERTURB_TYPE3_MASKED.value
+            == "perturb_type3_masked"
+        )
+        assert (
+            PerturbationType.PERTURB_TYPE3_REMOVED.value
+            == "perturb_type3_removed"
+        )
 
     def test_enum_members_count(self) -> None:
         """Test the total number of enum members."""
@@ -84,7 +95,10 @@ class TestFileLoadConfig:
     def test_repr_with_none_types(self) -> None:
         """Test __repr__ when perturb_types is None."""
         config = FileLoadConfig(path="test.json")
-        assert repr(config) == "FileLoadConfig(path='test.json', perturb_types=all)"
+        assert (
+            repr(config)
+            == "FileLoadConfig(path='test.json', perturb_types=all)"
+        )
 
     def test_repr_with_types(self) -> None:
         """Test __repr__ with specific perturbation types."""
@@ -122,7 +136,9 @@ class TestParseFileConfig:
 
     def test_parse_path_with_type3_variants(self) -> None:
         """Test parsing path with type3 variants."""
-        config = parse_file_config("obfusc_False.json:type3_random,type3_masked")
+        config = parse_file_config(
+            "obfusc_False.json:type3_random,type3_masked"
+        )
         assert config.path == "obfusc_False.json"
         assert config.perturb_types == [
             PerturbationType.PERTURB_TYPE3_RANDOM,
@@ -131,9 +147,7 @@ class TestParseFileConfig:
 
     def test_parse_path_with_full_type_names(self) -> None:
         """Test parsing with full perturbation type names."""
-        config = parse_file_config(
-            "test.json:perturb_type1,perturb_type2"
-        )
+        config = parse_file_config("test.json:perturb_type1,perturb_type2")
         assert config.path == "test.json"
         assert config.perturb_types == [
             PerturbationType.PERTURB_TYPE1,
@@ -165,7 +179,9 @@ class TestParseFileConfig:
         """Test that invalid perturbation type raises ValueError."""
         with pytest.raises(ValueError) as exc_info:
             parse_file_config("test.json:invalid_type")
-        assert "Unknown perturbation type: 'invalid_type'" in str(exc_info.value)
+        assert "Unknown perturbation type: 'invalid_type'" in str(
+            exc_info.value
+        )
 
     def test_parse_invalid_type_error_message(self) -> None:
         """Test error message lists valid types."""

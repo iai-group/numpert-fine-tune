@@ -301,7 +301,8 @@ class TestExpandPerturbations:
         assert "perturb_type2" not in types
 
     def test_original_always_included_with_allowed_types(self):
-        """Original should always be included even without explicit allowance."""
+        """Original should always be included even without explicit
+        allowance."""
         examples = [
             {
                 "claim_id": "7",
