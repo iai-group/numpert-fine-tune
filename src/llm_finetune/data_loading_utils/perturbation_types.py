@@ -21,7 +21,7 @@ from typing import List, Optional
 class PerturbationType(Enum):
     """Perturbation types aligned with PERTURBATIONS.md naming."""
 
-    ORIGINAL = "original"
+    ORIGINAL_NORMALIZED = "original_normalized"  # normalized_claim key only (no perturbation)
     PERTURB_TYPE1 = "perturb_type1"  # Structure-preserving
     PERTURB_TYPE2 = "perturb_type2"  # Value-modifying
     PERTURB_TYPE3_RANDOM = "perturb_type3_random"  # Obfuscation: random
@@ -105,7 +105,7 @@ def parse_file_config(config_str: str) -> FileLoadConfig:
             except ValueError:
                 raise ValueError(
                     f"Unknown perturbation type: {name!r}. "
-                    f"Valid types: {[t.value for t in PerturbationType if t != PerturbationType.ORIGINAL]}"
+                    f"Valid types: {[t.value for t in PerturbationType if t != PerturbationType.ORIGINAL_NORMALIZED]}"
                 )
         return FileLoadConfig(path=path, perturb_types=perturb_types)
     return FileLoadConfig(path=config_str)

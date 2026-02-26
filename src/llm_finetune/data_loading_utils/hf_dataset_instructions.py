@@ -137,7 +137,7 @@ def load_fact_checking_data(
                 raw_examples, allowed_types=config.perturb_types
             )
         else:
-            # Original claims only — no expansion
+            # Original claims only (normalized) — no expansion
             processed = []
             for example in raw_examples:
                 label_str = _normalize_label(example["label"])
@@ -147,7 +147,7 @@ def load_fact_checking_data(
                         "claim": example["normalized_claim"],
                         "doc": example["doc"],
                         "label": label_str,
-                        "perturbation_type": PerturbationType.ORIGINAL.value,
+                        "perturbation_type": PerturbationType.ORIGINAL_NORMALIZED.value,
                         "url": example.get("url", ""),
                         "taxonomy_label": example.get("taxonomy_label", ""),
                     }

@@ -361,7 +361,7 @@ class TestExpandPerturbations:
 
         assert len(expanded) == 3  # original + type1 + type2
 
-        orig = [e for e in expanded if e["perturbation_type"] == "original"]
+        orig = [e for e in expanded if e["perturbation_type"] == "original_normalized"]
         assert len(orig) == 1
         assert orig[0]["label"] == "True"
 
@@ -386,7 +386,7 @@ class TestExpandPerturbations:
 
         assert len(expanded) == 3
 
-        orig = [e for e in expanded if e["perturbation_type"] == "original"]
+        orig = [e for e in expanded if e["perturbation_type"] == "original_normalized"]
         assert orig[0]["label"] == "False"
 
         t1 = [e for e in expanded if e["perturbation_type"] == "perturb_type1"]
@@ -442,7 +442,7 @@ class TestExpandPerturbations:
         assert len(expanded) == 2  # original + type1 only
         types = {e["perturbation_type"] for e in expanded}
         assert "perturb_type2" not in types
-        assert "original" in types
+        assert "original_normalized" in types
         assert "perturb_type1" in types
 
     def test_allowed_types_filter_type2_only(self, approximation_false_example):
@@ -478,10 +478,10 @@ class TestExpandPerturbations:
         for ex in expanded:
             print(f"  {ex['perturbation_type']:25s} label={ex['label']}")
 
-        # Should contain original + type1, NOT type2
+        # Should contain original_normalized + type1, NOT type2
         assert len(expanded) == 2
         types = {e["perturbation_type"] for e in expanded}
-        assert types == {"original", "perturb_type1"}
+        assert types == {"original_normalized", "perturb_type1"}
         assert "perturb_type2" not in types
 
         # All labels must be False (type2 would have flipped to True)
@@ -594,7 +594,7 @@ class TestConvertToConversations:
         conversations = convert_to_conversations(expanded, split="train")
 
         orig = [
-            c for c in conversations if c["perturbation_type"] == "original"
+            c for c in conversations if c["perturbation_type"] == "original_normalized"
         ][0]
         assert orig["label"] == '{"label": true}'
 
@@ -638,7 +638,7 @@ class TestLoadFactCheckingData:
         )
 
         assert len(dataset) == 1
-        assert all(p == "original" for p in dataset["perturbation_type"])
+        assert all(p == "original_normalized" for p in dataset["perturbation_type"])
 
     def test_load_multiple_files(self, temp_json_files):
         dataset = load_fact_checking_data(
@@ -684,7 +684,7 @@ class TestLoadFactCheckingData:
         # File 1: original + type1 + type2 = 3
         # File 2: original + type1 (NOT type2) = 2
         assert len(dataset) == 5
-        assert perturb_dist["original"] == 2
+        assert perturb_dist["original_normalized"] == 2
         assert perturb_dist["perturb_type1"] == 2
         assert perturb_dist["perturb_type2"] == 1  # only from file 1
 
@@ -718,7 +718,7 @@ class TestLoadFactCheckingData:
         assert len(dataset) == 2
 
         perturb_dist = Counter(dataset["perturbation_type"])
-        assert perturb_dist["original"] == 1
+        assert perturb_dist["original_normalized"] == 1
         assert perturb_dist["perturb_type1"] == 1
         assert "perturb_type2" not in perturb_dist
 
@@ -764,7 +764,7 @@ class TestLoadFactCheckingData:
         # True file: original + type1 + type2 = 3
         # False file: original + type1 = 2
         assert len(dataset) == 5
-        assert perturb_dist["original"] == 2
+        assert perturb_dist["original_normalized"] == 2
         assert perturb_dist["perturb_type1"] == 2
         assert perturb_dist["perturb_type2"] == 1  # only from True file
 
@@ -876,8 +876,8 @@ class TestPerturbationTypeDistribution:
             pct = 100 * count / len(dataset)
             print(f"  {pt:30s}: {count:3d} ({pct:5.1f}%)")
 
-        assert "original" in perturb_counts
-        assert perturb_counts["original"] == 2
+        assert "original_normalized" in perturb_counts
+        assert perturb_counts["original_normalized"] == 2
 
         print("✓ Distribution analysis complete")
 
@@ -907,7 +907,7 @@ class TestClaimIdTracking:
         assert len(by_claim_id) == 1
         claim_id = list(by_claim_id.keys())[0]
         assert claim_id == "train_000001"
-        assert "original" in by_claim_id[claim_id]
+        assert "original_normalized" in by_claim_id[claim_id]
         assert "perturb_type1" in by_claim_id[claim_id]
         assert "perturb_type2" in by_claim_id[claim_id]
 
@@ -922,13 +922,13 @@ class TestBooleanLabelHandling:
 
     def test_bool_true_label_becomes_string(self, numeration_true_example):
         expanded = expand_perturbations([numeration_true_example])
-        orig = [e for e in expanded if e["perturbation_type"] == "original"][0]
+        orig = [e for e in expanded if e["perturbation_type"] == "original_normalized"][0]
         assert orig["label"] == "True"
         assert isinstance(orig["label"], str)
 
     def test_bool_false_label_becomes_string(self, approximation_false_example):
         expanded = expand_perturbations([approximation_false_example])
-        orig = [e for e in expanded if e["perturbation_type"] == "original"][0]
+        orig = [e for e in expanded if e["perturbation_type"] == "original_normalized"][0]
         assert orig["label"] == "False"
         assert isinstance(orig["label"], str)
 

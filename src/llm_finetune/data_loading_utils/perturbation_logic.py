@@ -99,7 +99,7 @@ def expand_perturbations(
     Args:
         examples: Raw examples loaded from a JSON file.
         allowed_types: If not ``None``, only these perturbation types will
-            be included.  ``PerturbationType.ORIGINAL`` is always included
+            be included.  ``PerturbationType.ORIGINAL_NORMALIZED`` is always included
             regardless.
 
     Returns:
@@ -110,7 +110,7 @@ def expand_perturbations(
     allowed_base_types: Optional[set] = None
     if allowed_types is not None:
         allowed_base_types = {
-            t.value for t in allowed_types if t != PerturbationType.ORIGINAL
+            t.value for t in allowed_types if t != PerturbationType.ORIGINAL_NORMALIZED
         }
 
     expanded: List[Dict] = []
@@ -125,7 +125,7 @@ def expand_perturbations(
             "claim": example["normalized_claim"],
             "doc": example["doc"],
             "label": original_label_str,
-            "perturbation_type": PerturbationType.ORIGINAL.value,
+            "perturbation_type": PerturbationType.ORIGINAL_NORMALIZED.value,
             "url": example.get("url", ""),
             "taxonomy_label": example.get("taxonomy_label", ""),
         }
