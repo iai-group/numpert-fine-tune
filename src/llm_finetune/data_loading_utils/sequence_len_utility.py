@@ -1,3 +1,4 @@
+"""Utility functions for analyzing sequence lengths in datasets."""
 import matplotlib.pyplot as plt
 from typing import Dict, List, Optional
 import numpy as np
@@ -19,7 +20,6 @@ def analyze_sequence_lengths(
     Returns:
         Dictionary with statistics and length distribution
     """
-
     print("\n" + "=" * 80)
     print(f"ANALYZING SEQUENCE LENGTHS - {split.upper()}")
     print("=" * 80)

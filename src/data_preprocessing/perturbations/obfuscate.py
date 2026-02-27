@@ -134,7 +134,9 @@ def value_removal(claim: str, entities: List[Dict[str, Any]]) -> str:
 def process_json(
     input_data: List[Dict[str, Any]],
 ) -> Dict[str, List[Dict[str, Any]]]:
-    """Returns a dict with 'true' and 'false' splits, each entry containing all
+    """Returns a dict with 'true' and 'false' splits.
+
+    Each entry containing all
     applicable obfuscation perturbation types as keys.
 
     Args:

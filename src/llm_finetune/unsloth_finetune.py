@@ -33,8 +33,7 @@ model_name_timestamp = time_start.strftime("%Y%m%d_%H%M%S")
 
 
 class PerturbationAwareSFTTrainer(SFTTrainer):
-    """Custom SFTTrainer that uses EnhancedPerturbationBatchSampler for
-    training.
+    """Custom SFTTrainer that uses EnhancedPerturbationBatchSampler.
 
     This allows claim_id-aware batching where examples from the same claim are
     grouped together to help the model learn contrasts between original and
@@ -48,7 +47,8 @@ class PerturbationAwareSFTTrainer(SFTTrainer):
         pre_built_batch_sampler=None,  # Accept pre-built sampler
         **kwargs,
     ):
-        """
+        """Initialize the trainer with optional custom batch sampler.
+
         Args:
             use_custom_sampler: Whether to use EnhancedPerturbationBatchSampler
             pre_built_batch_sampler: Pre-built batch sampler (created
@@ -95,6 +95,7 @@ class ValidationCallback(TrainerCallback):
     """Callback to run validation and print metrics during training."""
 
     def on_evaluate(self, args, state, control, metrics=None, **kwargs):
+        """Print validation metrics at evaluation time."""
         if metrics:
             print("\n" + "=" * 80)
             print("VALIDATION METRICS:")
@@ -146,8 +147,8 @@ def finetune(  # noqa: C901
     save_steps: int = 500,
     debug: bool = False,
 ):
-    target_epoch = start_epoch + num_train_epochs - 1
     """Fine-tune a model for fact-checking with numerical perturbations."""
+    target_epoch = start_epoch + num_train_epochs - 1
 
     print("\n" + "=" * 80)
     print("STARTING FINE-TUNING")

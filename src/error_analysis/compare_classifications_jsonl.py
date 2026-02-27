@@ -17,6 +17,7 @@ class CustomIdParser:
 
     @staticmethod
     def parse(custom_id: str) -> Tuple[str, bool]:
+        """Parse custom ID and extract ground truth label."""
         parts = custom_id.split("-")
         if len(parts) < 4:
             raise ValueError(f"Invalid custom_id format: {custom_id}")
@@ -58,6 +59,7 @@ def extract_label_from_content(content: str) -> Optional[bool]:
 
 
 def extract_label_from_openai_response(data: dict) -> Optional[bool]:
+    """Extract predicted label from OpenAI API response format."""
     try:
         choices = data.get("response", {}).get("body", {}).get("choices", [])
         if not choices:
@@ -152,6 +154,7 @@ def print_summary(
     file2: Dict[str, Tuple[bool, bool]],
     improved: List,
 ):
+    """Print comparison summary of predictions between two files."""
     common = set(file1) & set(file2)
     f1_corr = sum(corr for _, corr in (file1[c] for c in common))
     f2_corr = sum(corr for _, corr in (file2[c] for c in common))
@@ -167,6 +170,7 @@ def print_summary(
 
 
 def main():
+    """Main entry point for comparing classification results."""
     ap = argparse.ArgumentParser()
     ap.add_argument("file1", type=Path, help="First JSONL file")
     ap.add_argument("file2", type=Path, help="Second JSONL file")
