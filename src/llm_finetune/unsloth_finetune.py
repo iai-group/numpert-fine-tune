@@ -105,13 +105,12 @@ class ValidationCallback(TrainerCallback):
             print("=" * 80 + "\n")
 
 
-# TODO add more models
 def get_model_name_arg(model_name):
     """Convert short model name to full HuggingFace path."""
     if model_name.startswith("Qwen3-8B") or model_name.startswith("Qwen3-8B"):
         return "unsloth/Qwen3-8B"
     elif model_name.startswith("Qwen3-32B") or model_name.startswith(
-        "Qwen-3-32B"
+        "unsloth/Qwen3-8B"
     ):
         return "unsloth/Qwen3-32B"
     elif model_name.startswith("llama-3.2-3b"):
@@ -126,7 +125,7 @@ def finetune(  # noqa: C901
     val_json_paths: Optional[List[str]] = None,
     train_file_configs: Optional[List[FileLoadConfig]] = None,
     val_file_configs: Optional[List[FileLoadConfig]] = None,
-    model_name: str = "llama-3.2-3b-instruct",
+    model_name: str = "unsloth/Qwen3-8B",
     perturb_type_names: str = "",
     rank: int = 32,
     num_train_epochs: int = 1,
@@ -229,7 +228,7 @@ def finetune(  # noqa: C901
         tokenizer = get_chat_template(tokenizer, chat_template="llama-3.1")
     elif "qwen" in model_name.lower():
         tokenizer = get_chat_template(tokenizer, chat_template="chatml")
-    else:  # TODO fix for other models
+    else:  # TODO add more models and their templates as needed
         tokenizer = get_chat_template(tokenizer, chat_template="chatml")
 
     # Set padding

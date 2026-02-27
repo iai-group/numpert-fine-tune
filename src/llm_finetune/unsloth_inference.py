@@ -37,13 +37,12 @@ time_start = datetime.now()
 model_name_timestamp = time_start.strftime("%Y%m%d_%H%M%S")
 
 
-# TODO add more models
 def get_model_name_arg(model_name):
     """Convert short model name to full HuggingFace path."""
     if model_name.startswith("Qwen3-8B") or model_name.startswith("Qwen3-8B"):
         return "unsloth/Qwen3-8B"
     elif model_name.startswith("Qwen3-32B") or model_name.startswith(
-        "Qwen-3-32B"
+        "unsloth/Qwen3-32B"
     ):
         return "unsloth/Qwen3-32B"
     elif model_name.startswith("llama-3.2-3b"):
@@ -100,7 +99,7 @@ def extract_label_from_response(text: str) -> Optional[str]:
 def inference(  # noqa: C901
     test_json_paths: Optional[List[str]] = None,
     test_file_configs: Optional[List[FileLoadConfig]] = None,
-    model_name: str = "llama-3.2-3b-instruct",
+    model_name: str = "unsloth/Qwen3-8B",
     rank: int = 32,
     start_epoch: int = 0,
     use_vllm: bool = False,
