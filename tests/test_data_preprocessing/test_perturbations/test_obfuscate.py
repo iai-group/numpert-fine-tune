@@ -466,7 +466,8 @@ class TestProcessJson:
                 assert replace_digits_with_new_sequence("$,.!") == "$,.!"
 
             def test_single_zero_digit(self):
-                # "0" has no digits[1:] issue; result should differ and not start with 0
+                # "0" has no digits[1:] issue; result should differ and not
+                # start with 0
                 for _ in range(30):
                     result = replace_digits_with_new_sequence("0")
                     assert result != "0"
@@ -868,7 +869,8 @@ class TestProcessJson:
             def test_skips_entry_with_no_perturbation(
                 self, patch_included_keys
             ):
-                # No numerical entities → all perturbations equal original → skipped
+                # No numerical entities → all perturbations equal original
+                # → skipped
                 data = [
                     {
                         "normalized_claim": "This is a simple claim.",
@@ -1123,6 +1125,7 @@ class TestProcessJson:
                         "claim_id": "008",
                     }
                 ]
-                # Should not raise; no entities → all perturbations equal original → skipped
+                # Should not raise; no entities → all perturbations equal
+                # original → skipped
                 result = process_json(data)
                 assert result == {}

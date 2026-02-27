@@ -1,6 +1,5 @@
 import pytest
 from datasets import Dataset
-from collections import Counter
 from src.llm_finetune.data_loading_utils.class_balancer import DatasetBalancer
 
 
@@ -26,8 +25,10 @@ def create_mock_dataset(
         n_original_false: Number of original False examples
         n_t_to_t_per_original: Number of T→T perturbations per True original
         n_t_to_f_per_original: Number of T→F perturbations per True original
-        n_f_to_f_true_per_original: Number of F→F (*_true) perturbations per False original
-        n_f_to_f_false_per_original: Number of F→F (*_false) perturbations per False original
+        n_f_to_f_true_per_original: Number of F→F (*_true) perturbations
+            per False original
+        n_f_to_f_false_per_original: Number of F→F (*_false) perturbations
+            per False original
 
     Returns:
         Mock dataset
@@ -74,7 +75,8 @@ def create_mock_dataset(
                 }
             )
 
-        # T→F perturbations (type2 = value-modifying, flips to False; type3 = obfuscation)
+        # T→F perturbations (type2 = value-modifying, flips to False;
+        # type3 = obfuscation)
         for j in range(n_t_to_f_per_original):
             perturb_types = [
                 "perturb_type2",
@@ -132,14 +134,17 @@ def create_mock_dataset(
                         },
                         {
                             "role": "user",
-                            "content": f"False claim {i} perturbed F→F true {j}",
+                            "content": (
+                                f"False claim {i} perturbed F→F true {j}"
+                            ),
                         },
                         {"role": "assistant", "content": "False"},
                     ],
                 }
             )
 
-        # F→F type3 perturbations - obfuscation, should be ignored by balancer
+        # F→F type3 perturbations - obfuscation, should be ignored
+        # by balancer
         for j in range(n_f_to_f_false_per_original):
             perturb_types = [
                 "perturb_type3_random",
@@ -157,7 +162,9 @@ def create_mock_dataset(
                         },
                         {
                             "role": "user",
-                            "content": f"False claim {i} perturbed F→F false {j}",
+                            "content": (
+                                f"False claim {i} perturbed F→F false {j}"
+                            ),
                         },
                         {"role": "assistant", "content": "False"},
                     ],
@@ -220,21 +227,19 @@ def print_stats(stats: dict, title: str = "Dataset Statistics"):
     """Pretty print dataset statistics."""
     print(f"\n{title}:")
     print(f"  Total examples: {stats['total']}")
-    print(f"\n  Original examples:")
+    print("\n  Original examples:")
     print(f"    True:  {stats['original_true']}")
     print(f"    False: {stats['original_false']}")
-    print(f"\n  Perturbed examples:")
+    print("\n  Perturbed examples:")
     print(f"    T→T: {stats['t_to_t']}")
     print(f"    T→F: {stats['t_to_f']}")
     print(f"    F→F (*_true):  {stats['f_to_f_true']}")
     print(f"    F→F (*_false): {stats['f_to_f_false']}")
-    print(f"\n  Label distribution:")
-    print(
-        f"    True:  {stats['true_total']} ({100*stats['true_total']/stats['total']:.1f}%)"
-    )
-    print(
-        f"    False: {stats['false_total']} ({100*stats['false_total']/stats['total']:.1f}%)"
-    )
+    print("\n  Label distribution:")
+    true_pct = 100 * stats["true_total"] / stats["total"]
+    false_pct = 100 * stats["false_total"] / stats["total"]
+    print(f"    True:  {stats['true_total']} ({true_pct:.1f}%)")
+    print(f"    False: {stats['false_total']} ({false_pct:.1f}%)")
 
 
 class TestDatasetBalancer:
@@ -244,7 +249,8 @@ class TestDatasetBalancer:
         """Test with no label balancing and default 1:1 perturb ratio."""
         print_separator("TEST: No Balancing, Default 1:1 Ratio")
 
-        # Create dataset: 100 True, 100 False, each with 2 T→T, 2 T→F, 2 F→F_true
+        # Create dataset: 100 True, 100 False, each with 2 T→T, 2 T→F,
+        # 2 F→F_true
         dataset = create_mock_dataset(
             n_original_true=100,
             n_original_false=100,
@@ -271,7 +277,8 @@ class TestDatasetBalancer:
         output_stats = analyze_dataset(balanced)
         print_stats(output_stats, "Output Dataset")
 
-        # Verify: perturb_ratio=1.0 means 1:1 ratio of perturbed to non-perturbed
+        # Verify: perturb_ratio=1.0 means 1:1 ratio of perturbed to
+        # non-perturbed
         # 100 original True → 100 perturbed True (all T→T)
         # 100 original False → 100 perturbed False (67 T→F, 33 F→F)
 
@@ -346,10 +353,12 @@ class TestDatasetBalancer:
         # Total should be balanced
         assert output_stats["true_total"] == output_stats["false_total"]
 
-        print(
-            f"\n✓ Test passed: Labels balanced (True={output_stats['true_total']}, "
+        msg = (
+            f"\n✓ Test passed: Labels balanced "
+            f"(True={output_stats['true_total']}, "
             f"False={output_stats['false_total']})"
         )
+        print(msg)
 
     def test_custom_perturb_ratio(self):
         """Test with custom perturbation ratio (2:1)"""
@@ -381,7 +390,8 @@ class TestDatasetBalancer:
 
         # Expected:
         # 100 original True → 200 T→T
-        # 100 original False → 200 perturbed False (100 T→F, 100 F→F)
+        # 100 original False → 200 perturbed False (100 T→F,
+        # 100 F→F)
 
         assert output_stats["original_true"] == 100
         assert output_stats["original_false"] == 100
@@ -394,11 +404,12 @@ class TestDatasetBalancer:
         assert output_stats["f_to_f_true"] == expected_f_to_f
 
         # Total: 100 original True + 200 T→T = 300 True
-        #        100 original False + 100 T→F + 100 F→F = 300 False
+        # 100 original False + 100 T→F + 100 F→F = 300 False
         assert output_stats["true_total"] == 300
         assert output_stats["false_total"] == 300
 
-        print(f"\n✓ Test passed: 2:1 perturb ratio with 50/50 T→F/F→F split")
+        msg = "\n✓ Test passed: 2:1 perturb ratio with 50/50 T→F/F→F split"
+        print(msg)
 
     def test_custom_t_to_f_ratio(self):
         """Test with different T→F ratios."""
@@ -435,16 +446,19 @@ class TestDatasetBalancer:
             expected_f_to_f = total_false_perturbed - expected_t_to_f
 
             print(
-                f"  Expected T→F: {expected_t_to_f}, Actual: {output_stats['t_to_f']}"
+                f"  Expected T→F: {expected_t_to_f}, "
+                f"Actual: {output_stats['t_to_f']}"
             )
             print(
-                f"  Expected F→F: {expected_f_to_f}, Actual: {output_stats['f_to_f_true']}"
+                f"  Expected F→F: {expected_f_to_f}, "
+                f"Actual: {output_stats['f_to_f_true']}"
             )
 
             assert output_stats["t_to_f"] == expected_t_to_f
             assert output_stats["f_to_f_true"] == expected_f_to_f
 
-        print("\n✓ Test passed: All T→F ratios work correctly")
+        msg = "\n✓ Test passed: All T→F ratios work correctly"
+        print(msg)
 
     def test_insufficient_perturbations(self):
         """Test when there aren't enough perturbations available."""
@@ -494,16 +508,19 @@ class TestDatasetBalancer:
             n_t_to_t_per_original=1,
             n_t_to_f_per_original=1,
             n_f_to_f_true_per_original=3,  # 3 *_true perturbations
-            n_f_to_f_false_per_original=5,  # 5 *_false perturbations (should be ignored)
+            # 5 *_false perturbations (should be ignored)
+            n_f_to_f_false_per_original=5,
         )
 
         input_stats = analyze_dataset(dataset)
         print_stats(input_stats, "Input Dataset")
 
-        print(
-            f"\nNote: Input has {input_stats['f_to_f_false']} F→F (type3) perturbations"
+        note_msg = (
+            f"\nNote: Input has {input_stats['f_to_f_false']} "
+            f"F→F (type3) perturbations"
         )
-        print(f"      These should NOT be included in the output")
+        print(note_msg)
+        print("      These should NOT be included in the output")
 
         balancer = DatasetBalancer(
             dataset=dataset,
@@ -561,7 +578,8 @@ class TestDatasetBalancer:
         assert output_stats["f_to_f_true"] == 0
         assert output_stats["total"] == 200
 
-        print("\n✓ Test passed: Zero perturb_ratio gives only originals")
+        msg = "\n✓ Test passed: Zero perturb_ratio gives only originals"
+        print(msg)
 
     def test_complex_scenario(self):
         """Test complex scenario: imbalanced + custom ratios + balancing"""
@@ -613,7 +631,8 @@ class TestDatasetBalancer:
             abs(output_stats["true_total"] - output_stats["false_total"]) <= 2
         )
 
-        print(f"\n✓ Test passed: Complex scenario handled correctly")
+        msg = "\n✓ Test passed: Complex scenario handled correctly"
+        print(msg)
         print(
             f"   Final balance: True={output_stats['true_total']}, "
             f"False={output_stats['false_total']}"
@@ -636,7 +655,8 @@ class TestDatasetBalancerEdgeCases:
         balanced = balancer.balance()
 
         assert len(balanced) == 0
-        print("\n✓ Test passed: Empty dataset handled")
+        msg = "\n✓ Test passed: Empty dataset handled"
+        print(msg)
 
     def test_only_originals_no_perturbations(self):
         """Test dataset with only original examples."""
@@ -666,7 +686,8 @@ class TestDatasetBalancerEdgeCases:
         assert output_stats["original_false"] == 50
         assert output_stats["total"] == 100
 
-        print("\n✓ Test passed: Handles dataset with no perturbations")
+        msg = "\n✓ Test passed: Handles dataset with no perturbations"
+        print(msg)
 
     def test_all_true_labels(self):
         """Test dataset with only True labels."""
@@ -690,7 +711,8 @@ class TestDatasetBalancerEdgeCases:
         # With balance_labels=True and no False examples, should downsample to 0
         assert output_stats["false_total"] == 0
 
-        print("\n✓ Test passed: Handles all-True dataset")
+        msg = "\n✓ Test passed: Handles all-True dataset"
+        print(msg)
 
 
 if __name__ == "__main__":

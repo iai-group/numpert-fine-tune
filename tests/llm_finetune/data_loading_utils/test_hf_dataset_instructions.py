@@ -1,8 +1,6 @@
 import pytest
 import json
-import tempfile
-from pathlib import Path
-from typing import List, Dict
+from typing import Dict
 from collections import Counter, defaultdict
 from datasets import Dataset
 
@@ -36,13 +34,20 @@ def numeration_true_example():
         "url": "https://example.com/fact-check-1",
         "lang": "en",
         "claim": "The government distributed 35,000 LED bulbs.",
-        "doc": "Official report shows distribution of 35,000 LED bulbs in 2023.",
+        "doc": (
+            "Official report shows distribution of 35,000 LED bulbs " "in 2023."
+        ),
         "taxonomy_label": "statistical",
         "label_original": "True",
         "claim_id": "train_000001",
         "normalized_claim": "The government distributed 35,000 LED bulbs.",
-        "perturb_type1_True": "The government distributed thirty-five thousand LED bulbs.",
-        "perturb_type2_True": "The government distributed thirty-eight thousand five hundred LED bulbs.",
+        "perturb_type1_True": (
+            "The government distributed thirty-five thousand LED bulbs."
+        ),
+        "perturb_type2_True": (
+            "The government distributed thirty-eight thousand five "
+            "hundred LED bulbs."
+        ),
     }
 
 
@@ -61,8 +66,12 @@ def approximation_false_example():
         "label_original": "False",
         "claim_id": "train_000002",
         "normalized_claim": "Nirmala distributed 35,000 crore LED bulbs.",
-        "perturb_type1_False": "Nirmala distributed about 35,000 crore LED bulbs.",
-        "perturb_type2_False": "Nirmala distributed about 60,000 crore LED bulbs.",
+        "perturb_type1_False": (
+            "Nirmala distributed about 35,000 crore LED bulbs."
+        ),
+        "perturb_type2_False": (
+            "Nirmala distributed about 60,000 crore LED bulbs."
+        ),
     }
 
 
@@ -101,8 +110,12 @@ def negative_true_example():
         "taxonomy_label": "statistical",
         "label_original": "correct",
         "claim_id": "train_000004",
-        "normalized_claim": "Close to 40% of South Africans who need jobs are unemployed.",
-        "perturb_type2_True": "Close to -40% of South Africans who need jobs are unemployed.",
+        "normalized_claim": (
+            "Close to 40% of South Africans who need jobs are " "unemployed."
+        ),
+        "perturb_type2_True": (
+            "Close to -40% of South Africans who need jobs are " "unemployed."
+        ),
     }
 
 
@@ -133,7 +146,9 @@ def temp_json_files(
         "claim_id": "val_000001",
         "normalized_claim": "Validation claim about 100 items.",
         "perturb_type1_True": "Validation claim about one hundred items.",
-        "perturb_type2_True": "Validation claim about one hundred and ten items.",
+        "perturb_type2_True": (
+            "Validation claim about one hundred and ten items."
+        ),
     }
     with open(val_file, "w") as f:
         json.dump([val_data], f)

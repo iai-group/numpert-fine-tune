@@ -112,7 +112,7 @@ class TestGetPaths:
         assert "false" in input_false.lower()
 
 
-# ── remove_unperturbed_claims ──────────────────────────────────────────────────
+# ── remove_unperturbed_claims ─────────────────────────────────────
 
 
 class TestRemoveUnperturbedClaims:
@@ -123,7 +123,8 @@ class TestRemoveUnperturbedClaims:
     ) -> None:
         """Verifies that claims with an unperturbed key are removed."""
         result = remove_unperturbed_claims(
-            sample_claims, ["perturb_type1", "perturb_type2"]
+            sample_claims,
+            ["perturb_type1", "perturb_type2"],
         )
         normalized = [c["normalized_claim"] for c in result]
         assert "The count is 42." not in normalized
@@ -133,7 +134,8 @@ class TestRemoveUnperturbedClaims:
     ) -> None:
         """Verifies that claims with all keys perturbed are retained."""
         result = remove_unperturbed_claims(
-            sample_claims, ["perturb_type1", "perturb_type2"]
+            sample_claims,
+            ["perturb_type1", "perturb_type2"],
         )
         normalized = [c["normalized_claim"] for c in result]
         assert "The population is 1000." in normalized
@@ -144,7 +146,8 @@ class TestRemoveUnperturbedClaims:
     ) -> None:
         """Verifies that the returned list has the expected length."""
         result = remove_unperturbed_claims(
-            sample_claims, ["perturb_type1", "perturb_type2"]
+            sample_claims,
+            ["perturb_type1", "perturb_type2"],
         )
         assert len(result) == 2
 
@@ -157,7 +160,10 @@ class TestRemoveUnperturbedClaims:
         self, sample_claims: list[dict]
     ) -> None:
         """Verifies that non-existent keys cause no claims to be removed."""
-        result = remove_unperturbed_claims(sample_claims, ["nonexistent_key"])
+        result = remove_unperturbed_claims(
+            sample_claims,
+            ["nonexistent_key"],
+        )
         assert len(result) == len(sample_claims)
 
     def test_skips_non_dict_items(self, capsys: pytest.CaptureFixture) -> None:
@@ -193,7 +199,7 @@ class TestRemoveUnperturbedClaims:
                 "label": "True",
             }
         ]
-        # Only checking perturb_type2, which differs — should keep the claim.
+        # Only checking perturb_type2, which differs — should keep.
         result = remove_unperturbed_claims(data, ["perturb_type2"])
         assert len(result) == 1
 
@@ -228,7 +234,7 @@ class TestRemoveUnperturbedClaims:
         assert "Removed" not in captured.out
 
 
-# ── split_by_label ─────────────────────────────────────────────────────────────
+# ── split_by_label ─────────────────────────────────────────────────
 
 
 class TestSplitByLabel:
@@ -274,7 +280,7 @@ class TestSplitByLabel:
         assert len(result["True"]) == 5
 
 
-# ── save_splits ────────────────────────────────────────────────────────────────
+# ── save_splits ────────────────────────────────────────────────────
 
 
 class TestSaveSplits:
@@ -282,7 +288,8 @@ class TestSaveSplits:
 
     @patch("src.data_preprocessing.perturbations.main_perturb_all.save_data")
     @patch(
-        "src.data_preprocessing.perturbations.main_perturb_all.remove_unperturbed_claims"
+        "src.data_preprocessing.perturbations.main_perturb_all."
+        "remove_unperturbed_claims"
     )
     def test_calls_save_data_for_each_label(
         self,
@@ -300,7 +307,8 @@ class TestSaveSplits:
 
     @patch("src.data_preprocessing.perturbations.main_perturb_all.save_data")
     @patch(
-        "src.data_preprocessing.perturbations.main_perturb_all.remove_unperturbed_claims"
+        "src.data_preprocessing.perturbations.main_perturb_all."
+        "remove_unperturbed_claims"
     )
     def test_output_path_uses_name_and_label(
         self,
@@ -317,7 +325,8 @@ class TestSaveSplits:
 
     @patch("src.data_preprocessing.perturbations.main_perturb_all.save_data")
     @patch(
-        "src.data_preprocessing.perturbations.main_perturb_all.remove_unperturbed_claims"
+        "src.data_preprocessing.perturbations.main_perturb_all."
+        "remove_unperturbed_claims"
     )
     def test_skips_empty_splits_after_filtering(
         self,
@@ -332,7 +341,8 @@ class TestSaveSplits:
 
     @patch("src.data_preprocessing.perturbations.main_perturb_all.save_data")
     @patch(
-        "src.data_preprocessing.perturbations.main_perturb_all.remove_unperturbed_claims"
+        "src.data_preprocessing.perturbations.main_perturb_all."
+        "remove_unperturbed_claims"
     )
     def test_output_dir_used_in_path(
         self,
@@ -347,7 +357,7 @@ class TestSaveSplits:
         assert saved_path.startswith("/custom/dir")
 
 
-# ── run_perturbations ──────────────────────────────────────────────────────────
+# ── run_perturbations ──────────────────────────────────────────────
 
 
 class TestRunPerturbations:
@@ -467,14 +477,15 @@ class TestRunPerturbations:
         mock_obf.process_json.assert_called_once()
 
 
-# ── main (CLI) ─────────────────────────────────────────────────────────────────
+# ── main (CLI) ─────────────────────────────────────────────────────
 
 
 class TestMain:
     """Tests for the main CLI entry point."""
 
     @patch(
-        "src.data_preprocessing.perturbations.main_perturb_all.run_perturbations"
+        "src.data_preprocessing.perturbations.main_perturb_all."
+        "run_perturbations"
     )
     def test_default_split_is_used(self, mock_run: MagicMock) -> None:
         """Verifies that the default split is used when no arg is passed."""
@@ -483,7 +494,8 @@ class TestMain:
         mock_run.assert_called_once()
 
     @patch(
-        "src.data_preprocessing.perturbations.main_perturb_all.run_perturbations"
+        "src.data_preprocessing.perturbations.main_perturb_all."
+        "run_perturbations"
     )
     def test_single_split_calls_run_once(self, mock_run: MagicMock) -> None:
         """Verifies that a single split triggers exactly one run."""
@@ -492,7 +504,8 @@ class TestMain:
         mock_run.assert_called_once()
 
     @patch(
-        "src.data_preprocessing.perturbations.main_perturb_all.run_perturbations"
+        "src.data_preprocessing.perturbations.main_perturb_all."
+        "run_perturbations"
     )
     def test_all_split_calls_run_three_times(self, mock_run: MagicMock) -> None:
         """Verifies that '--split all' triggers three separate runs."""
@@ -501,7 +514,8 @@ class TestMain:
         assert mock_run.call_count == 3
 
     @patch(
-        "src.data_preprocessing.perturbations.main_perturb_all.run_perturbations"
+        "src.data_preprocessing.perturbations.main_perturb_all."
+        "run_perturbations"
     )
     def test_all_split_covers_train_val_test(self, mock_run: MagicMock) -> None:
         """Verifies that all three split names are passed when using 'all'."""
@@ -513,7 +527,8 @@ class TestMain:
             assert any(split in p for p in input_trues)
 
     @patch(
-        "src.data_preprocessing.perturbations.main_perturb_all.run_perturbations"
+        "src.data_preprocessing.perturbations.main_perturb_all."
+        "run_perturbations"
     )
     def test_correct_paths_passed_for_test_split(
         self, mock_run: MagicMock
