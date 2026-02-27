@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Upload a finetuned model (merged, LoRA adapter, or checkpoint) to HuggingFace
-Hub.
+"""Upload a finetuned model to HuggingFace Hub.
 
-Requires HF_TOKEN to be set in the environment, or active huggingface-cli login.
+Supports merged, LoRA adapter, or checkpoint uploads. Requires HF_TOKEN set in
+the environment or active huggingface-cli login.
 """
 
 import argparse
@@ -59,11 +59,27 @@ def detect_upload_type(model_path: Path) -> str:
 
 
 def build_repo_id(args) -> str:
+    """Build repository ID from namespace and model name.
+
+    Args:
+        args: Arguments containing namespace, username, and model_name.
+
+    Returns:
+        Repository ID in format 'namespace/model_name'.
+    """
     namespace = args.namespace or args.username
     return f"{namespace}/{args.model_name}"
 
 
 def upload(args):
+    """Upload model to HuggingFace Hub.
+
+    Detects model type, creates repository, and uploads model files.
+    Handles LoRA adapters, merged models, and checkpoints.
+
+    Args:
+        args: Command-line arguments with model path and upload options.
+    """
     from huggingface_hub import HfApi
 
     model_path = Path(args.model_path).resolve()
@@ -158,6 +174,7 @@ def upload(args):
 
 
 def main():
+    """Parse arguments and execute model upload."""
     parser = argparse.ArgumentParser(
         description="Upload a finetuned model to HuggingFace Hub.",
         formatter_class=argparse.RawDescriptionHelpFormatter,

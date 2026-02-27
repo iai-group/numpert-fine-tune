@@ -7,10 +7,9 @@ import random
 
 
 class EnhancedPerturbationBatchSampler(Sampler):
-    """Enhanced batch sampler with claim_id matching and original+perturbed
-    guarantees.
+    """Enhanced batch sampler with claim_id matching and original+perturbed.
 
-    Features:
+    Provides guarantees on batch composition. Features:
     - Can group examples with same claim_id in batches
     - Ensures each batch has both original and perturbed examples
     - Splits large claims across batches with balanced perturbation mix
@@ -29,7 +28,8 @@ class EnhancedPerturbationBatchSampler(Sampler):
         seed: int = 42,
         drop_last: bool = False,
     ):
-        """
+        """Initialize the batch sampler with perturbation awareness.
+
         Args:
             dataset: HuggingFace Dataset with 'claim_id' and
                 'perturbation_type' columns
@@ -187,11 +187,9 @@ class EnhancedPerturbationBatchSampler(Sampler):
     def _enforce_batch_constraints(  # noqa: C901
         self, batches: List[List[int]]
     ) -> List[List[int]]:
-        """Enforce constraints that batches should have both original and
-        perturbed examples.
+        """Enforce batch constraints for original and perturbed examples.
 
-        This is done by swapping indices between batches to meet the
-        constraints.
+        Swaps indices between batches to meet the constraints.
         """
         if not batches:
             return batches

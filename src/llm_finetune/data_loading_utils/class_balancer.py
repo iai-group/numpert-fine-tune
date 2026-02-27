@@ -27,15 +27,16 @@ class DatasetBalancer:
         false_perturb_t_to_f_ratio: float = 0.67,
         seed: int = 42,
     ):
-        """
+        """Initialize the DatasetBalancer.
+
         Args:
-            dataset: Full expanded dataset with all perturbations
-            balance_labels: Whether to balance True/False distribution
+            dataset: Full expanded dataset with all perturbations.
+            balance_labels: Whether to balance True/False distribution.
             perturb_ratio: Ratio of perturbed to non-perturbed examples
-                (1.0 = 1:1)
+                (1.0 = 1:1).
             false_perturb_t_to_f_ratio: Among False perturbed examples,
-                ratio that should be T→F
-            seed: Random seed
+                ratio that should be T→F.
+            seed: Random seed.
         """
         self.dataset = dataset
         self.balance_labels = balance_labels

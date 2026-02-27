@@ -155,8 +155,10 @@ def find_numeric_token_spans(tokens, ner_tags):
 
 
 def build_token_char_map(text: str, tokens: List[str]) -> List[Tuple[int, int]]:
-    """Build a mapping from token indices to character spans in the original
-    text."""
+    """Build a mapping from token indices to character spans.
+
+    Maps token indices to character spans in the original text.
+    """
     spans = []
     pos = 0
     for tok in tokens:

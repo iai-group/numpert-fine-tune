@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Compare two JSONL model output files and create a nested JSON file that shows
-the 'content' (model thoughts) for each custom_id.
+"""Compare two JSONL model output files and create a nested JSON file.
 
-The output filename is automatically generated from the two input files.
+The output shows the 'content' (model thoughts) for each custom_id. The output
+filename is automatically generated from the two input files.
 """
 
 import argparse
@@ -58,6 +58,7 @@ def extract_fields(entry: dict) -> dict:
 
 
 def build_comparison(file1: Path, file2: Path, output: Path):
+    """Build and save comparison between two model outputs."""
     preds1 = cmp.load_jsonl_predictions(file1)
     preds2 = cmp.load_jsonl_predictions(file2)
 
@@ -105,6 +106,7 @@ def make_output_name(file1: Path, file2: Path) -> Path:
 
 
 def main():
+    """Main entry point."""
     ap = argparse.ArgumentParser()
     ap.add_argument("file1", type=Path, help="First JSONL file")
     ap.add_argument("file2", type=Path, help="Second JSONL file")

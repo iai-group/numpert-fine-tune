@@ -62,7 +62,6 @@ def extract_label_from_response(text: str) -> Optional[str]:
     Returns:
         The extracted label in JSON format, or None if unparseable
     """
-
     original_text = text.strip()
 
     # Strip Qwen3 thinking tokens if present
@@ -110,7 +109,6 @@ def inference(  # noqa: C901
     output_dir: str = f"{prefix}predictions/{model_name_timestamp}",
 ):
     """Run inference on test data."""
-
     print("\n" + "=" * 80)
     print("STARTING INFERENCE")
     print("=" * 80)

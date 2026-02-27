@@ -1,5 +1,8 @@
-"""Remove entries with a specific label from a JSON dataset and add claim
-IDs."""
+"""Remove entries from JSON dataset and add claim IDs.
+
+Cleans datasets by removing entries with a specified label and assigns
+sequential claim identifiers to remaining entries.
+"""
 
 import json
 import argparse
@@ -13,6 +16,10 @@ _claim_counter = count(start=1)
 def generate_claim_id(dataset_split) -> str:
     """Generate a sequential claim ID.
 
+    Args:
+        dataset_split: The dataset split (e.g., 'train', 'val', 'test') to
+            include in the claim ID for traceability.
+
     Returns:
         str: A sequential claim identifier (e.g., claim_000001).
     """
@@ -22,9 +29,11 @@ def generate_claim_id(dataset_split) -> str:
 def remove_label(
     input_json: str, label_to_remove: str, dataset_split: str
 ) -> Tuple[str, int, int]:
-    """Remove entries with the specified label from the JSON data and add
-    claim_ids."""
+    """Remove entries with label and add claim IDs.
 
+    Filters JSON data to exclude entries with a given label and assigns
+    sequential claim identifiers to remaining entries.
+    """
     data: List[Dict[str, Any]] = json.loads(input_json)
     total_entries: int = len(data)
 
@@ -45,7 +54,7 @@ def remove_label(
 
 
 def main() -> None:
-    """Main function to parse arguments and execute label removal."""
+    """Parse arguments and execute label removal."""
     parser = argparse.ArgumentParser(
         description="Remove specified label from JSON data."
     )
