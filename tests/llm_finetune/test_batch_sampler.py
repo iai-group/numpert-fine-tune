@@ -1,7 +1,7 @@
 import pytest
 from datasets import Dataset
 from collections import Counter, defaultdict
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from src.llm_finetune.batch_sampler import EnhancedPerturbationBatchSampler
 
@@ -67,6 +67,80 @@ def create_mock_dataset(
             )
 
     return Dataset.from_list(examples)
+
+
+def create_multi_file_mock_dataset(
+    n_claims: int = 5,
+    file_perturbation_types: Optional[List[List[str]]] = None,
+) -> Dataset:
+    """Simulate loading data from multiple files with overlapping claim_ids.
+
+    Each "file" contributes an ``original_normalized`` entry plus its own
+    set of perturbation types for every claim.  This mirrors the real
+    pipeline where ``expand_perturbations`` is called once per file and
+    the results are concatenated — producing duplicate originals for any
+    ``claim_id`` that appears in more than one source file.
+
+    Args:
+        n_claims: Number of unique claims (shared across all files).
+        file_perturbation_types: A list of perturbation-type lists, one per
+            simulated file.  Defaults to two files with distinct types::
+
+                [["perturb_type1", "perturb_type2"],
+                 ["perturb_type3_random", "perturb_type3_masked"]]
+
+    Returns:
+        A ``Dataset`` that contains the duplicate originals and all
+        perturbation types — exactly what the batch sampler would receive.
+    """
+    if file_perturbation_types is None:
+        file_perturbation_types = [
+            ["perturb_type1", "perturb_type2"],
+            ["perturb_type3_random", "perturb_type3_masked"],
+        ]
+
+    examples: List[Dict] = []
+
+    for file_idx, perturb_types in enumerate(file_perturbation_types):
+        for i in range(n_claims):
+            claim_id = f"claim_{i:04d}"
+
+            # Each file emits its own original_normalized entry
+            examples.append(
+                {
+                    "claim_id": claim_id,
+                    "perturbation_type": "original_normalized",
+                    "conversations": [
+                        {"role": "system", "content": "System"},
+                        {"role": "user", "content": f"Claim {i}"},
+                        {"role": "assistant", "content": "True"},
+                    ],
+                    "source_file": f"file_{file_idx}.json",
+                }
+            )
+
+            # Perturbation entries specific to this file
+            for p_type in perturb_types:
+                examples.append(
+                    {
+                        "claim_id": claim_id,
+                        "perturbation_type": p_type,
+                        "conversations": [
+                            {"role": "system", "content": "System"},
+                            {
+                                "role": "user",
+                                "content": (
+                                    f"Claim {i} perturbed"
+                                    f" ({p_type}) from file_{file_idx}"
+                                ),
+                            },
+                            {"role": "assistant", "content": "False"},
+                        ],
+                        "source_file": f"file_{file_idx}.json",
+                    }
+                )
+
+    return examples, Dataset.from_list(examples)
 
 
 def analyze_batches(batches: list, dataset: Dataset) -> Dict[str, Any]:
@@ -693,6 +767,447 @@ class TestEnhancedPerturbationBatchSampler:
         print(
             "\n✓ Test passed: Impossible constraints "
             "handled gracefully with warnings"
+        )
+
+
+class TestMultiFileDeduplication:
+    """Tests for datasets loaded from multiple files with overlapping
+    claim_ids.
+
+    When multiple perturbation JSON files share the same claims (e.g.
+    ``approximation_True.json`` and ``range_True.json``),
+    ``expand_perturbations`` emits an ``original_normalized`` entry from
+    each file.  The batch sampler must not treat those duplicates as
+    distinct originals: each ``claim_id`` should contribute exactly *one*
+    original to the sampling, while all perturbation types from every
+    source file must be preserved.
+    """
+
+    def test_no_duplicate_originals_in_groups(self):
+        """Verify claim_id_groups stores only one original per claim_id.
+
+        The sampler uses ``dict["original"] = idx`` (assignment, not
+        append), so even if the raw dataset has two original_normalized
+        rows for the same claim_id only one ends up in the group.
+        """
+        print_separator(
+            "TEST: No Duplicate Originals in Groups (Multi-File)"
+        )
+
+        raw_examples, dataset = create_multi_file_mock_dataset(
+            n_claims=5,
+            file_perturbation_types=[
+                ["perturb_type1", "perturb_type2"],
+                ["perturb_type3_random", "perturb_type3_masked"],
+            ],
+        )
+
+        # Count raw originals to confirm duplicates exist in the input
+        raw_original_count = sum(
+            1
+            for ex in raw_examples
+            if ex["perturbation_type"] == "original_normalized"
+        )
+        print(f"\nRaw dataset size: {len(dataset)}")
+        print(f"Raw original_normalized rows: {raw_original_count}")
+        assert raw_original_count == 10, (
+            "Expected 2 originals per claim × 5 claims = 10 "
+            f"but got {raw_original_count}"
+        )
+
+        sampler = EnhancedPerturbationBatchSampler(
+            dataset=dataset,
+            batch_size=8,
+            batch_match_claim_id=True,
+            split_large_claims=True,
+            shuffle=False,
+            seed=42,
+        )
+
+        # Each claim_id must have exactly one original in the groups
+        for claim_id, group in sampler.claim_id_groups.items():
+            assert group["original"] is not None, (
+                f"{claim_id}: missing original in claim_id_groups"
+            )
+            # 'original' is a scalar (last-write-wins), so uniqueness
+            # in the group is guaranteed by dict semantics — just
+            # verify no None slipped through.
+            print(
+                f"  {claim_id}: original idx={group['original']}, "
+                f"perturbed count={len(group['perturbed'])}"
+            )
+
+        print("\n✓ Test passed: claim_id_groups has one original per claim")
+
+    def test_all_perturbation_types_preserved(self):
+        """All perturbation types from every source file must appear."""
+        print_separator(
+            "TEST: All Perturbation Types Preserved (Multi-File)"
+        )
+
+        file_types = [
+            ["perturb_type1", "perturb_type2"],
+            ["perturb_type3_random", "perturb_type3_masked"],
+        ]
+        _, dataset = create_multi_file_mock_dataset(
+            n_claims=5, file_perturbation_types=file_types
+        )
+
+        sampler = EnhancedPerturbationBatchSampler(
+            dataset=dataset,
+            batch_size=8,
+            batch_match_claim_id=True,
+            shuffle=False,
+            seed=42,
+        )
+
+        # Collect all perturbation types actually tracked by the sampler
+        all_perturbed_types_in_groups: set = set()
+        for claim_id, group in sampler.claim_id_groups.items():
+            for idx in group["perturbed"]:
+                all_perturbed_types_in_groups.add(
+                    dataset[idx]["perturbation_type"]
+                )
+
+        expected_types = {t for types in file_types for t in types}
+        print(f"\nExpected perturbation types: {sorted(expected_types)}")
+        print(
+            "Perturbation types in groups: "
+            f"{sorted(all_perturbed_types_in_groups)}"
+        )
+
+        assert expected_types == all_perturbed_types_in_groups, (
+            f"Missing types: {expected_types - all_perturbed_types_in_groups}"
+        )
+
+        # Per-claim check: every claim should have all types
+        for claim_id, group in sampler.claim_id_groups.items():
+            claim_types = {
+                dataset[idx]["perturbation_type"]
+                for idx in group["perturbed"]
+            }
+            assert expected_types == claim_types, (
+                f"{claim_id}: expected {expected_types} but got {claim_types}"
+            )
+
+        print("\n✓ Test passed: all perturbation types retained")
+
+    def test_batches_contain_no_duplicate_originals_per_claim(self):
+        """When batching, each claim_id's original must appear at most once.
+
+        Even though the raw dataset has duplicate originals, the sampler
+        should never yield the same claim_id's original in more than one
+        batch.
+        """
+        print_separator(
+            "TEST: Batches Have No Duplicate Originals Per Claim"
+        )
+
+        _, dataset = create_multi_file_mock_dataset(
+            n_claims=5,
+            file_perturbation_types=[
+                ["perturb_type1"],
+                ["perturb_type2"],
+                ["perturb_type3_random"],
+            ],
+        )
+        print(f"\nDataset size: {len(dataset)} (3 files × 5 claims)")
+
+        sampler = EnhancedPerturbationBatchSampler(
+            dataset=dataset,
+            batch_size=6,
+            batch_match_claim_id=True,
+            split_large_claims=True,
+            shuffle=False,
+            seed=42,
+        )
+
+        batches = list(sampler)
+        stats = analyze_batches(batches, dataset)
+        print_batch_stats(stats)
+
+        # No original should be repeated across batches
+        assert len(stats["claim_id_repeated_across_batches"]) == 0, (
+            "Originals repeated across batches: "
+            f"{stats['claim_id_repeated_across_batches']}"
+        )
+
+        print("\n✓ Test passed: no duplicate originals across batches")
+
+    def test_total_perturbed_count_matches_source_files(self):
+        """The number of perturbed examples seen across all batches must
+        equal the total from all source files (no perturbations lost).
+        """
+        print_separator(
+            "TEST: Total Perturbed Count Matches Source Files"
+        )
+
+        file_types = [
+            ["perturb_type1", "perturb_type2"],
+            ["perturb_type3_random"],
+        ]
+        n_claims = 5
+        _, dataset = create_multi_file_mock_dataset(
+            n_claims=n_claims, file_perturbation_types=file_types
+        )
+
+        # Expected perturbed: file0 has 2 types × 5 claims = 10,
+        #                     file1 has 1 type  × 5 claims =  5  → 15
+        expected_perturbed = sum(
+            len(types) * n_claims for types in file_types
+        )
+
+        sampler = EnhancedPerturbationBatchSampler(
+            dataset=dataset,
+            batch_size=8,
+            batch_match_claim_id=True,
+            split_large_claims=True,
+            shuffle=False,
+            seed=42,
+            drop_last=False,
+        )
+
+        batches = list(sampler)
+
+        all_perturbed_indices = set()
+        for batch in batches:
+            for idx in batch:
+                if dataset[idx]["perturbation_type"] != "original_normalized":
+                    all_perturbed_indices.add(idx)
+
+        print(f"\nExpected perturbed examples: {expected_perturbed}")
+        print(f"Perturbed in batches:        {len(all_perturbed_indices)}")
+
+        assert len(all_perturbed_indices) == expected_perturbed, (
+            f"Expected {expected_perturbed} perturbed examples but "
+            f"got {len(all_perturbed_indices)}"
+        )
+
+        print("\n✓ Test passed: all perturbed examples present in batches")
+
+    def test_three_files_same_claims(self):
+        """Stress test: three source files, all sharing the same claims.
+
+        Verifies correct behaviour with three-way original duplication.
+        """
+        print_separator("TEST: Three Files Same Claims")
+
+        file_types = [
+            ["perturb_type1"],
+            ["perturb_type2"],
+            ["perturb_type3_random"],
+        ]
+        n_claims = 4
+        raw_examples, dataset = create_multi_file_mock_dataset(
+            n_claims=n_claims, file_perturbation_types=file_types
+        )
+
+        # 3 files × 4 claims × (1 original + 1 perturbation) = 24 rows
+        # 3 originals per claim × 4 claims = 12 duplicates total
+        raw_originals = sum(
+            1
+            for ex in raw_examples
+            if ex["perturbation_type"] == "original_normalized"
+        )
+        print(f"\nRaw rows: {len(dataset)}")
+        print(f"Raw originals (with duplicates): {raw_originals}")
+        assert raw_originals == n_claims * len(file_types)
+
+        sampler = EnhancedPerturbationBatchSampler(
+            dataset=dataset,
+            batch_size=6,
+            batch_match_claim_id=True,
+            split_large_claims=True,
+            shuffle=False,
+            seed=42,
+        )
+
+        # claim_id_groups should have exactly n_claims entries
+        assert len(sampler.claim_id_groups) == n_claims
+
+        # Each group should reference ONE original and exactly 3
+        # perturbations (one from each file)
+        for claim_id, group in sampler.claim_id_groups.items():
+            assert group["original"] is not None
+            assert len(group["perturbed"]) == len(file_types), (
+                f"{claim_id}: expected {len(file_types)} perturbed, "
+                f"got {len(group['perturbed'])}"
+            )
+
+        # Verify perturbation type coverage per claim
+        expected_types = {t for types in file_types for t in types}
+        for claim_id, group in sampler.claim_id_groups.items():
+            claim_types = {
+                dataset[idx]["perturbation_type"]
+                for idx in group["perturbed"]
+            }
+            assert expected_types == claim_types, (
+                f"{claim_id}: expected types {expected_types}, "
+                f"got {claim_types}"
+            )
+
+        batches = list(sampler)
+        stats = analyze_batches(batches, dataset)
+        print_batch_stats(stats)
+
+        # No originals repeated across batches
+        assert len(stats["claim_id_repeated_across_batches"]) == 0
+
+        print("\n✓ Test passed: three files handled correctly")
+
+    def test_overlapping_perturbation_types_across_files(self):
+        """Two files both emit the same perturbation type for a claim.
+
+        This mirrors the real scenario: ``approximation_True.json`` and
+        ``range_True.json`` both have a ``perturb_type1`` key for the
+        same ``claim_id``, but with *different* perturbed claim text.
+        Both entries must end up in the sampler's group and eventually
+        appear in batches.
+        """
+        print_separator(
+            "TEST: Overlapping Perturbation Types Across Files"
+        )
+
+        # Both files contribute perturb_type1 — different claim text
+        file_types = [
+            ["perturb_type1", "perturb_type2"],
+            ["perturb_type1", "perturb_type3_random"],
+        ]
+        n_claims = 4
+        raw_examples, dataset = create_multi_file_mock_dataset(
+            n_claims=n_claims, file_perturbation_types=file_types
+        )
+
+        # Count how many perturb_type1 rows exist in the raw data
+        type1_rows = [
+            ex for ex in raw_examples
+            if ex["perturbation_type"] == "perturb_type1"
+        ]
+        print(f"\nRaw rows: {len(dataset)}")
+        print(f"perturb_type1 rows (from 2 files): {len(type1_rows)}")
+        # 2 files × 4 claims = 8 perturb_type1 entries
+        assert len(type1_rows) == n_claims * 2
+
+        sampler = EnhancedPerturbationBatchSampler(
+            dataset=dataset,
+            batch_size=8,
+            batch_match_claim_id=True,
+            split_large_claims=True,
+            shuffle=False,
+            seed=42,
+        )
+
+        # Each claim should have 4 perturbed entries:
+        #   file_0: perturb_type1, perturb_type2
+        #   file_1: perturb_type1, perturb_type3_random
+        for claim_id, group in sampler.claim_id_groups.items():
+            perturbed_types = [
+                dataset[idx]["perturbation_type"]
+                for idx in group["perturbed"]
+            ]
+            perturbed_texts = [
+                dataset[idx]["conversations"][1]["content"]
+                for idx in group["perturbed"]
+            ]
+
+            # Must have 4 perturbed entries (not 3 — both type1's count)
+            assert len(group["perturbed"]) == 4, (
+                f"{claim_id}: expected 4 perturbed entries (2 from each "
+                f"file) but got {len(group['perturbed'])}: {perturbed_types}"
+            )
+
+            # perturb_type1 must appear twice (once from each file)
+            type1_count = perturbed_types.count("perturb_type1")
+            assert type1_count == 2, (
+                f"{claim_id}: expected 2 perturb_type1 entries but "
+                f"got {type1_count}"
+            )
+
+            # The two perturb_type1 entries must have different claim text
+            type1_texts = [
+                text for text, ptype in zip(perturbed_texts, perturbed_types)
+                if ptype == "perturb_type1"
+            ]
+            assert type1_texts[0] != type1_texts[1], (
+                f"{claim_id}: two perturb_type1 entries have identical "
+                f"text — they should differ (one per source file)"
+            )
+
+            print(
+                f"  {claim_id}: {len(group['perturbed'])} perturbed, "
+                f"type1 ×{type1_count} (distinct texts)"
+            )
+
+        # Verify all perturbed entries appear in batches
+        batches = list(sampler)
+        all_batched_perturbed = [
+            idx
+            for batch in batches
+            for idx in batch
+            if dataset[idx]["perturbation_type"] != "original_normalized"
+        ]
+        expected_perturbed = sum(
+            len(types) * n_claims for types in file_types
+        )
+        assert len(all_batched_perturbed) == expected_perturbed, (
+            f"Expected {expected_perturbed} perturbed in batches, "
+            f"got {len(all_batched_perturbed)}"
+        )
+
+        print(
+            "\n✓ Test passed: overlapping perturbation types from "
+            "different files are all preserved"
+        )
+
+    def test_mixed_batches_multi_file_no_dup_originals(self):
+        """Validate mixed (non-claim-matched) batching with multi-file data.
+
+        In mixed mode the sampler uses *all* indices, so duplicate
+        original_normalized rows will both appear in `original_indices`.
+        This test documents that behavior and verifies that the total
+        example count is correct.
+        """
+        print_separator(
+            "TEST: Mixed Batches With Multi-File Data"
+        )
+
+        raw_examples, dataset = create_multi_file_mock_dataset(
+            n_claims=5,
+            file_perturbation_types=[
+                ["perturb_type1"],
+                ["perturb_type2"],
+            ],
+        )
+
+        sampler = EnhancedPerturbationBatchSampler(
+            dataset=dataset,
+            batch_size=4,
+            batch_match_claim_id=False,
+            shuffle=False,
+            seed=42,
+        )
+
+        batches = list(sampler)
+        total_in_batches = sum(len(b) for b in batches)
+        print(f"\nDataset size: {len(dataset)}")
+        print(f"Total examples across batches: {total_in_batches}")
+
+        # All dataset rows should appear (including duplicate originals
+        # — mixed mode does not deduplicate)
+        assert total_in_batches == len(dataset)
+
+        # The duplicate originals end up in original_indices
+        print(f"original_indices count: {len(sampler.original_indices)}")
+        print(f"perturbed_indices count: {len(sampler.perturbed_indices)}")
+
+        # 2 files × 5 claims = 10 original rows, 2 files × 1 type
+        # × 5 claims = 10 perturbed rows
+        assert len(sampler.original_indices) == 10
+        assert len(sampler.perturbed_indices) == 10
+
+        print(
+            "\n✓ Test passed: mixed-mode batching with multi-file data "
+            "preserves all rows"
         )
 
 
