@@ -138,7 +138,7 @@ def finetune(  # noqa: C901
     perturb_type_names: str = "",
     rank: int = 32,
     num_train_epochs: int = 1,
-    start_epoch: int = 1,
+    start_epoch: int = 0,
     resume_model: Optional[str] = None,
     batch_size: int = 2,
     gradient_accumulation_steps: int = 1,
@@ -191,12 +191,12 @@ def finetune(  # noqa: C901
     quant_status = "" if load_in_4bit else "-unquantized"
 
     # Determine model path
-    if start_epoch == 1:
+    if start_epoch == 0:
         model_name_arg = get_model_name_arg(model_name)
     else:
         if resume_model is None:
             raise ValueError(
-                "--resume_model is required when start_epoch > 1. "
+                "--resume_model is required when start_epoch > 0. "
                 "Provide the path to a previously saved merged model."
             )
         model_name_arg = resume_model

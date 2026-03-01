@@ -68,8 +68,17 @@ def _dataset_stats(dataset) -> Dict[str, Any]:
             "label_distribution": {},
         }
 
-    perturb_dist = dict(Counter(dataset["perturbation_type"]).most_common())
-    label_dist = dict(Counter(dataset["label"]).most_common())
+    columns = dataset.column_names if hasattr(dataset, "column_names") else []
+    perturb_dist = (
+        dict(Counter(dataset["perturbation_type"]).most_common())
+        if "perturbation_type" in columns
+        else {}
+    )
+    label_dist = (
+        dict(Counter(dataset["label"]).most_common())
+        if "label" in columns
+        else {}
+    )
 
     return {
         "size": size,
