@@ -13,6 +13,11 @@ from src.llm_finetune.data_loading_utils.hf_dataset_instructions import (
 )
 from src.llm_finetune.data_loading_utils.class_balancer import DatasetBalancer
 from src.llm_finetune.batch_sampler import EnhancedPerturbationBatchSampler
+from src.llm_finetune.convert_to_gguf import (
+    save_as_gguf,
+    DEFAULT_QUANT_METHOD,
+    SUPPORTED_QUANT_METHODS,
+)
 
 
 from unsloth.chat_templates import get_chat_template
@@ -142,8 +147,10 @@ def finetune(  # noqa: C901
     split_large_claims: bool = True,
     ensure_original_in_batch: bool = True,
     ensure_perturbed_in_batch: bool = True,
-    eval_steps: int = 100,
+    eval_steps: int = 500,
     save_steps: int = 500,
+    save_gguf: bool = False,
+    gguf_quantization_method: str = DEFAULT_QUANT_METHOD,
     debug: bool = False,
 ):
     """Fine-tune a model for fact-checking with numerical perturbations."""
@@ -755,6 +762,17 @@ def finetune(  # noqa: C901
         save_method="merged_16bit",
     )
     print(f"Merged model saved to: {merged_path}")
+
+    # Optionally save GGUF quantized version
+    if save_gguf:
+        gguf_path = f"{save_dir}/gguf_{gguf_quantization_method}{rank_postfix}"
+        save_as_gguf(
+            model,
+            tokenizer,
+            output_dir=gguf_path,
+            quantization_method=gguf_quantization_method,
+        )
+
     print("✅ Training complete")
     print(f"   Started at epoch: {start_epoch}")
     print(f"   Trained for: {int(trainer.state.epoch)} epochs")
@@ -891,6 +909,20 @@ if __name__ == "__main__":
         "--save_steps", type=int, default=500, help="Checkpoint save frequency"
     )
 
+    # GGUF quantization
+    parser.add_argument(
+        "--save_gguf",
+        action="store_true",
+        help="Save a GGUF-quantized copy alongside the merged model.",
+    )
+    parser.add_argument(
+        "--gguf_quantization_method",
+        type=str,
+        default=DEFAULT_QUANT_METHOD,
+        choices=SUPPORTED_QUANT_METHODS,
+        help=f"GGUF quantization method (default: {DEFAULT_QUANT_METHOD}).",
+    )
+
     # Debug
     parser.add_argument(
         "--debug",
@@ -929,5 +961,7 @@ if __name__ == "__main__":
         ensure_perturbed_in_batch=args.ensure_perturbed_in_batch,
         eval_steps=args.eval_steps,
         save_steps=args.save_steps,
+        save_gguf=args.save_gguf,
+        gguf_quantization_method=args.gguf_quantization_method,
         debug=args.debug,
     )
