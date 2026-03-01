@@ -5,6 +5,11 @@ on:
     branches:
       - main
 
+# Necessary for modern GITHUB_TOKEN security standards
+permissions:
+  contents: read
+  packages: write
+
 env:
   REPO_NAME: ${{ github.event.repository.name }}
 
@@ -26,7 +31,12 @@ jobs:
       - name: Set up Python 3.11
         run: uv python install 3.11
 
-      - name: Install Dependencies
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bc graphviz
+
+      - name: Install Python Dependencies
         # --frozen ensures we use the exact versions in your uv.lock
         # --extra dev installs pytest, ruff, etc.
         run: |
@@ -35,6 +45,10 @@ jobs:
 
       - name: Run Ruff Check
         run: uv run ruff check .
+
+      - name: Run Type Check (MyPy)
+        # Since you have an extensive MyPy config in pyproject.toml
+        run: uv run mypy .
 
       - name: PyTest with code coverage
         run: |
