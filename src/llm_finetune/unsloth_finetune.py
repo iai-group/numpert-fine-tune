@@ -18,6 +18,10 @@ from src.llm_finetune.convert_to_gguf import (
     DEFAULT_QUANT_METHOD,
     SUPPORTED_QUANT_METHODS,
 )
+from src.llm_finetune.training_config_export import (
+    build_training_config,
+    save_training_config,
+)
 
 
 from unsloth.chat_templates import get_chat_template
@@ -630,6 +634,34 @@ def finetune(  # noqa: C901
     output_dir = f"{base_dir}/checkpoints{rank_postfix}"
     if not os.path.exists(output_dir):
         os.makedirs(output_dir, exist_ok=True)
+
+    # Export training configuration to JSON
+    training_config_dict = build_training_config(
+        model_name=model_name,
+        train_file_configs=train_file_configs,
+        val_file_configs=val_file_configs,
+        train_dataset=train_data,
+        val_dataset=val_data,
+        rank=rank,
+        num_train_epochs=num_train_epochs,
+        start_epoch=start_epoch,
+        batch_size=batch_size,
+        gradient_accumulation_steps=gradient_accumulation_steps,
+        max_seq_length=max_seq_length,
+        expand_perturbations=expand_perturbations,
+        balance_labels=balance_labels,
+        perturb_ratio=perturb_ratio,
+        false_perturb_t_to_f_ratio=false_perturb_t_to_f_ratio,
+        batch_match_claim_id=batch_match_claim_id,
+        split_large_claims=split_large_claims,
+        ensure_original_in_batch=ensure_original_in_batch,
+        ensure_perturbed_in_batch=ensure_perturbed_in_batch,
+        save_gguf=save_gguf,
+        gguf_quantization_method=gguf_quantization_method,
+        timestamp=time_start,
+    )
+    config_path = save_training_config(training_config_dict, base_dir)
+    print(f"Training config saved to: {config_path}")
 
     # Calculate final epoch number
     target_epoch = start_epoch + num_train_epochs - 1

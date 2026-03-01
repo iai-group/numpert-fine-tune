@@ -9,7 +9,7 @@ Tests cover:
 
 import os
 import pytest
-from unittest.mock import MagicMock, patch, call
+from unittest.mock import MagicMock, patch
 from src.llm_finetune.convert_to_gguf import (
     save_as_gguf,
     convert_existing_model,
@@ -243,9 +243,7 @@ class TestCLI:
             default=DEFAULT_QUANT_METHOD,
             choices=SUPPORTED_QUANT_METHODS,
         )
-        parser.add_argument(
-            "--max_seq_length", type=int, default=16384
-        )
+        parser.add_argument("--max_seq_length", type=int, default=16384)
         return parser.parse_args(argv)
 
     def test_minimal_args(self):
@@ -258,12 +256,18 @@ class TestCLI:
         assert args.max_seq_length == 16384
 
     def test_all_args(self):
-        args = self._parse_args([
-            "--model_path", "/tmp/model",
-            "--output_dir", "/tmp/out",
-            "--quantization_method", "q8_0",
-            "--max_seq_length", "8192",
-        ])
+        args = self._parse_args(
+            [
+                "--model_path",
+                "/tmp/model",
+                "--output_dir",
+                "/tmp/out",
+                "--quantization_method",
+                "q8_0",
+                "--max_seq_length",
+                "8192",
+            ]
+        )
 
         assert args.model_path == "/tmp/model"
         assert args.output_dir == "/tmp/out"
@@ -271,9 +275,13 @@ class TestCLI:
         assert args.max_seq_length == 8192
 
     def test_invalid_quant_method_rejected(self):
-        """argparse should reject methods not in SUPPORTED_QUANT_METHODS."""
+        """Argparse should reject methods not in SUPPORTED_QUANT_METHODS."""
         with pytest.raises(SystemExit):
-            self._parse_args([
-                "--model_path", "/tmp/model",
-                "--quantization_method", "invalid",
-            ])
+            self._parse_args(
+                [
+                    "--model_path",
+                    "/tmp/model",
+                    "--quantization_method",
+                    "invalid",
+                ]
+            )
