@@ -6,19 +6,19 @@ from datetime import datetime
 
 from datasets import Dataset
 
-from src.llm_finetune.utils.inference_config_export import (
+from src.llm_finetune.utils.inference.inference_config_export import (
     INFERENCE_CONFIG_FILENAME,
     _MAX_PARENT_SEARCH_DEPTH,
     build_inference_config,
     find_training_config,
     save_inference_config,
 )
-from src.llm_finetune.utils_training.training_config_export import (
+from src.llm_finetune.utils.training.training_config_export import (
     CONFIG_FILENAME as TRAINING_CONFIG_FILENAME,
     build_training_config,
     save_training_config,
 )
-from src.llm_finetune.data_loading_utils.perturbation_types import (
+from src.llm_finetune.utils.data_loading.perturbation_types import (
     FileLoadConfig,
     PerturbationType,
 )

@@ -4,7 +4,7 @@ from typing import Dict
 from collections import Counter, defaultdict
 from datasets import Dataset
 
-from src.llm_finetune.data_loading_utils.hf_dataset_instructions import (
+from src.llm_finetune.utils.data_loading.hf_dataset_instructions import (
     load_json_files,
     expand_perturbations,
     convert_to_conversations,

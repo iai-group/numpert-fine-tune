@@ -10,21 +10,23 @@ This module implements the full fine-tuning and inference pipeline for numerical
 src/llm_finetune/
 ├── batch_sampler.py               # Perturbation-aware batch sampler
 ├── config.py                      # Path prefix configuration
-├── convert_to_gguf.py             # GGUF quantization (in-pipeline & standalone)
-├── training_config_export.py      # Save training params & data provenance to JSON
 ├── unsloth_finetune.py            # Training entry point
 ├── unsloth_inference.py           # Inference entry point
 ├── upload_model_hf.py             # Upload trained model to HuggingFace Hub
 ├── utils/
-│   ├── inference_config_export.py # Save inference run parameters to JSON
-│   └── metrics.py                 # Structured metrics computation & reporting
-└── data_loading_utils/
-    ├── perturbation_types.py      # PerturbationType enum, FileLoadConfig
-    ├── perturbation_logic.py      # expand_perturbations() core engine
-    ├── conversation.py            # Convert examples to SFTTrainer chat format
-    ├── class_balancer.py          # Label balancing & perturbation ratio control
-    ├── hf_dataset_instructions.py # High-level data loading API (orchestration)
-    └── sequence_len_utility.py    # Sequence length analysis & plotting
+│   ├── data_loading/
+│   │   ├── perturbation_types.py      # PerturbationType enum, FileLoadConfig
+│   │   ├── perturbation_logic.py      # expand_perturbations() core engine
+│   │   ├── conversation.py            # Convert examples to SFTTrainer chat format
+│   │   ├── class_balancer.py          # Label balancing & perturbation ratio control
+│   │   ├── hf_dataset_instructions.py # High-level data loading API (orchestration)
+│   │   └── sequence_len_utility.py    # Sequence length analysis & plotting
+│   ├── training/
+│   │   ├── convert_to_gguf.py         # GGUF quantization (in-pipeline & standalone)
+│   │   └── training_config_export.py  # Save training params & data provenance to JSON
+│   └── inference/
+│       ├── inference_config_export.py # Save inference run parameters to JSON
+│       └── metrics.py                 # Structured metrics computation & reporting
 ```
 
 ---
@@ -55,7 +57,7 @@ Both functions accept data either as simple file paths or as `FileLoadConfig` ob
 ### Simple Loading (All Types)
 
 ```python
-from src.llm_finetune.data_loading_utils import load_fact_checking_data
+from src.llm_finetune.utils.data_loading.hf_dataset_instructions import load_fact_checking_data
 
 dataset = load_fact_checking_data(
     json_paths=["data/perturbed_data/train_split/numeration_true.json"],
@@ -72,11 +74,11 @@ This loads every perturbation key found in the JSON file (`perturb_type1`, `pert
 Use `FileLoadConfig` to control which perturbation types are extracted from each file:
 
 ```python
-from src.llm_finetune.data_loading_utils import (
+from src.llm_finetune.utils.data_loading.hf_dataset_instructions import (
     load_fact_checking_data,
     FileLoadConfig,
-    PerturbationType,
 )
+from src.llm_finetune.utils.data_loading.perturbation_types import PerturbationType
 
 dataset = load_fact_checking_data(
     file_configs=[
@@ -113,7 +115,7 @@ Type names accept shorthand — `type1` is automatically expanded to `perturb_ty
 
 ## Perturbation Expansion (`expand_perturbations`)
 
-The `expand_perturbations()` function in `perturbation_logic.py` is the core engine that converts a raw JSON example into multiple rows — one per perturbation variant.
+The `expand_perturbations()` function in `src.llm_finetune.utils.data_loading.perturbation_logic` is the core engine that converts a raw JSON example into multiple rows — one per perturbation variant.
 
 ### How It Works
 
@@ -179,7 +181,7 @@ If a perturbation key is present but its value is empty or `None` (the perturbat
 
 ## Perturbation Types
 
-Defined in `perturbation_types.py` as the `PerturbationType` enum:
+Defined in `src.llm_finetune.utils.data_loading.perturbation_types` as the `PerturbationType` enum:
 
 | Enum Member | Value | Category |
 |---|---|---|
@@ -203,7 +205,7 @@ ALL_PERTURB_TYPES          = STRUCTURE_PRESERVING_TYPES | VALUE_MODIFYING_TYPES 
 
 ## Conversation Formatting
 
-`convert_to_conversations()` in `conversation.py` transforms expanded examples into the chat format expected by HuggingFace `SFTTrainer`:
+`convert_to_conversations()` in `src.llm_finetune.utils.data_loading.conversation` transforms expanded examples into the chat format expected by HuggingFace `SFTTrainer`:
 
 ```python
 {
@@ -227,7 +229,7 @@ ALL_PERTURB_TYPES          = STRUCTURE_PRESERVING_TYPES | VALUE_MODIFYING_TYPES 
 
 ## Dataset Balancing (`DatasetBalancer`)
 
-`class_balancer.py` provides `DatasetBalancer` for controlling label and perturbation distributions in the training set.
+`src.llm_finetune.utils.data_loading.class_balancer` provides `DatasetBalancer` for controlling label and perturbation distributions in the training set.
 
 ### Features
 
@@ -238,7 +240,7 @@ ALL_PERTURB_TYPES          = STRUCTURE_PRESERVING_TYPES | VALUE_MODIFYING_TYPES 
 ### Usage
 
 ```python
-from src.llm_finetune.data_loading_utils.class_balancer import DatasetBalancer
+from src.llm_finetune.utils.data_loading.class_balancer import DatasetBalancer
 
 balancer = DatasetBalancer(
     dataset=train_data,
@@ -264,7 +266,7 @@ The balancer categorises every example into one of five bins:
 
 ## Batch Sampler (`EnhancedPerturbationBatchSampler`)
 
-`batch_sampler.py` implements `EnhancedPerturbationBatchSampler`, a PyTorch `Sampler` that constructs training batches with awareness of claim structure.
+`src.llm_finetune.batch_sampler` implements `EnhancedPerturbationBatchSampler`, a PyTorch `Sampler` that constructs training batches with awareness of claim structure.
 
 ### Motivation
 
@@ -403,7 +405,7 @@ models/<model_name>_<timestamp>_<perturb_types>/
 
 #### `training_config.json`
 
-A machine-readable JSON file written to the model output directory at the start of every training run. It records the exact parameters, data files, perturbation types, and dataset statistics used, so every trained model carries full provenance. The file is produced by `training_config_export.py` and has the following structure:
+A machine-readable JSON file written to the model output directory at the start of every training run. It records the exact parameters, data files, perturbation types, and dataset statistics used, so every trained model carries full provenance. The file is produced by `src.llm_finetune.utils.training.training_config_export` and has the following structure:
 
 ```json
 {
@@ -476,13 +478,13 @@ A machine-readable JSON file written to the model output directory at the start 
 Key details:
 - **`data.train_files` / `data.val_files`**: Each entry records the file path and the perturbation types loaded from it. A value of `null` for `perturb_types` means all types present in the file were loaded.
 - **`data.train_stats` / `data.val_stats`**: Computed after any balancing or filtering, so they reflect the actual data the model trained on.
-- The file is generated by `build_training_config()` and written by `save_training_config()` from `training_config_export.py`.
+- The file is generated by `build_training_config()` and written by `save_training_config()` from `src.llm_finetune.utils.training.training_config_export`.
 
 ---
 
-## GGUF Quantization (`convert_to_gguf.py`)
+## GGUF Quantization (`convert_to_gguf`)
 
-GGUF is the format used by [llama.cpp](https://github.com/ggerganov/llama.cpp) and tools like [Ollama](https://ollama.com/) for efficient CPU/GPU inference. The module supports saving GGUF models in two ways.
+GGUF is the format used by [llama.cpp](https://github.com/ggerganov/llama.cpp) and tools like [Ollama](https://ollama.com/) for efficient CPU/GPU inference. The module (`src.llm_finetune.utils.training.convert_to_gguf`) supports saving GGUF models in two ways.
 
 ### During Training
 
@@ -510,7 +512,7 @@ models/<model_name>_<timestamp>_<perturb_types>/epoch-3/
 Convert any existing merged model to GGUF using the standalone CLI:
 
 ```bash
-python -m src.llm_finetune.convert_to_gguf \
+python -m src.llm_finetune.utils.training.convert_to_gguf \
     --model_path models/.../epoch-3/merged_model_r32 \
     --quantization_method q4_k_m
 ```
@@ -520,7 +522,7 @@ If `--output_dir` is not specified, the GGUF model is saved to `<model_path>_ggu
 You can also call `convert_existing_model()` from Python:
 
 ```python
-from src.llm_finetune.convert_to_gguf import convert_existing_model
+from src.llm_finetune.utils.training.convert_to_gguf import convert_existing_model
 
 convert_existing_model(
     model_path="models/.../epoch-3/merged_model_r32",
@@ -591,7 +593,7 @@ predictions/<timestamp>/<model>-epoch-<N>/
 
 ---
 
-## Metrics (`utils/metrics.py`)
+## Metrics (`utils/inference/metrics.py`)
 
 The metrics module computes and reports classification scores with breakdowns at multiple levels of granularity. It is separated from the inference script so that metrics can be recomputed, extended, or consumed independently.
 
@@ -723,7 +725,7 @@ Pass `show_classification_reports=True` to also print the full sklearn classific
 The metrics module can be used independently of the inference script:
 
 ```python
-from src.llm_finetune.utils.metrics import (
+from src.llm_finetune.utils.inference.metrics import (
     compute_metrics,
     print_metrics_report,
     save_metrics_report,
@@ -763,10 +765,10 @@ The data loading pipeline (`load_fact_checking_data()`) annotates every expanded
 
 ## Sequence Length Analysis
 
-`sequence_len_utility.py` provides `analyze_sequence_lengths()` to profile the token distribution of your dataset before training. It reports min/max/mean/median/p95/p99 sequence lengths and saves a histogram plot. Use it to choose an appropriate `--max_seq_length`:
+`src.llm_finetune.utils.data_loading.sequence_len_utility` provides `analyze_sequence_lengths()` to profile the token distribution of your dataset before training. It reports min/max/mean/median/p95/p99 sequence lengths and saves a histogram plot. Use it to choose an appropriate `--max_seq_length`:
 
 ```python
-from src.llm_finetune.data_loading_utils.sequence_len_utility import analyze_sequence_lengths
+from src.llm_finetune.utils.data_loading.sequence_len_utility import analyze_sequence_lengths
 
 stats = analyze_sequence_lengths(
     json_paths=["data/perturbed_data/train_split/numeration_true.json"],

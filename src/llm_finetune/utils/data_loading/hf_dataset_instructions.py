@@ -19,7 +19,7 @@ from pathlib import Path
 from typing import Dict, List, Optional, Union
 
 # Re-export taxonomy & config -------------------------------------------
-from src.llm_finetune.data_loading_utils.perturbation_types import (  # noqa
+from src.llm_finetune.utils.data_loading.perturbation_types import (  # noqa
     PerturbationType,
     STRUCTURE_PRESERVING_TYPES,
     VALUE_MODIFYING_TYPES,
@@ -30,7 +30,7 @@ from src.llm_finetune.data_loading_utils.perturbation_types import (  # noqa
 )
 
 # Re-export perturbation logic ------------------------------------------
-from src.llm_finetune.data_loading_utils.perturbation_logic import (  # noqa
+from src.llm_finetune.utils.data_loading.perturbation_logic import (  # noqa
     _PERTURB_KEY_RE,
     _detect_perturb_key,
     _normalize_label,
@@ -39,7 +39,7 @@ from src.llm_finetune.data_loading_utils.perturbation_logic import (  # noqa
 )
 
 # Re-export conversation formatting -------------------------------------
-from src.llm_finetune.data_loading_utils.conversation import (  # noqa: F401
+from src.llm_finetune.utils.data_loading.conversation import (  # noqa: F401
     convert_to_conversations,
 )
 
@@ -224,7 +224,7 @@ if __name__ == "__main__":
 
     if len(sys.argv) < 2:
         print(
-            "Usage: python -m src.llm_finetune.data_loading_utils"
+            "Usage: python -m src.llm_finetune.utils.data_loading"
             ".hf_dataset_instructions <file_config> [file_config ...]"
         )
         print("  file_config format: path/to/file.json[:type1,type2,...]")

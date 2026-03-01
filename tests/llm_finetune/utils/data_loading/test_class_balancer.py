@@ -1,6 +1,6 @@
 import pytest
 from datasets import Dataset
-from src.llm_finetune.data_loading_utils.class_balancer import DatasetBalancer
+from src.llm_finetune.utils.data_loading.class_balancer import DatasetBalancer
 
 
 def print_separator(title: str):

@@ -7,16 +7,16 @@ import torch
 from datetime import datetime
 
 from src.llm_finetune.config import prefix
-from src.llm_finetune.data_loading_utils.hf_dataset_instructions import (
+from src.llm_finetune.utils.data_loading.hf_dataset_instructions import (
     load_fact_checking_data,
     FileLoadConfig,
     parse_file_config,
 )
-from src.llm_finetune.utils.inference_config_export import (
+from src.llm_finetune.utils.inference.inference_config_export import (
     build_inference_config,
     save_inference_config,
 )
-from src.llm_finetune.utils.metrics import (
+from src.llm_finetune.utils.inference.metrics import (
     build_result_records,
     compute_metrics,
     print_metrics_report,

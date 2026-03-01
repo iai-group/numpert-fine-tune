@@ -5,7 +5,7 @@ import pytest
 """Tests for conversation.py module."""
 
 
-from src.llm_finetune.data_loading_utils.conversation import (
+from src.llm_finetune.utils.data_loading.conversation import (
     convert_to_conversations,
 )
 
@@ -41,10 +41,10 @@ def sample_examples():
 
 
 @patch(
-    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_SYSTEM_PROMPT"
+    "src.llm_finetune.utils.data_loading.conversation.FACT_CHECK_SYSTEM_PROMPT"
 )
 @patch(
-    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_USER_PROMPT"
+    "src.llm_finetune.utils.data_loading.conversation.FACT_CHECK_USER_PROMPT"
 )
 def test_convert_to_conversations_basic(
     mock_user_prompt,
@@ -56,11 +56,11 @@ def test_convert_to_conversations_basic(
     mock_system_prompt = "You are a fact-checker."
 
     with patch(
-        "src.llm_finetune.data_loading_utils.conversation"
+        "src.llm_finetune.utils.data_loading.conversation"
         ".FACT_CHECK_SYSTEM_PROMPT",
         "You are a fact-checker.",
     ), patch(
-        "src.llm_finetune.data_loading_utils.conversation"
+        "src.llm_finetune.utils.data_loading.conversation"
         ".FACT_CHECK_USER_PROMPT",
         "Claim: {claim}\nEvidence: {evidence}",
     ):
@@ -74,10 +74,10 @@ def test_convert_to_conversations_basic(
 
 
 @patch(
-    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_SYSTEM_PROMPT"
+    "src.llm_finetune.utils.data_loading.conversation.FACT_CHECK_SYSTEM_PROMPT"
 )
 @patch(
-    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_USER_PROMPT"
+    "src.llm_finetune.utils.data_loading.conversation.FACT_CHECK_USER_PROMPT"
 )
 def test_convert_to_conversations_structure(
     mock_user_prompt,
@@ -89,11 +89,11 @@ def test_convert_to_conversations_structure(
     mock_user_prompt = "Claim: {claim}\nEvidence: {evidence}"
 
     with patch(
-        "src.llm_finetune.data_loading_utils.conversation."
+        "src.llm_finetune.utils.data_loading.conversation."
         "FACT_CHECK_SYSTEM_PROMPT",
         mock_system_prompt,
     ), patch(
-        "src.llm_finetune.data_loading_utils.conversation."
+        "src.llm_finetune.utils.data_loading.conversation."
         "FACT_CHECK_USER_PROMPT",
         mock_user_prompt,
     ):
@@ -107,10 +107,10 @@ def test_convert_to_conversations_structure(
 
 
 @patch(
-    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_SYSTEM_PROMPT"
+    "src.llm_finetune.utils.data_loading.conversation.FACT_CHECK_SYSTEM_PROMPT"
 )
 @patch(
-    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_USER_PROMPT"
+    "src.llm_finetune.utils.data_loading.conversation.FACT_CHECK_USER_PROMPT"
 )
 def test_convert_to_conversations_label_true(
     mock_user_prompt,
@@ -119,11 +119,11 @@ def test_convert_to_conversations_label_true(
 ):
     """Test label conversion for True case."""
     with patch(
-        "src.llm_finetune.data_loading_utils.conversation."
+        "src.llm_finetune.utils.data_loading.conversation."
         "FACT_CHECK_SYSTEM_PROMPT",
         "System.",
     ), patch(
-        "src.llm_finetune.data_loading_utils.conversation."
+        "src.llm_finetune.utils.data_loading.conversation."
         "FACT_CHECK_USER_PROMPT",
         "Q: {claim}\nEvidence: {evidence}",
     ):
@@ -134,10 +134,10 @@ def test_convert_to_conversations_label_true(
 
 
 @patch(
-    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_SYSTEM_PROMPT"
+    "src.llm_finetune.utils.data_loading.conversation.FACT_CHECK_SYSTEM_PROMPT"
 )
 @patch(
-    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_USER_PROMPT"
+    "src.llm_finetune.utils.data_loading.conversation.FACT_CHECK_USER_PROMPT"
 )
 def test_convert_to_conversations_label_false(
     mock_user_prompt,
@@ -146,11 +146,11 @@ def test_convert_to_conversations_label_false(
 ):
     """Test label conversion for False case."""
     with patch(
-        "src.llm_finetune.data_loading_utils.conversation."
+        "src.llm_finetune.utils.data_loading.conversation."
         "FACT_CHECK_SYSTEM_PROMPT",
         "System.",
     ), patch(
-        "src.llm_finetune.data_loading_utils.conversation."
+        "src.llm_finetune.utils.data_loading.conversation."
         "FACT_CHECK_USER_PROMPT",
         "Q: {claim}\nEvidence: {evidence}",
     ):
@@ -161,10 +161,10 @@ def test_convert_to_conversations_label_false(
 
 
 @patch(
-    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_SYSTEM_PROMPT"
+    "src.llm_finetune.utils.data_loading.conversation.FACT_CHECK_SYSTEM_PROMPT"
 )
 @patch(
-    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_USER_PROMPT"
+    "src.llm_finetune.utils.data_loading.conversation.FACT_CHECK_USER_PROMPT"
 )
 def test_convert_to_conversations_include_doc_true(
     mock_user_prompt,
@@ -173,11 +173,11 @@ def test_convert_to_conversations_include_doc_true(
 ):
     """Test evidence is included when include_doc=True."""
     with patch(
-        "src.llm_finetune.data_loading_utils.conversation."
+        "src.llm_finetune.utils.data_loading.conversation."
         "FACT_CHECK_SYSTEM_PROMPT",
         "System.",
     ), patch(
-        "src.llm_finetune.data_loading_utils.conversation."
+        "src.llm_finetune.utils.data_loading.conversation."
         "FACT_CHECK_USER_PROMPT",
         "Q: {claim}\nE: {evidence}",
     ):
@@ -191,10 +191,10 @@ def test_convert_to_conversations_include_doc_true(
 
 
 @patch(
-    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_SYSTEM_PROMPT"
+    "src.llm_finetune.utils.data_loading.conversation.FACT_CHECK_SYSTEM_PROMPT"
 )
 @patch(
-    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_USER_PROMPT"
+    "src.llm_finetune.utils.data_loading.conversation.FACT_CHECK_USER_PROMPT"
 )
 def test_convert_to_conversations_include_doc_false(
     mock_user_prompt,
@@ -203,11 +203,11 @@ def test_convert_to_conversations_include_doc_false(
 ):
     """Test evidence is excluded when include_doc=False."""
     with patch(
-        "src.llm_finetune.data_loading_utils.conversation."
+        "src.llm_finetune.utils.data_loading.conversation."
         "FACT_CHECK_SYSTEM_PROMPT",
         "System.",
     ), patch(
-        "src.llm_finetune.data_loading_utils.conversation."
+        "src.llm_finetune.utils.data_loading.conversation."
         "FACT_CHECK_USER_PROMPT",
         "Q: {claim}\nE: {evidence}",
     ):
@@ -221,10 +221,10 @@ def test_convert_to_conversations_include_doc_false(
 
 
 @patch(
-    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_SYSTEM_PROMPT"
+    "src.llm_finetune.utils.data_loading.conversation.FACT_CHECK_SYSTEM_PROMPT"
 )
 @patch(
-    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_USER_PROMPT"
+    "src.llm_finetune.utils.data_loading.conversation.FACT_CHECK_USER_PROMPT"
 )
 def test_convert_to_conversations_preserves_metadata(
     mock_user_prompt,
@@ -233,11 +233,11 @@ def test_convert_to_conversations_preserves_metadata(
 ):
     """Test claim_id and perturbation_type are preserved."""
     with patch(
-        "src.llm_finetune.data_loading_utils.conversation."
+        "src.llm_finetune.utils.data_loading.conversation."
         "FACT_CHECK_SYSTEM_PROMPT",
         "System.",
     ), patch(
-        "src.llm_finetune.data_loading_utils.conversation."
+        "src.llm_finetune.utils.data_loading.conversation."
         "FACT_CHECK_USER_PROMPT",
         "Q: {claim}\nE: {evidence}",
     ):
@@ -252,10 +252,10 @@ def test_convert_to_conversations_preserves_metadata(
 
 
 @patch(
-    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_SYSTEM_PROMPT"
+    "src.llm_finetune.utils.data_loading.conversation.FACT_CHECK_SYSTEM_PROMPT"
 )
 @patch(
-    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_USER_PROMPT"
+    "src.llm_finetune.utils.data_loading.conversation.FACT_CHECK_USER_PROMPT"
 )
 def test_convert_to_conversations_empty_input(
     mock_user_prompt,
@@ -263,11 +263,11 @@ def test_convert_to_conversations_empty_input(
 ):
     """Test handling of empty examples list."""
     with patch(
-        "src.llm_finetune.data_loading_utils.conversation."
+        "src.llm_finetune.utils.data_loading.conversation."
         "FACT_CHECK_SYSTEM_PROMPT",
         "System.",
     ), patch(
-        "src.llm_finetune.data_loading_utils.conversation."
+        "src.llm_finetune.utils.data_loading.conversation."
         "FACT_CHECK_USER_PROMPT",
         "Q: {claim}\nE: {evidence}",
     ):
@@ -277,10 +277,10 @@ def test_convert_to_conversations_empty_input(
 
 
 @patch(
-    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_SYSTEM_PROMPT"
+    "src.llm_finetune.utils.data_loading.conversation.FACT_CHECK_SYSTEM_PROMPT"
 )
 @patch(
-    "src.llm_finetune.data_loading_utils.conversation.FACT_CHECK_USER_PROMPT"
+    "src.llm_finetune.utils.data_loading.conversation.FACT_CHECK_USER_PROMPT"
 )
 def test_convert_to_conversations_split_parameter(
     mock_user_prompt,
@@ -289,11 +289,11 @@ def test_convert_to_conversations_split_parameter(
 ):
     """Test split parameter is accepted (currently unused but valid)."""
     with patch(
-        "src.llm_finetune.data_loading_utils.conversation."
+        "src.llm_finetune.utils.data_loading.conversation."
         "FACT_CHECK_SYSTEM_PROMPT",
         "System.",
     ), patch(
-        "src.llm_finetune.data_loading_utils.conversation."
+        "src.llm_finetune.utils.data_loading.conversation."
         "FACT_CHECK_USER_PROMPT",
         "Q: {claim}\nE: {evidence}",
     ):

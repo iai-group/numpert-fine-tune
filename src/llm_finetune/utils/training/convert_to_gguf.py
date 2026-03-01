@@ -4,7 +4,7 @@ Standalone script for converting an already-trained merged model to GGUF.
 Also exposes `save_as_gguf()` for use in the fine-tuning pipeline.
 
 Usage:
-    python -m src.llm_finetune.convert_to_gguf \
+    python -m src.llm_finetune.utils.training.convert_to_gguf \
         --model_path path/to/merged_model \
         --output_dir path/to/output \
         --quantization_method q4_k_m

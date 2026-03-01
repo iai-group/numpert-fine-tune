@@ -4,7 +4,7 @@ import json
 import os
 from typing import Dict, List, Optional
 
-from src.llm_finetune.utils.metrics import (
+from src.llm_finetune.utils.inference.metrics import (
     ClassificationScores,
     MetricsReport,
     build_result_records,

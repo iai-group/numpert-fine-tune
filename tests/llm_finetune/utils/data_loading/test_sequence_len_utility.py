@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import Mock, patch
 
-from src.llm_finetune.data_loading_utils.sequence_len_utility import (
+from src.llm_finetune.utils.data_loading.sequence_len_utility import (
     analyze_sequence_lengths,
 )
 
@@ -105,10 +105,10 @@ def mock_tokenizer_with_lengths():
 
 
 @patch(
-    "src.llm_finetune.data_loading_utils.sequence_len_utility"
+    "src.llm_finetune.utils.data_loading.sequence_len_utility"
     ".load_fact_checking_data"
 )
-@patch("src.llm_finetune.data_loading_utils.sequence_len_utility.plt")
+@patch("src.llm_finetune.utils.data_loading.sequence_len_utility.plt")
 def test_analyze_sequence_lengths_basic(
     mock_plt, mock_load_data, mock_dataset, mock_tokenizer_with_lengths
 ):
@@ -130,10 +130,10 @@ def test_analyze_sequence_lengths_basic(
 
 
 @patch(
-    "src.llm_finetune.data_loading_utils.sequence_len_utility"
+    "src.llm_finetune.utils.data_loading.sequence_len_utility"
     ".load_fact_checking_data"
 )
-@patch("src.llm_finetune.data_loading_utils.sequence_len_utility.plt")
+@patch("src.llm_finetune.utils.data_loading.sequence_len_utility.plt")
 def test_analyze_sequence_lengths_stats_calculation(
     mock_plt, mock_load_data, mock_tokenizer_with_lengths
 ):
@@ -188,10 +188,10 @@ def test_analyze_sequence_lengths_stats_calculation(
 
 
 @patch(
-    "src.llm_finetune.data_loading_utils.sequence_len_utility"
+    "src.llm_finetune.utils.data_loading.sequence_len_utility"
     ".load_fact_checking_data"
 )
-@patch("src.llm_finetune.data_loading_utils.sequence_len_utility.plt")
+@patch("src.llm_finetune.utils.data_loading.sequence_len_utility.plt")
 def test_analyze_sequence_lengths_max_examples(
     mock_plt, mock_load_data, mock_tokenizer_with_lengths
 ):
@@ -239,10 +239,10 @@ def test_analyze_sequence_lengths_max_examples(
 
 
 @patch(
-    "src.llm_finetune.data_loading_utils.sequence_len_utility"
+    "src.llm_finetune.utils.data_loading.sequence_len_utility"
     ".load_fact_checking_data"
 )
-@patch("src.llm_finetune.data_loading_utils.sequence_len_utility.plt")
+@patch("src.llm_finetune.utils.data_loading.sequence_len_utility.plt")
 def test_analyze_sequence_lengths_too_long_examples(
     mock_plt, mock_load_data, mock_tokenizer_with_lengths
 ):
@@ -290,10 +290,10 @@ def test_analyze_sequence_lengths_too_long_examples(
 
 
 @patch(
-    "src.llm_finetune.data_loading_utils.sequence_len_utility"
+    "src.llm_finetune.utils.data_loading.sequence_len_utility"
     ".load_fact_checking_data"
 )
-@patch("src.llm_finetune.data_loading_utils.sequence_len_utility.plt")
+@patch("src.llm_finetune.utils.data_loading.sequence_len_utility.plt")
 def test_analyze_sequence_lengths_recommended_length(
     mock_plt, mock_load_data, mock_tokenizer_with_lengths
 ):
@@ -337,10 +337,10 @@ def test_analyze_sequence_lengths_recommended_length(
 
 
 @patch(
-    "src.llm_finetune.data_loading_utils.sequence_len_utility"
+    "src.llm_finetune.utils.data_loading.sequence_len_utility"
     ".load_fact_checking_data"
 )
-@patch("src.llm_finetune.data_loading_utils.sequence_len_utility.plt")
+@patch("src.llm_finetune.utils.data_loading.sequence_len_utility.plt")
 def test_analyze_sequence_lengths_split_parameter(
     mock_plt, mock_load_data, mock_tokenizer_with_lengths
 ):
@@ -383,10 +383,10 @@ def test_analyze_sequence_lengths_split_parameter(
 
 
 @patch(
-    "src.llm_finetune.data_loading_utils.sequence_len_utility"
+    "src.llm_finetune.utils.data_loading.sequence_len_utility"
     ".load_fact_checking_data"
 )
-@patch("src.llm_finetune.data_loading_utils.sequence_len_utility.plt")
+@patch("src.llm_finetune.utils.data_loading.sequence_len_utility.plt")
 def test_analyze_sequence_lengths_expand_perturbations_flag(
     mock_plt, mock_load_data, mock_tokenizer_with_lengths
 ):
@@ -428,10 +428,10 @@ def test_analyze_sequence_lengths_expand_perturbations_flag(
 
 
 @patch(
-    "src.llm_finetune.data_loading_utils.sequence_len_utility"
+    "src.llm_finetune.utils.data_loading.sequence_len_utility"
     ".load_fact_checking_data"
 )
-@patch("src.llm_finetune.data_loading_utils.sequence_len_utility.plt.savefig")
+@patch("src.llm_finetune.utils.data_loading.sequence_len_utility.plt.savefig")
 def test_analyze_sequence_lengths_saves_plot(
     mock_savefig, mock_load_data, mock_tokenizer_with_lengths
 ):

@@ -14,8 +14,9 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
-from src.llm_finetune.data_loading_utils.perturbation_types import (
+from src.llm_finetune.utils.data_loading.perturbation_types import (  # noqa: F401, E501
     FileLoadConfig,
+    PerturbationType,
 )
 
 CONFIG_FILENAME = "training_config.json"

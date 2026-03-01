@@ -6,19 +6,19 @@ from collections import Counter
 from datetime import datetime
 
 from src.llm_finetune.config import prefix
-from src.llm_finetune.data_loading_utils.hf_dataset_instructions import (
+from src.llm_finetune.utils.data_loading.hf_dataset_instructions import (
     load_train_and_validation,
     FileLoadConfig,
     parse_file_config,
 )
-from src.llm_finetune.data_loading_utils.class_balancer import DatasetBalancer
+from src.llm_finetune.utils.data_loading.class_balancer import DatasetBalancer
 from src.llm_finetune.batch_sampler import EnhancedPerturbationBatchSampler
-from src.llm_finetune.utils_training.convert_to_gguf import (
+from src.llm_finetune.utils.training.convert_to_gguf import (
     save_as_gguf,
     DEFAULT_QUANT_METHOD,
     SUPPORTED_QUANT_METHODS,
 )
-from src.llm_finetune.utils_training.training_config_export import (
+from src.llm_finetune.utils.training.training_config_export import (
     build_training_config,
     save_training_config,
 )

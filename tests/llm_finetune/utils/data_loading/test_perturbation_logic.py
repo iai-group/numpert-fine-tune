@@ -3,13 +3,13 @@ import pytest
 """Tests for perturbation_logic.py."""
 
 
-from src.llm_finetune.data_loading_utils.perturbation_logic import (
+from src.llm_finetune.utils.data_loading.perturbation_logic import (
     _detect_perturb_key,
     _determine_perturbed_label,
     _normalize_label,
     expand_perturbations,
 )
-from src.llm_finetune.data_loading_utils.perturbation_types import (
+from src.llm_finetune.utils.data_loading.perturbation_types import (
     PerturbationType,
 )
 

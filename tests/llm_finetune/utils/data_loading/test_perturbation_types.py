@@ -3,7 +3,7 @@ import pytest
 """Tests for perturbation_types.py module."""
 
 
-from src.llm_finetune.data_loading_utils.perturbation_types import (
+from src.llm_finetune.utils.data_loading.perturbation_types import (
     ALL_PERTURB_TYPES,
     OBFUSCATION_TYPES,
     STRUCTURE_PRESERVING_TYPES,

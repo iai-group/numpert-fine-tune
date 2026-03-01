@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from typing import Dict, List, Optional
 import numpy as np
 
-from src.llm_finetune.data_loading_utils.hf_dataset_instructions import (
+from src.llm_finetune.utils.data_loading.hf_dataset_instructions import (
     load_fact_checking_data,
 )
 
