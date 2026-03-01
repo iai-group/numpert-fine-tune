@@ -10,7 +10,7 @@ Tests cover:
 import os
 import pytest
 from unittest.mock import MagicMock, patch
-from src.llm_finetune.convert_to_gguf import (
+from src.llm_finetune.utils_training.convert_to_gguf import (
     save_as_gguf,
     convert_existing_model,
     DEFAULT_QUANT_METHOD,
@@ -126,7 +126,7 @@ class TestSaveAsGguf:
 class TestConvertExistingModel:
     """Test the convert_existing_model orchestration function."""
 
-    @patch("src.llm_finetune.convert_to_gguf.save_as_gguf")
+    @patch("src.llm_finetune.utils_training.convert_to_gguf.save_as_gguf")
     def test_default_output_dir(self, mock_save):
         mock_model = MagicMock()
         mock_tok = MagicMock()
@@ -148,7 +148,7 @@ class TestConvertExistingModel:
             quantization_method=DEFAULT_QUANT_METHOD,
         )
 
-    @patch("src.llm_finetune.convert_to_gguf.save_as_gguf")
+    @patch("src.llm_finetune.utils_training.convert_to_gguf.save_as_gguf")
     def test_custom_output_dir(self, mock_save):
         mock_flm = MagicMock()
         mock_flm.from_pretrained.return_value = (MagicMock(), MagicMock())
@@ -165,7 +165,7 @@ class TestConvertExistingModel:
 
         assert mock_save.call_args[1]["output_dir"] == "/custom/out"
 
-    @patch("src.llm_finetune.convert_to_gguf.save_as_gguf")
+    @patch("src.llm_finetune.utils_training.convert_to_gguf.save_as_gguf")
     def test_custom_quant_method(self, mock_save):
         mock_flm = MagicMock()
         mock_flm.from_pretrained.return_value = (MagicMock(), MagicMock())
@@ -183,7 +183,7 @@ class TestConvertExistingModel:
 
         assert mock_save.call_args[1]["quantization_method"] == "q8_0"
 
-    @patch("src.llm_finetune.convert_to_gguf.save_as_gguf")
+    @patch("src.llm_finetune.utils_training.convert_to_gguf.save_as_gguf")
     def test_loads_model_correctly(self, mock_save):
         mock_flm = MagicMock()
         mock_flm.from_pretrained.return_value = (MagicMock(), MagicMock())
@@ -206,7 +206,7 @@ class TestConvertExistingModel:
             load_in_4bit=False,
         )
 
-    @patch("src.llm_finetune.convert_to_gguf.save_as_gguf")
+    @patch("src.llm_finetune.utils_training.convert_to_gguf.save_as_gguf")
     def test_trailing_slash_stripped_from_default_dir(self, mock_save):
         mock_flm = MagicMock()
         mock_flm.from_pretrained.return_value = (MagicMock(), MagicMock())

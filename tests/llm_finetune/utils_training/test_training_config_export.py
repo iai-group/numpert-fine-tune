@@ -6,7 +6,7 @@ from datetime import datetime
 
 from datasets import Dataset
 
-from src.llm_finetune.training_config_export import (
+from src.llm_finetune.utils_training.training_config_export import (
     CONFIG_FILENAME,
     _dataset_stats,
     _file_config_to_dict,

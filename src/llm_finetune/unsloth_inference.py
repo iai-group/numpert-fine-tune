@@ -14,6 +14,10 @@ from src.llm_finetune.data_loading_utils.hf_dataset_instructions import (
     FileLoadConfig,
     parse_file_config,
 )
+from src.llm_finetune.utils.inference_config_export import (
+    build_inference_config,
+    save_inference_config,
+)
 
 from unsloth import FastLanguageModel
 from transformers import AutoTokenizer
@@ -240,6 +244,22 @@ def inference(  # noqa: C901
         f"{quant_status}-epoch-{start_epoch}{vllm_suffix}"
     )
     os.makedirs(pred_dir, exist_ok=True)
+
+    # Export inference configuration to JSON
+    inference_config = build_inference_config(
+        model_name=model_name,
+        model_path=model_name_arg,
+        test_file_configs=test_file_configs,
+        test_dataset=test_data,
+        rank=rank,
+        start_epoch=start_epoch,
+        use_vllm=use_vllm,
+        expand_perturbations=expand_perturbations,
+        max_seq_length=max_seq_length,
+        timestamp=time_start,
+    )
+    config_path = save_inference_config(inference_config, pred_dir)
+    print(f"Inference config saved to: {config_path}")
 
     # Run inference
     print("\nRunning inference...")
@@ -580,7 +600,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--output_dir",
-        default="predictions/numpert",
+        default="predictions",
         help="Output directory for predictions",
     )
 
