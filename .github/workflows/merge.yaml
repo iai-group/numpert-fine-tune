@@ -5,36 +5,29 @@ on:
       - main
 env:
   REPO_NAME: ${{ github.event.repository.name }}
-  
+
 jobs:
   build-and-test:
-    name: "Build and Test Python 3.9"
+    name: "Build and Test Python 3.11"
     runs-on: ubuntu-latest
     if: always()
     timeout-minutes: 20
-
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup python
-        uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v5
         with:
-          python-version: "3.9"
-          cache: "pip"
+          python-version: "3.11"
+          enable-caching: true
 
       - name: Install Dependencies
-        run: |
-          pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pytest-github-actions-annotate-failures
-          python -m spacy download en_core_web_trf
-        
-      - name: Install Graphviz
-        uses: tlylt/install-graphviz@v1
+        run: uv sync --frozen
 
       - name: PyTest with code coverage
         continue-on-error: false
         run: |
-          pytest --cov=. --cov-report=term-missing --cov-report=xml --cov-branch
+          uv run pytest --cov=. --cov-report=term-missing --cov-report=xml --cov-branch
 
       - name: Get the Coverage
         shell: bash
@@ -50,7 +43,7 @@ jobs:
           fi
           echo "COVERAGE=${coverage%.*}%" >> $GITHUB_ENV
           echo "COLOR=$COLOR" >> $GITHUB_ENV
-      
+
       - name: Create Coverage Badge
         uses: schneegans/dynamic-badges-action@v1.7.0
         with:
