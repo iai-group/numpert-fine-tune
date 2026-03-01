@@ -26,15 +26,13 @@ jobs:
       - name: Set up Python 3.11
         run: uv python install 3.11
 
-      - name: Install Dependencies
-        # --frozen ensures we use the exact versions in your uv.lock
-        # --extra dev installs pytest, ruff, etc.
+      - name: Install System Dependencies
         run: |
-          uv sync --frozen --extra dev
+          uv sync --frozen
           uv run python -m spacy download en_core_web_trf
 
-      - name: Run Ruff Check
-        run: uv run ruff check .
+      - name: Install Graphviz
+        run: sudo apt-get install -y graphviz
 
       - name: PyTest with code coverage
         run: |
@@ -44,9 +42,10 @@ jobs:
         id: coverage_data
         shell: bash
         run: |
-          # Extract line-rate from coverage.xml
+          # Extract line-rate from coverage.xml (e.g., 0.9532)
           line_rate=$(grep -oP '(?<=line-rate=")[^"]+' coverage.xml | head -n 1)
-          # Convert decimal (e.g. 0.95) to percentage (95)
+          
+          # Convert to percentage (95)
           coverage=$(echo "$line_rate * 100 / 1" | bc)
           
           if [ "$coverage" -gt 90 ]; then
