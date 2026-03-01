@@ -771,8 +771,7 @@ class TestEnhancedPerturbationBatchSampler:
 
 
 class TestMultiFileDeduplication:
-    """Tests for datasets loaded from multiple files with overlapping
-    claim_ids.
+    """Tests for datasets loaded from multiple files with overlapping claim_ids.
 
     When multiple perturbation JSON files share the same claims (e.g.
     ``approximation_True.json`` and ``range_True.json``),
@@ -790,9 +789,7 @@ class TestMultiFileDeduplication:
         append), so even if the raw dataset has two original_normalized
         rows for the same claim_id only one ends up in the group.
         """
-        print_separator(
-            "TEST: No Duplicate Originals in Groups (Multi-File)"
-        )
+        print_separator("TEST: No Duplicate Originals in Groups (Multi-File)")
 
         raw_examples, dataset = create_multi_file_mock_dataset(
             n_claims=5,
@@ -826,9 +823,9 @@ class TestMultiFileDeduplication:
 
         # Each claim_id must have exactly one original in the groups
         for claim_id, group in sampler.claim_id_groups.items():
-            assert group["original"] is not None, (
-                f"{claim_id}: missing original in claim_id_groups"
-            )
+            assert (
+                group["original"] is not None
+            ), f"{claim_id}: missing original in claim_id_groups"
             # 'original' is a scalar (last-write-wins), so uniqueness
             # in the group is guaranteed by dict semantics — just
             # verify no None slipped through.
@@ -841,9 +838,7 @@ class TestMultiFileDeduplication:
 
     def test_all_perturbation_types_preserved(self):
         """All perturbation types from every source file must appear."""
-        print_separator(
-            "TEST: All Perturbation Types Preserved (Multi-File)"
-        )
+        print_separator("TEST: All Perturbation Types Preserved (Multi-File)")
 
         file_types = [
             ["perturb_type1", "perturb_type2"],
@@ -876,32 +871,28 @@ class TestMultiFileDeduplication:
             f"{sorted(all_perturbed_types_in_groups)}"
         )
 
-        assert expected_types == all_perturbed_types_in_groups, (
-            f"Missing types: {expected_types - all_perturbed_types_in_groups}"
-        )
+        assert (
+            expected_types == all_perturbed_types_in_groups
+        ), f"Missing types: {expected_types - all_perturbed_types_in_groups}"
 
         # Per-claim check: every claim should have all types
         for claim_id, group in sampler.claim_id_groups.items():
             claim_types = {
-                dataset[idx]["perturbation_type"]
-                for idx in group["perturbed"]
+                dataset[idx]["perturbation_type"] for idx in group["perturbed"]
             }
-            assert expected_types == claim_types, (
-                f"{claim_id}: expected {expected_types} but got {claim_types}"
-            )
+            assert (
+                expected_types == claim_types
+            ), f"{claim_id}: expected {expected_types} but got {claim_types}"
 
         print("\n✓ Test passed: all perturbation types retained")
 
     def test_batches_contain_no_duplicate_originals_per_claim(self):
         """When batching, each claim_id's original must appear at most once.
 
-        Even though the raw dataset has duplicate originals, the sampler
-        should never yield the same claim_id's original in more than one
-        batch.
+        Even though the raw dataset has duplicate originals, the sampler should
+        never yield the same claim_id's original in more than one batch.
         """
-        print_separator(
-            "TEST: Batches Have No Duplicate Originals Per Claim"
-        )
+        print_separator("TEST: Batches Have No Duplicate Originals Per Claim")
 
         _, dataset = create_multi_file_mock_dataset(
             n_claims=5,
@@ -935,12 +926,9 @@ class TestMultiFileDeduplication:
         print("\n✓ Test passed: no duplicate originals across batches")
 
     def test_total_perturbed_count_matches_source_files(self):
-        """The number of perturbed examples seen across all batches must
-        equal the total from all source files (no perturbations lost).
-        """
-        print_separator(
-            "TEST: Total Perturbed Count Matches Source Files"
-        )
+        """The number of perturbed examples seen across all batches must equal
+        the total from all source files (no perturbations lost)."""
+        print_separator("TEST: Total Perturbed Count Matches Source Files")
 
         file_types = [
             ["perturb_type1", "perturb_type2"],
@@ -953,9 +941,7 @@ class TestMultiFileDeduplication:
 
         # Expected perturbed: file0 has 2 types × 5 claims = 10,
         #                     file1 has 1 type  × 5 claims =  5  → 15
-        expected_perturbed = sum(
-            len(types) * n_claims for types in file_types
-        )
+        expected_perturbed = sum(len(types) * n_claims for types in file_types)
 
         sampler = EnhancedPerturbationBatchSampler(
             dataset=dataset,
@@ -1038,8 +1024,7 @@ class TestMultiFileDeduplication:
         expected_types = {t for types in file_types for t in types}
         for claim_id, group in sampler.claim_id_groups.items():
             claim_types = {
-                dataset[idx]["perturbation_type"]
-                for idx in group["perturbed"]
+                dataset[idx]["perturbation_type"] for idx in group["perturbed"]
             }
             assert expected_types == claim_types, (
                 f"{claim_id}: expected types {expected_types}, "
@@ -1064,9 +1049,7 @@ class TestMultiFileDeduplication:
         Both entries must end up in the sampler's group and eventually
         appear in batches.
         """
-        print_separator(
-            "TEST: Overlapping Perturbation Types Across Files"
-        )
+        print_separator("TEST: Overlapping Perturbation Types Across Files")
 
         # Both files contribute perturb_type1 — different claim text
         file_types = [
@@ -1080,7 +1063,8 @@ class TestMultiFileDeduplication:
 
         # Count how many perturb_type1 rows exist in the raw data
         type1_rows = [
-            ex for ex in raw_examples
+            ex
+            for ex in raw_examples
             if ex["perturbation_type"] == "perturb_type1"
         ]
         print(f"\nRaw rows: {len(dataset)}")
@@ -1102,8 +1086,7 @@ class TestMultiFileDeduplication:
         #   file_1: perturb_type1, perturb_type3_random
         for claim_id, group in sampler.claim_id_groups.items():
             perturbed_types = [
-                dataset[idx]["perturbation_type"]
-                for idx in group["perturbed"]
+                dataset[idx]["perturbation_type"] for idx in group["perturbed"]
             ]
             perturbed_texts = [
                 dataset[idx]["conversations"][1]["content"]
@@ -1125,7 +1108,8 @@ class TestMultiFileDeduplication:
 
             # The two perturb_type1 entries must have different claim text
             type1_texts = [
-                text for text, ptype in zip(perturbed_texts, perturbed_types)
+                text
+                for text, ptype in zip(perturbed_texts, perturbed_types)
                 if ptype == "perturb_type1"
             ]
             assert type1_texts[0] != type1_texts[1], (
@@ -1146,9 +1130,7 @@ class TestMultiFileDeduplication:
             for idx in batch
             if dataset[idx]["perturbation_type"] != "original_normalized"
         ]
-        expected_perturbed = sum(
-            len(types) * n_claims for types in file_types
-        )
+        expected_perturbed = sum(len(types) * n_claims for types in file_types)
         assert len(all_batched_perturbed) == expected_perturbed, (
             f"Expected {expected_perturbed} perturbed in batches, "
             f"got {len(all_batched_perturbed)}"
@@ -1167,9 +1149,7 @@ class TestMultiFileDeduplication:
         This test documents that behavior and verifies that the total
         example count is correct.
         """
-        print_separator(
-            "TEST: Mixed Batches With Multi-File Data"
-        )
+        print_separator("TEST: Mixed Batches With Multi-File Data")
 
         raw_examples, dataset = create_multi_file_mock_dataset(
             n_claims=5,

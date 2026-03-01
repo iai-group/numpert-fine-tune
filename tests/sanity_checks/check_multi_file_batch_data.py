@@ -181,7 +181,7 @@ def report_per_file(configs: List[FileLoadConfig]) -> None:
         print()
 
 
-def report_combined(
+def report_combined(  # noqa: C901
     all_expanded: List[Dict],
     deduped: List[Dict],
     duplicates: Dict[str, List[int]],
@@ -233,7 +233,7 @@ def report_combined(
     )
     deduped_perturbed = len(deduped) - deduped_originals
 
-    print(f"  After deduplication:")
+    print("  After deduplication:")
     print(f"    Total rows:    {len(deduped)}")
     print(f"    Originals:     {deduped_originals}")
     print(f"    Perturbed:     {deduped_perturbed}")
@@ -312,6 +312,7 @@ def report_combined(
 
 
 def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
+    """Parse command-line arguments."""
     parser = argparse.ArgumentParser(
         description=(
             "Load multiple perturbation files, deduplicate originals, "
@@ -341,6 +342,7 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
 
 
 def main(argv: Optional[List[str]] = None) -> None:  # noqa: C901
+    """Main entry point."""
     args = parse_args(argv)
 
     config_strings = args.configs if args.configs else DEFAULT_CONFIGS
@@ -378,7 +380,9 @@ def main(argv: Optional[List[str]] = None) -> None:  # noqa: C901
     output_data = all_expanded if args.keep_duplicate_originals else deduped
     write_jsonl(output_data, output_path)
 
-    label = "with duplicates" if args.keep_duplicate_originals else "deduplicated"
+    label = (
+        "with duplicates" if args.keep_duplicate_originals else "deduplicated"
+    )
     print(SEPARATOR)
     print(f"  Wrote {len(output_data)} rows ({label}) → {output_path}")
     print(SEPARATOR)
