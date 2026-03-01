@@ -131,6 +131,8 @@ def load_fact_checking_data(
 
     for config in file_configs:
         raw_examples = load_json_files(config.path)
+        # Derive a short source-file label from the config path
+        source_file = Path(config.path).name
 
         if expand_perturbations_flag:
             processed = expand_perturbations(
@@ -154,6 +156,10 @@ def load_fact_checking_data(
                         "taxonomy_label": example.get("taxonomy_label", ""),
                     }
                 )
+
+        # Annotate every expanded row with its source file
+        for item in processed:
+            item["source_file"] = source_file
 
         all_processed.extend(processed)
 

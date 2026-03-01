@@ -15,6 +15,9 @@ src/llm_finetune/
 ├── unsloth_finetune.py            # Training entry point
 ├── unsloth_inference.py           # Inference entry point
 ├── upload_model_hf.py             # Upload trained model to HuggingFace Hub
+├── utils/
+│   ├── inference_config_export.py # Save inference run parameters to JSON
+│   └── metrics.py                 # Structured metrics computation & reporting
 └── data_loading_utils/
     ├── perturbation_types.py      # PerturbationType enum, FileLoadConfig
     ├── perturbation_logic.py      # expand_perturbations() core engine
@@ -579,11 +582,182 @@ python -m src.llm_finetune.unsloth_inference \
 
 ```
 predictions/<timestamp>/<model>-epoch-<N>/
+├── inference_config.json    # Model, data files, and run parameters
 ├── inference_details.json   # Full prompts + raw model outputs
 ├── predictions.csv          # Structured predictions table
 ├── metrics.json             # Accuracy, F1, per-perturbation breakdown
 └── parse_failures.json      # Unparseable responses (for debugging)
 ```
+
+---
+
+## Metrics (`utils/metrics.py`)
+
+The metrics module computes and reports classification scores with breakdowns at multiple levels of granularity. It is separated from the inference script so that metrics can be recomputed, extended, or consumed independently.
+
+### Report Structure
+
+`compute_metrics()` produces a `MetricsReport` containing four sections:
+
+| Section | Grouping | Purpose |
+|---|---|---|
+| **Overall** | All examples combined | Single aggregate accuracy / F1 |
+| **Per perturbation type** | One group per `perturbation_type` value | See how the model handles each perturbation independently |
+| **Per source file** | One group per input JSON file | Compare performance across different data files (e.g. `approximation_True.json` vs `numeration_False.json`) |
+| **Per file + type** | Cross-product of source file × perturbation type | Most granular view — e.g. accuracy on `perturb_type2` examples that came from `approximation_True.json` |
+
+Each section is optional and can be toggled via boolean flags:
+
+```python
+report = compute_metrics(
+    results,
+    include_per_type=True,           # default: True
+    include_per_file=True,           # default: True
+    include_per_file_and_type=True,  # default: True
+)
+```
+
+Per-file breakdowns require a `source_file` field to be present in the result records (automatically set by the data loading pipeline).
+
+### Scores per Group
+
+Every group (overall and each sub-group) is represented by a `ClassificationScores` dataclass containing:
+
+| Field | Description |
+|---|---|
+| `accuracy` | Standard accuracy (correct / valid) |
+| `f1_macro` | Macro-averaged F1 score |
+| `f1_weighted` | Weighted F1 score |
+| `precision_macro` | Macro-averaged precision |
+| `recall_macro` | Macro-averaged recall |
+| `total` | Total number of examples in the group |
+| `valid` | Examples successfully parsed (`total - parse_failures`) |
+| `correct` | Number of correct predictions |
+| `parse_failures` | Responses that could not be parsed as valid JSON |
+| `classification_report_str` | Full sklearn `classification_report` text |
+
+Parse failures (responses that didn't produce valid `{"label": true/false}` JSON) are **excluded** from metric computation but tracked separately per group.
+
+### Console Output
+
+`print_metrics_report()` prints a structured summary to stdout:
+
+```
+================================================================================
+  OVERALL RESULTS  (150/152 parseable responses)
+================================================================================
+  Accuracy:       0.8533
+  F1 Macro:       0.8521
+  F1 Weighted:    0.8537
+  Precision (M):  0.8600
+  Recall (M):     0.8467
+  Parse failures: 2/152
+
+================================================================================
+  METRICS BY PERTURBATION TYPE
+================================================================================
+  Group                                      Acc    F1-M    F1-W    Prec     Rec     N  Fail
+  -----------------------------------------------------------------------------------------
+  original_normalized                      0.9000  0.8980  0.9010  0.9100  0.8900    50     0
+  perturb_type1                            0.8800  0.8756  0.8812  0.8900  0.8600    50     1
+  perturb_type2                            0.7800  0.7789  0.7802  0.7800  0.7900    50     1
+
+================================================================================
+  METRICS BY SOURCE FILE
+================================================================================
+  Group                                      Acc    F1-M    F1-W    Prec     Rec     N  Fail
+  -----------------------------------------------------------------------------------------
+  approximation_True.json                  0.8667  0.8650  0.8670  0.8700  0.8600    76     1
+  numeration_False.json                    0.8378  0.8350  0.8390  0.8500  0.8300    74     1
+
+================================================================================
+  METRICS BY SOURCE FILE + PERTURBATION TYPE
+================================================================================
+  Group                                      Acc    F1-M    F1-W    Prec     Rec     N  Fail
+  -----------------------------------------------------------------------------------------
+  approximation_True.json | original_norm  0.9200  ...
+  approximation_True.json | perturb_type1  0.8800  ...
+  numeration_False.json | perturb_type2    0.7600  ...
+  ...
+```
+
+Pass `show_classification_reports=True` to also print the full sklearn classification report for each group.
+
+### JSON Output
+
+`save_metrics_report()` writes `metrics.json` with the same structure:
+
+```json
+{
+  "overall": {
+    "group_name": "overall",
+    "accuracy": 0.8533,
+    "f1_macro": 0.8521,
+    "f1_weighted": 0.8537,
+    "precision_macro": 0.86,
+    "recall_macro": 0.8467,
+    "total": 152,
+    "valid": 150,
+    "correct": 128,
+    "parse_failures": 2
+  },
+  "per_perturbation_type": {
+    "original_normalized": { "accuracy": 0.9, "..." : "..." },
+    "perturb_type1": { "accuracy": 0.88, "..." : "..." },
+    "perturb_type2": { "accuracy": 0.78, "..." : "..." }
+  },
+  "per_source_file": {
+    "approximation_True.json": { "accuracy": 0.8667, "..." : "..." },
+    "numeration_False.json": { "accuracy": 0.8378, "..." : "..." }
+  },
+  "per_file_and_type": {
+    "approximation_True.json | original_normalized": { "..." : "..." },
+    "approximation_True.json | perturb_type1": { "..." : "..." },
+    "numeration_False.json | perturb_type2": { "..." : "..." }
+  }
+}
+```
+
+### Programmatic Usage
+
+The metrics module can be used independently of the inference script:
+
+```python
+from src.llm_finetune.utils.metrics import (
+    compute_metrics,
+    print_metrics_report,
+    save_metrics_report,
+)
+
+# Each result dict needs at minimum: label, prediction, perturbation_type
+results = [
+    {
+        "claim_id": "c1",
+        "label": '{"label": true}',
+        "prediction": '{"label": true}',
+        "perturbation_type": "original_normalized",
+        "source_file": "approximation_True.json",  # optional, enables per-file breakdown
+    },
+    # ...
+]
+
+report = compute_metrics(results)
+print_metrics_report(report, show_classification_reports=True)
+save_metrics_report(report, output_dir="results/my_experiment")
+```
+
+### Integration with Inference
+
+During inference, the pipeline automatically:
+
+1. Calls `build_result_records()` to merge dataset metadata with parsed predictions.
+2. Calls `compute_metrics()` to produce the full report.
+3. Calls `print_metrics_report()` to display results.
+4. Calls `save_metrics_report()`, `save_parse_failures()`, and `save_predictions_csv()` to persist outputs.
+
+### Source File Tracking
+
+The data loading pipeline (`load_fact_checking_data()`) annotates every expanded example with a `source_file` field containing the JSON filename (e.g. `approximation_True.json`). This field flows through the conversation formatter and into the HuggingFace dataset, enabling per-file metric breakdowns without any extra configuration.
 
 ---
 

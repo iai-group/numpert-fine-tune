@@ -2,10 +2,8 @@
 
 import re
 import json
-from typing import Optional, List, Dict
-from sklearn.metrics import f1_score, accuracy_score, classification_report
+from typing import Optional, List
 import torch
-from collections import defaultdict
 from datetime import datetime
 
 from src.llm_finetune.config import prefix
@@ -17,6 +15,14 @@ from src.llm_finetune.data_loading_utils.hf_dataset_instructions import (
 from src.llm_finetune.utils.inference_config_export import (
     build_inference_config,
     save_inference_config,
+)
+from src.llm_finetune.utils.metrics import (
+    build_result_records,
+    compute_metrics,
+    print_metrics_report,
+    save_metrics_report,
+    save_parse_failures,
+    save_predictions_csv,
 )
 
 from unsloth import FastLanguageModel
@@ -31,10 +37,6 @@ except ImportError:  # vllm is optional (GPU-only)
 import os
 import argparse
 from tqdm import tqdm
-import pandas as pd
-
-# Valid labels for fact-checking (JSON format)
-VALID_LABELS = ['{"label": true}', '{"label": false}']
 
 # Timestamp for model naming
 time_start = datetime.now()
@@ -234,7 +236,6 @@ def inference(  # noqa: C901
 
     # Prepare for predictions
     predictions = []  # Will contain None for parse failures
-    true_labels = list(test_data["label"])
     raw_outputs = []  # Store raw outputs for debugging
 
     # Create output directory
@@ -277,16 +278,17 @@ def inference(  # noqa: C901
 
         for idx, output in enumerate(outputs):
             text = output.outputs[0].text
-            raw_outputs.append(
-                {
-                    "index": idx,
-                    "claim_id": test_data[idx]["claim_id"],
-                    "perturbation_type": test_data[idx]["perturbation_type"],
-                    "label": test_data[idx]["label"],
-                    "full_prompt": prompts[idx],  # Full input
-                    "raw_response": text,  # Model output only
-                }
-            )
+            entry = {
+                "index": idx,
+                "claim_id": test_data[idx]["claim_id"],
+                "perturbation_type": test_data[idx]["perturbation_type"],
+                "label": test_data[idx]["label"],
+                "full_prompt": prompts[idx],  # Full input
+                "raw_response": text,  # Model output only
+            }
+            if "source_file" in test_data.column_names:
+                entry["source_file"] = test_data[idx]["source_file"]
+            raw_outputs.append(entry)
             label = extract_label_from_response(text)
             predictions.append(label)
 
@@ -336,16 +338,17 @@ def inference(  # noqa: C901
             new_tokens = outputs[0][input_length:]
             decoded = tokenizer.decode(new_tokens, skip_special_tokens=True)
 
-            raw_outputs.append(
-                {
-                    "index": i,
-                    "claim_id": test_data[i]["claim_id"],
-                    "perturbation_type": test_data[i]["perturbation_type"],
-                    "label": test_data[i]["label"],
-                    "full_prompt": prompt_text,  # Full input
-                    "raw_response": decoded,  # Model output only
-                }
-            )
+            entry = {
+                "index": i,
+                "claim_id": test_data[i]["claim_id"],
+                "perturbation_type": test_data[i]["perturbation_type"],
+                "label": test_data[i]["label"],
+                "full_prompt": prompt_text,  # Full input
+                "raw_response": decoded,  # Model output only
+            }
+            if "source_file" in test_data.column_names:
+                entry["source_file"] = test_data[i]["source_file"]
+            raw_outputs.append(entry)
 
             label = extract_label_from_response(decoded)
             predictions.append(label)
@@ -363,196 +366,23 @@ def inference(  # noqa: C901
         extract_label_from_response(resp) for resp in predictions_only
     ]
 
-    # Separate valid predictions from parse failures
-    valid_indices = [
-        i for i, pred in enumerate(labels_extracted) if pred is not None
-    ]
-    parse_failure_indices = [
-        i for i, pred in enumerate(labels_extracted) if pred is None
-    ]
-
-    valid_predictions = [labels_extracted[i] for i in valid_indices]
-    valid_true_labels = [true_labels[i] for i in valid_indices]
-
-    n_total = len(labels_extracted)
-    n_valid = len(valid_predictions)
-    n_failures = len(parse_failure_indices)
-
-    # Report parse failures
-    print("\n📊 Parse Results:")
-    print(
-        f"   Successfully parsed: {n_valid}/{n_total}"
-        f" ({100*n_valid/n_total:.1f}%)"
+    # Build structured result records and compute metrics
+    result_records = build_result_records(
+        test_data, raw_outputs, labels_extracted
     )
-    print(
-        f"   Parse failures: {n_failures}/{n_total}"
-        f" ({100*n_failures/n_total:.1f}%)"
-    )
+    report = compute_metrics(result_records)
+    print_metrics_report(report, show_classification_reports=True)
 
-    if n_failures > 0:
-        print(
-            f"\n⚠️  WARNING: {n_failures} responses could not"
-            " be parsed and are EXCLUDED from metrics."
-        )
-        print(
-            "    Check inference_details.json and"
-            " parse_failures.json for details."
-        )
+    # Save all outputs
+    metrics_path = save_metrics_report(report, pred_dir)
+    print(f"Metrics saved to: {metrics_path}")
 
-    # Calculate metrics (only on valid predictions)
-    print("\n" + "=" * 80)
-    print(f"RESULTS (on {n_valid}/{n_total} parseable responses)")
-    print("=" * 80)
+    failures_path = save_parse_failures(result_records, raw_outputs, pred_dir)
+    if failures_path:
+        print(f"Parse failure details saved to: {failures_path}")
 
-    if n_valid == 0:
-        print("❌ ERROR: No valid predictions! Cannot compute metrics.")
-        accuracy = 0.0
-        f1_macro = 0.0
-        f1_weighted = 0.0
-    else:
-        accuracy = accuracy_score(valid_true_labels, valid_predictions)
-        f1_macro = f1_score(
-            valid_true_labels,
-            valid_predictions,
-            average="macro",
-            zero_division=0,
-        )
-        f1_weighted = f1_score(
-            valid_true_labels,
-            valid_predictions,
-            average="weighted",
-            zero_division=0,
-        )
-
-        print(f"Accuracy: {accuracy:.4f}")
-        print(f"F1 Macro: {f1_macro:.4f}")
-        print(f"F1 Weighted: {f1_weighted:.4f}")
-
-        print("\nClassification Report:")
-        print(
-            classification_report(
-                valid_true_labels, valid_predictions, labels=VALID_LABELS
-            )
-        )
-
-    # Per-perturbation analysis (only on valid predictions)
-    print("\nPer-Perturbation Type Analysis:")
-    perturb_metrics: Dict[str, Dict[str, int]] = defaultdict(
-        lambda: {"correct": 0, "total": 0, "failures": 0}
-    )
-
-    # Count failures per perturbation type
-    for i in parse_failure_indices:
-        p_type = test_data[i]["perturbation_type"]
-        perturb_metrics[p_type]["failures"] += 1
-
-    # Count correct/total for valid predictions
-    for i in valid_indices:
-        pred = labels_extracted[i]
-        gt = true_labels[i]
-        p_type = test_data[i]["perturbation_type"]
-        perturb_metrics[p_type]["total"] += 1
-        if pred == gt:
-            perturb_metrics[p_type]["correct"] += 1
-
-    for p_type in sorted(perturb_metrics.keys()):
-        metrics = perturb_metrics[p_type]
-        total_with_failures = (  # noqa: F841
-            metrics["total"] + metrics["failures"]
-        )
-        acc = (
-            metrics["correct"] / metrics["total"] if metrics["total"] > 0 else 0
-        )
-        failure_note = (
-            f" [+{metrics['failures']} unparsed]"
-            if metrics["failures"] > 0
-            else ""
-        )
-        print(
-            f"  {p_type:30s}: {acc:.4f}"
-            f" ({metrics['correct']}/{metrics['total']}){failure_note}"
-        )
-
-    print("=" * 80 + "\n")
-
-    # Save parse failures with full context
-    if n_failures > 0:
-        failures_info = [raw_outputs[i] for i in parse_failure_indices]
-
-        failures_path = f"{pred_dir}/parse_failures.json"
-        with open(failures_path, "w") as f:
-            json.dump(failures_info, f, indent=2)
-        print(
-            f"Parse failure details (with full prompts)"
-            f" saved to: {failures_path}\n"
-        )
-
-    # Save predictions CSV
-    results_df = pd.DataFrame(
-        {
-            "claim_id": test_data["claim_id"],
-            "perturbation_type": test_data["perturbation_type"],
-            "label": true_labels,
-            "prediction": [
-                p if p is not None else "PARSE_FAILURE"
-                for p in labels_extracted
-            ],
-            "parsed_successfully": [p is not None for p in labels_extracted],
-            "raw_response": [item["raw_response"] for item in raw_outputs],
-        }
-    )
-
-    results_path = f"{pred_dir}/predictions.csv"
-    results_df.to_csv(results_path, index=False)
-    print(f"Predictions saved to: {results_path}\n")
-
-    # Save metrics
-    metrics_dict = {
-        "accuracy": accuracy,
-        "f1_macro": f1_macro,
-        "f1_weighted": f1_weighted,
-        "total_examples": n_total,
-        "valid_examples": n_valid,
-        "parse_failures": n_failures,
-        "parse_failure_rate": n_failures / n_total if n_total > 0 else 0,
-        "valid_output_rate": n_valid / n_total if n_total > 0 else 0,
-        "note": (
-            f"Metrics computed on {n_valid}/{n_total}"
-            " parseable responses only."
-        ),
-        "per_perturbation": {
-            p_type: {
-                "accuracy": m["correct"] / m["total"] if m["total"] > 0 else 0,
-                "correct": m["correct"],
-                "total": m["total"],
-                "parse_failures": m["failures"],
-            }
-            for p_type, m in perturb_metrics.items()
-        },
-    }
-
-    metrics_path = f"{pred_dir}/metrics.json"
-    with open(metrics_path, "w") as f:
-        json.dump(metrics_dict, f, indent=2)
-    print(f"Metrics saved to: {metrics_path}\n")
-
-    # Save raw outputs for debugging parse failures
-    if n_failures > 0:
-        # Save detailed info about failures
-        failures_info = [
-            {
-                "index": i,
-                "claim_id": test_data[i]["claim_id"],
-                "perturbation_type": test_data[i]["perturbation_type"],
-                "label": true_labels[i],
-                "raw_output": raw_outputs[i],
-            }
-            for i in parse_failure_indices
-        ]
-        failures_path = f"{pred_dir}/parse_failures.json"
-        with open(failures_path, "w") as f:
-            json.dump(failures_info, f, indent=2)
-        print(f"Parse failure details saved to: {failures_path}\n")
+    csv_path = save_predictions_csv(result_records, raw_outputs, pred_dir)
+    print(f"Predictions saved to: {csv_path}\n")
 
 
 if __name__ == "__main__":
