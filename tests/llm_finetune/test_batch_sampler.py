@@ -38,7 +38,7 @@ def create_mock_dataset(
             examples.append(
                 {
                     "claim_id": claim_id,
-                    "perturbation_type": "original",
+                    "perturbation_type": "original_normalized",
                     "conversations": [
                         {"role": "system", "content": "System"},
                         {"role": "user", "content": f"Claim {i}"},
@@ -104,7 +104,7 @@ def analyze_batches(batches: list, dataset: Dataset) -> Dict[str, Any]:
             batch_claim_ids.append(claim_id)
             batch_perturb_types.append(perturb_type)
 
-            if perturb_type == "original":
+            if perturb_type == "original_normalized":
                 original_count += 1
                 claim_id_to_batches[claim_id]["original_in"].append(batch_idx)
             else:
@@ -396,7 +396,7 @@ class TestEnhancedPerturbationBatchSampler:
                 {
                     "claim_id": "small_claim",
                     "perturbation_type": (
-                        "original" if i == 0 else "perturb_type2"
+                        "original_normalized" if i == 0 else "perturb_type2"
                     ),
                     "conversations": [{"role": "assistant", "content": "True"}],
                 }
@@ -408,7 +408,7 @@ class TestEnhancedPerturbationBatchSampler:
                 {
                     "claim_id": "medium_claim",
                     "perturbation_type": (
-                        "original" if i == 0 else "perturb_type1"
+                        "original_normalized" if i == 0 else "perturb_type1"
                     ),
                     "conversations": [{"role": "assistant", "content": "True"}],
                 }
@@ -420,7 +420,7 @@ class TestEnhancedPerturbationBatchSampler:
                 {
                     "claim_id": "large_claim",
                     "perturbation_type": (
-                        "original" if i == 0 else "range_false"
+                        "original_normalized" if i == 0 else "range_false"
                     ),
                     "conversations": [
                         {"role": "assistant", "content": "False"}
@@ -535,7 +535,7 @@ class TestEnhancedPerturbationBatchSampler:
             examples.append(
                 {
                     "claim_id": claim_id,
-                    "perturbation_type": "original",
+                    "perturbation_type": "original_normalized",
                     "conversations": [{"role": "assistant", "content": "True"}],
                 }
             )
@@ -554,7 +554,7 @@ class TestEnhancedPerturbationBatchSampler:
             examples.append(
                 {
                     "claim_id": f"only_orig_{i}",
-                    "perturbation_type": "original",
+                    "perturbation_type": "original_normalized",
                     "conversations": [{"role": "assistant", "content": "True"}],
                 }
             )
@@ -655,7 +655,7 @@ class TestEnhancedPerturbationBatchSampler:
             examples.append(
                 {
                     "claim_id": f"claim_{i}",
-                    "perturbation_type": "original",
+                    "perturbation_type": "original_normalized",
                     "conversations": [{"role": "assistant", "content": "True"}],
                 }
             )

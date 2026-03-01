@@ -5,6 +5,12 @@ from collections import defaultdict
 from typing import Any, Dict, List
 import random
 
+from src.llm_finetune.utils.data_loading.perturbation_types import (
+    PerturbationType,
+)
+
+_ORIGINAL = PerturbationType.ORIGINAL_NORMALIZED.value
+
 
 class EnhancedPerturbationBatchSampler(Sampler):
     """Enhanced batch sampler with claim_id matching and original+perturbed.
@@ -66,7 +72,7 @@ class EnhancedPerturbationBatchSampler(Sampler):
             claim_id = dataset[idx]["claim_id"]
             perturb_type = dataset[idx]["perturbation_type"]
 
-            if perturb_type == "original":
+            if perturb_type == _ORIGINAL:
                 self.claim_id_groups[claim_id]["original"] = idx
                 self.original_indices.append(idx)
             else:
@@ -203,11 +209,11 @@ class EnhancedPerturbationBatchSampler(Sampler):
         # First pass: categorize batches
         for batch_idx, batch in enumerate(batches):
             has_original = any(
-                self.dataset[idx]["perturbation_type"] == "original"
+                self.dataset[idx]["perturbation_type"] == _ORIGINAL
                 for idx in batch
             )
             has_perturbed = any(
-                self.dataset[idx]["perturbation_type"] != "original"
+                self.dataset[idx]["perturbation_type"] != _ORIGINAL
                 for idx in batch
             )
 
@@ -215,7 +221,7 @@ class EnhancedPerturbationBatchSampler(Sampler):
             original_count = sum(
                 1
                 for idx in batch
-                if self.dataset[idx]["perturbation_type"] == "original"
+                if self.dataset[idx]["perturbation_type"] == _ORIGINAL
             )
             perturbed_count = len(batch) - original_count
 
@@ -257,14 +263,14 @@ class EnhancedPerturbationBatchSampler(Sampler):
                     # Find an original in the extra batch
                     original_to_swap = None
                     for idx in extra_batch:
-                        if self.dataset[idx]["perturbation_type"] == "original":
+                        if self.dataset[idx]["perturbation_type"] == _ORIGINAL:
                             original_to_swap = idx
                             break
 
                     # Find a perturbed in the needing batch
                     perturbed_to_swap = None
                     for idx in batch:
-                        if self.dataset[idx]["perturbation_type"] != "original":
+                        if self.dataset[idx]["perturbation_type"] != _ORIGINAL:
                             perturbed_to_swap = idx
                             break
 
@@ -303,14 +309,14 @@ class EnhancedPerturbationBatchSampler(Sampler):
                     # Find a perturbed in the extra batch
                     perturbed_to_swap = None
                     for idx in extra_batch:
-                        if self.dataset[idx]["perturbation_type"] != "original":
+                        if self.dataset[idx]["perturbation_type"] != _ORIGINAL:
                             perturbed_to_swap = idx
                             break
 
                     # Find an original in the needing batch
                     original_to_swap = None
                     for idx in batch:
-                        if self.dataset[idx]["perturbation_type"] == "original":
+                        if self.dataset[idx]["perturbation_type"] == _ORIGINAL:
                             original_to_swap = idx
                             break
 

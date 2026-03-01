@@ -30,7 +30,7 @@ def create_mock_dataset(n_claims=10, perturbations_per_claim=5):
 
         # Add original
         data["claim_id"].append(claim_id)
-        data["perturbation_type"].append("original")
+        data["perturbation_type"].append("original_normalized")
         data["label"].append(random.choice([True, False]))
         data["normalized_claim"].append(f"Original claim {claim_idx}")
         data["conversations"].append(
@@ -126,8 +126,8 @@ def test_custom_sampler_basic():
         ]
 
         unique_claims = len(set(claim_ids))
-        has_original = "original" in perturb_types
-        has_perturbed = any(p != "original" for p in perturb_types)
+        has_original = "original_normalized" in perturb_types
+        has_perturbed = any(p != "original_normalized" for p in perturb_types)
 
         print(f"\n  Batch {batch_idx}:")
         print(f"    Size: {len(batch_indices)}")
@@ -177,7 +177,7 @@ def test_large_claim_splitting():
             dataset[idx]["perturbation_type"] for idx in batch_indices
         ]
 
-        if "original" in perturb_types:
+        if "original_normalized" in perturb_types:
             original_count += 1
             print(f"\n  Batch {batch_idx} contains original")
             print(f"    Perturbation types: {perturb_types}")
@@ -218,8 +218,8 @@ def test_constraint_enforcement():
             dataset[idx]["perturbation_type"] for idx in batch_indices
         ]
 
-        has_original = "original" in perturb_types
-        has_perturbed = any(p != "original" for p in perturb_types)
+        has_original = "original_normalized" in perturb_types
+        has_perturbed = any(p != "original_normalized" for p in perturb_types)
 
         if not has_original or not has_perturbed:
             violations += 1

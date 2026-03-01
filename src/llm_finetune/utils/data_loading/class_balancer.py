@@ -4,6 +4,10 @@ from datasets import Dataset
 from typing import List
 import random
 
+from src.llm_finetune.utils.data_loading.perturbation_types import (
+    PerturbationType,
+)
+
 # JSON format labels
 LABEL_TRUE = '{"label": true}'
 LABEL_FALSE = '{"label": false}'
@@ -81,7 +85,7 @@ class DatasetBalancer:
             claim_id = example["claim_id"]
             perturb_type = example["perturbation_type"]
 
-            if perturb_type == "original":
+            if perturb_type == PerturbationType.ORIGINAL_NORMALIZED.value:
                 label = self._extract_label(example)
                 is_true = self._is_true_label(label)
                 original_labels[claim_id] = is_true
@@ -97,7 +101,7 @@ class DatasetBalancer:
             claim_id = example["claim_id"]
             perturb_type = example["perturbation_type"]
 
-            if perturb_type == "original":
+            if perturb_type == PerturbationType.ORIGINAL_NORMALIZED.value:
                 continue
 
             original_is_true = original_labels.get(claim_id)

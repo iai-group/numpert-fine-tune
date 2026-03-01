@@ -43,7 +43,7 @@ def create_mock_dataset(
         examples.append(
             {
                 "claim_id": claim_id,
-                "perturbation_type": "original",
+                "perturbation_type": "original_normalized",
                 "conversations": [
                     {"role": "system", "content": "You are a fact checker."},
                     {"role": "user", "content": f"Claim {i}"},
@@ -109,7 +109,7 @@ def create_mock_dataset(
         examples.append(
             {
                 "claim_id": claim_id,
-                "perturbation_type": "original",
+                "perturbation_type": "original_normalized",
                 "conversations": [
                     {"role": "system", "content": "You are a fact checker."},
                     {"role": "user", "content": f"False claim {i}"},
@@ -199,7 +199,7 @@ def analyze_dataset(dataset: Dataset) -> dict:
             stats["false_total"] += 1
 
         # Count by category
-        if perturb_type == "original":
+        if perturb_type == "original_normalized":
             if label == "True":
                 stats["original_true"] += 1
             else:
