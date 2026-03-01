@@ -1,15 +1,31 @@
 #!/bin/bash
 
 ################################################################################
-# Fine-tuning script for numerical perturbation fact-checking
-# Model: Qwen3-8B with LoRA — Normal batching, no type2_false
+# Model Config: Qwen3-8B — Normal Batching, No type2 from False files
 #
-# This script fine-tunes a model to detect numerical perturbations in claims.
-# It uses custom batch sampling to group examples from the same claim together.
+# DESCRIPTION:
+#   Fine-tunes Qwen3-8B with LoRA on numeration perturbation data using
+#   standard random batching, with selective perturbation type loading.
 #
-# Selective loading:
-#   - From *_true.json: type1 (structure-preserving) + type2 (value-modifying)
-#   - From *_false.json: type1 only (type2_false excluded)
+#   From *_True.json files: loads type1 (structure-preserving) + type2
+#   (value-modifying) perturbations.
+#   From *_False.json files: loads type1 only — type2 is excluded because
+#   type2 applied to False-labeled claims produces True labels via double
+#   negation, which can introduce noisy supervision signal.
+#
+# BATCHING STRATEGY:
+#   - batch_match_claim_id = false → standard random batching
+#
+# DATASET:
+#   Selective perturbation loading via path:type1,type2 syntax.
+#   Excludes type2 from False-labeled source files.
+#
+# BALANCING:
+#   Labels balanced (True/False 1:1), perturbed-to-original ratio 1:1,
+#   67% T→F / 33% F→F among False perturbations.
+#
+# USAGE:
+#   bash scripts/train/model_configs/qwen3_8b_normal_b_no_type2f.sh
 ################################################################################
 
 set -e  # Exit on error
@@ -18,38 +34,36 @@ set -u  # Exit on undefined variable
 # ==============================================================================
 # MODEL CONFIGURATION
 # ==============================================================================
-MODEL="Qwen3-8B"          # Options: qwen-3-8b, Qwen3-32B, llama-3.2-3b-instruct, llama-3.2-1b-instruct
-RANK=32                    # LoRA rank (16, 32, 64) - higher = more parameters but slower
-START_EPOCH=1              # Epoch number (1 for first training, 2+ for continued training)
-NUM_TRAIN_EPOCHS=2         # Total number of training epochs
-PERTURB_TYPE_NAMES="numeration_normal_batched_no_type2f"  # Perturbation type name(s) for logging and saving
+MODEL="Qwen3-8B"
+RANK=32                         # LoRA rank (16, 32, 64)
+START_EPOCH=1                   # 1 for fresh training, 2+ for continued
+NUM_TRAIN_EPOCHS=2              # Total number of training epochs
+RESUME_MODEL=""                 # Path to merged model when resuming (start_epoch > 1)
+PERTURB_TYPE_NAMES="numeration_normal_batched_no_type2f"
 
 # ==============================================================================
 # TRAINING HYPERPARAMETERS
 # ==============================================================================
-BATCH_SIZE=5               # Per-device batch size (adjust based on GPU memory)
-GRAD_ACCUM=1               # Gradient accumulation steps
-                           # Effective batch size = BATCH_SIZE × GRAD_ACCUM = 5
-MAX_SEQ_LENGTH=8192        # Maximum sequence length in tokens
-                           # Your docs are 2000-4000 words ≈ 3000-6000 tokens
+BATCH_SIZE=5                    # Per-device batch size
+GRAD_ACCUM=1                    # Gradient accumulation steps
+                                # Effective batch size = BATCH_SIZE × GRAD_ACCUM = 5
+MAX_SEQ_LENGTH=8192             # Maximum sequence length in tokens
 
 # ==============================================================================
 # DATASET BALANCING CONFIGURATION
 # ==============================================================================
-BALANCE_LABELS=true        # Balance True/False label distribution
-PERTURB_RATIO=1.0          # Ratio of perturbed to original examples
-                           # 1.0 = 1:1 (equal number of original and perturbed)
-FALSE_T_TO_F_RATIO=0.67    # Among False perturbed examples, what % should be T→F
-                           # 0.67 = 67% T→F (True→False), 33% F→F (False→False)
+BALANCE_LABELS=true             # Balance True/False label distribution
+PERTURB_RATIO=1.0               # Ratio of perturbed to original examples (1.0 = 1:1)
+FALSE_T_TO_F_RATIO=0.67         # Among False perturbed examples, % that are T→F
+                                # 0.67 = 67% T→F, 33% F→F
 
 # ==============================================================================
-# BATCH MATCHING CONFIGURATION
+# BATCH MATCHING CONFIGURATION (Normal = disabled)
 # ==============================================================================
-# These settings control how examples are grouped in batches
-BATCH_MATCH_CLAIM_ID=false      # Group examples from same claim in batches
-SPLIT_LARGE_CLAIMS=false        # Split claims with many perturbations across batches
-ENSURE_ORIGINAL_IN_BATCH=false  # Each batch has ≥1 original example
-ENSURE_PERTURBED_IN_BATCH=false # Each batch has ≥1 perturbed example
+BATCH_MATCH_CLAIM_ID=false      # No claim grouping — standard random batching
+SPLIT_LARGE_CLAIMS=false        # N/A when batch_match_claim_id is false
+ENSURE_ORIGINAL_IN_BATCH=false  # N/A when batch_match_claim_id is false
+ENSURE_PERTURBED_IN_BATCH=false # N/A when batch_match_claim_id is false
 
 # ==============================================================================
 # DATA PATHS (with per-file perturbation type filtering)
@@ -57,26 +71,34 @@ ENSURE_PERTURBED_IN_BATCH=false # Each batch has ≥1 perturbed example
 # Format: path.json:type1,type2  — only load specified perturbation types
 # Omit the :suffix to load all types from a file.
 #
-# Allowed: type1_true, type2_true, type1_false (+ originals)
-# Excluded: type2_false
-
-# Training data
+# From True files:  type1 + type2 (all perturbation types)
+# From False files: type1 only    (type2_false excluded)
 TRAIN_JSON=(
-    "./data/perturbed_data/train_split/numeration_true.json:type1,type2"
-    "./data/perturbed_data/train_split/numeration_false.json:type1"
+    "./data/perturbed_data/train_split/numeration_True.json:type1,type2"
+    "./data/perturbed_data/train_split/numeration_False.json:type1"
 )
 
-# Validation data
 VAL_JSON=(
-    "./data/perturbed_data/val_split/numeration_true.json:type1,type2"
-    "./data/perturbed_data/val_split/numeration_false.json:type1"
+    "./data/perturbed_data/val_split/numeration_True.json:type1,type2"
+    "./data/perturbed_data/val_split/numeration_False.json:type1"
 )
 
 # ==============================================================================
 # EVALUATION & CHECKPOINTING
 # ==============================================================================
-EVAL_STEPS=500             # Evaluate on validation set every N steps
-SAVE_STEPS=500             # Save checkpoint every N steps
+EVAL_STEPS=500                  # Evaluate on validation set every N steps
+SAVE_STEPS=500                  # Save checkpoint every N steps
+
+# ==============================================================================
+# GGUF QUANTIZATION (optional)
+# ==============================================================================
+SAVE_GGUF=false                 # Save GGUF-quantized copy after training
+GGUF_QUANT_METHOD="q4_k_m"     # Quantization method (q4_k_m, q8_0, q5_k_m, etc.)
+
+# ==============================================================================
+# DEBUG
+# ==============================================================================
+DEBUG=false                     # Print conversation format and tokenisation diagnostics
 
 # ==============================================================================
 # SCRIPT EXECUTION
@@ -91,6 +113,9 @@ echo "  Model:           $MODEL"
 echo "  LoRA Rank:       $RANK"
 echo "  Start Epoch:     $START_EPOCH"
 echo "  Train Epochs:    $NUM_TRAIN_EPOCHS"
+if [ -n "$RESUME_MODEL" ]; then
+echo "  Resume Model:    $RESUME_MODEL"
+fi
 echo ""
 echo "Training Hyperparameters:"
 echo "  Batch Size:      $BATCH_SIZE"
@@ -103,15 +128,12 @@ echo "  Balance Labels:  $BALANCE_LABELS"
 echo "  Perturb Ratio:   $PERTURB_RATIO"
 echo "  False T→F Ratio: $FALSE_T_TO_F_RATIO"
 echo ""
-echo "Batch Matching:"
+echo "Batch Matching (Normal — disabled):"
 echo "  Match Claim ID:     $BATCH_MATCH_CLAIM_ID"
-echo "  Split Large Claims: $SPLIT_LARGE_CLAIMS"
-echo "  Ensure Original:    $ENSURE_ORIGINAL_IN_BATCH"
-echo "  Ensure Perturbed:   $ENSURE_PERTURBED_IN_BATCH"
 echo ""
 echo "Selective Perturbation Loading:"
-echo "  True file:  type1, type2 (all)"
-echo "  False file:  type1 only (type2_false excluded)"
+echo "  True files:  type1, type2"
+echo "  False files: type1 only (type2 excluded)"
 echo ""
 echo "Training Data Files:"
 for entry in "${TRAIN_JSON[@]}"; do
@@ -140,7 +162,7 @@ for entry in "${VAL_JSON[@]}"; do
 done
 echo ""
 
-# Check if all data files exist
+# Check if all data files exist (strip :type suffix before checking)
 echo "Checking data files..."
 all_files_exist=true
 for entry in "${TRAIN_JSON[@]}" "${VAL_JSON[@]}"; do
@@ -165,10 +187,8 @@ echo "Starting Training..."
 echo "=========================================="
 echo ""
 
-
 # Build command
-
-CMD="uv run python -m src.llm_finetune.unsloth_finetune\
+CMD="uv run python -m src.llm_finetune.unsloth_finetune \
     --train_json ${TRAIN_JSON[@]} \
     --val_json ${VAL_JSON[@]} \
     --model ${MODEL} \
@@ -194,16 +214,16 @@ if [ "$BATCH_MATCH_CLAIM_ID" = true ]; then
     CMD="$CMD --batch_match_claim_id"
 fi
 
-if [ "$SPLIT_LARGE_CLAIMS" = true ]; then
-    CMD="$CMD --split_large_claims"
+if [ -n "$RESUME_MODEL" ]; then
+    CMD="$CMD --resume_model $RESUME_MODEL"
 fi
 
-if [ "$ENSURE_ORIGINAL_IN_BATCH" = true ]; then
-    CMD="$CMD --ensure_original_in_batch"
+if [ "$SAVE_GGUF" = true ]; then
+    CMD="$CMD --save_gguf --gguf_quantization_method $GGUF_QUANT_METHOD"
 fi
 
-if [ "$ENSURE_PERTURBED_IN_BATCH" = true ]; then
-    CMD="$CMD --ensure_perturbed_in_batch"
+if [ "$DEBUG" = true ]; then
+    CMD="$CMD --debug"
 fi
 
 # Print full command (for debugging)

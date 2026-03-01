@@ -1,4 +1,13 @@
 #!/bin/bash
+################################################################################
+# SLURM launcher for Qwen3-32B with enhanced (claim-matched) batching.
+#
+# Runs model_configs/qwen3_32b_enhanced_b.sh which fine-tunes Qwen3-32B using
+# perturbation-aware batch sampling (original + perturbed claims grouped
+# together per batch). Requires H100 NVL or equivalent GPU.
+#
+# Submit: sbatch scripts/train/start_32b_enchanced_batch.sh
+################################################################################
 #SBATCH --job-name=qwen3-32b-finetune
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:nvidia_h100_nvl:1

@@ -1,9 +1,18 @@
 #!/bin/bash
-#SBATCH --job-name=env_test_qwen3-8b-finetune
+################################################################################
+# SLURM launcher for Qwen3-8B with normal (random) batching.
+#
+# Runs model_configs/qwen3_8b_normal_b.sh which fine-tunes Qwen3-8B using
+# standard random batching (no claim grouping). Serves as the baseline
+# comparison against the enhanced (claim-matched) batching strategy.
+#
+# Submit: sbatch scripts/train/start_8b_normal_batch.sh
+################################################################################
+#SBATCH --job-name=qwen3-8b-finetune
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:1
 #SBATCH --time=12:00:00
-#SBATCH --output=scripts/slurm_out/train/qwen3-8b-finetune_normal_batchtestesttest.out
+#SBATCH --output=scripts/slurm_out/train/qwen3-8b-finetune_normal_batch.out
 #SBATCH --mem=300G
 #SBATCH --nodelist=gorina8
 
@@ -41,7 +50,7 @@ echo ""
 echo "Working directory: $(pwd)"
 echo ""
     
-bash ./scripts/train/model_configs/qwen3_8b_normal_b_no_type2f.sh
+bash ./scripts/train/model_configs/qwen3_8b_normal_b.sh
 
 # Print completion information
 echo ""

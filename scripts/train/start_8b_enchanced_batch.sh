@@ -1,4 +1,13 @@
 #!/bin/bash
+################################################################################
+# SLURM launcher for Qwen3-8B with enhanced (claim-matched) batching.
+#
+# Runs model_configs/qwen3_8b_enhanced_b.sh which fine-tunes Qwen3-8B using
+# perturbation-aware batch sampling (original + perturbed claims grouped
+# together per batch).
+#
+# Submit: sbatch scripts/train/start_8b_enchanced_batch.sh
+################################################################################
 #SBATCH --job-name=qwen3-8b-finetune
 #SBATCH --partition=gpu
 ##  --gres=gpu:nvidia_h100_nvl:1
