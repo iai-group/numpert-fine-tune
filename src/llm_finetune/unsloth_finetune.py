@@ -116,10 +116,12 @@ class ValidationCallback(TrainerCallback):
 
 def get_model_name_arg(model_name):
     """Convert short model name to full HuggingFace path."""
-    if model_name.startswith("Qwen3-8B") or model_name.startswith("Qwen3-8B"):
+    if model_name.startswith("Qwen3-8B") or model_name.startswith(
+        "unsloth/Qwen3-8B"
+    ):
         return "unsloth/Qwen3-8B"
     elif model_name.startswith("Qwen3-32B") or model_name.startswith(
-        "unsloth/Qwen3-8B"
+        "unsloth/Qwen3-32B"
     ):
         return "unsloth/Qwen3-32B"
     elif model_name.startswith("llama-3.2-3b"):
