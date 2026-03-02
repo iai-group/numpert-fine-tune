@@ -557,10 +557,9 @@ Runs a trained model on test data and computes per-perturbation metrics.
 2. **Training checkpoint**: If `--start_epoch > 0`, look for a checkpoint at the conventional save path.
 3. **HuggingFace Hub**: Fall back to downloading from HuggingFace (with alias resolution for common names).
 
-### Inference Backends
+### Inference Backend
 
-- **Unsloth** (default): Loads with `FastLanguageModel`, generates one example at a time.
-- **vLLM** (`--use_vllm`): Batch inference with vLLM for higher throughput.
+- **Unsloth**: Loads with `FastLanguageModel`, generates one example at a time.
 
 ### Label Extraction
 

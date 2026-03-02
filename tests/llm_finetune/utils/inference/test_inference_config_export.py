@@ -202,7 +202,6 @@ class TestBuildInferenceConfig:
             test_dataset=test_ds,
             rank=64,
             start_epoch=3,
-            use_vllm=True,
             expand_perturbations=True,
             max_seq_length=8192,
             timestamp=FIXED_TIMESTAMP,
@@ -214,7 +213,6 @@ class TestBuildInferenceConfig:
         assert config["model"]["start_epoch"] == 3
 
         # Inference section
-        assert config["inference"]["use_vllm"] is True
         assert config["inference"]["max_seq_length"] == 8192
 
         # Data section
@@ -350,7 +348,6 @@ class TestSaveInferenceConfig:
             test_dataset=test_ds,
             rank=32,
             start_epoch=3,
-            use_vllm=False,
             max_seq_length=8192,
             timestamp=FIXED_TIMESTAMP,
         )

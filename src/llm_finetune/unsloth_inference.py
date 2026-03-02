@@ -26,13 +26,6 @@ from src.llm_finetune.utils.inference.metrics import (
 )
 
 from unsloth import FastLanguageModel
-from transformers import AutoTokenizer
-
-try:
-    from vllm import LLM, SamplingParams
-except ImportError:  # vllm is optional (GPU-only)
-    LLM = None  # type: ignore[assignment,misc]
-    SamplingParams = None  # type: ignore[assignment,misc]
 
 import os
 import argparse
@@ -108,7 +101,6 @@ def inference(  # noqa: C901
     model_name: str = "unsloth/Qwen3-8B",
     rank: int = 32,
     start_epoch: int = 0,
-    use_vllm: bool = False,
     expand_perturbations: bool = True,
     max_seq_length: int = 16384,
     output_dir: str = f"{prefix}predictions/{model_name_timestamp}",
@@ -120,7 +112,6 @@ def inference(  # noqa: C901
     print(f"Model: {model_name}")
     print(f"Model from Epoch: {start_epoch}")
     print(f"Max sequence length: {max_seq_length:,} tokens")
-    print(f"Use vLLM: {use_vllm}")
     print(f"Expand perturbations: {expand_perturbations}")
     print("=" * 80 + "\n")
 
@@ -171,25 +162,14 @@ def inference(  # noqa: C901
     print(f"Loading model from: {model_name_arg}\n")
 
     # Load model
-    if use_vllm:
-        llm = LLM(
-            model=model_name_arg,
-            max_model_len=max_seq_length,
-            dtype="bfloat16",
-            gpu_memory_utilization=0.8,
-        )
-        tokenizer = AutoTokenizer.from_pretrained(
-            model_name_arg, trust_remote_code=True
-        )
-    else:
-        model, tokenizer = FastLanguageModel.from_pretrained(
-            model_name=model_name_arg,
-            max_seq_length=max_seq_length,
-            dtype=dtype,
-            load_in_4bit=load_in_4bit,
-            fix_tokenizer=False,
-        )
-        FastLanguageModel.for_inference(model)
+    model, tokenizer = FastLanguageModel.from_pretrained(
+        model_name=model_name_arg,
+        max_seq_length=max_seq_length,
+        dtype=dtype,
+        load_in_4bit=load_in_4bit,
+        fix_tokenizer=False,
+    )
+    FastLanguageModel.for_inference(model)
 
     # Load test data
     print("Loading test data...")
@@ -239,10 +219,9 @@ def inference(  # noqa: C901
     raw_outputs = []  # Store raw outputs for debugging
 
     # Create output directory
-    vllm_suffix = "-vllm" if use_vllm else ""
     pred_dir = (
         f"{output_dir}/{model_name}{rank_postfix}"
-        f"{quant_status}-epoch-{start_epoch}{vllm_suffix}"
+        f"{quant_status}-epoch-{start_epoch}"
     )
     os.makedirs(pred_dir, exist_ok=True)
 
@@ -254,7 +233,6 @@ def inference(  # noqa: C901
         test_dataset=test_data,
         rank=rank,
         start_epoch=start_epoch,
-        use_vllm=use_vllm,
         expand_perturbations=expand_perturbations,
         max_seq_length=max_seq_length,
         timestamp=time_start,
@@ -265,93 +243,65 @@ def inference(  # noqa: C901
     # Run inference
     print("\nRunning inference...")
 
-    if use_vllm:
-        sampling_params = SamplingParams(temperature=0, max_tokens=512, seed=42)
-        prompts = [
-            tokenizer.apply_chat_template(
-                conv, tokenize=False, add_generation_prompt=True
-            )
-            for conv in test_data["conversations"]
-        ]
+    for i in tqdm(range(len(test_data))):
+        # Format the prompt
+        prompt_text = tokenizer.apply_chat_template(
+            test_data[i]["conversations"],
+            tokenize=False,
+            add_generation_prompt=True,
+        )
 
-        outputs = llm.generate(prompts, sampling_params)
+        model_inputs = tokenizer.apply_chat_template(
+            test_data[i]["conversations"],
+            tokenize=True,
+            add_generation_prompt=True,
+            return_tensors="pt",
+        )
 
-        for idx, output in enumerate(outputs):
-            text = output.outputs[0].text
-            entry = {
-                "index": idx,
-                "claim_id": test_data[idx]["claim_id"],
-                "perturbation_type": test_data[idx]["perturbation_type"],
-                "label": test_data[idx]["label"],
-                "full_prompt": prompts[idx],  # Full input
-                "raw_response": text,  # Model output only
-            }
-            if "source_file" in test_data.column_names:
-                entry["source_file"] = test_data[idx]["source_file"]
-            raw_outputs.append(entry)
-            label = extract_label_from_response(text)
-            predictions.append(label)
+        if isinstance(model_inputs, torch.Tensor):
+            model_inputs = {"input_ids": model_inputs}
 
-    else:
-        for i in tqdm(range(len(test_data))):
-            # Format the prompt
-            prompt_text = tokenizer.apply_chat_template(
-                test_data[i]["conversations"],
-                tokenize=False,
-                add_generation_prompt=True,
-            )
+        model_inputs = {k: v.cuda() for k, v in model_inputs.items()}
 
-            model_inputs = tokenizer.apply_chat_template(
-                test_data[i]["conversations"],
-                tokenize=True,
-                add_generation_prompt=True,
-                return_tensors="pt",
-            )
+        if "attention_mask" not in model_inputs:
+            pad_id = getattr(tokenizer, "pad_token_id", None)
+            if pad_id is None:
+                model_inputs["attention_mask"] = (
+                    model_inputs["input_ids"] != 0
+                ).long()
+            else:
+                model_inputs["attention_mask"] = (
+                    model_inputs["input_ids"] != pad_id
+                ).long()
 
-            if isinstance(model_inputs, torch.Tensor):
-                model_inputs = {"input_ids": model_inputs}
+        # Store input length
+        input_length = model_inputs["input_ids"].shape[1]
 
-            model_inputs = {k: v.cuda() for k, v in model_inputs.items()}
+        outputs = model.generate(
+            **model_inputs,
+            max_new_tokens=512,
+            use_cache=True,
+            temperature=0.001,
+        )
 
-            if "attention_mask" not in model_inputs:
-                pad_id = getattr(tokenizer, "pad_token_id", None)
-                if pad_id is None:
-                    model_inputs["attention_mask"] = (
-                        model_inputs["input_ids"] != 0
-                    ).long()
-                else:
-                    model_inputs["attention_mask"] = (
-                        model_inputs["input_ids"] != pad_id
-                    ).long()
+        # Decode only new tokens
+        new_tokens = outputs[0][input_length:]
+        decoded = tokenizer.decode(new_tokens, skip_special_tokens=True)
 
-            # Store input length
-            input_length = model_inputs["input_ids"].shape[1]
+        entry = {
+            "index": i,
+            "claim_id": test_data[i]["claim_id"],
+            "perturbation_type": test_data[i]["perturbation_type"],
+            "label": test_data[i]["label"],
+            "full_prompt": prompt_text,  # Full input
+            "raw_response": decoded,  # Model output only
+        }
+        if "source_file" in test_data.column_names:
+            entry["source_file"] = test_data[i]["source_file"]
+        raw_outputs.append(entry)
 
-            outputs = model.generate(
-                **model_inputs,
-                max_new_tokens=512,
-                use_cache=True,
-                temperature=0.001,
-            )
-
-            # Decode only new tokens
-            new_tokens = outputs[0][input_length:]
-            decoded = tokenizer.decode(new_tokens, skip_special_tokens=True)
-
-            entry = {
-                "index": i,
-                "claim_id": test_data[i]["claim_id"],
-                "perturbation_type": test_data[i]["perturbation_type"],
-                "label": test_data[i]["label"],
-                "full_prompt": prompt_text,  # Full input
-                "raw_response": decoded,  # Model output only
-            }
-            if "source_file" in test_data.column_names:
-                entry["source_file"] = test_data[i]["source_file"]
-            raw_outputs.append(entry)
-
-            label = extract_label_from_response(decoded)
-            predictions.append(label)
+        label = extract_label_from_response(decoded)
+        predictions.append(label)
 
     raw_outputs_path = f"{pred_dir}/inference_details.json"
     with open(raw_outputs_path, "w") as f:
@@ -426,9 +376,6 @@ if __name__ == "__main__":
 
     # Inference options
     parser.add_argument(
-        "--use_vllm", action="store_true", help="Use vLLM for inference"
-    )
-    parser.add_argument(
         "--output_dir",
         default="predictions",
         help="Output directory for predictions",
@@ -444,7 +391,6 @@ if __name__ == "__main__":
         model_name=args.model,
         rank=args.rank,
         start_epoch=args.start_epoch,
-        use_vllm=args.use_vllm,
         expand_perturbations=args.expand_perturbations,
         max_seq_length=args.max_seq_length,
         output_dir=args.output_dir,

@@ -90,7 +90,6 @@ module = [
     "trl.*",
     "tqdm.*",
     "pandas.*",
-    "vllm.*",
     "pytest.*",
 ]
 ignore_missing_imports = true

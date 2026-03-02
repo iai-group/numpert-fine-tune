@@ -78,7 +78,6 @@ def build_inference_config(
     test_dataset=None,
     rank: int = 32,
     start_epoch: int = 0,
-    use_vllm: bool = False,
     expand_perturbations: bool = True,
     max_seq_length: int = 16384,
     timestamp: Optional[datetime] = None,
@@ -94,7 +93,6 @@ def build_inference_config(
             ``None`` omits dataset statistics.
         rank: LoRA rank.
         start_epoch: Epoch of the trained model checkpoint.
-        use_vllm: Whether vLLM backend was used.
         expand_perturbations: Whether perturbation expansion is enabled.
         max_seq_length: Maximum sequence length in tokens.
         timestamp: Run timestamp (defaults to ``datetime.now()``).
@@ -115,7 +113,6 @@ def build_inference_config(
             "start_epoch": start_epoch,
         },
         "inference": {
-            "use_vllm": use_vllm,
             "max_seq_length": max_seq_length,
         },
         "data": {
