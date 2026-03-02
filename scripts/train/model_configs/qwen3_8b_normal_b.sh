@@ -34,7 +34,7 @@ set -u  # Exit on undefined variable
 # ==============================================================================
 MODEL="Qwen3-8B"
 RANK=32                         # LoRA rank (16, 32, 64)
-START_EPOCH=1                   # 1 for fresh training, 2+ for continued
+START_EPOCH=0                   # 0 for fresh training, 2+ for continued
 NUM_TRAIN_EPOCHS=3              # Total number of training epochs
 RESUME_MODEL=""                 # Path to merged model when resuming (start_epoch > 1)
 PERTURB_TYPE_NAMES="numeration_normal_batched"
@@ -67,13 +67,13 @@ ENSURE_PERTURBED_IN_BATCH=false # N/A when batch_match_claim_id is false
 # DATA PATHS
 # ==============================================================================
 TRAIN_JSON=(
-    "./data/perturbed_data/train_split/numeration_True.json"
-    "./data/perturbed_data/train_split/numeration_False.json"
+    "./data/perturbed_data/train_split/numeration_True.json:type1,type2"
+    "./data/perturbed_data/train_split/numeration_False.json:type1"
 )
 
 VAL_JSON=(
-    "./data/perturbed_data/val_split/numeration_True.json"
-    "./data/perturbed_data/val_split/numeration_False.json"
+    "./data/perturbed_data/val_split/numeration_True.json:type1,type2"
+    "./data/perturbed_data/val_split/numeration_False.json:type1"
 )
 
 # ==============================================================================
@@ -125,30 +125,37 @@ echo "Batch Matching (Normal — disabled):"
 echo "  Match Claim ID:     $BATCH_MATCH_CLAIM_ID"
 echo ""
 echo "Training Data Files:"
-for file in "${TRAIN_JSON[@]}"; do
+for entry in "${TRAIN_JSON[@]}"; do
+    file="${entry%%:*}"
+    filter="${entry#*:}"
+    if [ "$file" = "$filter" ]; then filter="all"; fi
     if [ -f "$file" ]; then
         size=$(wc -l < "$file")
-        echo "  ✓ $file ($size lines)"
+        echo "  ✓ $file ($size lines) [types: $filter]"
     else
-        echo "  ✗ $file (NOT FOUND)"
+        echo "  ✗ $file (NOT FOUND) [types: $filter]"
     fi
 done
 echo ""
 echo "Validation Data Files:"
-for file in "${VAL_JSON[@]}"; do
+for entry in "${VAL_JSON[@]}"; do
+    file="${entry%%:*}"
+    filter="${entry#*:}"
+    if [ "$file" = "$filter" ]; then filter="all"; fi
     if [ -f "$file" ]; then
         size=$(wc -l < "$file")
-        echo "  ✓ $file ($size lines)"
+        echo "  ✓ $file ($size lines) [types: $filter]"
     else
-        echo "  ✗ $file (NOT FOUND)"
+        echo "  ✗ $file (NOT FOUND) [types: $filter]"
     fi
 done
 echo ""
 
-# Check if all data files exist
+# Check if all data files exist (strip :type suffix before checking)
 echo "Checking data files..."
 all_files_exist=true
-for file in "${TRAIN_JSON[@]}" "${VAL_JSON[@]}"; do
+for entry in "${TRAIN_JSON[@]}" "${VAL_JSON[@]}"; do
+    file="${entry%%:*}"
     if [ ! -f "$file" ]; then
         echo "ERROR: File not found: $file"
         all_files_exist=false
@@ -170,7 +177,7 @@ echo "=========================================="
 echo ""
 
 # Build command
-CMD="uv run python -m src.llm_finetune.unsloth_finetune \
+CMD="python -m src.llm_finetune.unsloth_finetune \
     --train_json ${TRAIN_JSON[@]} \
     --val_json ${VAL_JSON[@]} \
     --model ${MODEL} \

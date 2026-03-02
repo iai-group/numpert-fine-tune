@@ -36,7 +36,7 @@ set -u  # Exit on undefined variable
 # ==============================================================================
 MODEL="Qwen3-8B"
 RANK=32                         # LoRA rank (16, 32, 64)
-START_EPOCH=1                   # 1 for fresh training, 2+ for continued
+START_EPOCH=0                   # 0 for fresh training, 2+ for continued
 NUM_TRAIN_EPOCHS=2              # Total number of training epochs
 RESUME_MODEL=""                 # Path to merged model when resuming (start_epoch > 1)
 PERTURB_TYPE_NAMES="numeration_normal_batched_no_type2f"

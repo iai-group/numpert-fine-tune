@@ -11,7 +11,7 @@
 #SBATCH --job-name=qwen3-8b-finetune
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:1
-#SBATCH --time=12:00:00
+#SBATCH --time=24:00:00
 #SBATCH --output=scripts/slurm_out/train/qwen3-8b-finetune_normal_batch.out
 #SBATCH --mem=300G
 #SBATCH --nodelist=gorina8
@@ -31,8 +31,8 @@ echo ""
 
 # Load environment
 echo "Activating uv environment..."
-# echo $PATH
-# source .finetune/bin/activate
+#echo $PATH
+source .finetune/bin/activate
 
 # Verify GPU is available
 echo ""
