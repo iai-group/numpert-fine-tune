@@ -38,7 +38,6 @@ jobs:
       - name: Install Dependencies
         run: |
           curl -LsSf https://astral.sh/uv/install.sh | sh
-          uv init
           source .venv/bin/activate
           python -m pip install -U pip
           uv sync
