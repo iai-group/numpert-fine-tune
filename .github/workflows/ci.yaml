@@ -39,32 +39,32 @@ jobs:
         run: |
           curl -LsSf https://astral.sh/uv/install.sh | sh
           uv run python -m pip install -U pip
-          uv sync
+          uv sync --all-extras
           uv run python -m spacy download en_core_web_trf
 
       - name: Run black
         shell: bash
-        run: pre-commit run black --all-files
+        run: uv run pre-commit run black --all-files
 
       - name: Run flake8
         shell: bash
-        run: pre-commit run flake8 --all-files
+        run: uv run pre-commit run flake8 --all-files
 
       - name: Run docformatter
         shell: bash
-        run: pre-commit run docformatter --all-files
+        run: uv run pre-commit run docformatter --all-files
 
       - name: Run pydocstyle
         shell: bash
-        run: pre-commit run pydocstyle --all-files
+        run: uv run pre-commit run pydocstyle --all-files
 
       - name: Run mypy
         shell: bash
-        run: pre-commit run mypy --all-files
+        run: uv run pre-commit run mypy --all-files
    
       - name: Run pytest with code coverage
         run: |
-          pytest --junitxml pytest.xml --cov=. --cov-report=term-missing --cov-report=xml:coverage.xml --cov-branch | tee pytest-coverage.txt
+          uv run pytest --junitxml pytest.xml --cov=. --cov-report=term-missing --cov-report=xml:coverage.xml --cov-branch | tee pytest-coverage.txt
         continue-on-error: false
 
       - name: Upload Coverage Results
