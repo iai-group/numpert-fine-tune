@@ -2,7 +2,7 @@
 name = "numpert-fine-tune"
 version = "0.1.0"
 description = "Numerical perturbation fact-checking with fine-tuned LLMs"
-requires-python = ">=3.11"
+requires-python = "==3.11"
 dependencies = [
     # Core ML dependencies
     "torch",
