@@ -37,9 +37,8 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          pip install --upgrade pip
-          pip install -r requirements.txt
-          python -m spacy download en_core_web_trf
+          uv sync
+          uv run python -m spacy download en_core_web_trf
 
       - name: Run black
         shell: bash
