@@ -2,6 +2,7 @@
 
 from typing import Optional, List
 from torch.utils.data import DataLoader
+from torch import torch
 from collections import Counter
 from datetime import datetime
 
@@ -185,7 +186,7 @@ def finetune(  # noqa: C901
     print("=" * 80 + "\n")
 
     # Model configuration
-    dtype = None
+    dtype = torch.bfloat16 if is_bfloat16_supported() else None
     load_in_4bit = True
 
     # Naming conventions
