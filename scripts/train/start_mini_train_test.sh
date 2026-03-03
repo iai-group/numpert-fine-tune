@@ -32,7 +32,7 @@ echo ""
 # Load environment
 echo "Activating uv environment..."
 #echo $PATH
-source .finetune/bin/activate
+#source .finetune/bin/activate
 
 
 # Verify GPU is available
