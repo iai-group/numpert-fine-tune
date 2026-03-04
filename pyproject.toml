@@ -2,10 +2,11 @@
 name = "numpert-fine-tune"
 version = "0.1.0"
 description = "Numerical perturbation fact-checking with fine-tuned LLMs"
-requires-python = "==3.11.14"
+requires-python = ">=3.11"
 dependencies = [
     # Core ML dependencies
     "torch==2.9.1",
+    "vllm==0.16.0",
     "transformers==4.57.6",
     "trl==0.24.0",
     "peft==0.18.0",
@@ -15,14 +16,15 @@ dependencies = [
     "unsloth==2026.1.4",
     "unsloth-zoo==2026.1.4",
     
+    
     # NLP tools
     "spacy",
     "sentencepiece==0.2.0",
     "huggingface-hub>=0.30.0",
     
     # Data processing
-    "numpy>=1.24.0,<2.0.0",
-    "pandas==2.2.0",
+    "numpy>=2.0.0",
+    "pandas==2.2.3",
     "scipy==1.13.1",
     "scikit-learn>=1.5.0",
     
@@ -96,13 +98,3 @@ module = [
     "pytest.*",
 ]
 ignore_missing_imports = true
-
-[[tool.uv.index]]
-name = "pytorch-cpu"
-url = "https://download.pytorch.org/whl/cpu"
-explicit = true
-
-[tool.uv.sources]
-torch = { index = "pytorch-cpu" }
-torchvision = { index = "pytorch-cpu" }
-torchaudio = { index = "pytorch-cpu" }

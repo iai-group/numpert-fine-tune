@@ -6,11 +6,11 @@
 # Automatically sets job name and output path based on experiment name.
 #
 # USAGE:
-#   sbatch scripts/experiments/slurm_experiment.sh <experiment_name>
+#   sbatch scripts/train/experiments/slurm_experiment.sh <experiment_name>
 #
 # EXAMPLES:
-#   sbatch scripts/experiments/slurm_experiment.sh qwen3_8b_numeration_normal
-#   sbatch scripts/experiments/slurm_experiment.sh qwen3_32b_allperturb_enhanced
+#   sbatch scripts/train/experiments/slurm_experiment.sh qwen3_8b_numeration_normal
+#   sbatch scripts/train/experiments/slurm_experiment.sh qwen3_32b_allperturb_enhanced
 #
 # OVERRIDES (set via environment or sbatch --export):
 #   SLURM_PARTITION   (default: gpu)
@@ -24,10 +24,11 @@
 #SBATCH --gres=gpu:1
 #SBATCH --time=24:00:00
 #SBATCH --mem=300G
-
+#SBATCH --nodelist=gorina9
+#SBATCH --gres=gpu:nvidia_h100_nvl:1
 # These are set dynamically below if possible, defaults here as fallback
 #SBATCH --job-name=experiment
-#SBATCH --output=scripts/slurm_out/train/experiment_%j.out
+#SBATCH --output=scripts/slurm_out/train/finetune_%j.out
 
 # ==============================================================================
 # PARSE EXPERIMENT NAME
@@ -41,7 +42,7 @@ if [ -z "$EXPERIMENT_NAME" ]; then
     echo "Usage: sbatch $0 <experiment_name>"
     echo ""
     echo "List available experiments:"
-    echo "  bash scripts/experiments/run_experiment.sh --list"
+    echo "  bash scripts/train/experiments/run_experiment.sh --list"
     exit 1
 fi
 
@@ -68,8 +69,8 @@ echo ""
 # ==============================================================================
 # ENVIRONMENT
 # ==============================================================================
-echo "Activating environment..."
-source .finetune/bin/activate
+#echo "Activating environment..."
+#source .finetune/bin/activate
 
 echo ""
 echo "Checking GPU availability..."
@@ -79,7 +80,7 @@ echo ""
 # ==============================================================================
 # RUN EXPERIMENT
 # ==============================================================================
-bash scripts/experiments/run_experiment.sh "$EXPERIMENT_NAME"
+bash scripts/train/experiments/run_experiment.sh "$EXPERIMENT_NAME"
 
 # ==============================================================================
 # DONE
