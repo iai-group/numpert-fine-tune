@@ -27,7 +27,7 @@
 #SBATCH --nodelist=gorina9
 #SBATCH --gres=gpu:nvidia_h100_nvl:1
 # These are set dynamically below if possible, defaults here as fallback
-#SBATCH --job-name=experiment
+#SBATCH --job-name=finepert
 #SBATCH --output=scripts/slurm_out/train/finetune_%j.out
 
 # ==============================================================================
@@ -41,8 +41,8 @@ if [ -z "$EXPERIMENT_NAME" ]; then
     echo "ERROR: No experiment name provided."
     echo "Usage: sbatch $0 <experiment_name>"
     echo ""
-    echo "List available experiments:"
-    echo "  bash scripts/train/experiments/run_experiment.sh --list"
+    echo "List availistlable experiments:"
+    echo "  bash scripts/train/experiments/run_experiment.sh --"
     exit 1
 fi
 
