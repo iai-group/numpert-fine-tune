@@ -65,9 +65,11 @@ def convert_to_conversations(
             "perturbation_type": example["perturbation_type"],
             "label": json_label,
         }
-        # Pass through source_file when available
+        # Pass through optional metadata fields
         if "source_file" in example:
             entry["source_file"] = example["source_file"]
+        if "perturbation" in example:
+            entry["perturbation"] = example["perturbation"]
         messages.append(entry)
 
     return messages

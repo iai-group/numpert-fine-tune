@@ -150,6 +150,7 @@ def finetune(  # noqa: C901
     balance_labels: bool = False,
     perturb_ratio: float = 1.0,
     false_perturb_t_to_f_ratio: float = 0.67,
+    equal_perturbation_methods: bool = False,
     batch_match_claim_id: bool = False,
     split_large_claims: bool = True,
     ensure_original_in_batch: bool = True,
@@ -178,6 +179,7 @@ def finetune(  # noqa: C901
     print(f"Balance labels: {balance_labels}")
     print(f"Perturb ratio: {perturb_ratio}")
     print(f"False perturb T→F ratio: {false_perturb_t_to_f_ratio}")
+    print(f"Equal perturbation methods: {equal_perturbation_methods}")
     print(f"Batch match claim_id: {batch_match_claim_id}")
     if batch_match_claim_id:
         print(f"  - Split large claims: {split_large_claims}")
@@ -339,12 +341,13 @@ def finetune(  # noqa: C901
     print(f"Loaded validation dataset size: {len(val_data)}")
 
     # Apply balancing to training data
-    if balance_labels or perturb_ratio != 1.0:
+    if balance_labels or perturb_ratio != 1.0 or equal_perturbation_methods:
         balancer = DatasetBalancer(
             dataset=train_data,
             balance_labels=balance_labels,
             perturb_ratio=perturb_ratio,
             false_perturb_t_to_f_ratio=false_perturb_t_to_f_ratio,
+            equal_perturbation_methods=equal_perturbation_methods,
             seed=3407 + start_epoch,
         )
         train_data = balancer.balance()
@@ -655,6 +658,7 @@ def finetune(  # noqa: C901
         balance_labels=balance_labels,
         perturb_ratio=perturb_ratio,
         false_perturb_t_to_f_ratio=false_perturb_t_to_f_ratio,
+        equal_perturbation_methods=equal_perturbation_methods,
         batch_match_claim_id=batch_match_claim_id,
         split_large_claims=split_large_claims,
         ensure_original_in_batch=ensure_original_in_batch,
@@ -691,6 +695,7 @@ def finetune(  # noqa: C901
             "balance_labels": balance_labels,
             "perturb_ratio": perturb_ratio,
             "false_perturb_t_to_f_ratio": false_perturb_t_to_f_ratio,
+            "equal_perturbation_methods": equal_perturbation_methods,
             "batch_match_claim_id": batch_match_claim_id,
             "split_large_claims": split_large_claims,
             "ensure_original_in_batch": ensure_original_in_batch,
@@ -910,6 +915,14 @@ if __name__ == "__main__":
         default=0.67,
         help="Among False perturbed examples, ratio that should be T→F",
     )
+    parser.add_argument(
+        "--equal_perturbation_methods",
+        action="store_true",
+        help=(
+            "Stratify balancing so each perturbation method "
+            "(numeration, range, …) gets an equal share of the budget"
+        ),
+    )
 
     # Batch matching
     parser.add_argument(
@@ -990,6 +1003,7 @@ if __name__ == "__main__":
         balance_labels=args.balance_labels,
         perturb_ratio=args.perturb_ratio,
         false_perturb_t_to_f_ratio=args.false_perturb_t_to_f_ratio,
+        equal_perturbation_methods=args.equal_perturbation_methods,
         batch_match_claim_id=args.batch_match_claim_id,
         split_large_claims=args.split_large_claims,
         ensure_original_in_batch=args.ensure_original_in_batch,

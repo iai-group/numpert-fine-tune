@@ -110,6 +110,7 @@ def build_training_config(
     balance_labels: bool = False,
     perturb_ratio: float = 1.0,
     false_perturb_t_to_f_ratio: float = 0.67,
+    equal_perturbation_methods: bool = False,
     batch_match_claim_id: bool = False,
     split_large_claims: bool = True,
     ensure_original_in_batch: bool = True,
@@ -176,6 +177,7 @@ def build_training_config(
             "balance_labels": balance_labels,
             "perturb_ratio": perturb_ratio,
             "false_perturb_t_to_f_ratio": false_perturb_t_to_f_ratio,
+            "equal_perturbation_methods": equal_perturbation_methods,
             "train_files": (
                 [_file_config_to_dict(c) for c in train_file_configs]
                 if train_file_configs

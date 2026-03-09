@@ -79,7 +79,7 @@ def load_json_files(file_paths: Union[str, List[str]]) -> List[Dict]:
 # ---------------------------------------------------------------------------
 
 
-def load_fact_checking_data(
+def load_fact_checking_data(  # noqa: C901
     json_paths: Union[str, List[str], None] = None,
     file_configs: Optional[List[FileLoadConfig]] = None,
     split: str = "train",
@@ -154,6 +154,7 @@ def load_fact_checking_data(
                         ),
                         "url": example.get("url", ""),
                         "taxonomy_label": example.get("taxonomy_label", ""),
+                        "perturbation": example.get("perturbation", ""),
                     }
                 )
 
@@ -162,6 +163,31 @@ def load_fact_checking_data(
             item["source_file"] = source_file
 
         all_processed.extend(processed)
+
+    # Deduplicate originals — when loading from multiple source files,
+    # each file produces an original_normalized entry for every claim it
+    # contains.  Keep only the first original per claim_id to avoid
+    # inflating original counts in the balancer.
+    seen_original_ids: set = set()
+    deduped: List[Dict] = []
+    n_dupes_removed = 0
+    for item in all_processed:
+        if (
+            item["perturbation_type"]
+            == PerturbationType.ORIGINAL_NORMALIZED.value
+        ):
+            if item["claim_id"] in seen_original_ids:
+                n_dupes_removed += 1
+                continue
+            seen_original_ids.add(item["claim_id"])
+        deduped.append(item)
+
+    if n_dupes_removed > 0:
+        print(
+            f"  Deduplicated {n_dupes_removed} duplicate original entries"
+            f" (kept {len(seen_original_ids)} unique originals)"
+        )
+    all_processed = deduped
 
     # Convert to conversation format
     conversation_data = convert_to_conversations(

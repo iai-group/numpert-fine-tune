@@ -1,7 +1,7 @@
 """class_balancer.py."""
 
 from datasets import Dataset
-from typing import List
+from typing import Dict, List
 import random
 
 from src.llm_finetune.utils.data_loading.perturbation_types import (
@@ -29,6 +29,7 @@ class DatasetBalancer:
         balance_labels: bool = False,
         perturb_ratio: float = 1.0,
         false_perturb_t_to_f_ratio: float = 0.67,
+        equal_perturbation_methods: bool = False,
         seed: int = 42,
     ):
         """Initialize the DatasetBalancer.
@@ -40,12 +41,17 @@ class DatasetBalancer:
                 (1.0 = 1:1).
             false_perturb_t_to_f_ratio: Among False perturbed examples,
                 ratio that should be T→F.
+            equal_perturbation_methods: When True, stratify sampling so
+                that each perturbation method (numeration, range, etc.)
+                gets an equal share of the budget within each category.
+                Requires the ``perturbation`` column in the dataset.
             seed: Random seed.
         """
         self.dataset = dataset
         self.balance_labels = balance_labels
         self.perturb_ratio = perturb_ratio
         self.false_perturb_t_to_f_ratio = false_perturb_t_to_f_ratio
+        self.equal_perturbation_methods = equal_perturbation_methods
         self.rng = random.Random(seed)
 
         # Categorize examples
@@ -56,6 +62,10 @@ class DatasetBalancer:
         self.f_to_f_indices: List[
             int
         ] = []  # False → False perturbations (*_true only)
+        self.f_to_t_indices: List[int] = []  # False → True perturbations
+        self.uncategorized_indices: List[
+            int
+        ] = []  # F→F non-type1 (type3 obfuscation on False originals)
 
         self._categorize_examples()
 
@@ -73,7 +83,7 @@ class DatasetBalancer:
         label_lower = label.lower().strip()
         return "false" in label_lower
 
-    def _categorize_examples(self):
+    def _categorize_examples(self):  # noqa: C901
         """Categorize all examples by type."""
         # First pass: identify original examples and their labels
         original_labels = (
@@ -113,12 +123,15 @@ class DatasetBalancer:
                 self.t_to_t_indices.append(idx)
             elif original_is_true and not current_is_true:
                 self.t_to_f_indices.append(idx)
+            elif not original_is_true and current_is_true:
+                self.f_to_t_indices.append(idx)
             elif not original_is_true and not current_is_true:
                 # Only use structure-preserving (type1) perturbations for F→F
                 # (these are most similar to the original claim)
                 if perturb_type == "perturb_type1":
                     self.f_to_f_indices.append(idx)
-                # Ignore type2/type3 perturbations for F→F
+                else:
+                    self.uncategorized_indices.append(idx)
 
     def _extract_label(self, example):
         """Extract label from example."""
@@ -145,14 +158,35 @@ class DatasetBalancer:
         print(f"  Balance labels: {self.balance_labels}")
         print(f"  Perturb ratio: {self.perturb_ratio}")
         print(f"  False perturb T→F ratio: {self.false_perturb_t_to_f_ratio}")
+        print(
+            "  Equal perturbation methods:"
+            f" {self.equal_perturbation_methods}"
+        )
 
         print("\nOriginal distribution:")
         print(f"  Original True: {len(self.original_true_indices)}")
         print(f"  Original False: {len(self.original_false_indices)}")
         print(f"  T→T perturbations: {len(self.t_to_t_indices)}")
         print(f"  T→F perturbations: {len(self.t_to_f_indices)}")
+        print(f"  F→T perturbations: {len(self.f_to_t_indices)}")
         print(f"  F→F perturbations (*_true only): {len(self.f_to_f_indices)}")
-        print(f"  Total available: {len(self.dataset)}")
+        print(
+            f"  F→F uncategorized (non-type1): "
+            f"{len(self.uncategorized_indices)}"
+        )
+        categorized = (
+            len(self.original_true_indices)
+            + len(self.original_false_indices)
+            + len(self.t_to_t_indices)
+            + len(self.t_to_f_indices)
+            + len(self.f_to_t_indices)
+            + len(self.f_to_f_indices)
+            + len(self.uncategorized_indices)
+        )
+        excluded = len(self.dataset) - categorized
+        print(f"  Total categorized: {categorized}")
+        if excluded > 0:
+            print(f"  ⚠️  Excluded from all categories: {excluded}")
 
         # Handle empty dataset
         if len(self.dataset) == 0:
@@ -330,16 +364,170 @@ class DatasetBalancer:
     def _sample_with_warning(
         self, indices: List[int], target: int, category: str
     ) -> List[int]:
-        """Sample indices with warning if not enough available."""
+        """Sample indices with optional stratification.
+
+        Stratification modes (checked in order):
+
+        1. **Equal-method** (``equal_perturbation_methods=True``):
+           Groups indices by the ``perturbation`` column (e.g. numeration,
+           range, …) and allocates an equal share of the budget to each
+           method.  Any method with fewer examples than its share donates
+           the surplus back to the others via a second pass.
+
+        2. **Proportional-source** (default when ``source_file`` exists):
+           Groups by ``source_file`` and allocates proportionally.
+
+        3. **Uniform random** (fallback): plain ``random.sample``.
+        """
         available = len(indices)
 
         if target <= 0:
             return []
 
-        if available < target:
-            print(f"  ⚠️  WARNING: Not enough {category} examples!")
-            print(f"     Requested: {target}, Available: {available}")
-            print(f"     Using all {available} available examples.")
+        if available <= target:
+            if available < target:
+                print(f"  ⚠️  WARNING: Not enough {category} examples!")
+                print(f"     Requested: {target}, Available: {available}")
+                print(f"     Using all {available} available examples.")
             return indices.copy()
 
-        return self.rng.sample(indices, target)
+        # ----- equal-method stratification --------------------------------
+        if self.equal_perturbation_methods:
+            has_method = "perturbation" in self.dataset.column_names
+            if has_method:
+                return self._stratify_equal(
+                    indices, target, category, group_col="perturbation"
+                )
+
+        # ----- proportional source_file stratification --------------------
+        has_source = "source_file" in self.dataset.column_names
+        if not has_source:
+            return self.rng.sample(indices, target)
+
+        return self._stratify_proportional(
+            indices, target, category, group_col="source_file"
+        )
+
+    # ------------------------------------------------------------------
+    # Stratification helpers
+    # ------------------------------------------------------------------
+
+    def _build_groups(
+        self, indices: List[int], group_col: str
+    ) -> Dict[str, List[int]]:
+        """Group *indices* by a dataset column value."""
+        groups: Dict[str, List[int]] = {}
+        for idx in indices:
+            key = self.dataset[idx][group_col]
+            groups.setdefault(key, []).append(idx)
+        return groups
+
+    def _stratify_equal(
+        self,
+        indices: List[int],
+        target: int,
+        category: str,
+        group_col: str,
+    ) -> List[int]:
+        """Allocate *target* slots equally across groups.
+
+        Each group gets ``target // n_groups`` slots (capped by its size).
+        Left-over budget is distributed round-robin to groups that still
+        have capacity.
+        """
+        groups = self._build_groups(indices, group_col)
+        n_groups = len(groups)
+
+        if n_groups <= 1:
+            return self.rng.sample(indices, target)
+
+        # Equal base allocation
+        base_per_group = target // n_groups
+        allocations: Dict[str, int] = {
+            g: min(base_per_group, len(idxs)) for g, idxs in groups.items()
+        }
+
+        # Distribute remainder — groups with room get extra
+        remaining = target - sum(allocations.values())
+        if remaining > 0:
+            for g in sorted(groups):
+                if remaining <= 0:
+                    break
+                room = len(groups[g]) - allocations[g]
+                extra = min(room, remaining)
+                allocations[g] += extra
+                remaining -= extra
+
+        selected = self._select_from_groups(groups, allocations)
+        self._log_stratification(category, groups, allocations, label="method")
+        return selected
+
+    def _stratify_proportional(
+        self,
+        indices: List[int],
+        target: int,
+        category: str,
+        group_col: str,
+    ) -> List[int]:
+        """Allocate *target* slots proportionally across groups.
+
+        Uses the largest-remainder method for rounding.
+        """
+        groups = self._build_groups(indices, group_col)
+        available = len(indices)
+
+        if len(groups) <= 1:
+            return self.rng.sample(indices, target)
+
+        allocations: Dict[str, int] = {}
+        for g, idxs in groups.items():
+            exact = target * len(idxs) / available
+            allocations[g] = min(int(exact), len(idxs))
+
+        remaining = target - sum(allocations.values())
+        if remaining > 0:
+            fractionals = {
+                g: (target * len(groups[g]) / available) - allocations[g]
+                for g in groups
+            }
+            for g in sorted(fractionals, key=fractionals.get, reverse=True):
+                if remaining <= 0:
+                    break
+                if allocations[g] < len(groups[g]):
+                    allocations[g] += 1
+                    remaining -= 1
+
+        selected = self._select_from_groups(groups, allocations)
+        self._log_stratification(category, groups, allocations, label="source")
+        return selected
+
+    def _select_from_groups(
+        self,
+        groups: Dict[str, List[int]],
+        allocations: Dict[str, int],
+    ) -> List[int]:
+        """Sample *allocations[g]* indices from each group."""
+        selected: List[int] = []
+        for g, idxs in groups.items():
+            n = allocations.get(g, 0)
+            if n <= 0:
+                continue
+            if n >= len(idxs):
+                selected.extend(idxs)
+            else:
+                selected.extend(self.rng.sample(idxs, n))
+        return selected
+
+    def _log_stratification(
+        self,
+        category: str,
+        groups: Dict[str, List[int]],
+        allocations: Dict[str, int],
+        label: str,
+    ) -> None:
+        """Print a breakdown of the stratified allocation."""
+        print(f"  {category} stratified by {label}:")
+        for g in sorted(groups):
+            avail = len(groups[g])
+            sampled = allocations.get(g, 0)
+            print(f"    {g:45s}: {sampled:5d}/{avail:5d}")

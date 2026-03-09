@@ -132,6 +132,7 @@ def expand_perturbations(
             "perturbation_type": PerturbationType.ORIGINAL_NORMALIZED.value,
             "url": example.get("url", ""),
             "taxonomy_label": example.get("taxonomy_label", ""),
+            "perturbation": example.get("perturbation", ""),
         }
         expanded.append(original_entry)
 
@@ -165,6 +166,7 @@ def expand_perturbations(
                 "perturbation_type": base_type,
                 "url": example.get("url", ""),
                 "taxonomy_label": example.get("taxonomy_label", ""),
+                "perturbation": example.get("perturbation", ""),
             }
             expanded.append(perturbed_entry)
 

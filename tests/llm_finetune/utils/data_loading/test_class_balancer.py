@@ -715,6 +715,427 @@ class TestDatasetBalancerEdgeCases:
         print(msg)
 
 
+def create_mock_dataset_with_perturbation(
+    methods: list[str] | None = None,
+    n_originals_per_method: int = 20,
+    n_t_to_t_per_original: int = 2,
+    n_t_to_f_per_original: int = 2,
+    n_f_to_f_true_per_original: int = 2,
+    method_sizes: dict[str, int] | None = None,
+) -> Dataset:
+    """Create a mock dataset that includes the ``perturbation`` column.
+
+    Args:
+        methods: List of perturbation method names
+            (e.g. ["numeration", "range", "approximation"]).
+        n_originals_per_method: Number of original True examples per method
+            (same count used for False originals).
+        n_t_to_t_per_original: T→T perturbations per True original.
+        n_t_to_f_per_original: T→F perturbations per True original.
+        n_f_to_f_true_per_original: F→F type1 perturbations per False
+            original.
+        method_sizes: Optional dict mapping method name → number of
+            originals (overrides ``n_originals_per_method`` per method).
+
+    Returns:
+        Mock dataset with ``perturbation`` column.
+    """
+    if methods is None:
+        methods = ["numeration", "range", "approximation"]
+
+    examples = []
+
+    for method in methods:
+        n_orig = (
+            method_sizes[method]
+            if method_sizes and method in method_sizes
+            else n_originals_per_method
+        )
+
+        for i in range(n_orig):
+            claim_id = f"{method}_true_{i:04d}"
+
+            # Original True
+            examples.append(
+                {
+                    "claim_id": claim_id,
+                    "perturbation_type": "original_normalized",
+                    "perturbation": method,
+                    "source_file": f"{method}_True.json",
+                    "conversations": [
+                        {
+                            "role": "system",
+                            "content": "You are a fact checker.",
+                        },
+                        {
+                            "role": "user",
+                            "content": f"{method} claim {i}",
+                        },
+                        {"role": "assistant", "content": "True"},
+                    ],
+                }
+            )
+
+            # T→T perturbations
+            for j in range(n_t_to_t_per_original):
+                examples.append(
+                    {
+                        "claim_id": claim_id,
+                        "perturbation_type": "perturb_type1",
+                        "perturbation": method,
+                        "source_file": f"{method}_True.json",
+                        "conversations": [
+                            {
+                                "role": "system",
+                                "content": "You are a fact checker.",
+                            },
+                            {
+                                "role": "user",
+                                "content": (f"{method} claim {i} T→T {j}"),
+                            },
+                            {"role": "assistant", "content": "True"},
+                        ],
+                    }
+                )
+
+            # T→F perturbations
+            for j in range(n_t_to_f_per_original):
+                perturb_types = [
+                    "perturb_type2",
+                    "perturb_type3_random",
+                    "perturb_type3_masked",
+                ]
+                examples.append(
+                    {
+                        "claim_id": claim_id,
+                        "perturbation_type": perturb_types[
+                            j % len(perturb_types)
+                        ],
+                        "perturbation": method,
+                        "source_file": f"{method}_False.json",
+                        "conversations": [
+                            {
+                                "role": "system",
+                                "content": "You are a fact checker.",
+                            },
+                            {
+                                "role": "user",
+                                "content": (f"{method} claim {i} T→F {j}"),
+                            },
+                            {"role": "assistant", "content": "False"},
+                        ],
+                    }
+                )
+
+        # Original False + F→F perturbations
+        for i in range(n_orig):
+            claim_id = f"{method}_false_{i:04d}"
+
+            examples.append(
+                {
+                    "claim_id": claim_id,
+                    "perturbation_type": "original_normalized",
+                    "perturbation": method,
+                    "source_file": f"{method}_False.json",
+                    "conversations": [
+                        {
+                            "role": "system",
+                            "content": "You are a fact checker.",
+                        },
+                        {
+                            "role": "user",
+                            "content": f"{method} false claim {i}",
+                        },
+                        {"role": "assistant", "content": "False"},
+                    ],
+                }
+            )
+
+            for j in range(n_f_to_f_true_per_original):
+                examples.append(
+                    {
+                        "claim_id": claim_id,
+                        "perturbation_type": "perturb_type1",
+                        "perturbation": method,
+                        "source_file": f"{method}_False.json",
+                        "conversations": [
+                            {
+                                "role": "system",
+                                "content": "You are a fact checker.",
+                            },
+                            {
+                                "role": "user",
+                                "content": (
+                                    f"{method} false claim {i} F→F {j}"
+                                ),
+                            },
+                            {"role": "assistant", "content": "False"},
+                        ],
+                    }
+                )
+
+    return Dataset.from_list(examples)
+
+
+class TestEqualPerturbationMethods:
+    """Tests for the ``equal_perturbation_methods`` stratification mode."""
+
+    def test_equal_method_distributes_evenly(self):
+        """Each perturbation method should get an equal share of the budget when
+        ``equal_perturbation_methods=True``."""
+        print_separator("TEST: Equal Method Distribution")
+
+        methods = ["numeration", "range", "approximation"]
+        dataset = create_mock_dataset_with_perturbation(
+            methods=methods,
+            n_originals_per_method=30,
+            n_t_to_t_per_original=3,
+            n_t_to_f_per_original=3,
+            n_f_to_f_true_per_original=3,
+        )
+
+        balancer = DatasetBalancer(
+            dataset=dataset,
+            balance_labels=False,
+            perturb_ratio=0.5,  # Downsample perturbations
+            equal_perturbation_methods=True,
+            seed=42,
+        )
+
+        balanced = balancer.balance()
+
+        # Count perturbation method distribution in the balanced output
+        method_counts: dict[str, int] = {}
+        for example in balanced:
+            m = example["perturbation"]
+            method_counts[m] = method_counts.get(m, 0) + 1
+
+        print(f"\nMethod distribution: {method_counts}")
+
+        # All methods should be present
+        for m in methods:
+            assert m in method_counts, f"Method {m} missing from output"
+
+        # Counts should be roughly equal (allow ±2 for rounding)
+        counts = list(method_counts.values())
+        max_diff = max(counts) - min(counts)
+        assert max_diff <= 2, (
+            f"Method counts too uneven: {method_counts}"
+            f" (max diff={max_diff})"
+        )
+
+        print(
+            f"\n✓ Test passed: Methods distributed evenly"
+            f" (max diff={max_diff})"
+        )
+
+    def test_equal_method_with_imbalanced_sources(self):
+        """When one method has many more examples, equal stratification should
+        not let it dominate the budget."""
+        print_separator("TEST: Equal Method With Imbalanced Sources")
+
+        dataset = create_mock_dataset_with_perturbation(
+            methods=["numeration", "range", "approximation"],
+            method_sizes={
+                "numeration": 100,
+                "range": 10,
+                "approximation": 50,
+            },
+            n_t_to_t_per_original=2,
+            n_t_to_f_per_original=2,
+            n_f_to_f_true_per_original=2,
+        )
+
+        balancer = DatasetBalancer(
+            dataset=dataset,
+            balance_labels=False,
+            perturb_ratio=0.5,
+            equal_perturbation_methods=True,
+            seed=42,
+        )
+
+        balanced = balancer.balance()
+
+        method_counts: dict[str, int] = {}
+        for example in balanced:
+            m = example["perturbation"]
+            method_counts[m] = method_counts.get(m, 0) + 1
+
+        print(f"\nMethod distribution: {method_counts}")
+
+        # Range (smallest source) should NOT be dwarfed
+        assert method_counts.get("range", 0) > 0
+        # Numeration should NOT dominate
+        total = sum(method_counts.values())
+        numeration_pct = method_counts.get("numeration", 0) / total
+        assert (
+            numeration_pct < 0.6
+        ), f"Numeration dominates at {numeration_pct:.0%}"
+
+        print(
+            "\n✓ Test passed: Imbalanced sources handled"
+            " — no method dominates"
+        )
+
+    def test_equal_method_respects_per_category_budget(self):
+        """Equal-method stratification should apply within each perturbation
+        category (T→T, T→F, F→F) independently."""
+        print_separator("TEST: Equal Method Per-Category Budget")
+
+        methods = ["numeration", "range"]
+        dataset = create_mock_dataset_with_perturbation(
+            methods=methods,
+            n_originals_per_method=50,
+            n_t_to_t_per_original=4,
+            n_t_to_f_per_original=4,
+            n_f_to_f_true_per_original=4,
+        )
+
+        balancer = DatasetBalancer(
+            dataset=dataset,
+            balance_labels=False,
+            perturb_ratio=1.0,
+            false_perturb_t_to_f_ratio=0.5,
+            equal_perturbation_methods=True,
+            seed=42,
+        )
+
+        balanced = balancer.balance()
+
+        # Count T→T examples per method (type1 perturbation on True originals)
+        t_to_t_by_method: dict[str, int] = {}
+        for example in balanced:
+            claim_id = example["claim_id"]
+            perturb_type = example["perturbation_type"]
+            label = example["conversations"][-1]["content"]
+
+            # T→T: was originally True (claim_id contains "_true_"),
+            # still True, and is a perturbation
+            is_t_to_t = (
+                "_true_" in claim_id
+                and label == "True"
+                and perturb_type != "original_normalized"
+            )
+            if is_t_to_t:
+                m = example["perturbation"]
+                t_to_t_by_method[m] = t_to_t_by_method.get(m, 0) + 1
+
+        print(f"\nT→T by method: {t_to_t_by_method}")
+
+        # Both methods should appear. Allow ±2 for rounding.
+        if len(t_to_t_by_method) == 2:
+            counts = list(t_to_t_by_method.values())
+            diff = abs(counts[0] - counts[1])
+            assert (
+                diff <= 2
+            ), f"T→T not equal across methods: {t_to_t_by_method}"
+
+        print("\n✓ Test passed: Per-category budgets respected")
+
+    def test_proportional_without_equal_flag(self):
+        """When equal_perturbation_methods is False (default), proportional
+        stratification by source_file should be used instead."""
+        print_separator("TEST: Proportional (no equal flag)")
+
+        dataset = create_mock_dataset_with_perturbation(
+            methods=["numeration", "range", "approximation"],
+            method_sizes={
+                "numeration": 100,
+                "range": 10,
+                "approximation": 50,
+            },
+            n_t_to_t_per_original=3,
+            n_t_to_f_per_original=3,
+            n_f_to_f_true_per_original=3,
+        )
+
+        balancer = DatasetBalancer(
+            dataset=dataset,
+            balance_labels=False,
+            perturb_ratio=0.5,
+            equal_perturbation_methods=False,  # default
+            seed=42,
+        )
+
+        balanced = balancer.balance()
+
+        method_counts: dict[str, int] = {}
+        for example in balanced:
+            m = example["perturbation"]
+            method_counts[m] = method_counts.get(m, 0) + 1
+
+        print(f"\nMethod distribution: {method_counts}")
+
+        # Numeration (100 originals) should have more examples than
+        # range (10 originals) because proportional allocation favors
+        # larger sources.
+        assert method_counts.get("numeration", 0) > method_counts.get(
+            "range", 0
+        ), "Proportional mode should give more to larger sources"
+
+        print("\n✓ Test passed: Proportional mode preserves source proportions")
+
+    def test_equal_method_fallback_without_perturbation_column(self):
+        """When ``equal_perturbation_methods=True`` but the dataset has no
+        ``perturbation`` column, it should fall back gracefully."""
+        print_separator("TEST: Equal Method Fallback (no column)")
+
+        # Use the old mock helper which doesn't add ``perturbation``
+        dataset = create_mock_dataset(
+            n_original_true=50,
+            n_original_false=50,
+            n_t_to_t_per_original=3,
+            n_t_to_f_per_original=3,
+            n_f_to_f_true_per_original=3,
+        )
+
+        balancer = DatasetBalancer(
+            dataset=dataset,
+            balance_labels=False,
+            perturb_ratio=0.5,
+            equal_perturbation_methods=True,  # flag is set
+            seed=42,
+        )
+
+        # Should not raise — falls back to uniform random
+        balanced = balancer.balance()
+        assert len(balanced) > 0
+
+        print("\n✓ Test passed: Graceful fallback when column is missing")
+
+    def test_equal_method_single_method(self):
+        """When there is only one perturbation method, equal stratification
+        should behave like uniform random."""
+        print_separator("TEST: Single Method Equal Strat")
+
+        dataset = create_mock_dataset_with_perturbation(
+            methods=["numeration"],
+            n_originals_per_method=50,
+            n_t_to_t_per_original=4,
+            n_t_to_f_per_original=4,
+            n_f_to_f_true_per_original=4,
+        )
+
+        balancer = DatasetBalancer(
+            dataset=dataset,
+            balance_labels=False,
+            perturb_ratio=0.5,
+            equal_perturbation_methods=True,
+            seed=42,
+        )
+
+        balanced = balancer.balance()
+
+        # Should still work and return expected size
+        assert len(balanced) > 0
+
+        # All examples should be from "numeration"
+        for example in balanced:
+            assert example["perturbation"] == "numeration"
+
+        print("\n✓ Test passed: Single method handled correctly")
+
+
 if __name__ == "__main__":
     print("\n" + "=" * 80)
     print("  RUNNING DATASET BALANCER TESTS")
