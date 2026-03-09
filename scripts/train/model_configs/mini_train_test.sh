@@ -186,7 +186,7 @@ echo "=========================================="
 echo ""
 
 # Build command
-CMD="python -m src.llm_finetune.unsloth_finetune \
+CMD="uv run python -m src.llm_finetune.unsloth_finetune \
     --train_json ${TRAIN_JSON[@]} \
     --val_json ${VAL_JSON[@]} \
     --model ${MODEL} \

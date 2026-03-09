@@ -37,3 +37,4 @@ inference_tests/
 .github/INTEGRATION_GUIDE.md
 .python-version
 uv.lock
+.models
