@@ -6,11 +6,6 @@ GPU code — only the orchestration logic, helper functions, and data-routing
 decisions.
 """
 
-from src.llm_finetune.unsloth_inference import (
-    get_model_name_arg,
-    extract_label_from_response,
-)
-
 import sys
 import types
 import json
@@ -19,7 +14,7 @@ from unittest.mock import MagicMock, patch
 from datasets import Dataset
 
 # ---------------------------------------------------------------------------
-# Stub heavy third-party packages before importing the module under test.
+# Stub heavy third-party packages BEFORE importing the module under test.
 # ---------------------------------------------------------------------------
 
 
@@ -44,6 +39,12 @@ _unsloth = _ensure_module(
 
 # --- tqdm (prevent progress bars in test output) ---
 _ensure_module("tqdm", {"tqdm": lambda x, **kw: x})
+
+# Now safe to import the module under test
+from src.llm_finetune.unsloth_inference import (  # noqa: E402
+    get_model_name_arg,
+    extract_label_from_response,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -617,6 +618,89 @@ class TestMockTestDatasetIntegrity:
         types = set(small_test_dataset["perturbation_type"])
         assert "original_normalized" in types
         assert len(types) > 1
+
+
+# ---------------------------------------------------------------------------
+# Tests for unperturbed-claims inference mode
+# ---------------------------------------------------------------------------
+
+
+class TestUnperturbedClaimsInference:
+    """Test --inference_unperturbed_claims flag behaviour in inference()."""
+
+    def test_unperturbed_forces_expand_false(self, tmp_path):
+        """inference_unperturbed_claims=True forces
+        expand_perturbations_flag=False."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        with _make_mock_inference_context(tmp_path) as m:
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(tmp_path / "output"),
+                inference_unperturbed_claims=True,
+            )
+            load_call = m["refs"]["load_fact_checking_data"].call_args
+            assert load_call[1]["expand_perturbations_flag"] is False
+
+    def test_unperturbed_output_files_prefixed(self, tmp_path):
+        """inference_unperturbed_claims=True produces unperturbed_ prefixed
+        output files."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        out = tmp_path / "output"
+        with _make_mock_inference_context(tmp_path) as m:
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test-model",
+                max_seq_length=512,
+                output_dir=str(out),
+                inference_unperturbed_claims=True,
+            )
+            # metrics saved with unperturbed_ prefix
+            save_call = m["refs"]["save_metrics_report"].call_args
+            assert save_call[1]["filename"] == "unperturbed_metrics.json"
+
+            # predictions csv saved with unperturbed_ prefix
+            csv_call = m["refs"]["save_predictions_csv"].call_args
+            assert csv_call[1]["filename"] == "unperturbed_predictions.csv"
+
+            # parse failures saved with unperturbed_ prefix
+            fail_call = m["refs"]["save_parse_failures"].call_args
+            assert fail_call[1]["filename"] == "unperturbed_parse_failures.json"
+
+    def test_unperturbed_inference_details_prefixed(self, tmp_path):
+        """inference_unperturbed_claims=True writes
+        unperturbed_inference_details.json."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        out = tmp_path / "output"
+        with _make_mock_inference_context(tmp_path):
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test-model",
+                max_seq_length=512,
+                output_dir=str(out),
+                inference_unperturbed_claims=True,
+            )
+        json_files = list(out.rglob("unperturbed_inference_details.json"))
+        assert len(json_files) == 1
+
+    def test_non_unperturbed_no_prefix(self, tmp_path):
+        """Without the flag, output files have no prefix."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        with _make_mock_inference_context(tmp_path) as m:
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(tmp_path / "output"),
+                inference_unperturbed_claims=False,
+            )
+            save_call = m["refs"]["save_metrics_report"].call_args
+            assert save_call[1]["filename"] == "metrics.json"
 
 
 # ---------------------------------------------------------------------------

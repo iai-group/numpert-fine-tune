@@ -104,15 +104,26 @@ def inference(  # noqa: C901
     expand_perturbations: bool = True,
     max_seq_length: int = 16384,
     output_dir: str = f"{prefix}predictions/{model_name_timestamp}",
+    inference_unperturbed_claims: bool = False,
 ):
     """Run inference on test data."""
+    if inference_unperturbed_claims:
+        expand_perturbations = False
+
     print("\n" + "=" * 80)
-    print("STARTING INFERENCE")
+    print(
+        "STARTING INFERENCE"
+        + (" (UNPERTURBED CLAIMS)" if inference_unperturbed_claims else "")
+    )
     print("=" * 80)
     print(f"Model: {model_name}")
     print(f"Model from Epoch: {start_epoch}")
     print(f"Max sequence length: {max_seq_length:,} tokens")
     print(f"Expand perturbations: {expand_perturbations}")
+    if inference_unperturbed_claims:
+        print(
+            "Unperturbed mode: using only normalized_claim (no perturbations)"
+        )
     print("=" * 80 + "\n")
 
     # Configuration
@@ -303,7 +314,10 @@ def inference(  # noqa: C901
         label = extract_label_from_response(decoded)
         predictions.append(label)
 
-    raw_outputs_path = f"{pred_dir}/inference_details.json"
+    # Determine output file prefix for unperturbed-claims mode
+    file_prefix = "unperturbed_" if inference_unperturbed_claims else ""
+
+    raw_outputs_path = f"{pred_dir}/{file_prefix}inference_details.json"
     with open(raw_outputs_path, "w") as f:
         json.dump(raw_outputs, f, indent=2)
     print(
@@ -324,14 +338,26 @@ def inference(  # noqa: C901
     print_metrics_report(report, show_classification_reports=True)
 
     # Save all outputs
-    metrics_path = save_metrics_report(report, pred_dir)
+    metrics_path = save_metrics_report(
+        report, pred_dir, filename=f"{file_prefix}metrics.json"
+    )
     print(f"Metrics saved to: {metrics_path}")
 
-    failures_path = save_parse_failures(result_records, raw_outputs, pred_dir)
+    failures_path = save_parse_failures(
+        result_records,
+        raw_outputs,
+        pred_dir,
+        filename=f"{file_prefix}parse_failures.json",
+    )
     if failures_path:
         print(f"Parse failure details saved to: {failures_path}")
 
-    csv_path = save_predictions_csv(result_records, raw_outputs, pred_dir)
+    csv_path = save_predictions_csv(
+        result_records,
+        raw_outputs,
+        pred_dir,
+        filename=f"{file_prefix}predictions.csv",
+    )
     print(f"Predictions saved to: {csv_path}\n")
 
 
@@ -373,6 +399,15 @@ if __name__ == "__main__":
         default=True,
         help="Expand perturbations in dataset",
     )
+    parser.add_argument(
+        "--inference_unperturbed_claims",
+        action="store_true",
+        default=False,
+        help=(
+            "Run inference using only normalized_claim "
+            "(no perturbations). Outputs are prefixed with 'unperturbed_'."
+        ),
+    )
 
     # Inference options
     parser.add_argument(
@@ -394,4 +429,5 @@ if __name__ == "__main__":
         expand_perturbations=args.expand_perturbations,
         max_seq_length=args.max_seq_length,
         output_dir=args.output_dir,
+        inference_unperturbed_claims=args.inference_unperturbed_claims,
     )
