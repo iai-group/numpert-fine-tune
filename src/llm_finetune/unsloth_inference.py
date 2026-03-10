@@ -37,7 +37,9 @@ from src.llm_finetune.utils.naming import (
 
 def get_model_name_arg(model_name):
     """Convert short model name to full HuggingFace path."""
-    if model_name.startswith("Qwen3-8B") or model_name.startswith("Qwen3-8B"):
+    if model_name.startswith("Qwen3-8B") or model_name.startswith(
+        "unsloth/Qwen3-8B"
+    ):
         return "unsloth/Qwen3-8B"
     elif model_name.startswith("Qwen3-32B") or model_name.startswith(
         "unsloth/Qwen3-32B"
@@ -429,8 +431,9 @@ if __name__ == "__main__":
     # Inference options
     parser.add_argument(
         "--output_dir",
-        default="predictions",
-        help="Output directory for predictions",
+        default=None,
+        help="Output directory for predictions "
+        "(auto-generates run name if not set)",
     )
 
     args = parser.parse_args()

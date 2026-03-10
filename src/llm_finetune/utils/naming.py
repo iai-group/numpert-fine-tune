@@ -49,6 +49,8 @@ ADJECTIVES = [
     "warm",
     "wise",
 ]
+# De-duplicate to avoid biased sampling
+ADJECTIVES = list(dict.fromkeys(ADJECTIVES))
 
 NOUNS = [
     "ape",
@@ -168,7 +170,9 @@ def generate_run_name(
     """
     base_path_obj = Path(base_path) if base_path else None
 
-    # Seed for reproducibility (if needed)
+    # Sanitize model_name: replace path separators to avoid nested dirs
+    safe_model_name = model_name.replace("/", "-")
+
     used_names = set()
     if base_path_obj and base_path_obj.exists():
         used_names = {d.name for d in base_path_obj.iterdir() if d.is_dir()}
@@ -178,7 +182,7 @@ def generate_run_name(
         adjective = random.choice(ADJECTIVES)
         noun = random.choice(NOUNS)
         verb = random.choice(VERBS)
-        name = f"{model_name}-{adjective}-{noun}-{verb}"
+        name = f"{safe_model_name}-{adjective}-{noun}-{verb}"
 
         if perturb_type_names:
             name = f"{name}_{perturb_type_names}"
@@ -187,19 +191,19 @@ def generate_run_name(
             return name
 
     # If all combinations exhausted, append numeric suffix
-    name = (
-        f"{model_name}-{random.choice(ADJECTIVES)}-"
+    base_name = (
+        f"{safe_model_name}-{random.choice(ADJECTIVES)}-"
         f"{random.choice(NOUNS)}-{random.choice(VERBS)}"
     )
     if perturb_type_names:
-        name = f"{name}_{perturb_type_names}"
+        base_name = f"{base_name}_{perturb_type_names}"
 
     # Find first available numbered suffix
     counter = 1
-    while f"{name}_v{counter}" in used_names:
+    while f"{base_name}_v{counter}" in used_names:
         counter += 1
 
-    return f"{name}_v{counter}"
+    return f"{base_name}_v{counter}"
 
 
 def build_output_dir_name(

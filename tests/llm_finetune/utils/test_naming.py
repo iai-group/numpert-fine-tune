@@ -21,7 +21,7 @@ class TestGenerateRunName:
         name = generate_run_name("Qwen3-8B")
         parts = name.split("-")
         # Should have: Qwen3, 8B (from model), adjective, noun, verb
-        assert len(parts) >= 4
+        assert len(parts) >= 5
         assert parts[0] == "Qwen3"
         assert parts[1] == "8B"
         # Adjective, noun, verb should be from our word lists
