@@ -670,6 +670,12 @@ class TestUnperturbedClaimsInference:
             fail_call = m["refs"]["save_parse_failures"].call_args
             assert fail_call[1]["filename"] == "unperturbed_parse_failures.json"
 
+            # inference config saved with unperturbed_ prefix
+            cfg_call = m["refs"]["save_inference_config"].call_args
+            assert (
+                cfg_call[1]["filename"] == "unperturbed_inference_config.json"
+            )
+
     def test_unperturbed_inference_details_prefixed(self, tmp_path):
         """inference_unperturbed_claims=True writes
         unperturbed_inference_details.json."""
@@ -701,6 +707,9 @@ class TestUnperturbedClaimsInference:
             )
             save_call = m["refs"]["save_metrics_report"].call_args
             assert save_call[1]["filename"] == "metrics.json"
+
+            cfg_call = m["refs"]["save_inference_config"].call_args
+            assert cfg_call[1]["filename"] == "inference_config.json"
 
 
 # ---------------------------------------------------------------------------

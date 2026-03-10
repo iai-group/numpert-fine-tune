@@ -1,10 +1,15 @@
 """Inference for fact-checking models with numerical perturbations."""
 
-import re
+import argparse
 import json
-from typing import Optional, List
-import torch
+import os
+import re
 from datetime import datetime
+from typing import Optional, List
+
+import torch
+from tqdm import tqdm
+from unsloth import FastLanguageModel
 
 from src.llm_finetune.config import prefix
 from src.llm_finetune.utils.data_loading.hf_dataset_instructions import (
@@ -24,16 +29,10 @@ from src.llm_finetune.utils.inference.metrics import (
     save_parse_failures,
     save_predictions_csv,
 )
-
-from unsloth import FastLanguageModel
-
-import os
-import argparse
-from tqdm import tqdm
-
-# Timestamp for model naming
-time_start = datetime.now()
-model_name_timestamp = time_start.strftime("%Y%m%d_%H%M%S")
+from src.llm_finetune.utils.naming import (
+    build_output_dir_name,
+    generate_run_name,
+)
 
 
 def get_model_name_arg(model_name):
@@ -103,10 +102,21 @@ def inference(  # noqa: C901
     start_epoch: int = 0,
     expand_perturbations: bool = True,
     max_seq_length: int = 16384,
-    output_dir: str = f"{prefix}predictions/{model_name_timestamp}",
+    output_dir: Optional[str] = None,
     inference_unperturbed_claims: bool = False,
 ):
     """Run inference on test data."""
+    time_start = datetime.now()
+
+    if output_dir is None:
+        predictions_dir = f"{prefix}predictions"
+        run_name = generate_run_name(
+            model_name,
+            timestamp=time_start,
+            base_path=predictions_dir,
+        )
+        output_dir = f"{predictions_dir}/{run_name}"
+
     if inference_unperturbed_claims:
         expand_perturbations = False
 
@@ -229,11 +239,17 @@ def inference(  # noqa: C901
     predictions = []  # Will contain None for parse failures
     raw_outputs = []  # Store raw outputs for debugging
 
+    # Determine output file prefix for unperturbed-claims mode
+    file_prefix = "unperturbed_" if inference_unperturbed_claims else ""
+
     # Create output directory
-    pred_dir = (
-        f"{output_dir}/{model_name}{rank_postfix}"
-        f"{quant_status}-epoch-{start_epoch}"
+    pred_dir_name = build_output_dir_name(
+        model_name,
+        rank,
+        start_epoch,
+        load_in_4bit=load_in_4bit,
     )
+    pred_dir = f"{output_dir}/{pred_dir_name}"
     os.makedirs(pred_dir, exist_ok=True)
 
     # Export inference configuration to JSON
@@ -248,7 +264,11 @@ def inference(  # noqa: C901
         max_seq_length=max_seq_length,
         timestamp=time_start,
     )
-    config_path = save_inference_config(inference_config, pred_dir)
+    config_path = save_inference_config(
+        inference_config,
+        pred_dir,
+        filename=f"{file_prefix}inference_config.json",
+    )
     print(f"Inference config saved to: {config_path}")
 
     # Run inference
@@ -313,9 +333,6 @@ def inference(  # noqa: C901
 
         label = extract_label_from_response(decoded)
         predictions.append(label)
-
-    # Determine output file prefix for unperturbed-claims mode
-    file_prefix = "unperturbed_" if inference_unperturbed_claims else ""
 
     raw_outputs_path = f"{pred_dir}/{file_prefix}inference_details.json"
     with open(raw_outputs_path, "w") as f:
@@ -395,7 +412,7 @@ if __name__ == "__main__":
     # Dataset configuration
     parser.add_argument(
         "--expand_perturbations",
-        action="store_true",
+        action=argparse.BooleanOptionalAction,
         default=True,
         help="Expand perturbations in dataset",
     )
