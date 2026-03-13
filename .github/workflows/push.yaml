@@ -28,7 +28,6 @@ jobs:
 
       - name: Install System Dependencies
         run: |
-          uv init
           uv lock
           uv sync
 
