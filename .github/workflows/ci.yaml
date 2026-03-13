@@ -38,7 +38,7 @@ jobs:
       - name: Install Dependencies
         run: |
           curl -LsSf https://astral.sh/uv/install.sh | sh
-          uv sync --all-extras
+          uv sync --extra dev
 
       - name: Run black
         shell: bash
