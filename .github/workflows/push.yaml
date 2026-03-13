@@ -28,10 +28,8 @@ jobs:
 
       - name: Install System Dependencies
         run: |
-          uv init
           uv lock
           uv sync
-          uv run python -m spacy download en_core_web_trf
 
       - name: Install Graphviz
         run: sudo apt-get install -y graphviz

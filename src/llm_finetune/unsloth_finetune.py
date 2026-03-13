@@ -1,10 +1,21 @@
 """Fine-tuning for fact-checking models with numerical perturbations."""
 
-from typing import Optional, List
-from torch.utils.data import DataLoader
-from torch import torch
+import argparse
+import os
 from collections import Counter
 from datetime import datetime
+from typing import Optional, List
+
+import wandb
+from torch import torch
+from torch.utils.data import DataLoader
+from trl import SFTTrainer, SFTConfig
+from transformers import (
+    DataCollatorForSeq2Seq,
+    TrainerCallback,
+)
+from unsloth import FastLanguageModel, is_bfloat16_supported
+from unsloth.chat_templates import get_chat_template
 
 from src.llm_finetune.config import prefix
 from src.llm_finetune.utils.data_loading.hf_dataset_instructions import (
@@ -14,6 +25,7 @@ from src.llm_finetune.utils.data_loading.hf_dataset_instructions import (
 )
 from src.llm_finetune.utils.data_loading.class_balancer import DatasetBalancer
 from src.llm_finetune.batch_sampler import EnhancedPerturbationBatchSampler
+from src.llm_finetune.utils.naming import generate_run_name
 from src.llm_finetune.utils.training.convert_to_gguf import (
     save_as_gguf,
     DEFAULT_QUANT_METHOD,
@@ -23,23 +35,6 @@ from src.llm_finetune.utils.training.training_config_export import (
     build_training_config,
     save_training_config,
 )
-
-
-from unsloth.chat_templates import get_chat_template
-from unsloth import FastLanguageModel
-from trl import SFTTrainer, SFTConfig
-from transformers import (
-    DataCollatorForSeq2Seq,
-    TrainerCallback,
-)
-from unsloth import is_bfloat16_supported
-import wandb
-import argparse
-import os
-
-# Timestamp for model naming
-time_start = datetime.now()
-model_name_timestamp = time_start.strftime("%Y%m%d_%H%M%S")
 
 
 class PerturbationAwareSFTTrainer(SFTTrainer):
@@ -162,6 +157,7 @@ def finetune(  # noqa: C901
     debug: bool = False,
 ):
     """Fine-tune a model for fact-checking with numerical perturbations."""
+    time_start = datetime.now()
     target_epoch = start_epoch + num_train_epochs - 1
 
     print("\n" + "=" * 80)
@@ -633,10 +629,14 @@ def finetune(  # noqa: C901
         )
 
     # Create output directory (used for checkpoints and final model)
-    base_dir = (
-        f"{prefix}models/"
-        f"{model_name}_{model_name_timestamp}_{perturb_type_names}"
+    models_dir = f"{prefix}models"
+    run_name = generate_run_name(
+        model_name,
+        timestamp=time_start,
+        perturb_type_names=perturb_type_names,
+        base_path=models_dir,
     )
+    base_dir = f"{models_dir}/{run_name}"
     output_dir = f"{base_dir}/checkpoints{rank_postfix}"
     if not os.path.exists(output_dir):
         os.makedirs(output_dir, exist_ok=True)
@@ -894,7 +894,7 @@ if __name__ == "__main__":
     # Dataset configuration
     parser.add_argument(
         "--expand_perturbations",
-        action="store_true",
+        action=argparse.BooleanOptionalAction,
         default=True,
         help="Expand perturbations in dataset",
     )
@@ -932,19 +932,19 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--split_large_claims",
-        action="store_true",
+        action=argparse.BooleanOptionalAction,
         default=True,
         help="Split claims with many perturbations across batches",
     )
     parser.add_argument(
         "--ensure_original_in_batch",
-        action="store_true",
+        action=argparse.BooleanOptionalAction,
         default=True,
         help="Ensure each batch has at least one original example",
     )
     parser.add_argument(
         "--ensure_perturbed_in_batch",
-        action="store_true",
+        action=argparse.BooleanOptionalAction,
         default=True,
         help="Ensure each batch has at least one perturbed example",
     )

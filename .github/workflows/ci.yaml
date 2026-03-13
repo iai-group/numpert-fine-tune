@@ -22,7 +22,7 @@ jobs:
         id: branch-name
         uses: tj-actions/branch-names@v7.0.7
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
@@ -39,7 +39,6 @@ jobs:
         run: |
           curl -LsSf https://astral.sh/uv/install.sh | sh
           uv sync --all-extras
-          uv run python -m spacy download en_core_web_trf
 
       - name: Run black
         shell: bash
@@ -78,14 +77,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: unit-test-py39
-          path: pytest.xml
-
-      - name: Upload Unit Test Results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: unit-test-py39
-          path: pytest-coverage.txt
+          path: |
+            pytest.xml
+            pytest-coverage.txt
           
   publish-test-results:
       name: "Publish Unit Tests Results"
@@ -96,7 +90,7 @@ jobs:
 
       steps:
         - name: Download Artifacts
-          uses: actions/download-artifact@v3
+          uses: actions/download-artifact@v4
           with:
             name: unit-test-py39
             path: unit-test-py39
@@ -107,7 +101,7 @@ jobs:
             files: unit-test-py39/*.xml
 
         - name: Download coverage report
-          uses: actions/download-artifact@v3
+          uses: actions/download-artifact@v4
           with:
             name: coverage-results
 
