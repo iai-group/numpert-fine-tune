@@ -77,14 +77,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: unit-test-py39
-          path: pytest.xml
-
-      - name: Upload Unit Test Results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: unit-test-py39
-          path: pytest-coverage.txt
+          path: |
+            pytest.xml
+            pytest-coverage.txt
           
   publish-test-results:
       name: "Publish Unit Tests Results"
