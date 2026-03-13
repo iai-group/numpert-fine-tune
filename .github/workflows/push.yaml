@@ -21,15 +21,14 @@ jobs:
         uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
-          cache-dependency-glob: "uv.lock"
+          cache-dependency-glob: "pyproject.toml"
 
       - name: Set up Python 3.11
         run: uv python install 3.11
 
-      - name: Install System Dependencies
+      - name: Install Dependencies
         run: |
-          uv lock
-          uv sync
+          uv sync --extra dev
 
       - name: Install Graphviz
         run: sudo apt-get install -y graphviz
