@@ -6,6 +6,8 @@ import math
 from dataclasses import dataclass
 from typing import List, Optional, Tuple
 
+PERTUBATION_METHOD = "approximation"
+
 
 # =========================
 # Configuration
@@ -320,6 +322,7 @@ def process_claims(input_file, output_file):
             for k, v in claim.items()
             if k not in {"tokens", "ner_tags", "entities"}
         }
+        out["pertubation_method"] = PERTUBATION_METHOD
         out[f"perturb_type1_{label}"] = t
         out[f"perturb_type2_{label}"] = f_
         output.append(out)
