@@ -323,7 +323,9 @@ class TestProcessJsonWithLabel:
         ):
             result = process_json(input_data)
         assert len(result) == 2
-        assert all(entry["pertubation_method"] == "numeration" for entry in result)
+        assert all(
+            entry["pertubation_method"] == "numeration" for entry in result
+        )
         assert result[0]["id"] == 1
         assert result[1]["id"] == 3
 
