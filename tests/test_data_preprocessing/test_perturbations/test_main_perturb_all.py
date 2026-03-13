@@ -356,6 +356,24 @@ class TestSaveSplits:
         saved_path = mock_save.call_args[0][1]
         assert saved_path.startswith("/custom/dir")
 
+    @patch("src.data_preprocessing.perturbations.main_perturb_all.save_data")
+    @patch(
+        "src.data_preprocessing.perturbations.main_perturb_all."
+        "remove_unperturbed_claims"
+    )
+    def test_preserves_perturbation_annotation(
+        self,
+        mock_remove: MagicMock,
+        mock_save: MagicMock,
+    ) -> None:
+        """Verifies annotated perturbation entries are forwarded unchanged."""
+        filtered = [{"claim": "A.", "perturbation": "negative"}]
+        mock_remove.return_value = filtered
+
+        save_splits({"True": filtered}, "negative", ["perturb_type2"], "/out")
+
+        assert mock_save.call_args[0][0][0]["perturbation"] == "negative"
+
 
 # ── run_perturbations ──────────────────────────────────────────────
 

@@ -7,6 +7,8 @@ from src.data_preprocessing.perturbations.utils.load_save import (
     INCLUDED_KEYS,
 )
 
+PERTURBATION_NAME = "numeration"
+
 # Numerical entity types
 numerical_entities: Set[str] = {
     "CARDINAL",
@@ -233,6 +235,7 @@ def process_json(input_data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
             perturbed_entry = {
                 key: entry[key] for key in INCLUDED_KEYS if key in entry
             }
+            perturbed_entry["perturbation"] = PERTURBATION_NAME
             if perturbed_type1:
                 perturbed_entry[f"perturb_type1_{label}"] = perturbed_type1
             if perturbed_type2:

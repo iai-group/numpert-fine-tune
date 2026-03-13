@@ -83,6 +83,7 @@ def test_process_json_basic():
     ):
         result = process_json(input_data)
     assert len(result) == 1
+    assert result[0]["perturbation"] == "negative"
     assert result[0]["perturb_type2_True"] == "The success rate is -50%."
     assert result[0]["claim_id"] == "1"
 
@@ -118,6 +119,7 @@ def test_process_json_unknown_label():
     ):
         result = process_json(input_data)
     assert len(result) == 1
+    assert result[0]["perturbation"] == "negative"
     assert "perturb_type2_UNKNOWN" in result[0]
 
 
@@ -149,6 +151,7 @@ def test_process_json_multiple_entries():
     ):
         result = process_json(input_data)
     assert len(result) == 2
+    assert all(entry["perturbation"] == "negative" for entry in result)
     assert result[0]["perturb_type2_True"] == "The success rate is -50%."
     assert result[1]["perturb_type2_False"] == "Accuracy increased by -10%."
 

@@ -274,6 +274,7 @@ class TestProcessJson:
             "perturb_type3_masked_True",
             "perturb_type3_removed_True",
         }
+        assert entry["perturbation"] == "obfuscation"
         assert perturbation_keys & entry.keys()
 
     def test_skips_entry_with_no_perturbation(self, patch_included_keys):
@@ -320,6 +321,7 @@ class TestProcessJson:
         for key in MOCK_INCLUDED_KEYS:
             if key in sample_input_data[0]:
                 assert key in entry
+        assert entry["perturbation"] == "obfuscation"
 
     def test_unknown_label_used_when_missing(self, patch_included_keys):
         data = [

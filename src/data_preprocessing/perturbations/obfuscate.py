@@ -12,6 +12,8 @@ from src.data_preprocessing.perturbations.utils.load_save import (
     INCLUDED_KEYS,
 )
 
+PERTURBATION_NAME = "obfuscation"
+
 # Numerical entity labels
 NUMERICAL_LABELS = {
     "CARDINAL",
@@ -163,6 +165,7 @@ def process_json(
             continue
 
         base_entry = {key: entry[key] for key in INCLUDED_KEYS if key in entry}
+        base_entry["perturbation"] = PERTURBATION_NAME
 
         if perturbed_random != claim:
             base_entry[f"perturb_type3_random_{label}"] = perturbed_random

@@ -4,6 +4,36 @@ import pytest
 from src.data_preprocessing.perturbations import range as rng
 
 
+def test_process_json_adds_perturbation_field():
+    """Test process_json annotates emitted entries with perturbation type."""
+    result = rng.process_json(
+        [
+            {
+                "normalized_claim": "The rate is 50%.",
+                "entities": [
+                    {
+                        "text": "50%",
+                        "label": "PERCENT",
+                        "start_char": 12,
+                        "end_char": 15,
+                    }
+                ],
+                "label": "True",
+                "claim_id": "r1",
+                "tokens": ["The", "rate", "is", "50", "%"],
+                "ner_tags": ["O", "O", "O", "PERCENT", "PERCENT"],
+            }
+        ]
+    )
+
+    assert len(result) == 1
+    assert result[0]["perturbation"] == "range"
+    assert result[0]["claim_id"] == "r1"
+    assert "entities" not in result[0]
+    assert "tokens" not in result[0]
+    assert "ner_tags" not in result[0]
+
+
 def test_extract_number_from_text_percent():
     """Test extracting a number with a percent unit from text."""
     prefix, number, suffix, unit = rng.extract_number_from_text(

@@ -6,6 +6,8 @@ import math
 from dataclasses import dataclass
 from typing import List, Optional, Tuple
 
+PERTURBATION_NAME = "approximation"
+
 
 # =========================
 # Configuration
@@ -320,6 +322,7 @@ def process_claims(input_file, output_file):
             for k, v in claim.items()
             if k not in {"tokens", "ner_tags", "entities"}
         }
+        out["perturbation"] = PERTURBATION_NAME
         out[f"perturb_type1_{label}"] = t
         out[f"perturb_type2_{label}"] = f_
         output.append(out)
