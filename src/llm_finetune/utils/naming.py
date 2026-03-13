@@ -41,7 +41,6 @@ ADJECTIVES = [
     "fast",
     "grand",
     "hard",
-    "keen",
     "loud",
     "rich",
     "silent",
@@ -99,9 +98,9 @@ NOUNS = [
     "turtle",
     "viper",
     "wolf",
-    "xylophone-bird",
+    "xerus",
     "yellowhammer",
-    "zephyr-hawk",
+    "zebu",
 ]
 
 VERBS = [
@@ -174,8 +173,11 @@ def generate_run_name(
     safe_model_name = model_name.replace("/", "-")
 
     used_names = set()
-    if base_path_obj and base_path_obj.exists():
-        used_names = {d.name for d in base_path_obj.iterdir() if d.is_dir()}
+    if base_path_obj and base_path_obj.is_dir():
+        try:
+            used_names = {d.name for d in base_path_obj.iterdir() if d.is_dir()}
+        except OSError:
+            pass
 
     # Try to generate a unique combination
     for attempt in range(max_attempts):
@@ -227,6 +229,8 @@ def build_output_dir_name(
         A directory *name* (not full path) such as
         ``"Qwen3-8B_r32-epoch-1"``.
     """
+    # Sanitize model_name: replace path separators to avoid nested dirs
+    safe_model_name = model_name.replace("/", "-").replace("\\", "-")
     rank_postfix = "" if rank == 16 else f"_r{rank}"
     quant_status = "" if load_in_4bit else "-unquantized"
-    return f"{model_name}{rank_postfix}{quant_status}-epoch-{start_epoch}"
+    return f"{safe_model_name}{rank_postfix}{quant_status}-epoch-{start_epoch}"

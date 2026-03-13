@@ -54,11 +54,27 @@ class TestGenerateRunName:
         assert name.startswith("model-")
 
     def test_uniqueness_without_directory(self):
-        """Test that different calls produce different names."""
-        names = {generate_run_name("model") for _ in range(10)}
-        # Very unlikely to get same name twice (89000+ combinations)
-        # but set to be safe
-        assert len(names) >= 9  # At least 9 different names out of 10
+        """Test that different calls produce different names (deterministic)."""
+        import src.llm_finetune.utils.naming as naming_module
+
+        state = naming_module.random.getstate()
+        naming_module.random.seed(42)
+        try:
+            names = [generate_run_name("model") for _ in range(10)]
+        finally:
+            naming_module.random.setstate(state)
+        assert len(names) == len(
+            set(names)
+        ), "Expected all 10 names to be distinct"
+
+    def test_base_path_is_file_does_not_raise(self):
+        """Test that passing a file path as base_path does not raise."""
+        import tempfile
+
+        with tempfile.NamedTemporaryFile() as tmp:
+            # Should not raise even though base_path is a file, not a dir
+            name = generate_run_name("model", base_path=tmp.name)
+            assert name.startswith("model-")
 
     def test_uniqueness_with_existing_directory(self):
         """Test that function generates unique names avoiding existing dirs."""
@@ -131,3 +147,11 @@ class TestBuildOutputDirName:
     def test_epoch_0(self):
         result = build_output_dir_name("model", rank=32, start_epoch=0)
         assert result == "model_r32-epoch-0"
+
+    def test_huggingface_id_sanitized(self):
+        """Test that HuggingFace-style org/model IDs have / replaced with -."""
+        result = build_output_dir_name(
+            "unsloth/Qwen3-8B", rank=16, start_epoch=1
+        )
+        assert "/" not in result
+        assert result == "unsloth-Qwen3-8B-epoch-1"
