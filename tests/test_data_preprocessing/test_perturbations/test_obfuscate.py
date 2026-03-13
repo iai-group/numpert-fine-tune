@@ -258,6 +258,10 @@ def patch_included_keys():
 
 
 class TestProcessJson:
+    @staticmethod
+    def _entries_by_perturbation(result, label):
+        return {entry["pertubation_method"]: entry for entry in result[label]}
+
     def test_returns_dict(self, sample_input_data, patch_included_keys):
         result = process_json(sample_input_data)
         assert isinstance(result, dict)
@@ -268,13 +272,11 @@ class TestProcessJson:
 
     def test_perturbed_keys_added(self, sample_input_data, patch_included_keys):
         result = process_json(sample_input_data)
-        entry = result["True"][0]
-        perturbation_keys = {
-            "perturb_type3_random_True",
-            "perturb_type3_masked_True",
-            "perturb_type3_removed_True",
-        }
-        assert perturbation_keys & entry.keys()
+        entries = self._entries_by_perturbation(result, "True")
+        assert set(entries) == {"random", "masked", "removed"}
+        assert "perturb_type3_random_True" in entries["random"]
+        assert "perturb_type3_masked_True" in entries["masked"]
+        assert "perturb_type3_removed_True" in entries["removed"]
 
     def test_skips_entry_with_no_perturbation(self, patch_included_keys):
         # No numerical entities → all perturbations equal original → skipped
@@ -316,10 +318,15 @@ class TestProcessJson:
         self, sample_input_data, patch_included_keys
     ):
         result = process_json(sample_input_data)
-        entry = result["True"][0]
-        for key in MOCK_INCLUDED_KEYS:
-            if key in sample_input_data[0]:
-                assert key in entry
+        for entry in result["True"]:
+            for key in MOCK_INCLUDED_KEYS:
+                if key in sample_input_data[0]:
+                    assert key in entry
+            assert entry["pertubation_method"] in {
+                "random",
+                "masked",
+                "removed",
+            }
 
     def test_unknown_label_used_when_missing(self, patch_included_keys):
         data = [
@@ -352,8 +359,25 @@ class TestProcessJson:
         ]
         result = process_json(data)
         if "True" in result:
-            entry = result["True"][0]
-            assert "perturb_type3_random_True" not in entry
+            entries = self._entries_by_perturbation(result, "True")
+            assert "random" not in entries
+            assert set(entries) == {"removed"}
+
+    def test_each_entry_has_single_obfuscation_variant(
+        self, sample_input_data, patch_included_keys
+    ):
+        result = process_json(sample_input_data)
+
+        for entry in result["True"]:
+            perturbation_keys = [
+                key for key in entry if key.startswith("perturb_type3_")
+            ]
+            assert len(perturbation_keys) == 1
+            assert entry["pertubation_method"] in {
+                "random",
+                "masked",
+                "removed",
+            }
 
     def test_empty_input_returns_empty_dict(  # noqa: C901
         self, patch_included_keys

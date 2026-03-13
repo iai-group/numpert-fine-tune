@@ -162,15 +162,21 @@ def process_json(
         ):
             continue
 
-        base_entry = {key: entry[key] for key in INCLUDED_KEYS if key in entry}
+        variants = [
+            ("random", f"perturb_type3_random_{label}", perturbed_random),
+            ("masked", f"perturb_type3_masked_{label}", perturbed_masked),
+            ("removed", f"perturb_type3_removed_{label}", perturbed_removed),
+        ]
 
-        if perturbed_random != claim:
-            base_entry[f"perturb_type3_random_{label}"] = perturbed_random
-        if perturbed_masked != claim:
-            base_entry[f"perturb_type3_masked_{label}"] = perturbed_masked
-        if perturbed_removed != claim:
-            base_entry[f"perturb_type3_removed_{label}"] = perturbed_removed
+        for perturbation_name, perturbation_key, perturbation_value in variants:
+            if perturbation_value == claim:
+                continue
 
-        results.setdefault(label, []).append(base_entry)
+            entry_with_variant = {
+                key: entry[key] for key in INCLUDED_KEYS if key in entry
+            }
+            entry_with_variant["pertubation_method"] = perturbation_name
+            entry_with_variant[perturbation_key] = perturbation_value
+            results.setdefault(label, []).append(entry_with_variant)
 
     return results
