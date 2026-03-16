@@ -1,6 +1,5 @@
 """Tests for unperturbed-claims deduplication helper."""
 
-import pytest
 from datasets import Dataset
 
 from src.llm_finetune.utils.inference.unperturbed_claims import (

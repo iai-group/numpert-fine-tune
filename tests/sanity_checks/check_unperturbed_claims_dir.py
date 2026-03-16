@@ -27,7 +27,7 @@ import json
 from collections import Counter, defaultdict
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Tuple
 
 SEPARATOR = "=" * 80
 
@@ -154,15 +154,17 @@ def _print_summary(
 
     if duplicates:
         print("Top duplicate claim_ids (first 15):")
-        top = sorted(duplicates.items(), key=lambda kv: len(kv[1]), reverse=True)
+        top = sorted(
+            duplicates.items(), key=lambda kv: len(kv[1]), reverse=True
+        )
         for claim_id, recs in top[:15]:
             files = sorted({r.source_file for r in recs})
-            print(
-                f"  {claim_id}: {len(recs)} rows across {len(files)} files"
-            )
+            print(f"  {claim_id}: {len(recs)} rows across {len(files)} files")
         print()
 
-    print(f"claim_id -> normalized_claim conflicts: {len(claim_text_conflicts)}")
+    print(
+        f"claim_id -> normalized_claim conflicts: {len(claim_text_conflicts)}"
+    )
     if claim_text_conflicts:
         for claim_id in sorted(claim_text_conflicts)[:10]:
             print(
@@ -174,9 +176,7 @@ def _print_summary(
     print(f"claim_id -> label conflicts:            {len(label_conflicts)}")
     if label_conflicts:
         for claim_id in sorted(label_conflicts)[:10]:
-            print(
-                f"  {claim_id}: labels={sorted(label_conflicts[claim_id])}"
-            )
+            print(f"  {claim_id}: labels={sorted(label_conflicts[claim_id])}")
     print()
 
     file_counts = Counter(r.source_file for r in rows)
@@ -186,7 +186,9 @@ def _print_summary(
     print()
 
 
-def _write_unique_jsonl(unique_rows: List[ClaimRecord], output_path: Path) -> None:
+def _write_unique_jsonl(
+    unique_rows: List[ClaimRecord], output_path: Path
+) -> None:
     """Write final unique set (one row per claim_id) to JSONL."""
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -234,7 +236,9 @@ def main() -> None:
 
     input_dir = Path(args.input_dir)
     if not input_dir.exists() or not input_dir.is_dir():
-        raise ValueError(f"input_dir must be an existing directory: {input_dir}")
+        raise ValueError(
+            f"input_dir must be an existing directory: {input_dir}"
+        )
 
     json_files = _iter_json_files(input_dir, recursive=args.recursive)
     if not json_files:
