@@ -29,6 +29,9 @@ from src.llm_finetune.utils.inference.metrics import (
     save_parse_failures,
     save_predictions_csv,
 )
+from src.llm_finetune.utils.inference.unperturbed_claims import (
+    deduplicate_unperturbed_claims,
+)
 from src.llm_finetune.utils.naming import (
     build_output_dir_name,
     generate_run_name,
@@ -203,6 +206,14 @@ def inference(  # noqa: C901
         expand_perturbations_flag=expand_perturbations,
         include_doc=True,
     )
+
+    if inference_unperturbed_claims:
+        pre_dedup = len(test_data)
+        test_data = deduplicate_unperturbed_claims(test_data)
+        print(
+            f"Unperturbed dedup: {pre_dedup} → {len(test_data)} "
+            f"(removed {pre_dedup - len(test_data)} duplicates)"
+        )
 
     print(f"Test dataset size: {len(test_data)}")
 
