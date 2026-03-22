@@ -248,7 +248,7 @@ def inference(  # noqa: C901
     else:
         print("✅ All examples fit within max_seq_length")
 
-    raw_outputs = []  # Store raw outputs for debugging
+    raw_outputs: list[dict] = [{} for _ in range(len(test_data))]
 
     # Determine output file prefix for unperturbed-claims mode
     file_prefix = "unperturbed_" if inference_unperturbed_claims else ""
@@ -282,10 +282,36 @@ def inference(  # noqa: C901
     )
     print(f"Inference config saved to: {config_path}")
 
-    # Run inference
+    # Deduplicate: only evaluate each original_normalized claim once.
+    # Perturbed entries are always unique across files (different claim text)
+    # so only original_normalized entries can be true duplicates.
+    seen_original_claims: dict[str, int] = {}  # claim_id → first index
+    unique_indices: list[int] = []
+    duplicate_map: dict[int, int] = {}  # dup index → first occurrence index
+
+    for i in range(len(test_data)):
+        if test_data[i]["perturbation_type"] == "original_normalized":
+            cid = test_data[i]["claim_id"]
+            if cid not in seen_original_claims:
+                seen_original_claims[cid] = i
+                unique_indices.append(i)
+            else:
+                duplicate_map[i] = seen_original_claims[cid]
+        else:
+            unique_indices.append(i)
+
+    n_duplicates = len(duplicate_map)
+    if n_duplicates > 0:
+        print(
+            f"\nDeduplication: {len(test_data)} entries → "
+            f"{len(unique_indices)} unique evaluations "
+            f"(skipping {n_duplicates} duplicate original_normalized claims)"
+        )
+
+    # Run inference on unique entries only
     print("\nRunning inference...")
 
-    for i in tqdm(range(len(test_data))):
+    for i in tqdm(unique_indices):
         # Format the prompt
         prompt_text = tokenizer.apply_chat_template(
             test_data[i]["conversations"],
@@ -344,7 +370,25 @@ def inference(  # noqa: C901
         }
         if "source_file" in test_data.column_names:
             entry["source_file"] = test_data[i]["source_file"]
-        raw_outputs.append(entry)
+        raw_outputs[i] = entry
+
+    # Fill duplicate entries by reusing the inference result
+    for dup_idx, orig_idx in duplicate_map.items():
+        orig = raw_outputs[orig_idx]
+        entry = {
+            "index": dup_idx,
+            "claim_id": test_data[dup_idx]["claim_id"],
+            "perturbation_type": test_data[dup_idx]["perturbation_type"],
+            "label": test_data[dup_idx]["label"],
+            "full_prompt": orig["full_prompt"],
+            "raw_response": orig["raw_response"],
+            "parsed_successfully": orig["parsed_successfully"],
+            "predicted_label": orig["predicted_label"],
+            "reused_from_index": orig_idx,
+        }
+        if "source_file" in test_data.column_names:
+            entry["source_file"] = test_data[dup_idx]["source_file"]
+        raw_outputs[dup_idx] = entry
 
     raw_outputs_path = f"{pred_dir}/{file_prefix}inference_details.json"
     with open(raw_outputs_path, "w") as f:
