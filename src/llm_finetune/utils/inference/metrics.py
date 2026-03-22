@@ -396,13 +396,9 @@ def _format_classification_report(report_dict: Dict) -> str:
     if "accuracy" in report_dict:
         total_support = sum(
             v.get("support", 0)
-            for v in report_dict.values()
-            if isinstance(v, dict)
-            and v
-            not in [
-                report_dict.get("macro avg"),
-                report_dict.get("weighted avg"),
-            ]
+            for k, v in report_dict.items()
+            if k not in {"accuracy", "macro avg", "weighted avg"}
+            and isinstance(v, dict)
         )
         lines.append(
             f"{'accuracy':>18s} {'':>10s} {'':>10s}"

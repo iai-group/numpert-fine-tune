@@ -3,8 +3,10 @@
 Creates a small set of dummy inference outputs with a mix of:
 - Correct / incorrect predictions
 - Parse failures (unparseable model responses)
-- Multiple perturbation types (original, type1, type2, type3_random)
-- Multiple source files (range_True.json, range_False.json)
+- Multiple perturbation types
+(original_normalized, perturb_type1, perturb_type2,
+perturb_type3_random)- Multiple source files
+(range_True.json, range_False.json)
 
 Runs the metrics pipeline and writes ``inference_details.json`` and
 ``metrics.json`` to a temp directory, then prints the full output so you
