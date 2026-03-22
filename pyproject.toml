@@ -75,7 +75,7 @@ no_site_packages = true
 exclude = [
     "src/metrics/",
     "src/llm_eval",
-    "^\\.numpert-fine-tune/",
+    "^\\.numpert-fine-tune/"
 ]
 
 [[tool.mypy.overrides]]
