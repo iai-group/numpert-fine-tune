@@ -237,8 +237,6 @@ def inference(  # noqa: C901
     else:
         print("✅ All examples fit within max_seq_length")
 
-    # Prepare for predictions
-    predictions = []  # Will contain None for parse failures
     raw_outputs = []  # Store raw outputs for debugging
 
     # Determine output file prefix for unperturbed-claims mode
@@ -321,6 +319,8 @@ def inference(  # noqa: C901
         new_tokens = outputs[0][input_length:]
         decoded = tokenizer.decode(new_tokens, skip_special_tokens=True)
 
+        label = extract_label_from_response(decoded)
+
         entry = {
             "index": i,
             "claim_id": test_data[i]["claim_id"],
@@ -328,13 +328,12 @@ def inference(  # noqa: C901
             "label": test_data[i]["label"],
             "full_prompt": prompt_text,  # Full input
             "raw_response": decoded,  # Model output only
+            "parsed_successfully": label is not None,
+            "predicted_label": label,
         }
         if "source_file" in test_data.column_names:
             entry["source_file"] = test_data[i]["source_file"]
         raw_outputs.append(entry)
-
-        label = extract_label_from_response(decoded)
-        predictions.append(label)
 
     raw_outputs_path = f"{pred_dir}/{file_prefix}inference_details.json"
     with open(raw_outputs_path, "w") as f:
@@ -343,16 +342,8 @@ def inference(  # noqa: C901
         f"Inference details (prompts + outputs) saved to: {raw_outputs_path}\n"
     )
 
-    # Extract predictions for metrics
-    predictions_only = [item["raw_response"] for item in raw_outputs]
-    labels_extracted = [
-        extract_label_from_response(resp) for resp in predictions_only
-    ]
-
     # Build structured result records and compute metrics
-    result_records = build_result_records(
-        test_data, raw_outputs, labels_extracted
-    )
+    result_records = build_result_records(test_data, raw_outputs)
     report = compute_metrics(result_records)
     print_metrics_report(report, show_classification_reports=True)
 
