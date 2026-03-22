@@ -643,6 +643,16 @@ class TestDescriptionHelpers:
         """Unknown type returns empty string."""
         assert _describe_perturbation_type("mystery_type") == ""
 
+    def test_label_transition_unknown_type(self):
+        """Unknown perturbation type returns empty string."""
+        assert _label_transition("True", "future_type4") == ""
+        assert _label_transition("False", "something_new") == ""
+
+    def test_describe_file_and_type_unknown_perturb(self):
+        """Unknown perturb type with valid filename returns empty."""
+        desc = _describe_file_and_type("range_True.json | future_type4")
+        assert desc == ""
+
     def test_describe_file_and_type_true_type1(self):
         """True-origin + type1 → 'True → True — Structure-preserving'."""
         desc = _describe_file_and_type("range_True.json | perturb_type1")

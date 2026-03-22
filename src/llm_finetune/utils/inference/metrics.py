@@ -229,9 +229,12 @@ def _label_transition(original_label: str, perturb_type: str) -> str:
         # Value-modifying: label flipped
         flipped = "False" if orig == "True" else "True"
         return f"{orig} → {flipped}"
-    else:
+    elif perturb_type.startswith("perturb_type3_"):
         # Type3 obfuscation: always False
         return f"{orig} → False"
+    else:
+        # Unknown perturbation type: no transition assumed
+        return ""
 
 
 def _describe_perturbation_type(perturb_type: str) -> str:
@@ -243,7 +246,7 @@ def _describe_file_and_type(combo_key: str) -> str:
     """Generate a description for a source-file + perturbation-type group.
 
     Example input:  ``"range_True.json | perturb_type1"``
-    Example output: ``"True → True (structure-preserving)"``
+    Example output: ``"True → True — Structure-preserving (label unchanged)"``
     """
     parts = [p.strip() for p in combo_key.split("|")]
     if len(parts) != 2:
@@ -257,8 +260,14 @@ def _describe_file_and_type(combo_key: str) -> str:
 
     original_label = match.group(1)  # "True" or "False"
     transition = _label_transition(original_label, perturb_type)
-    category = _PERTURB_TYPE_DESCRIPTIONS.get(perturb_type, perturb_type)
-    return f"{transition} — {category}"
+    category = _PERTURB_TYPE_DESCRIPTIONS.get(perturb_type, "")
+    if transition and category:
+        return f"{transition} — {category}"
+    if transition:
+        return transition
+    if category:
+        return category
+    return ""
 
 
 # ── grouping helpers ─────────────────────────────────────────────────────

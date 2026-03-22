@@ -237,8 +237,6 @@ def inference(  # noqa: C901
     else:
         print("✅ All examples fit within max_seq_length")
 
-    # Prepare for predictions
-    predictions = []  # Will contain None for parse failures
     raw_outputs = []  # Store raw outputs for debugging
 
     # Determine output file prefix for unperturbed-claims mode
@@ -322,7 +320,6 @@ def inference(  # noqa: C901
         decoded = tokenizer.decode(new_tokens, skip_special_tokens=True)
 
         label = extract_label_from_response(decoded)
-        predictions.append(label)
 
         entry = {
             "index": i,
