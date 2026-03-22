@@ -47,7 +47,6 @@ class ClassificationScores:
     total: int = 0
     correct: int = 0
     parse_failures: int = 0
-    classification_report_str: str = ""
     classification_report_dict: Dict = field(default_factory=dict)
 
     @property
@@ -174,11 +173,8 @@ def _compute_scores(
         valid_true, valid_pred, average="macro", zero_division=0
     )
     scores.correct = sum(1 for g, p in zip(valid_true, valid_pred) if g == p)
-    scores.classification_report_str = classification_report(
-        valid_true, valid_pred, labels=VALID_LABELS, zero_division=0
-    )
 
-    # Structured per-class report with readable keys
+    # Single call for the structured per-class report
     raw_report = classification_report(
         valid_true,
         valid_pred,
@@ -367,6 +363,67 @@ def compute_metrics(
 # ── printing / formatting ────────────────────────────────────────────────
 
 
+def _format_classification_report(report_dict: Dict) -> str:
+    """Format a classification report dict as a human-readable string.
+
+    Produces output similar to ``sklearn.metrics.classification_report``
+    but from the pre-computed dict, avoiding a second sklearn call.
+    """
+    lines: List[str] = []
+    # Column headers
+    lines.append(
+        f"{'':>18s} {'precision':>10s} {'recall':>10s}"
+        f" {'f1-score':>10s} {'support':>10s}"
+    )
+    lines.append("")
+
+    # Per-class rows
+    avg_keys = {"accuracy", "macro avg", "weighted avg"}
+    for key, value in report_dict.items():
+        if key in avg_keys:
+            continue
+        if isinstance(value, dict):
+            lines.append(
+                f"{key:>18s} {value.get('precision', 0):>10.4f}"
+                f" {value.get('recall', 0):>10.4f}"
+                f" {value.get('f1-score', 0):>10.4f}"
+                f" {value.get('support', 0):>10.0f}"
+            )
+
+    lines.append("")
+
+    # Accuracy row (single value)
+    if "accuracy" in report_dict:
+        total_support = sum(
+            v.get("support", 0)
+            for v in report_dict.values()
+            if isinstance(v, dict)
+            and v
+            not in [
+                report_dict.get("macro avg"),
+                report_dict.get("weighted avg"),
+            ]
+        )
+        lines.append(
+            f"{'accuracy':>18s} {'':>10s} {'':>10s}"
+            f" {report_dict['accuracy']:>10.4f}"
+            f" {total_support:>10.0f}"
+        )
+
+    # Avg rows
+    for avg_key in ["macro avg", "weighted avg"]:
+        if avg_key in report_dict:
+            v = report_dict[avg_key]
+            lines.append(
+                f"{avg_key:>18s} {v.get('precision', 0):>10.4f}"
+                f" {v.get('recall', 0):>10.4f}"
+                f" {v.get('f1-score', 0):>10.4f}"
+                f" {v.get('support', 0):>10.0f}"
+            )
+
+    return "\n".join(lines)
+
+
 def _print_section_header(title: str, width: int = 80) -> None:
     """Print a divider with a centred title."""
     print(f"\n{'=' * width}")
@@ -398,9 +455,12 @@ def _print_scores_table(
     if show_report:
         for key in sorted(scores_dict):
             s = scores_dict[key]
-            if s.classification_report_str:
+            if s.classification_report_dict:
+                report_str = _format_classification_report(
+                    s.classification_report_dict
+                )
                 print(f"\n  Classification Report — {key}:")
-                for line in s.classification_report_str.splitlines():
+                for line in report_str.splitlines():
                     print(f"    {line}")
 
 
@@ -427,9 +487,12 @@ def print_metrics_report(
         print(f"  Recall (M):     {s.recall_macro:.4f}")
         print(f"  Parse failures: {s.parse_failures}/{s.total}")
 
-        if show_classification_reports and s.classification_report_str:
+        if show_classification_reports and s.classification_report_dict:
+            report_str = _format_classification_report(
+                s.classification_report_dict
+            )
             print("\n  Classification Report:")
-            for line in s.classification_report_str.splitlines():
+            for line in report_str.splitlines():
                 print(f"    {line}")
 
     if report.per_perturbation_type:
@@ -578,11 +641,16 @@ def build_result_records(
     """
     results: List[Dict] = []
     for i, output in enumerate(raw_outputs):
+        if "predicted_label" not in output:
+            raise KeyError(
+                f"raw_outputs[{i}] is missing 'predicted_label'. "
+                "Ensure inference populates this field."
+            )
         record = {
             "claim_id": test_data[i]["claim_id"],
             "label": test_data[i]["label"],
             "perturbation_type": test_data[i]["perturbation_type"],
-            "prediction": output.get("predicted_label"),
+            "prediction": output["predicted_label"],
         }
         # Include source_file when available
         if "source_file" in test_data[i]:

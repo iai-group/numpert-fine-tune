@@ -113,12 +113,12 @@ class TestComputeScores:
         assert scores.total == 0
         assert scores.accuracy == 0.0
 
-    def test_classification_report_populated(self):
-        """The report string should be non-empty when valid."""
+    def test_classification_report_dict_populated(self):
+        """The report dict should be non-empty when valid."""
         true = [LABEL_TRUE, LABEL_FALSE]
         pred = [LABEL_TRUE, LABEL_FALSE]
         scores = _compute_scores("report", true, pred)
-        assert len(scores.classification_report_str) > 0
+        assert len(scores.classification_report_dict) > 0
 
     def test_classification_report_dict_has_per_class_detail(self):
         """The report dict should contain per-class precision/recall/f1."""
@@ -560,6 +560,28 @@ class TestBuildResultRecords:
 
         records = build_result_records(test_data, raw_outputs)
         assert "source_file" not in records[0]
+
+    def test_missing_predicted_label_raises(self):
+        """Should raise KeyError when predicted_label is absent."""
+        from datasets import Dataset
+        import pytest
+
+        test_data = Dataset.from_list(
+            [
+                {
+                    "claim_id": "c1",
+                    "label": LABEL_TRUE,
+                    "perturbation_type": "original_normalized",
+                    "conversations": [],
+                },
+            ]
+        )
+        raw_outputs = [
+            {"raw_response": '{"label": true}'},
+        ]
+
+        with pytest.raises(KeyError, match="predicted_label"):
+            build_result_records(test_data, raw_outputs)
 
 
 # ---------------------------------------------------------------------------
