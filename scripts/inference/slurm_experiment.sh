@@ -9,18 +9,18 @@
 #   sbatch scripts/inference/experiments/slurm_experiment.sh <experiment_name>
 #
 # EXAMPLES:
+#   sbatch scripts/inference/experiments/slurm_experiment.sh qwen3_8b_numeration
 #   sbatch scripts/inference/experiments/slurm_experiment.sh qwen3_8b_all_test_filtered
-#   sbatch scripts/inference/experiments/slurm_experiment.sh qwen3_8b_all_test_with_type2
-#   sbatch scripts/inference/experiments/slurm_experiment.sh qwen3_8b_all_test_true_only
+#   sbatch scripts/inference/experiments/slurm_experiment.sh qwen3_32b_all_test_unperturbed
 #
 # For 32B models, request an H100 GPU:
 #   sbatch --gres=gpu:nvidia_h100_nvl:1 \
-#          scripts/inference/experiments/slurm_experiment.sh qwen3_32b_all_test_filtered
+#          scripts/inference/experiments/slurm_experiment.sh qwen3_32b_all_test
 ################################################################################
 
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:1
-#SBATCH --time=48:00:00
+#SBATCH --time=12:00:00
 #SBATCH --mem=300G
 # These are set dynamically below if possible, defaults here as fallback
 #SBATCH --job-name=infer-exp
