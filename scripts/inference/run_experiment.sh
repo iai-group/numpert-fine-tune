@@ -84,7 +84,6 @@ show_experiment() {
     echo ""
     echo "Inference Options:"
     echo "  Expand Perturb:   $EXPAND_PERTURBATIONS"
-    echo "  Unperturbed Only: $INFERENCE_UNPERTURBED_CLAIMS"
     if [ -n "$OUTPUT_DIR" ]; then
         echo "  Output Dir:       $OUTPUT_DIR"
     else
