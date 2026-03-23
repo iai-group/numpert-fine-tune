@@ -5,16 +5,16 @@
 # Loads an experiment by name from experiments.conf and runs inference.
 #
 # USAGE:
-#   bash scripts/inference/experiments/run_experiment.sh <experiment_name>
-#   bash scripts/inference/experiments/run_experiment.sh --list
-#   bash scripts/inference/experiments/run_experiment.sh --show <experiment_name>
+#   bash scripts/inference/run_experiment.sh <experiment_name>
+#   bash scripts/inference/run_experiment.sh --list
+#   bash scripts/inference/run_experiment.sh --show <experiment_name>
 #   bash scripts/inference/experiments/run_experiment.sh --dry-run <experiment_name>
 #
 # EXAMPLES:
-#   bash scripts/inference/experiments/run_experiment.sh qwen3_8b_all_test_filtered
-#   bash scripts/inference/experiments/run_experiment.sh qwen3_8b_all_test_with_type2
-#   bash scripts/inference/experiments/run_experiment.sh qwen3_8b_all_test_true_only
-#   bash scripts/inference/experiments/run_experiment.sh qwen3_32b_all_test_filtered
+#   bash scripts/inference/run_experiment.sh qwen3_8b_all_test_filtered
+#   bash scripts/inference/run_experiment.sh qwen3_8b_all_test_with_type2
+#   bash scripts/inference/run_experiment.sh qwen3_8b_all_test_true_only
+#   bash scripts/inference/run_experiment.sh qwen3_32b_all_test_filtered
 #
 # The "experiment_" prefix is added automatically if omitted.
 ################################################################################
@@ -24,7 +24,7 @@ set -u
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONF_FILE="${SCRIPT_DIR}/experiments.conf"
-REPO_ROOT="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 
 # ==============================================================================
 # LOAD EXPERIMENT DEFINITIONS

@@ -63,8 +63,6 @@ echo ""
 # ==============================================================================
 # ENVIRONMENT
 # ==============================================================================
-echo "Activating environment..."
-source .finetune/bin/activate
 
 echo ""
 echo "Checking GPU availability..."
