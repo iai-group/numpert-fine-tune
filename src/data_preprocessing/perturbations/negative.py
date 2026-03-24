@@ -60,10 +60,11 @@ def process_json(input_data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
 
         if perturbed_claim != claim:
             label: str = entry.get("label", "UNKNOWN")
-            new_entry = {
+            perturbed_entry = {
                 key: entry[key] for key in INCLUDED_KEYS if key in entry
             }
-            new_entry[f"perturb_type2_{label}"] = perturbed_claim
-            output_data.append(new_entry)
+            perturbed_entry["pertubation_method"] = PERTUBATION_METHOD
+            perturbed_entry[f"perturb_type2_{label}"] = perturbed_claim
+            output_data.append(perturbed_entry)
 
     return output_data

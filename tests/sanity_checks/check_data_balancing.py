@@ -39,10 +39,12 @@ Usage::
     python -m tests.sanity_checks.check_data_balancing --compare
 
     # With label balancing
-    python -m tests.sanity_checks.check_data_balancing --balance_labels --compare
+    python -m tests.sanity_checks.check_data_balancing
+     --balance_labels --compare
 
     # Custom ratio
-    python -m tests.sanity_checks.check_data_balancing --perturb_ratio 0.5 --compare
+    python -m tests.sanity_checks.check_data_balancing
+     --perturb_ratio 0.5 --compare
 """
 
 from __future__ import annotations
@@ -78,7 +80,7 @@ def _print_counter(counter: Counter, total: int, col_width: int = 40) -> None:
         print(f"    {str(key):<{col_width}}: {count:>5d}  ({pct:5.1f}%)")
 
 
-def dataset_report(dataset, title: str = "Dataset") -> None:
+def dataset_report(dataset, title: str = "Dataset") -> None:  # noqa: C901
     """Print a full breakdown of a HuggingFace Dataset."""
     _print_header(title)
     n = len(dataset)
@@ -90,7 +92,7 @@ def dataset_report(dataset, title: str = "Dataset") -> None:
     print(f"  Columns: {cols}")
 
     # Perturbation type distribution
-    print(f"\n  perturbation_type distribution:")
+    print("\n  perturbation_type distribution:")
     pt_counter = Counter(dataset["perturbation_type"])
     _print_counter(pt_counter, n)
 
@@ -103,24 +105,24 @@ def dataset_report(dataset, title: str = "Dataset") -> None:
         else:
             labels.append("(no label)")
     label_counter = Counter(labels)
-    print(f"\n  Label distribution:")
+    print("\n  Label distribution:")
     _print_counter(label_counter, n, col_width=20)
 
     # Perturbation method distribution (if column exists)
     if "perturbation" in cols:
         method_counter = Counter(dataset["perturbation"])
-        print(f"\n  Perturbation method distribution:")
+        print("\n  Perturbation method distribution:")
         _print_counter(method_counter, n)
 
     # Source file distribution (if column exists)
     if "source_file" in cols:
         sf_counter = Counter(dataset["source_file"])
-        print(f"\n  Source file distribution:")
+        print("\n  Source file distribution:")
         _print_counter(sf_counter, n)
 
     # Cross-tab: perturbation method × perturbation_type
     if "perturbation" in cols:
-        print(f"\n  Method × Perturbation type cross-tab:")
+        print("\n  Method × Perturbation type cross-tab:")
         cross: dict[str, Counter] = {}
         for ex in dataset:
             method = ex["perturbation"]
@@ -179,6 +181,7 @@ def balance_and_report(
 
 
 def main() -> None:
+    """Main function to load, balance, and report on the dataset."""
     parser = argparse.ArgumentParser(
         description="Sanity check: data loading + balancing on real data",
     )

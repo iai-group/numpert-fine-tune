@@ -187,6 +187,7 @@ class DatasetBalancer:
         print(f"  Total categorized: {categorized}")
         if excluded > 0:
             print(f"  ⚠️  Excluded from all categories: {excluded}")
+        print(f"  Total available: {len(self.dataset)}")
 
         # Handle empty dataset
         if len(self.dataset) == 0:
