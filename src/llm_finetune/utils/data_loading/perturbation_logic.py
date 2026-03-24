@@ -124,6 +124,11 @@ def expand_perturbations(
         original_label_str = _normalize_label(example["label"])
         original_label_bool = original_label_str == "True"
 
+        # Read pertubation_method (typo is in the raw JSON data)
+        method = example.get(
+            "pertubation_method", example.get("perturbation_method", "")
+        )
+
         original_entry = {
             "claim_id": example["claim_id"],
             "claim": example["normalized_claim"],
@@ -132,7 +137,7 @@ def expand_perturbations(
             "perturbation_type": PerturbationType.ORIGINAL_NORMALIZED.value,
             "url": example.get("url", ""),
             "taxonomy_label": example.get("taxonomy_label", ""),
-            "perturbation": example.get("perturbation", ""),
+            "perturbation_method": method,
         }
         expanded.append(original_entry)
 
@@ -166,7 +171,7 @@ def expand_perturbations(
                 "perturbation_type": base_type,
                 "url": example.get("url", ""),
                 "taxonomy_label": example.get("taxonomy_label", ""),
-                "perturbation": example.get("perturbation", ""),
+                "perturbation_method": method,
             }
             expanded.append(perturbed_entry)
 

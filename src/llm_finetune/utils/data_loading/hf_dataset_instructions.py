@@ -143,6 +143,10 @@ def load_fact_checking_data(  # noqa: C901
             processed = []
             for example in raw_examples:
                 label_str = _normalize_label(example["label"])
+                method = example.get(
+                    "pertubation_method",
+                    example.get("perturbation_method", ""),
+                )
                 processed.append(
                     {
                         "claim_id": example["claim_id"],
@@ -154,7 +158,7 @@ def load_fact_checking_data(  # noqa: C901
                         ),
                         "url": example.get("url", ""),
                         "taxonomy_label": example.get("taxonomy_label", ""),
-                        "perturbation": example.get("perturbation", ""),
+                        "perturbation_method": method,
                     }
                 )
 

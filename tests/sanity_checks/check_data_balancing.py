@@ -13,16 +13,16 @@ balance), and prints a detailed report of:
 
 Usage::
 
-    # Default: load all train_split files, balance with defaults
+    # Default: load all train_split files, no special balancing
     python -m tests.sanity_checks.check_data_balancing
 
-    # Custom perturb_ratio and balancing
-    python -m tests.sanity_checks.check_data_balancing \
-        --perturb_ratio 0.5 --balance_labels
+    # Equal methods with class balancing
+        python -m tests.sanity_checks.check_data_balancing \
+            --equal_methods --class_ratio 1.0
 
-    # Equal-method stratification
+    # Proportional, cap at 5000 samples
     python -m tests.sanity_checks.check_data_balancing \
-        --equal_perturbation_methods
+        --max_samples 5000
 
     # Use val split instead
     python -m tests.sanity_checks.check_data_balancing --split val
@@ -31,20 +31,8 @@ Usage::
     python -m tests.sanity_checks.check_data_balancing \
         --files numeration_True.json range_True.json
 
-
-    # Default run
-    python -m tests.sanity_checks.check_data_balancing
-
     # Compare proportional vs equal side-by-side
     python -m tests.sanity_checks.check_data_balancing --compare
-
-    # With label balancing
-    python -m tests.sanity_checks.check_data_balancing
-     --balance_labels --compare
-
-    # Custom ratio
-    python -m tests.sanity_checks.check_data_balancing
-     --perturb_ratio 0.5 --compare
 """
 
 from __future__ import annotations
@@ -57,7 +45,7 @@ from src.llm_finetune.utils.data_loading.hf_dataset_instructions import (
     load_train_and_validation,
     FileLoadConfig,
 )
-from src.llm_finetune.utils.data_loading.class_balancer import DatasetBalancer
+from src.llm_finetune.utils.data_loading.data_balancer_old.method_balancer import MethodBalancer
 
 SEP = "=" * 80
 DATA_ROOT = Path("data/perturbed_data")
@@ -109,8 +97,8 @@ def dataset_report(dataset, title: str = "Dataset") -> None:  # noqa: C901
     _print_counter(label_counter, n, col_width=20)
 
     # Perturbation method distribution (if column exists)
-    if "perturbation" in cols:
-        method_counter = Counter(dataset["perturbation"])
+    if "perturbation_method" in cols:
+        method_counter = Counter(dataset["perturbation_method"])
         print("\n  Perturbation method distribution:")
         _print_counter(method_counter, n)
 
@@ -121,11 +109,11 @@ def dataset_report(dataset, title: str = "Dataset") -> None:  # noqa: C901
         _print_counter(sf_counter, n)
 
     # Cross-tab: perturbation method × perturbation_type
-    if "perturbation" in cols:
+    if "perturbation_method" in cols:
         print("\n  Method × Perturbation type cross-tab:")
         cross: dict[str, Counter] = {}
         for ex in dataset:
-            method = ex["perturbation"]
+            method = ex["perturbation_method"]
             ptype = ex["perturbation_type"]
             cross.setdefault(method, Counter())[ptype] += 1
 
@@ -154,20 +142,19 @@ def dataset_report(dataset, title: str = "Dataset") -> None:  # noqa: C901
 
 def balance_and_report(
     dataset,
-    balance_labels: bool,
-    perturb_ratio: float,
-    false_perturb_t_to_f_ratio: float,
-    equal_perturbation_methods: bool,
+    equal_methods: bool,
+    class_ratio: float | None,
+    max_samples: int | None,
     seed: int = 42,
     title: str = "Balanced",
 ):
-    """Run DatasetBalancer and print a report of the result."""
-    balancer = DatasetBalancer(
+    """Run MethodBalancer and print a report of the result."""
+    balancer = MethodBalancer(
         dataset=dataset,
-        balance_labels=balance_labels,
-        perturb_ratio=perturb_ratio,
-        false_perturb_t_to_f_ratio=false_perturb_t_to_f_ratio,
-        equal_perturbation_methods=equal_perturbation_methods,
+        equal_methods=equal_methods,
+        class_ratio=class_ratio,
+        max_samples=max_samples,
+        include_originals=True,
         seed=seed,
     )
     balanced = balancer.balance()
@@ -201,26 +188,24 @@ def main() -> None:
         ),
     )
     parser.add_argument(
-        "--balance_labels",
+        "--equal_methods",
         action="store_true",
-        help="Balance True/False label distribution",
+        help="Equalise sample count across perturbation methods",
     )
     parser.add_argument(
-        "--perturb_ratio",
+        "--class_ratio",
         type=float,
-        default=1.0,
-        help="Ratio of perturbed to non-perturbed examples (default: 1.0)",
+        default=None,
+        help=(
+            "Desired True:False ratio (e.g. 1.0 = 50/50). "
+            "Omit to skip class balancing."
+        ),
     )
     parser.add_argument(
-        "--false_perturb_t_to_f_ratio",
-        type=float,
-        default=0.67,
-        help="Among False perturbed, ratio that should be T→F (default: 0.67)",
-    )
-    parser.add_argument(
-        "--equal_perturbation_methods",
-        action="store_true",
-        help="Use equal-method stratification instead of proportional",
+        "--max_samples",
+        type=int,
+        default=None,
+        help="Hard cap on total output size (default: no cap)",
     )
     parser.add_argument(
         "--compare",
@@ -273,15 +258,14 @@ def main() -> None:
     # Balance with the requested settings
     balance_and_report(
         dataset=train_data,
-        balance_labels=args.balance_labels,
-        perturb_ratio=args.perturb_ratio,
-        false_perturb_t_to_f_ratio=args.false_perturb_t_to_f_ratio,
-        equal_perturbation_methods=args.equal_perturbation_methods,
+        equal_methods=args.equal_methods,
+        class_ratio=args.class_ratio,
+        max_samples=args.max_samples,
         seed=args.seed,
         title=(
-            f"BALANCED (ratio={args.perturb_ratio}, "
-            f"balance_labels={args.balance_labels}, "
-            f"equal_methods={args.equal_perturbation_methods})"
+            f"BALANCED (equal_methods={args.equal_methods}, "
+            f"class_ratio={args.class_ratio}, "
+            f"max_samples={args.max_samples})"
         ),
     )
 
@@ -291,32 +275,30 @@ def main() -> None:
 
         balanced_prop = balance_and_report(
             dataset=train_data,
-            balance_labels=args.balance_labels,
-            perturb_ratio=args.perturb_ratio,
-            false_perturb_t_to_f_ratio=args.false_perturb_t_to_f_ratio,
-            equal_perturbation_methods=False,
+            equal_methods=False,
+            class_ratio=args.class_ratio,
+            max_samples=args.max_samples,
             seed=args.seed,
             title="PROPORTIONAL stratification",
         )
 
         balanced_equal = balance_and_report(
             dataset=train_data,
-            balance_labels=args.balance_labels,
-            perturb_ratio=args.perturb_ratio,
-            false_perturb_t_to_f_ratio=args.false_perturb_t_to_f_ratio,
-            equal_perturbation_methods=True,
+            equal_methods=True,
+            class_ratio=args.class_ratio,
+            max_samples=args.max_samples,
             seed=args.seed,
             title="EQUAL-METHOD stratification",
         )
 
         # Side-by-side method comparison
-        if "perturbation" in train_data.column_names:
+        if "perturbation_method" in train_data.column_names:
             print(f"\n{SEP}")
             print("  SIDE-BY-SIDE: method counts")
             print(SEP)
 
-            prop_counts = Counter(balanced_prop["perturbation"])
-            equal_counts = Counter(balanced_equal["perturbation"])
+            prop_counts = Counter(balanced_prop["perturbation_method"])
+            equal_counts = Counter(balanced_equal["perturbation_method"])
             all_methods = sorted(
                 set(prop_counts.keys()) | set(equal_counts.keys())
             )

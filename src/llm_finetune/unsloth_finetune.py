@@ -23,7 +23,7 @@ from src.llm_finetune.utils.data_loading.hf_dataset_instructions import (
     FileLoadConfig,
     parse_file_config,
 )
-from src.llm_finetune.utils.data_loading.class_balancer import DatasetBalancer
+from src.llm_finetune.utils.data_loading.data_balancer_old.class_balancer import DatasetBalancer
 from src.llm_finetune.batch_sampler import EnhancedPerturbationBatchSampler
 from src.llm_finetune.utils.naming import generate_run_name
 from src.llm_finetune.utils.training.convert_to_gguf import (
