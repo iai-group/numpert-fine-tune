@@ -4,7 +4,7 @@ import pytest
 from src.data_preprocessing.perturbations import range as rng
 
 
-def test_process_json_adds_perturbation_field():
+def test_process_json_adds_pertubation_method():
     """Test process_json annotates emitted entries with perturbation type."""
     result = rng.process_json(
         [
@@ -27,7 +27,7 @@ def test_process_json_adds_perturbation_field():
     )
 
     assert len(result) == 1
-    assert result[0]["perturbation"] == "range"
+    assert result[0]["pertubation_method"] == "range"
     assert result[0]["claim_id"] == "r1"
     assert "entities" not in result[0]
     assert "tokens" not in result[0]

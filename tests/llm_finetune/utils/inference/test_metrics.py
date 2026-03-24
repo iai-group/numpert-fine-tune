@@ -14,6 +14,9 @@ from src.llm_finetune.utils.inference.metrics import (
     save_parse_failures,
     save_predictions_csv,
     _compute_scores,
+    _describe_perturbation_type,
+    _describe_file_and_type,
+    _label_transition,
 )
 
 
@@ -110,12 +113,29 @@ class TestComputeScores:
         assert scores.total == 0
         assert scores.accuracy == 0.0
 
-    def test_classification_report_populated(self):
-        """The report string should be non-empty when valid."""
+    def test_classification_report_dict_populated(self):
+        """The report dict should be non-empty when valid."""
         true = [LABEL_TRUE, LABEL_FALSE]
         pred = [LABEL_TRUE, LABEL_FALSE]
         scores = _compute_scores("report", true, pred)
-        assert len(scores.classification_report_str) > 0
+        assert len(scores.classification_report_dict) > 0
+
+    def test_classification_report_dict_has_per_class_detail(self):
+        """The report dict should contain per-class precision/recall/f1."""
+        true = [LABEL_TRUE, LABEL_FALSE, LABEL_TRUE]
+        pred = [LABEL_TRUE, LABEL_FALSE, LABEL_FALSE]
+        scores = _compute_scores("detail", true, pred)
+
+        report = scores.classification_report_dict
+        assert "true" in report
+        assert "false" in report
+        for cls in ["true", "false"]:
+            assert "precision" in report[cls]
+            assert "recall" in report[cls]
+            assert "f1-score" in report[cls]
+            assert "support" in report[cls]
+        assert "macro avg" in report
+        assert "weighted avg" in report
 
     def test_precision_and_recall(self):
         """Precision and recall should be computed."""
@@ -250,6 +270,56 @@ class TestComputeMetrics:
         assert len(report.per_file_and_type) == 0
         assert report.overall is not None
 
+    def test_perturbation_type_descriptions(self):
+        """Each perturbation type group should have a description."""
+        results = _make_results(
+            labels=[LABEL_TRUE, LABEL_FALSE, LABEL_TRUE, LABEL_FALSE],
+            predictions=[LABEL_TRUE, LABEL_FALSE, LABEL_TRUE, LABEL_FALSE],
+            perturbation_types=[
+                "original_normalized",
+                "perturb_type1",
+                "perturb_type2",
+                "perturb_type3_random",
+            ],
+        )
+        report = compute_metrics(results)
+
+        orig = report.per_perturbation_type["original_normalized"]
+        assert "Baseline" in orig.description
+
+        t1 = report.per_perturbation_type["perturb_type1"]
+        assert "Structure-preserving" in t1.description
+
+        t2 = report.per_perturbation_type["perturb_type2"]
+        assert "Value-modifying" in t2.description
+
+        t3 = report.per_perturbation_type["perturb_type3_random"]
+        assert "Obfuscation" in t3.description
+
+    def test_file_and_type_descriptions(self):
+        """File + type combos should have label-transition descriptions."""
+        results = _make_results(
+            labels=[LABEL_TRUE, LABEL_FALSE, LABEL_TRUE],
+            predictions=[LABEL_TRUE, LABEL_FALSE, LABEL_TRUE],
+            perturbation_types=[
+                "original_normalized",
+                "perturb_type1",
+                "perturb_type2",
+            ],
+            source_files=[
+                "range_True.json",
+                "range_True.json",
+                "range_True.json",
+            ],
+        )
+        report = compute_metrics(results)
+
+        t1 = report.per_file_and_type["range_True.json | perturb_type1"]
+        assert "True \u2192 True" in t1.description
+
+        t2 = report.per_file_and_type["range_True.json | perturb_type2"]
+        assert "True \u2192 False" in t2.description
+
     def test_parse_failures_per_type(self):
         """Parse failures should be tracked per perturbation type."""
         results = _make_results(
@@ -294,6 +364,25 @@ class TestSerialization:
         assert d["total"] == 100
         assert d["valid"] == 95
         assert d["parse_failures"] == 5
+
+    def test_to_dict_includes_classification_report(self):
+        """to_dict should include classification_report when computed."""
+        true = [LABEL_TRUE, LABEL_FALSE, LABEL_TRUE]
+        pred = [LABEL_TRUE, LABEL_FALSE, LABEL_FALSE]
+        scores = _compute_scores("with_report", true, pred)
+        d = scores.to_dict()
+
+        assert "classification_report" in d
+        cr = d["classification_report"]
+        assert "true" in cr
+        assert "false" in cr
+        assert "macro avg" in cr
+        assert "weighted avg" in cr
+        # Per-class values
+        assert "precision" in cr["true"]
+        assert "recall" in cr["false"]
+        assert "f1-score" in cr["true"]
+        assert "support" in cr["false"]
 
     def test_metrics_report_to_dict_structure(self):
         """Full report dict should have the expected top-level keys."""
@@ -428,12 +517,19 @@ class TestBuildResultRecords:
             ]
         )
         raw_outputs = [
-            {"raw_response": '{"label": true}'},
-            {"raw_response": "bad"},
+            {
+                "raw_response": '{"label": true}',
+                "predicted_label": LABEL_TRUE,
+                "parsed_successfully": True,
+            },
+            {
+                "raw_response": "bad",
+                "predicted_label": None,
+                "parsed_successfully": False,
+            },
         ]
-        predictions = [LABEL_TRUE, None]
 
-        records = build_result_records(test_data, raw_outputs, predictions)
+        records = build_result_records(test_data, raw_outputs)
 
         assert len(records) == 2
         assert records[0]["prediction"] == LABEL_TRUE
@@ -454,11 +550,38 @@ class TestBuildResultRecords:
                 },
             ]
         )
-        raw_outputs = [{"raw_response": '{"label": true}'}]
-        predictions = [LABEL_TRUE]
+        raw_outputs = [
+            {
+                "raw_response": '{"label": true}',
+                "predicted_label": LABEL_TRUE,
+                "parsed_successfully": True,
+            },
+        ]
 
-        records = build_result_records(test_data, raw_outputs, predictions)
+        records = build_result_records(test_data, raw_outputs)
         assert "source_file" not in records[0]
+
+    def test_missing_predicted_label_raises(self):
+        """Should raise KeyError when predicted_label is absent."""
+        from datasets import Dataset
+        import pytest
+
+        test_data = Dataset.from_list(
+            [
+                {
+                    "claim_id": "c1",
+                    "label": LABEL_TRUE,
+                    "perturbation_type": "original_normalized",
+                    "conversations": [],
+                },
+            ]
+        )
+        raw_outputs = [
+            {"raw_response": '{"label": true}'},
+        ]
+
+        with pytest.raises(KeyError, match="predicted_label"):
+            build_result_records(test_data, raw_outputs)
 
 
 # ---------------------------------------------------------------------------
@@ -494,3 +617,106 @@ class TestPrintMetricsReport:
         report = MetricsReport()
         print_metrics_report(report)
         # Should not raise
+
+
+# ---------------------------------------------------------------------------
+# Description helpers
+# ---------------------------------------------------------------------------
+
+
+class TestDescriptionHelpers:
+    """Tests for group description generation."""
+
+    def test_label_transition_type1_true_origin(self):
+        """Type1 on True-origin claim: True → True."""
+        assert _label_transition("True", "perturb_type1") == "True → True"
+
+    def test_label_transition_type1_false_origin(self):
+        """Type1 on False-origin claim: False → False."""
+        assert _label_transition("False", "perturb_type1") == "False → False"
+
+    def test_label_transition_type2_true_origin(self):
+        """Type2 on True-origin claim: True → False."""
+        assert _label_transition("True", "perturb_type2") == "True → False"
+
+    def test_label_transition_type2_false_origin(self):
+        """Type2 on False-origin claim: False → True."""
+        assert _label_transition("False", "perturb_type2") == "False → True"
+
+    def test_label_transition_type3_true_origin(self):
+        """Type3 on True-origin: True → False (obfuscation always False)."""
+        assert (
+            _label_transition("True", "perturb_type3_random") == "True → False"
+        )
+
+    def test_label_transition_type3_false_origin(self):
+        """Type3 on False-origin: False → False (obfuscation always False)."""
+        assert (
+            _label_transition("False", "perturb_type3_masked")
+            == "False → False"
+        )
+
+    def test_describe_perturbation_type_known(self):
+        """Known types return their category description."""
+        desc = _describe_perturbation_type("perturb_type2")
+        assert "Value-modifying" in desc
+
+    def test_describe_perturbation_type_unknown(self):
+        """Unknown type returns empty string."""
+        assert _describe_perturbation_type("mystery_type") == ""
+
+    def test_label_transition_unknown_type(self):
+        """Unknown perturbation type returns empty string."""
+        assert _label_transition("True", "future_type4") == ""
+        assert _label_transition("False", "something_new") == ""
+
+    def test_describe_file_and_type_unknown_perturb(self):
+        """Unknown perturb type with valid filename returns empty."""
+        desc = _describe_file_and_type("range_True.json | future_type4")
+        assert desc == ""
+
+    def test_describe_file_and_type_true_type1(self):
+        """True-origin + type1 → 'True → True — Structure-preserving'."""
+        desc = _describe_file_and_type("range_True.json | perturb_type1")
+        assert "True → True" in desc
+        assert "Structure-preserving" in desc
+
+    def test_describe_file_and_type_true_type2(self):
+        """True-origin + type2 → 'True → False — Value-modifying'."""
+        desc = _describe_file_and_type("range_True.json | perturb_type2")
+        assert "True → False" in desc
+        assert "Value-modifying" in desc
+
+    def test_describe_file_and_type_false_type2(self):
+        """False-origin + type2 → 'False → True — Value-modifying'."""
+        desc = _describe_file_and_type("numeration_False.json | perturb_type2")
+        assert "False → True" in desc
+
+    def test_describe_file_and_type_false_type3(self):
+        """False-origin + type3 → 'False → False — Obfuscation'."""
+        desc = _describe_file_and_type(
+            "range_False.json | perturb_type3_random"
+        )
+        assert "False → False" in desc
+        assert "Obfuscation" in desc
+
+    def test_describe_file_and_type_no_label_in_filename(self):
+        """Filename without True/False falls back to type description."""
+        desc = _describe_file_and_type("custom_data.json | perturb_type1")
+        assert "Structure-preserving" in desc
+
+    def test_description_in_to_dict(self):
+        """Description should appear in serialized dict when set."""
+        scores = ClassificationScores(
+            group_name="test",
+            description="True → False — Value-modifying (label flipped)",
+        )
+        d = scores.to_dict()
+        assert "description" in d
+        assert "True → False" in d["description"]
+
+    def test_no_description_omitted_from_to_dict(self):
+        """Empty description should not appear in serialized dict."""
+        scores = ClassificationScores(group_name="test")
+        d = scores.to_dict()
+        assert "description" not in d

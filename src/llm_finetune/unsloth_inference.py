@@ -29,6 +29,9 @@ from src.llm_finetune.utils.inference.metrics import (
     save_parse_failures,
     save_predictions_csv,
 )
+from src.llm_finetune.utils.inference.unperturbed_claims import (
+    deduplicate_unperturbed_claims,
+)
 from src.llm_finetune.utils.naming import (
     build_output_dir_name,
     generate_run_name,
@@ -204,6 +207,14 @@ def inference(  # noqa: C901
         include_doc=True,
     )
 
+    if inference_unperturbed_claims:
+        pre_dedup = len(test_data)
+        test_data = deduplicate_unperturbed_claims(test_data)
+        print(
+            f"Unperturbed dedup: {pre_dedup} → {len(test_data)} "
+            f"(removed {pre_dedup - len(test_data)} duplicates)"
+        )
+
     print(f"Test dataset size: {len(test_data)}")
 
     # Check sequence lengths
@@ -237,9 +248,7 @@ def inference(  # noqa: C901
     else:
         print("✅ All examples fit within max_seq_length")
 
-    # Prepare for predictions
-    predictions = []  # Will contain None for parse failures
-    raw_outputs = []  # Store raw outputs for debugging
+    raw_outputs: list[dict] = [{} for _ in range(len(test_data))]
 
     # Determine output file prefix for unperturbed-claims mode
     file_prefix = "unperturbed_" if inference_unperturbed_claims else ""
@@ -273,10 +282,36 @@ def inference(  # noqa: C901
     )
     print(f"Inference config saved to: {config_path}")
 
-    # Run inference
+    # Deduplicate: only evaluate each original_normalized claim once.
+    # Perturbed entries are always unique across files (different claim text)
+    # so only original_normalized entries can be true duplicates.
+    seen_original_claims: dict[str, int] = {}  # claim_id → first index
+    unique_indices: list[int] = []
+    duplicate_map: dict[int, int] = {}  # dup index → first occurrence index
+
+    for i in range(len(test_data)):
+        if test_data[i]["perturbation_type"] == "original_normalized":
+            cid = test_data[i]["claim_id"]
+            if cid not in seen_original_claims:
+                seen_original_claims[cid] = i
+                unique_indices.append(i)
+            else:
+                duplicate_map[i] = seen_original_claims[cid]
+        else:
+            unique_indices.append(i)
+
+    n_duplicates = len(duplicate_map)
+    if n_duplicates > 0:
+        print(
+            f"\nDeduplication: {len(test_data)} entries → "
+            f"{len(unique_indices)} unique evaluations "
+            f"(skipping {n_duplicates} duplicate original_normalized claims)"
+        )
+
+    # Run inference on unique entries only
     print("\nRunning inference...")
 
-    for i in tqdm(range(len(test_data))):
+    for i in tqdm(unique_indices):
         # Format the prompt
         prompt_text = tokenizer.apply_chat_template(
             test_data[i]["conversations"],
@@ -321,6 +356,8 @@ def inference(  # noqa: C901
         new_tokens = outputs[0][input_length:]
         decoded = tokenizer.decode(new_tokens, skip_special_tokens=True)
 
+        label = extract_label_from_response(decoded)
+
         entry = {
             "index": i,
             "claim_id": test_data[i]["claim_id"],
@@ -328,13 +365,30 @@ def inference(  # noqa: C901
             "label": test_data[i]["label"],
             "full_prompt": prompt_text,  # Full input
             "raw_response": decoded,  # Model output only
+            "parsed_successfully": label is not None,
+            "predicted_label": label,
         }
         if "source_file" in test_data.column_names:
             entry["source_file"] = test_data[i]["source_file"]
-        raw_outputs.append(entry)
+        raw_outputs[i] = entry
 
-        label = extract_label_from_response(decoded)
-        predictions.append(label)
+    # Fill duplicate entries by reusing the inference result
+    for dup_idx, orig_idx in duplicate_map.items():
+        orig = raw_outputs[orig_idx]
+        entry = {
+            "index": dup_idx,
+            "claim_id": test_data[dup_idx]["claim_id"],
+            "perturbation_type": test_data[dup_idx]["perturbation_type"],
+            "label": test_data[dup_idx]["label"],
+            "full_prompt": orig["full_prompt"],
+            "raw_response": orig["raw_response"],
+            "parsed_successfully": orig["parsed_successfully"],
+            "predicted_label": orig["predicted_label"],
+            "reused_from_index": orig_idx,
+        }
+        if "source_file" in test_data.column_names:
+            entry["source_file"] = test_data[dup_idx]["source_file"]
+        raw_outputs[dup_idx] = entry
 
     raw_outputs_path = f"{pred_dir}/{file_prefix}inference_details.json"
     with open(raw_outputs_path, "w") as f:
@@ -343,16 +397,8 @@ def inference(  # noqa: C901
         f"Inference details (prompts + outputs) saved to: {raw_outputs_path}\n"
     )
 
-    # Extract predictions for metrics
-    predictions_only = [item["raw_response"] for item in raw_outputs]
-    labels_extracted = [
-        extract_label_from_response(resp) for resp in predictions_only
-    ]
-
     # Build structured result records and compute metrics
-    result_records = build_result_records(
-        test_data, raw_outputs, labels_extracted
-    )
+    result_records = build_result_records(test_data, raw_outputs)
     report = compute_metrics(result_records)
     print_metrics_report(report, show_classification_reports=True)
 

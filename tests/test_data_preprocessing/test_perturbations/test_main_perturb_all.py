@@ -361,18 +361,18 @@ class TestSaveSplits:
         "src.data_preprocessing.perturbations.main_perturb_all."
         "remove_unperturbed_claims"
     )
-    def test_preserves_perturbation_annotation(
+    def test_preserves_pertubation_method_annotation(
         self,
         mock_remove: MagicMock,
         mock_save: MagicMock,
     ) -> None:
         """Verifies annotated perturbation entries are forwarded unchanged."""
-        filtered = [{"claim": "A.", "perturbation": "negative"}]
+        filtered = [{"claim": "A.", "pertubation_method": "negative"}]
         mock_remove.return_value = filtered
 
         save_splits({"True": filtered}, "negative", ["perturb_type2"], "/out")
 
-        assert mock_save.call_args[0][0][0]["perturbation"] == "negative"
+        assert mock_save.call_args[0][0][0]["pertubation_method"] == "negative"
 
 
 # ── run_perturbations ──────────────────────────────────────────────

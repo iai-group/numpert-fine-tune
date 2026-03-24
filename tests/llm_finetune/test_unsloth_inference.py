@@ -752,3 +752,587 @@ class TestCLIArgParsing:
 
         with pytest.raises(ValueError, match="Unknown perturbation type"):
             parse_file_config("data/test.json:nonexistent_type")
+
+
+# ---------------------------------------------------------------------------
+# Helpers for deduplication tests
+# ---------------------------------------------------------------------------
+
+
+def _make_test_example_with_source(
+    claim_id, perturb_type, label, source_file, claim_text="claim"
+):
+    """Build a single example dict with ``source_file``."""
+    return {
+        "claim_id": claim_id,
+        "perturbation_type": perturb_type,
+        "label": label,
+        "source_file": source_file,
+        "conversations": [
+            {"role": "system", "content": "You are a fact-checker."},
+            {
+                "role": "user",
+                "content": f"Claim: {claim_text}\nEvidence: some doc",
+            },
+        ],
+    }
+
+
+def _create_dataset_with_duplicates():
+    """Create a dataset simulating multiple source files sharing claims.
+
+    Scenario: two source files (``range_True.json`` and
+    ``approximation_True.json``) each contribute an
+    ``original_normalized`` entry for the same claim, plus their own
+    perturbation entries (which may share the same type but have
+    different claim text).  Result: 8 rows, 6 unique evaluations
+    (only original_normalized duplicates are skipped).
+    """
+    examples = [
+        # range_True.json entries
+        _make_test_example_with_source(
+            "c1",
+            "original_normalized",
+            "True",
+            "range_True.json",
+            "claim one",
+        ),
+        _make_test_example_with_source(
+            "c1",
+            "perturb_type1",
+            "True",
+            "range_True.json",
+            "claim one range perturb",
+        ),
+        # approximation_True.json entries
+        _make_test_example_with_source(
+            "c1",
+            "original_normalized",
+            "True",
+            "approximation_True.json",
+            "claim one",
+        ),
+        _make_test_example_with_source(
+            "c1",
+            "perturb_type1",
+            "True",
+            "approximation_True.json",
+            "claim one approx perturb",
+        ),
+        _make_test_example_with_source(
+            "c1",
+            "perturb_type2",
+            "False",
+            "approximation_True.json",
+            "claim one approx type2",
+        ),
+        # A second claim with the same pattern
+        _make_test_example_with_source(
+            "c2",
+            "original_normalized",
+            "False",
+            "range_True.json",
+            "claim two",
+        ),
+        _make_test_example_with_source(
+            "c2",
+            "original_normalized",
+            "False",
+            "approximation_True.json",
+            "claim two",
+        ),
+        _make_test_example_with_source(
+            "c2",
+            "perturb_type1",
+            "False",
+            "range_True.json",
+            "claim two range perturb",
+        ),
+    ]
+    return Dataset.from_list(examples)
+
+
+# ---------------------------------------------------------------------------
+# Tests for inference deduplication
+# ---------------------------------------------------------------------------
+
+
+class TestInferenceDeduplication:
+    """Verify that duplicate original_normalized entries are evaluated only once
+    and the result is reused.
+
+    Perturbed entries with the same type from different files must always be
+    evaluated.
+    """
+
+    def test_model_generate_called_only_for_unique(self, tmp_path):
+        """model.generate is called for every perturbed entry plus one per
+        unique original_normalized claim_id."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        ds = _create_dataset_with_duplicates()
+        # 8 rows total, 2 duplicate original_normalized → 6 unique evals
+        with _make_mock_inference_context(
+            tmp_path,
+            load_fact_checking_data=MagicMock(return_value=ds),
+        ) as m:
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(tmp_path / "output"),
+            )
+            assert m["model"].generate.call_count == 6
+
+    def test_all_entries_in_output(self, tmp_path):
+        """inference_details.json contains an entry for every row, including
+        duplicates."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        ds = _create_dataset_with_duplicates()
+        out = tmp_path / "output"
+        with _make_mock_inference_context(
+            tmp_path,
+            load_fact_checking_data=MagicMock(return_value=ds),
+        ):
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(out),
+            )
+        json_files = list(out.rglob("inference_details.json"))
+        assert len(json_files) == 1
+        with open(json_files[0]) as f:
+            details = json.load(f)
+        assert len(details) == 8
+
+    def test_duplicates_have_reused_marker(self, tmp_path):
+        """Only duplicate original_normalized entries are tagged with
+        ``reused_from_index``."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        ds = _create_dataset_with_duplicates()
+        out = tmp_path / "output"
+        with _make_mock_inference_context(
+            tmp_path,
+            load_fact_checking_data=MagicMock(return_value=ds),
+        ):
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(out),
+            )
+        json_files = list(out.rglob("inference_details.json"))
+        with open(json_files[0]) as f:
+            details = json.load(f)
+
+        reused = [d for d in details if "reused_from_index" in d]
+        not_reused = [d for d in details if "reused_from_index" not in d]
+        assert len(reused) == 2  # two duplicate original_normalized
+        assert len(not_reused) == 6
+        # All reused entries must be original_normalized
+        for d in reused:
+            assert d["perturbation_type"] == "original_normalized"
+
+    def test_duplicate_preserves_source_file(self, tmp_path):
+        """Reused entries retain their own ``source_file``, not the
+        original's."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        ds = _create_dataset_with_duplicates()
+        out = tmp_path / "output"
+        with _make_mock_inference_context(
+            tmp_path,
+            load_fact_checking_data=MagicMock(return_value=ds),
+        ):
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(out),
+            )
+        json_files = list(out.rglob("inference_details.json"))
+        with open(json_files[0]) as f:
+            details = json.load(f)
+
+        reused = [d for d in details if "reused_from_index" in d]
+        # The duplicates come from approximation_True.json
+        source_files = {d["source_file"] for d in reused}
+        assert "approximation_True.json" in source_files
+
+    def test_no_duplicates_means_no_reuse(self, tmp_path):
+        """When all entries are unique, no reuse markers appear and
+        model.generate is called for every entry."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        # Default dataset has no duplicates
+        ds = create_mock_test_dataset(n_claims=3, perturbations_per_claim=1)
+        with _make_mock_inference_context(
+            tmp_path,
+            load_fact_checking_data=MagicMock(return_value=ds),
+        ) as m:
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(tmp_path / "output"),
+            )
+            assert m["model"].generate.call_count == len(ds)
+
+    def test_same_perturb_type_different_files_both_evaluated(self, tmp_path):
+        """perturb_type1 from two files for the same claim_id must both go
+        through model.generate (different claim text)."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        examples = [
+            _make_test_example_with_source(
+                "c1",
+                "perturb_type1",
+                "True",
+                "range_True.json",
+                "claim one range perturb",
+            ),
+            _make_test_example_with_source(
+                "c1",
+                "perturb_type1",
+                "True",
+                "approximation_True.json",
+                "claim one approx perturb",
+            ),
+        ]
+        ds = Dataset.from_list(examples)
+        out = tmp_path / "output"
+
+        with _make_mock_inference_context(
+            tmp_path,
+            load_fact_checking_data=MagicMock(return_value=ds),
+        ) as m:
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(out),
+            )
+            # Both must be evaluated — no deduplication
+            assert m["model"].generate.call_count == 2
+
+        json_files = list(out.rglob("inference_details.json"))
+        with open(json_files[0]) as f:
+            details = json.load(f)
+        # No reused entries
+        assert all("reused_from_index" not in d for d in details)
+
+    def test_duplicate_shares_predicted_label(self, tmp_path):
+        """Reused entry has the same ``predicted_label`` as original."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        ds = _create_dataset_with_duplicates()
+        out = tmp_path / "output"
+        with _make_mock_inference_context(
+            tmp_path,
+            load_fact_checking_data=MagicMock(return_value=ds),
+        ):
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(out),
+            )
+        json_files = list(out.rglob("inference_details.json"))
+        with open(json_files[0]) as f:
+            details = json.load(f)
+
+        by_index = {d["index"]: d for d in details}
+        for d in details:
+            if "reused_from_index" in d:
+                orig = by_index[d["reused_from_index"]]
+                assert d["predicted_label"] == orig["predicted_label"]
+                assert d["raw_response"] == orig["raw_response"]
+
+
+# ---------------------------------------------------------------------------
+# Tests for deduplication key logic (unit-level, no model needed)
+# ---------------------------------------------------------------------------
+
+
+class TestDeduplicationKeyLogic:
+    """Verify that only ``original_normalized`` entries are deduplicated by
+    ``claim_id``.
+
+    Perturbed entries are never deduplicated, even if
+    they share the same ``(claim_id, perturbation_type)``.
+    """
+
+    def test_original_normalized_duplicates_detected(self):
+        """Two original_normalized rows for the same claim_id are duplicates."""
+        ds = _create_dataset_with_duplicates()
+        # c1/original_normalized at index 0, c1/original_normalized at index 2
+        assert ds[0]["perturbation_type"] == "original_normalized"
+        assert ds[2]["perturbation_type"] == "original_normalized"
+        assert ds[0]["claim_id"] == ds[2]["claim_id"]
+
+    def test_same_perturb_type_different_files_not_duplicated(self):
+        """perturb_type1 for c1 from two files must both be kept."""
+        ds = _create_dataset_with_duplicates()
+        # Index 1: c1/perturb_type1/range_True.json
+        # Index 3: c1/perturb_type1/approximation_True.json
+        assert ds[1]["perturbation_type"] == "perturb_type1"
+        assert ds[3]["perturbation_type"] == "perturb_type1"
+        assert ds[1]["claim_id"] == ds[3]["claim_id"]
+        # But they have different claim text, so must NOT be deduped
+        assert ds[1]["source_file"] != ds[3]["source_file"]
+
+    def test_first_occurrence_wins(self):
+        """The dedup map records the first index for each original_normalized
+        claim_id."""
+        ds = _create_dataset_with_duplicates()
+        seen: dict = {}
+        unique_indices: list = []
+        duplicate_map: dict = {}
+
+        for i in range(len(ds)):
+            if ds[i]["perturbation_type"] == "original_normalized":
+                cid = ds[i]["claim_id"]
+                if cid not in seen:
+                    seen[cid] = i
+                    unique_indices.append(i)
+                else:
+                    duplicate_map[i] = seen[cid]
+            else:
+                unique_indices.append(i)
+
+        # 8 rows, 2 duplicate original_normalized → 6 unique
+        assert unique_indices == [0, 1, 3, 4, 5, 7]
+        assert duplicate_map == {2: 0, 6: 5}
+
+    def test_empty_dataset_produces_no_duplicates(self):
+        """An empty dataset has no unique indices or duplicates."""
+        ds = Dataset.from_list([])
+        seen: dict = {}
+        unique_indices: list = []
+        duplicate_map: dict = {}
+
+        for i in range(len(ds)):
+            if ds[i]["perturbation_type"] == "original_normalized":
+                cid = ds[i]["claim_id"]
+                if cid not in seen:
+                    seen[cid] = i
+                    unique_indices.append(i)
+                else:
+                    duplicate_map[i] = seen[cid]
+            else:
+                unique_indices.append(i)
+
+        assert unique_indices == []
+        assert duplicate_map == {}
+
+    def test_all_unique_no_duplicates(self):
+        """When every row has a distinct key, duplicate_map is empty."""
+        ds = create_mock_test_dataset(n_claims=3, perturbations_per_claim=1)
+        seen: dict = {}
+        duplicate_map: dict = {}
+        for i in range(len(ds)):
+            if ds[i]["perturbation_type"] == "original_normalized":
+                cid = ds[i]["claim_id"]
+                if cid in seen:
+                    duplicate_map[i] = seen[cid]
+                else:
+                    seen[cid] = i
+        assert duplicate_map == {}
+
+    def test_perturbed_entries_never_deduped_even_with_same_key(self):
+        """Two perturb_type1 entries for the same claim_id from different source
+        files must both be evaluated."""
+        examples = [
+            _make_test_example_with_source(
+                "c1",
+                "perturb_type1",
+                "True",
+                "file_a.json",
+                "claim one file-a",
+            ),
+            _make_test_example_with_source(
+                "c1",
+                "perturb_type1",
+                "True",
+                "file_b.json",
+                "claim one file-b",
+            ),
+        ]
+        ds = Dataset.from_list(examples)
+
+        seen: dict = {}
+        unique_indices: list = []
+        duplicate_map: dict = {}
+        for i in range(len(ds)):
+            if ds[i]["perturbation_type"] == "original_normalized":
+                cid = ds[i]["claim_id"]
+                if cid not in seen:
+                    seen[cid] = i
+                    unique_indices.append(i)
+                else:
+                    duplicate_map[i] = seen[cid]
+            else:
+                unique_indices.append(i)
+
+        # Both must be kept
+        assert unique_indices == [0, 1]
+        assert duplicate_map == {}
+
+
+# ---------------------------------------------------------------------------
+# End-to-end deduplication → metrics tests
+# ---------------------------------------------------------------------------
+
+
+class TestDeduplicationMetricsIntegration:
+    """Verify that reused inference results flow correctly through
+    ``build_result_records`` → ``compute_metrics`` so that per-source-file
+    breakdowns report the right counts."""
+
+    def _run_dedup_pipeline(self):
+        """Simulate the dedup + result-building pipeline and return the metrics
+        report.
+
+        Uses ``_create_dataset_with_duplicates()`` (8 rows, 6 unique).
+        """
+        from src.llm_finetune.utils.inference.metrics import (
+            build_result_records,
+            compute_metrics,
+        )
+
+        ds = _create_dataset_with_duplicates()
+
+        # Simulate inference results: all predictions are correct
+        raw_outputs = []
+        for i in range(len(ds)):
+            label = ds[i]["label"]
+            pred = '{"label": true}' if label == "True" else '{"label": false}'
+            entry = {
+                "index": i,
+                "claim_id": ds[i]["claim_id"],
+                "perturbation_type": ds[i]["perturbation_type"],
+                "label": label,
+                "predicted_label": pred,
+                "parsed_successfully": True,
+                "raw_response": pred,
+                "full_prompt": "prompt",
+            }
+            if "source_file" in ds.column_names:
+                entry["source_file"] = ds[i]["source_file"]
+            raw_outputs.append(entry)
+
+        records = build_result_records(ds, raw_outputs)
+        report = compute_metrics(records)
+        return report, ds
+
+    def test_overall_count_includes_all_rows(self):
+        """Overall metrics count all 8 rows, not just the 6 unique."""
+        report, ds = self._run_dedup_pipeline()
+        assert report.overall.total == len(ds)  # 8
+
+    def test_per_source_file_counts(self):
+        """Each source file reports its own row count."""
+        report, _ = self._run_dedup_pipeline()
+        assert "range_True.json" in report.per_source_file
+        assert "approximation_True.json" in report.per_source_file
+        assert report.per_source_file["range_True.json"].total == 4
+        assert report.per_source_file["approximation_True.json"].total == 4
+
+    def test_per_file_and_type_original_normalized(self):
+        """Both source files report their own original_normalized count."""
+        report, _ = self._run_dedup_pipeline()
+        range_orig = report.per_file_and_type.get(
+            "range_True.json | original_normalized"
+        )
+        approx_orig = report.per_file_and_type.get(
+            "approximation_True.json | original_normalized"
+        )
+        assert range_orig is not None
+        assert approx_orig is not None
+        assert range_orig.total == 2  # c1 + c2
+        assert approx_orig.total == 2  # c1 + c2
+
+    def test_per_perturbation_type_overall(self):
+        """Perturbation-type grouping sums original_normalized duplicates
+        together."""
+        report, _ = self._run_dedup_pipeline()
+        orig = report.per_perturbation_type.get("original_normalized")
+        assert orig is not None
+        # 4 original_normalized rows (c1 x2, c2 x2)
+        assert orig.total == 4
+
+    def test_perturbed_entries_all_counted_per_file(self):
+        """Same perturbation type from different files counts separately per
+        source file."""
+        report, _ = self._run_dedup_pipeline()
+        range_t1 = report.per_file_and_type.get(
+            "range_True.json | perturb_type1"
+        )
+        approx_t1 = report.per_file_and_type.get(
+            "approximation_True.json | perturb_type1"
+        )
+        assert range_t1 is not None
+        assert approx_t1 is not None
+        # c1/perturb_type1 from range, c2/perturb_type1 from range
+        assert range_t1.total == 2
+        # c1/perturb_type1 from approximation
+        assert approx_t1.total == 1
+
+    def test_three_source_files_same_claim(self):
+        """Three source files sharing one claim: metrics count all 3."""
+        from src.llm_finetune.utils.inference.metrics import (
+            build_result_records,
+            compute_metrics,
+        )
+
+        examples = [
+            _make_test_example_with_source(
+                "c1",
+                "original_normalized",
+                "True",
+                "file_a.json",
+                "claim one",
+            ),
+            _make_test_example_with_source(
+                "c1",
+                "original_normalized",
+                "True",
+                "file_b.json",
+                "claim one",
+            ),
+            _make_test_example_with_source(
+                "c1",
+                "original_normalized",
+                "True",
+                "file_c.json",
+                "claim one",
+            ),
+        ]
+        ds = Dataset.from_list(examples)
+
+        raw_outputs = []
+        for i in range(len(ds)):
+            raw_outputs.append(
+                {
+                    "index": i,
+                    "claim_id": "c1",
+                    "perturbation_type": "original_normalized",
+                    "label": "True",
+                    "predicted_label": '{"label": true}',
+                    "parsed_successfully": True,
+                    "raw_response": '{"label": true}',
+                    "full_prompt": "prompt",
+                    "source_file": ds[i]["source_file"],
+                }
+            )
+
+        records = build_result_records(ds, raw_outputs)
+        report = compute_metrics(records)
+
+        assert report.overall.total == 3
+        assert len(report.per_source_file) == 3
+        for src in ["file_a.json", "file_b.json", "file_c.json"]:
+            assert report.per_source_file[src].total == 1

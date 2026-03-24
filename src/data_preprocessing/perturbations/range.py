@@ -10,7 +10,7 @@ import math
 import re
 from typing import Optional, Any, List, Dict
 
-PERTURBATION_NAME = "range"
+PERTUBATION_METHOD = "range"
 
 # Configure logging
 logging.basicConfig(level=logging.ERROR, format="%(levelname)s: %(message)s")
@@ -396,7 +396,6 @@ def process_json(input_data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         entities = entry.get("entities", [])
         label = entry.get("label", "UNKNOWN")
         perturbed_entry = dict(entry)
-        perturbed_entry["perturbation"] = PERTURBATION_NAME
 
         perturbed_entry[f"perturb_type1_{label}"] = perturb_claim(
             claim_text, entities, "true"
