@@ -235,7 +235,7 @@ ALL_PERTURB_TYPES          = STRUCTURE_PRESERVING_TYPES | VALUE_MODIFYING_TYPES 
 
 - **Label balancing**: Downsample the majority class (True/False) to match the minority class.
 - **Perturbation ratio**: Control the ratio of perturbed to non-perturbed (original) examples. A ratio of `1.0` means equal counts.
-- **False perturbation split**: Among False-labeled perturbed examples, control the ratio of True→False (value-modified originals) vs False→False (structure-preserved false claims). Only `perturb_type1` perturbations are used for F→F to ensure they are semantically close to the original.
+- **False perturbation split**: Among False-labeled perturbed examples, control the share that are True→False (value-modified originals) versus False→False (structure-preserved false claims). Only `perturb_type1` perturbations are used for F→F to ensure they are semantically close to the original.
 
 ### Usage
 
@@ -387,7 +387,7 @@ python -m src.llm_finetune.unsloth_finetune \
 | `--expand_perturbations` | `True` | Expand perturbation keys into separate examples |
 | `--balance_labels` | `False` | Balance True/False label distribution |
 | `--perturb_ratio` | 1.0 | Perturbed-to-original ratio |
-| `--false_perturb_t_to_f_ratio` | 0.67 | T→F share among False perturbations |
+| `--false_perturb_t_to_f_ratio` | 0.67 | Fraction of False perturbations that are T→F |
 | `--batch_match_claim_id` | `False` | Enable claim-aware batch grouping |
 | `--debug` | `False` | Print conversation format and tokenisation diagnostics |
 

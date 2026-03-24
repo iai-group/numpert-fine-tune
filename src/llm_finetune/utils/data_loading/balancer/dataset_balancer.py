@@ -1,8 +1,8 @@
 """Dataset balancer for claim verification training data.
 
-Loads multiple input JSON files and produces a balanced, deduplicated,
-and structured dataset with configurable label balancing, perturbation
-ratio constraints, method-level fairness, and cross-file fairness.
+Loads multiple input JSON files and produces a balanced, deduplicated, and
+structured dataset with configurable label balancing, perturbation ratio
+constraints, method-level fairness, and cross-file fairness.
 """
 
 from __future__ import annotations
@@ -66,9 +66,7 @@ def _parse_perturb_key(key: str) -> tuple[str, str] | None:
     return match.group(1), match.group(2)
 
 
-def _determine_perturbed_label(
-    original_label: str, perturb_type: str
-) -> str:
+def _determine_perturbed_label(original_label: str, perturb_type: str) -> str:
     """Determine the label of a perturbed sample."""
     if perturb_type == "type1":
         return original_label
@@ -77,14 +75,10 @@ def _determine_perturbed_label(
     elif perturb_type.startswith("type3"):
         return "False"
     else:
-        raise ValueError(
-            f"Unknown perturbation type: {perturb_type}"
-        )
+        raise ValueError(f"Unknown perturbation type: {perturb_type}")
 
 
-def _assign_type(
-    original_label: str, perturbed_label: str
-) -> str:
+def _assign_type(original_label: str, perturbed_label: str) -> str:
     """Assign sample type based on original and perturbed labels."""
     if original_label == "True" and perturbed_label == "True":
         return "T→T"
@@ -142,9 +136,7 @@ def flatten_samples(
 
                 parsed = _parse_perturb_key(key)
                 if parsed is None:
-                    logger.warning(
-                        "Could not parse perturb key: %s", key
-                    )
+                    logger.warning("Could not parse perturb key: %s", key)
                     continue
 
                 perturb_type, label_from_key = parsed
@@ -156,11 +148,7 @@ def flatten_samples(
                     continue
 
                 # Skip empty values
-                if (
-                    not value
-                    or not isinstance(value, str)
-                    or not value.strip()
-                ):
+                if not value or not isinstance(value, str) or not value.strip():
                     continue
 
                 # Validate label consistency
@@ -178,9 +166,7 @@ def flatten_samples(
                 perturbed_label = _determine_perturbed_label(
                     original_label, perturb_type
                 )
-                sample_type = _assign_type(
-                    original_label, perturbed_label
-                )
+                sample_type = _assign_type(original_label, perturbed_label)
 
                 samples.append(
                     Sample(
@@ -223,8 +209,8 @@ def _undersample_fair(
 ) -> list[Sample]:
     """Undersample to target_count, distributing fairly across files.
 
-    Uses round-robin sampling across source files to avoid exhausting
-    any single file's contribution early.
+    Uses round-robin sampling across source files to avoid exhausting any single
+    file's contribution early.
     """
     if len(items) <= target_count:
         return list(items)
@@ -266,9 +252,7 @@ def _balance_methods(
     for label in ("True", "False"):
         label_samples = [s for s in perturbed if s.label == label]
 
-        by_method: dict[Optional[str], list[Sample]] = defaultdict(
-            list
-        )
+        by_method: dict[Optional[str], list[Sample]] = defaultdict(list)
         for s in label_samples:
             by_method[s.perturbation_method].append(s)
 
@@ -278,18 +262,98 @@ def _balance_methods(
         min_size = min(len(v) for v in by_method.values())
 
         for method_samples in by_method.values():
-            result.extend(
-                _undersample_fair(method_samples, min_size, rng)
-            )
+            result.extend(_undersample_fair(method_samples, min_size, rng))
 
     return result
+
+
+def _compute_false_perturbation_targets(
+    t_to_f_count: int,
+    f_to_f_count: int,
+    t_to_f_fraction: float,
+    target_total: Optional[int] = None,
+) -> tuple[int, int]:
+    """Compute feasible T→F/F→F counts under a target fraction.
+
+    ``t_to_f_fraction`` is interpreted as the share of False
+    perturbations that should be T→F.
+    """
+    if not 0 <= t_to_f_fraction <= 1:
+        raise ValueError("false_perturb_t_to_f_ratio must be between 0 and 1")
+
+    if t_to_f_count == 0 or f_to_f_count == 0:
+        kept_t_to_f = t_to_f_count
+        kept_f_to_f = f_to_f_count
+    elif t_to_f_fraction == 0:
+        kept_t_to_f = 0
+        kept_f_to_f = f_to_f_count
+    elif t_to_f_fraction == 1:
+        kept_t_to_f = t_to_f_count
+        kept_f_to_f = 0
+    else:
+        actual_fraction = t_to_f_count / (t_to_f_count + f_to_f_count)
+
+        if actual_fraction > t_to_f_fraction:
+            kept_f_to_f = f_to_f_count
+            kept_t_to_f = min(
+                t_to_f_count,
+                int(f_to_f_count * t_to_f_fraction / (1 - t_to_f_fraction)),
+            )
+        elif actual_fraction < t_to_f_fraction:
+            kept_t_to_f = t_to_f_count
+            kept_f_to_f = min(
+                f_to_f_count,
+                int(t_to_f_count * (1 - t_to_f_fraction) / t_to_f_fraction),
+            )
+        else:
+            kept_t_to_f = t_to_f_count
+            kept_f_to_f = f_to_f_count
+
+    kept_total = kept_t_to_f + kept_f_to_f
+    if target_total is None or kept_total <= target_total:
+        return kept_t_to_f, kept_f_to_f
+
+    if target_total <= 0:
+        return 0, 0
+
+    if t_to_f_fraction == 0:
+        return 0, min(kept_f_to_f, target_total)
+
+    if t_to_f_fraction == 1:
+        return min(kept_t_to_f, target_total), 0
+
+    min_t_to_f = max(0, target_total - kept_f_to_f)
+    max_t_to_f = min(kept_t_to_f, target_total)
+    ideal_t_to_f = target_total * t_to_f_fraction
+    candidates = {
+        min_t_to_f,
+        max_t_to_f,
+        max(min_t_to_f, min(max_t_to_f, int(ideal_t_to_f))),
+        max(
+            min_t_to_f,
+            min(max_t_to_f, int(ideal_t_to_f) + 1),
+        ),
+        max(
+            min_t_to_f,
+            min(max_t_to_f, round(ideal_t_to_f)),
+        ),
+    }
+
+    best_t_to_f = min(
+        candidates,
+        key=lambda count: (
+            abs((count / target_total) - t_to_f_fraction),
+            abs(count - ideal_t_to_f),
+        ),
+    )
+    return best_t_to_f, target_total - best_t_to_f
 
 
 def apply_balancing(
     samples: list[Sample],
     balance_labels: bool,
     perturb_ratio: float,
-    false_perturb_t_to_f_ratio: float,
+    false_perturb_t_to_f_ratio: Optional[float],
     equal_method_size: bool,
     rng: random.Random,
 ) -> list[Sample]:
@@ -310,34 +374,45 @@ def apply_balancing(
 
     # --- 5. Ratio constraints (lowest priority) ---
 
-    # 5a. False perturbation composition (T→F vs F→F)
-    false_perturbed = [s for s in perturbed if s.label == "False"]
     true_perturbed = [s for s in perturbed if s.label == "True"]
+    false_perturbed = [s for s in perturbed if s.label == "False"]
 
     t_to_f = [s for s in false_perturbed if s.type == "T→F"]
     f_to_f = [s for s in false_perturbed if s.type == "F→F"]
 
-    if t_to_f and f_to_f and 0 < false_perturb_t_to_f_ratio < 1:
-        total_false_perturbed = len(t_to_f) + len(f_to_f)
-        target_t_to_f = int(
-            total_false_perturbed * false_perturb_t_to_f_ratio
-        )
-        target_f_to_f = total_false_perturbed - target_t_to_f
-
-        t_to_f = _undersample_fair(t_to_f, target_t_to_f, rng)
-        f_to_f = _undersample_fair(f_to_f, target_f_to_f, rng)
-
-        false_perturbed = t_to_f + f_to_f
-
-    perturbed = true_perturbed + false_perturbed
+    target_perturbed = None
+    remaining_false_budget = None
+    selected_true_perturbed = list(true_perturbed)
 
     # 5b. Perturbation ratio (perturbed / originals)
     if originals and perturbed:
         target_perturbed = int(len(originals) * perturb_ratio)
-        if len(perturbed) > target_perturbed:
-            perturbed = _undersample_fair(
-                perturbed, target_perturbed, rng
-            )
+        true_budget = min(len(true_perturbed), target_perturbed)
+        selected_true_perturbed = _undersample_fair(
+            true_perturbed, true_budget, rng
+        )
+        remaining_false_budget = max(
+            0, target_perturbed - len(selected_true_perturbed)
+        )
+
+    # 5a. False perturbation composition (share of T→F among
+    # False perturbations)
+    if false_perturb_t_to_f_ratio is not None:
+        target_t_to_f, target_f_to_f = _compute_false_perturbation_targets(
+            len(t_to_f),
+            len(f_to_f),
+            false_perturb_t_to_f_ratio,
+            target_total=remaining_false_budget,
+        )
+        t_to_f = _undersample_fair(t_to_f, target_t_to_f, rng)
+        f_to_f = _undersample_fair(f_to_f, target_f_to_f, rng)
+        false_perturbed = t_to_f + f_to_f
+    elif remaining_false_budget is not None:
+        false_perturbed = _undersample_fair(
+            false_perturbed, remaining_false_budget, rng
+        )
+
+    perturbed = selected_true_perturbed + false_perturbed
 
     # --- 4. Method balancing ---
     if equal_method_size:
@@ -349,18 +424,12 @@ def apply_balancing(
     # --- 3. Label balancing (highest applied priority) ---
     if balance_labels:
         true_samples = [s for s in all_samples if s.label == "True"]
-        false_samples = [
-            s for s in all_samples if s.label == "False"
-        ]
+        false_samples = [s for s in all_samples if s.label == "False"]
 
         min_count = min(len(true_samples), len(false_samples))
 
-        true_samples = _undersample_fair(
-            true_samples, min_count, rng
-        )
-        false_samples = _undersample_fair(
-            false_samples, min_count, rng
-        )
+        true_samples = _undersample_fair(true_samples, min_count, rng)
+        false_samples = _undersample_fair(false_samples, min_count, rng)
 
         all_samples = true_samples + false_samples
 
@@ -382,9 +451,7 @@ def enforce_coupling(
     }
 
     existing_original_ids = {
-        s.source_claim_id
-        for s in selected
-        if not s.is_perturbed
+        s.source_claim_id for s in selected if not s.is_perturbed
     }
 
     missing_ids = selected_perturbed_ids - existing_original_ids
@@ -439,7 +506,7 @@ def build_balanced_dataset(
     file_paths: list[str | Path],
     balance_labels: bool = True,
     perturb_ratio: float = 1.0,
-    false_perturb_t_to_f_ratio: float = 0.5,
+    false_perturb_t_to_f_ratio: float | None = None,
     equal_method_size: bool = False,
     seed: int | None = None,
 ) -> list[dict]:
@@ -449,8 +516,9 @@ def build_balanced_dataset(
         file_paths: Paths to JSON files containing claim records.
         balance_labels: Enforce equal True/False sample counts.
         perturb_ratio: Target ratio of perturbed to original samples.
-        false_perturb_t_to_f_ratio: Among False perturbations,
-            the fraction that should be T→F (vs F→F).
+        false_perturb_t_to_f_ratio: Desired share of False
+            perturbations that should be T→F. ``0.5`` means equal
+            T→F/F→F counts. ``None`` disables the constraint.
         equal_method_size: Balance perturbation methods equally
             within each label group.
         seed: Random seed for deterministic output.

@@ -11,7 +11,7 @@ from typing import Optional
 
 import pytest
 
-from src.llm_finetune.utils.data_loading.dataset_balancer import (
+from src.llm_finetune.utils.data_loading.balancer.dataset_balancer import (
     Sample,
     _assign_type,
     _determine_perturbed_label,
@@ -130,23 +130,12 @@ class TestDetermineLabel:
 
     def test_type2_always_false(self):
         assert _determine_perturbed_label("True", "type2") == "False"
-        assert (
-            _determine_perturbed_label("False", "type2") == "False"
-        )
+        assert _determine_perturbed_label("False", "type2") == "False"
 
     def test_type3_always_false(self):
-        assert (
-            _determine_perturbed_label("True", "type3_random")
-            == "False"
-        )
-        assert (
-            _determine_perturbed_label("False", "type3_masked")
-            == "False"
-        )
-        assert (
-            _determine_perturbed_label("True", "type3_removed")
-            == "False"
-        )
+        assert _determine_perturbed_label("True", "type3_random") == "False"
+        assert _determine_perturbed_label("False", "type3_masked") == "False"
+        assert _determine_perturbed_label("True", "type3_removed") == "False"
 
     def test_unknown_type_raises(self):
         with pytest.raises(ValueError, match="Unknown perturbation"):
@@ -199,9 +188,7 @@ class TestLoadFiles:
 
 class TestFlattenSamples:
     def test_original_only(self):
-        records = [
-            _make_record("c1", "True", "The number is 42.")
-        ]
+        records = [_make_record("c1", "True", "The number is 42.")]
         samples = flatten_samples([("file.json", records)])
         assert len(samples) == 1
         s = samples[0]
@@ -300,9 +287,7 @@ class TestFlattenSamples:
                 "c4",
                 "True",
                 "Claim text.",
-                perturb_fields={
-                    "perturb_type1_False": "mismatched perturb"
-                },
+                perturb_fields={"perturb_type1_False": "mismatched perturb"},
             )
         ]
         samples = flatten_samples([("f.json", records)])
@@ -363,12 +348,8 @@ class TestDeduplicate:
         assert {s.text for s in result} == {"A", "B"}
 
     def test_keeps_first_occurrence(self):
-        s1 = _make_sample(
-            text="Same", claim_id="first", source_file="f1.json"
-        )
-        s2 = _make_sample(
-            text="Same", claim_id="second", source_file="f2.json"
-        )
+        s1 = _make_sample(text="Same", claim_id="first", source_file="f1.json")
+        s2 = _make_sample(text="Same", claim_id="second", source_file="f2.json")
         result = deduplicate([s1, s2])
         assert len(result) == 1
         assert result[0].source_claim_id == "first"
@@ -400,9 +381,7 @@ class TestUndersampleFair:
 
         rng = random.Random(42)
         items = [
-            _make_sample(
-                text=f"t{i}", source_file=f"file_{i % 3}.json"
-            )
+            _make_sample(text=f"t{i}", source_file=f"file_{i % 3}.json")
             for i in range(10)
         ]
         result = _undersample_fair(items, 5, rng)
@@ -415,16 +394,8 @@ class TestUndersampleFair:
         items = []
         # 10 from file_a, 10 from file_b
         for i in range(10):
-            items.append(
-                _make_sample(
-                    text=f"a_{i}", source_file="file_a.json"
-                )
-            )
-            items.append(
-                _make_sample(
-                    text=f"b_{i}", source_file="file_b.json"
-                )
-            )
+            items.append(_make_sample(text=f"a_{i}", source_file="file_a.json"))
+            items.append(_make_sample(text=f"b_{i}", source_file="file_b.json"))
 
         result = _undersample_fair(items, 6, rng)
         file_counts = Counter(s.source_file for s in result)
@@ -455,19 +426,13 @@ class TestEnforceCoupling:
 
         result = enforce_coupling(selected, all_pool)
         assert len(result) == 2
-        original_in_result = [
-            s for s in result if not s.is_perturbed
-        ]
+        original_in_result = [s for s in result if not s.is_perturbed]
         assert len(original_in_result) == 1
         assert original_in_result[0].source_claim_id == "c1"
 
     def test_no_coupling_needed(self):
-        original = _make_sample(
-            text="orig", claim_id="c1", is_perturbed=False
-        )
-        perturbed = _make_sample(
-            text="pert", claim_id="c1", is_perturbed=True
-        )
+        original = _make_sample(text="orig", claim_id="c1", is_perturbed=False)
+        perturbed = _make_sample(text="pert", claim_id="c1", is_perturbed=True)
         selected = [original, perturbed]
 
         result = enforce_coupling(selected, selected)
@@ -475,12 +440,8 @@ class TestEnforceCoupling:
 
     def test_originals_only_no_change(self):
         samples = [
-            _make_sample(
-                text="a", claim_id="c1", is_perturbed=False
-            ),
-            _make_sample(
-                text="b", claim_id="c2", is_perturbed=False
-            ),
+            _make_sample(text="a", claim_id="c1", is_perturbed=False),
+            _make_sample(text="b", claim_id="c2", is_perturbed=False),
         ]
         result = enforce_coupling(samples, samples)
         assert len(result) == 2
@@ -558,14 +519,10 @@ class TestApplyBalancing:
         rng = random.Random(42)
         # More True than False
         samples = [
-            _make_sample(
-                text=f"t_{i}", label="True", is_perturbed=False
-            )
+            _make_sample(text=f"t_{i}", label="True", is_perturbed=False)
             for i in range(10)
         ] + [
-            _make_sample(
-                text=f"f_{i}", label="False", is_perturbed=False
-            )
+            _make_sample(text=f"f_{i}", label="False", is_perturbed=False)
             for i in range(4)
         ]
 
@@ -573,7 +530,7 @@ class TestApplyBalancing:
             samples,
             balance_labels=True,
             perturb_ratio=1.0,
-            false_perturb_t_to_f_ratio=0.5,
+            false_perturb_t_to_f_ratio=None,
             equal_method_size=False,
             rng=rng,
         )
@@ -586,14 +543,10 @@ class TestApplyBalancing:
 
         rng = random.Random(42)
         samples = [
-            _make_sample(
-                text=f"t_{i}", label="True", is_perturbed=False
-            )
+            _make_sample(text=f"t_{i}", label="True", is_perturbed=False)
             for i in range(10)
         ] + [
-            _make_sample(
-                text=f"f_{i}", label="False", is_perturbed=False
-            )
+            _make_sample(text=f"f_{i}", label="False", is_perturbed=False)
             for i in range(4)
         ]
 
@@ -601,7 +554,7 @@ class TestApplyBalancing:
             samples,
             balance_labels=False,
             perturb_ratio=1.0,
-            false_perturb_t_to_f_ratio=0.5,
+            false_perturb_t_to_f_ratio=None,
             equal_method_size=False,
             rng=rng,
         )
@@ -633,7 +586,7 @@ class TestApplyBalancing:
             samples,
             balance_labels=False,
             perturb_ratio=1.0,
-            false_perturb_t_to_f_ratio=0.5,
+            false_perturb_t_to_f_ratio=None,
             equal_method_size=False,
             rng=rng,
         )
@@ -683,13 +636,11 @@ class TestApplyBalancing:
             samples,
             balance_labels=False,
             perturb_ratio=100.0,  # high ratio, won't limit
-            false_perturb_t_to_f_ratio=0.5,
+            false_perturb_t_to_f_ratio=None,
             equal_method_size=True,
             rng=rng,
         )
-        method_counts = Counter(
-            s.perturbation_method for s in result
-        )
+        method_counts = Counter(s.perturbation_method for s in result)
         # All methods balanced to minimum (3)
         assert method_counts["numeration"] == 3
         assert method_counts["approximation"] == 3
@@ -700,8 +651,8 @@ class TestApplyBalancing:
 
         rng = random.Random(42)
         samples = []
-        # 10 T→F, 10 F→F
-        for i in range(10):
+        # 20 T→F, 10 F→F
+        for i in range(20):
             samples.append(
                 _make_sample(
                     text=f"tf_{i}",
@@ -712,6 +663,7 @@ class TestApplyBalancing:
                     is_perturbed=True,
                 )
             )
+        for i in range(10):
             samples.append(
                 _make_sample(
                     text=f"ff_{i}",
@@ -723,6 +675,7 @@ class TestApplyBalancing:
                 )
             )
 
+        # ratio=0.5 means 50% T→F, 50% F→F → undersample T→F to 10
         result = apply_balancing(
             samples,
             balance_labels=False,
@@ -735,6 +688,162 @@ class TestApplyBalancing:
         f_to_f = [s for s in result if s.type == "F→F"]
         assert len(t_to_f) == 10
         assert len(f_to_f) == 10
+
+    def test_false_perturb_ratio_undersamples_f_to_f(self):
+        import random
+
+        rng = random.Random(42)
+        samples = []
+        # 5 T→F, 20 F→F
+        for i in range(5):
+            samples.append(
+                _make_sample(
+                    text=f"tf_{i}",
+                    label="False",
+                    claim_id=f"ct_{i}",
+                    sample_type="T→F",
+                    method="numeration",
+                    is_perturbed=True,
+                )
+            )
+        for i in range(20):
+            samples.append(
+                _make_sample(
+                    text=f"ff_{i}",
+                    label="False",
+                    claim_id=f"cf_{i}",
+                    sample_type="F→F",
+                    method="range",
+                    is_perturbed=True,
+                )
+            )
+
+        # ratio=0.5 → F→F undersampled to 5
+        result = apply_balancing(
+            samples,
+            balance_labels=False,
+            perturb_ratio=100.0,
+            false_perturb_t_to_f_ratio=0.5,
+            equal_method_size=False,
+            rng=rng,
+        )
+        t_to_f = [s for s in result if s.type == "T→F"]
+        f_to_f = [s for s in result if s.type == "F→F"]
+        assert len(t_to_f) == 5
+        assert len(f_to_f) == 5
+
+    def test_false_perturb_ratio_none_no_constraint(self):
+        import random
+
+        rng = random.Random(42)
+        samples = []
+        # 5 T→F, 20 F→F
+        for i in range(5):
+            samples.append(
+                _make_sample(
+                    text=f"tf_{i}",
+                    label="False",
+                    claim_id=f"ct_{i}",
+                    sample_type="T→F",
+                    method="numeration",
+                    is_perturbed=True,
+                )
+            )
+        for i in range(20):
+            samples.append(
+                _make_sample(
+                    text=f"ff_{i}",
+                    label="False",
+                    claim_id=f"cf_{i}",
+                    sample_type="F→F",
+                    method="range",
+                    is_perturbed=True,
+                )
+            )
+
+        # None → no constraint, both untouched
+        result = apply_balancing(
+            samples,
+            balance_labels=False,
+            perturb_ratio=100.0,
+            false_perturb_t_to_f_ratio=None,
+            equal_method_size=False,
+            rng=rng,
+        )
+        t_to_f = [s for s in result if s.type == "T→F"]
+        f_to_f = [s for s in result if s.type == "F→F"]
+        assert len(t_to_f) == 5
+        assert len(f_to_f) == 20
+
+    def test_false_perturb_fraction_respected_with_budget(self):
+        import random
+
+        rng = random.Random(42)
+        samples = []
+
+        for i in range(50):
+            samples.append(
+                _make_sample(
+                    text=f"orig_{i}",
+                    label="True" if i % 2 == 0 else "False",
+                    claim_id=f"co_{i}",
+                )
+            )
+
+        for i in range(20):
+            samples.append(
+                _make_sample(
+                    text=f"tt_{i}",
+                    label="True",
+                    claim_id=f"ctt_{i}",
+                    sample_type="T→T",
+                    method="numeration",
+                    is_perturbed=True,
+                )
+            )
+
+        for i in range(40):
+            samples.append(
+                _make_sample(
+                    text=f"tf_{i}",
+                    label="False",
+                    claim_id=f"ctf_{i}",
+                    sample_type="T→F",
+                    method="range",
+                    is_perturbed=True,
+                )
+            )
+
+        for i in range(80):
+            samples.append(
+                _make_sample(
+                    text=f"ff_{i}",
+                    label="False",
+                    claim_id=f"cff_{i}",
+                    sample_type="F→F",
+                    method="numeration",
+                    is_perturbed=True,
+                )
+            )
+
+        result = apply_balancing(
+            samples,
+            balance_labels=False,
+            perturb_ratio=1.0,
+            false_perturb_t_to_f_ratio=0.1,
+            equal_method_size=False,
+            rng=rng,
+        )
+
+        perturbed = [s for s in result if s.is_perturbed]
+        t_to_t = [s for s in perturbed if s.type == "T→T"]
+        t_to_f = [s for s in perturbed if s.type == "T→F"]
+        f_to_f = [s for s in perturbed if s.type == "F→F"]
+
+        assert len(perturbed) == 50
+        assert len(t_to_t) == 20
+        assert len(t_to_f) == 3
+        assert len(f_to_f) == 27
 
 
 # ── build_balanced_dataset (integration) ────────────────────────
@@ -752,12 +861,8 @@ class TestBuildBalancedDataset:
                     normalized_claim=f"True claim number {i}.",
                     method="numeration",
                     perturb_fields={
-                        "perturb_type1_True": (
-                            f"True claim number {i} type1."
-                        ),
-                        "perturb_type2_True": (
-                            f"True claim number {i} type2."
-                        ),
+                        "perturb_type1_True": (f"True claim number {i} type1."),
+                        "perturb_type2_True": (f"True claim number {i} type2."),
                     },
                 )
             )
@@ -781,9 +886,7 @@ class TestBuildBalancedDataset:
                 )
             )
 
-        path_t = _write_json(
-            true_records, tmp_path, "numeration_True.json"
-        )
+        path_t = _write_json(true_records, tmp_path, "numeration_True.json")
         path_f = _write_json(
             false_records, tmp_path, "approximation_False.json"
         )
@@ -791,9 +894,7 @@ class TestBuildBalancedDataset:
 
     def test_basic_output_schema(self, tmp_path):
         paths = self._create_test_files(tmp_path)
-        result = build_balanced_dataset(
-            paths, balance_labels=False, seed=42
-        )
+        result = build_balanced_dataset(paths, balance_labels=False, seed=42)
         assert len(result) > 0
         sample = result[0]
         assert set(sample.keys()) == {
@@ -817,20 +918,16 @@ class TestBuildBalancedDataset:
         kwargs = dict(
             balance_labels=False,
             perturb_ratio=100.0,
-            false_perturb_t_to_f_ratio=1.0,  # skip ratio
+            false_perturb_t_to_f_ratio=None,  # no constraint
         )
         r1 = build_balanced_dataset(paths, seed=42, **kwargs)
         r2 = build_balanced_dataset(paths, seed=99, **kwargs)
         # Same samples, different order (almost certainly)
-        assert sorted(s["text"] for s in r1) == sorted(
-            s["text"] for s in r2
-        )
+        assert sorted(s["text"] for s in r1) == sorted(s["text"] for s in r2)
 
     def test_label_balance(self, tmp_path):
         paths = self._create_test_files(tmp_path)
-        result = build_balanced_dataset(
-            paths, balance_labels=True, seed=42
-        )
+        result = build_balanced_dataset(paths, balance_labels=True, seed=42)
         labels = Counter(s["label"] for s in result)
         # Coupling (priority 2) can add originals after label
         # balancing (priority 3), so allow a small delta.
@@ -849,9 +946,7 @@ class TestBuildBalancedDataset:
         pa = _write_json(recs_a, tmp_path, "a.json")
         pb = _write_json(recs_b, tmp_path, "b.json")
 
-        result = build_balanced_dataset(
-            [pa, pb], balance_labels=False, seed=42
-        )
+        result = build_balanced_dataset([pa, pb], balance_labels=False, seed=42)
         texts = [s["text"] for s in result]
         assert len(texts) == len(set(texts))
 
@@ -869,19 +964,13 @@ class TestBuildBalancedDataset:
         ]
         path = _write_json(recs, tmp_path, "data.json")
 
-        result = build_balanced_dataset(
-            [path], balance_labels=False, seed=42
-        )
+        result = build_balanced_dataset([path], balance_labels=False, seed=42)
 
         claim_ids_perturbed = {
-            s["source_claim_id"]
-            for s in result
-            if s["is_perturbed"]
+            s["source_claim_id"] for s in result if s["is_perturbed"]
         }
         claim_ids_original = {
-            s["source_claim_id"]
-            for s in result
-            if not s["is_perturbed"]
+            s["source_claim_id"] for s in result if not s["is_perturbed"]
         }
         # Every perturbed claim_id has its original
         assert claim_ids_perturbed <= claim_ids_original
@@ -891,9 +980,7 @@ class TestBuildBalancedDataset:
             _make_record("c1", "True", "Simple claim."),
         ]
         path = _write_json(recs, tmp_path, "data.json")
-        result = build_balanced_dataset(
-            [path], balance_labels=False, seed=42
-        )
+        result = build_balanced_dataset([path], balance_labels=False, seed=42)
         assert len(result) == 1
         assert result[0]["type"] == "Original"
 
@@ -971,19 +1058,15 @@ class TestEdgeCases:
     def test_multi_file_fairness(self, tmp_path):
         """Samples should be drawn proportionally from files."""
         recs_a = [
-            _make_record(f"a{i}", "True", f"Claim A{i}.")
-            for i in range(20)
+            _make_record(f"a{i}", "True", f"Claim A{i}.") for i in range(20)
         ]
         recs_b = [
-            _make_record(f"b{i}", "True", f"Claim B{i}.")
-            for i in range(20)
+            _make_record(f"b{i}", "True", f"Claim B{i}.") for i in range(20)
         ]
         pa = _write_json(recs_a, tmp_path, "a.json")
         pb = _write_json(recs_b, tmp_path, "b.json")
 
-        result = build_balanced_dataset(
-            [pa, pb], balance_labels=False, seed=42
-        )
+        result = build_balanced_dataset([pa, pb], balance_labels=False, seed=42)
         file_counts = Counter(s["source_file"] for s in result)
         # Both files contribute equally
         assert file_counts["a.json"] == file_counts["b.json"]
@@ -1004,7 +1087,9 @@ class TestEdgeCases:
         ]
         path = _write_json(recs, tmp_path, "obfuscation.json")
         result = build_balanced_dataset(
-            [path], balance_labels=False, perturb_ratio=10.0,
+            [path],
+            balance_labels=False,
+            perturb_ratio=10.0,
             seed=42,
         )
         perturbed = [s for s in result if s["is_perturbed"]]
@@ -1042,7 +1127,9 @@ class TestEdgeCases:
         ]
         path = _write_json(recs, tmp_path, "mixed.json")
         result = build_balanced_dataset(
-            [path], balance_labels=False, perturb_ratio=10.0,
+            [path],
+            balance_labels=False,
+            perturb_ratio=10.0,
             seed=42,
         )
         # c1 is entirely excluded (method=removed)
@@ -1063,19 +1150,15 @@ class TestEdgeCases:
             )
         ]
         path = _write_json(recs, tmp_path, "negative.json")
-        result = build_balanced_dataset(
-            [path], balance_labels=False, seed=42
-        )
+        result = build_balanced_dataset([path], balance_labels=False, seed=42)
         perturbed = [s for s in result if s["is_perturbed"]]
         assert len(perturbed) == 1
         assert perturbed[0]["label"] == "False"
         assert perturbed[0]["type"] == "T→F"
 
-    def test_balancing_removes_all_perturbs_keeps_original(
-        self, tmp_path
-    ):
-        """If balancing removes all perturbations of a claim,
-        the original can remain independently."""
+    def test_balancing_removes_all_perturbs_keeps_original(self, tmp_path):
+        """If balancing removes all perturbations of a claim, the original can
+        remain independently."""
         # Create imbalanced: many True, few False
         recs = [
             _make_record(
@@ -1089,9 +1172,7 @@ class TestEdgeCases:
             _make_record("c2", "False", "False claim one."),
         ]
         path = _write_json(recs, tmp_path, "data.json")
-        result = build_balanced_dataset(
-            [path], balance_labels=True, seed=42
-        )
+        result = build_balanced_dataset([path], balance_labels=True, seed=42)
         # Should still have originals even if perturbations removed
         originals = [s for s in result if not s["is_perturbed"]]
         assert len(originals) >= 1

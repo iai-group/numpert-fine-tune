@@ -23,7 +23,9 @@ from src.llm_finetune.utils.data_loading.hf_dataset_instructions import (
     FileLoadConfig,
     parse_file_config,
 )
-from src.llm_finetune.utils.data_loading.data_balancer_old.class_balancer import DatasetBalancer
+from src.llm_finetune.utils.data_loading.data_balancer_old.class_balancer import (
+    DatasetBalancer,
+)
 from src.llm_finetune.batch_sampler import EnhancedPerturbationBatchSampler
 from src.llm_finetune.utils.naming import generate_run_name
 from src.llm_finetune.utils.training.convert_to_gguf import (
@@ -144,7 +146,7 @@ def finetune(  # noqa: C901
     expand_perturbations: bool = True,
     balance_labels: bool = False,
     perturb_ratio: float = 1.0,
-    false_perturb_t_to_f_ratio: float = 0.67,
+    false_perturb_t_to_f_ratio: float = None,
     equal_perturbation_methods: bool = False,
     batch_match_claim_id: bool = False,
     split_large_claims: bool = True,
@@ -174,7 +176,7 @@ def finetune(  # noqa: C901
     print(f"Expand perturbations: {expand_perturbations}")
     print(f"Balance labels: {balance_labels}")
     print(f"Perturb ratio: {perturb_ratio}")
-    print(f"False perturb T→F ratio: {false_perturb_t_to_f_ratio}")
+    print(f"False perturb T→F share: {false_perturb_t_to_f_ratio}")
     print(f"Equal perturbation methods: {equal_perturbation_methods}")
     print(f"Batch match claim_id: {batch_match_claim_id}")
     if batch_match_claim_id:
@@ -913,7 +915,10 @@ if __name__ == "__main__":
         "--false_perturb_t_to_f_ratio",
         type=float,
         default=0.67,
-        help="Among False perturbed examples, ratio that should be T→F",
+        help=(
+            "Share of False perturbed examples that should be T→F "
+            "(0.5 = equal T→F/F→F counts)"
+        ),
     )
     parser.add_argument(
         "--equal_perturbation_methods",

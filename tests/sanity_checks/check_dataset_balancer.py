@@ -39,7 +39,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Optional
 
-from src.llm_finetune.utils.data_loading.dataset_balancer import (
+from src.llm_finetune.utils.data_loading.balancer.dataset_balancer import (
     Sample,
     build_balanced_dataset,
     compute_stats,
@@ -111,8 +111,10 @@ def report_raw_input(
         print(f"  {fname:<35s}  {n:>8d}  {t:>6d}  {f:>6d}")
 
     print(f"  {THIN_SEP}")
-    print(f"  {'TOTAL':<35s}  {total_records:>8d}  "
-          f"{label_ctr['True']:>6d}  {label_ctr['False']:>6d}")
+    print(
+        f"  {'TOTAL':<35s}  {total_records:>8d}  "
+        f"{label_ctr['True']:>6d}  {label_ctr['False']:>6d}"
+    )
 
     _subheader("Perturbation method (from raw records)")
     _counter_table(method_ctr, total_records)
@@ -137,18 +139,14 @@ def report_flattened(samples: list[Sample]) -> None:
     _counter_table(Counter(s.type for s in samples), n)
 
     _subheader("Method distribution (perturbed only)")
-    method_ctr = Counter(
-        s.perturbation_method for s in perturbed
-    )
+    method_ctr = Counter(s.perturbation_method for s in perturbed)
     _counter_table(method_ctr, len(perturbed))
 
     _subheader("Source file distribution")
     _counter_table(Counter(s.source_file for s in samples), n)
 
 
-def report_dedup(
-    before: list[Sample], after: list[Sample]
-) -> None:
+def report_dedup(before: list[Sample], after: list[Sample]) -> None:
     """Print deduplication effect."""
     _header("DEDUPLICATION")
 
@@ -164,9 +162,7 @@ def report_dedup(
     # Break down removals by type
     before_types = Counter(s.type for s in before)
     after_types = Counter(s.type for s in after)
-    all_types = sorted(
-        set(before_types.keys()) | set(after_types.keys())
-    )
+    all_types = sorted(set(before_types.keys()) | set(after_types.keys()))
 
     print(f"\n  {'Type':<15s}  {'Before':>8s}  {'After':>8s}  {'Removed':>8s}")
     print(f"  {THIN_SEP}")
@@ -176,9 +172,7 @@ def report_dedup(
         print(f"  {t:<15s}  {b:>8d}  {a:>8d}  {b - a:>8d}")
 
 
-def report_balanced(
-    result: list[dict], title: str = "BALANCED OUTPUT"
-) -> None:
+def report_balanced(result: list[dict], title: str = "BALANCED OUTPUT") -> None:
     """Print full breakdown of the balanced result."""
     _header(title)
 
@@ -226,9 +220,7 @@ def report_balanced(
         m = s["perturbation_method"] or "(original)"
         cross[m][s["type"]] += 1
 
-    all_types = sorted(
-        {s["type"] for s in result}
-    )
+    all_types = sorted({s["type"] for s in result})
     hdr = f"  {'method':<20s}"
     for t in all_types:
         hdr += f"  {t:>10s}"
@@ -256,16 +248,17 @@ def report_comparison(
     results = {}
     for cfg in configs:
         name = cfg.pop("name")
-        result = build_balanced_dataset(
-            file_paths=file_paths, **cfg
-        )
+        result = build_balanced_dataset(file_paths=file_paths, **cfg)
         results[name] = result
         cfg["name"] = name  # restore
 
     # Summary table
-    print(f"\n  {'Config':<30s}  {'Total':>6s}  {'True':>6s}  "
-          f"{'False':>6s}  {'Orig':>6s}  {'Pert':>6s}  "
-          f"{'P/O':>5s}  {'T→F%':>5s}  {'Methods':>8s}")
+    print(
+        f"\n  {'Config':<30s}  {'Total':>6s}  {'True':>6s}  "
+        f"{'False':>6s}  {'Orig':>6s}  {'Pert':>6s}  "
+        f"{'P/O':>5s}  {'T→T':>6s}  {'T→F':>6s}  "
+        f"{'F→F':>6s}  {'Methods':>8s}"
+    )
     print(f"  {THIN_SEP}")
 
     for name, result in results.items():
@@ -275,29 +268,29 @@ def report_comparison(
         orig = sum(1 for s in result if not s["is_perturbed"])
         pert = n - orig
         po = pert / orig if orig else 0
-        false_p = [
-            s for s in result
-            if s["is_perturbed"] and s["label"] == "False"
-        ]
-        tf = sum(1 for s in false_p if s["type"] == "T→F")
-        tf_pct = 100 * tf / len(false_p) if false_p else 0
-        methods = len({
-            s["perturbation_method"]
-            for s in result
-            if s["perturbation_method"] is not None
-        })
+        perturbed = [s for s in result if s["is_perturbed"]]
+        t_to_t = sum(1 for s in perturbed if s["type"] == "T→T")
+        t_to_f = sum(1 for s in perturbed if s["type"] == "T→F")
+        f_to_f = sum(1 for s in perturbed if s["type"] == "F→F")
+        methods = len(
+            {
+                s["perturbation_method"]
+                for s in result
+                if s["perturbation_method"] is not None
+            }
+        )
         print(
             f"  {name:<30s}  {n:>6d}  {t:>6d}  "
             f"{f:>6d}  {orig:>6d}  {pert:>6d}  "
-            f"{po:>5.2f}  {tf_pct:>4.1f}%  {methods:>8d}"
+            f"{po:>5.2f}  {t_to_t:>6d}  {t_to_f:>6d}  "
+            f"{f_to_f:>6d}  {methods:>8d}"
         )
 
     # Per-config method breakdown
     for name, result in results.items():
         _subheader(f"{name}: method counts")
         method_ctr = Counter(
-            s["perturbation_method"] or "(original)"
-            for s in result
+            s["perturbation_method"] or "(original)" for s in result
         )
         _counter_table(method_ctr, len(result))
 
@@ -319,7 +312,7 @@ PRESET_CONFIGS = [
         "name": "no_balancing",
         "balance_labels": False,
         "perturb_ratio": 100.0,
-        "false_perturb_t_to_f_ratio": 1.0,
+        "false_perturb_t_to_f_ratio": None,
         "equal_method_size": False,
         "seed": 42,
     },
@@ -327,7 +320,7 @@ PRESET_CONFIGS = [
         "name": "balanced_labels_only",
         "balance_labels": True,
         "perturb_ratio": 100.0,
-        "false_perturb_t_to_f_ratio": 1.0,
+        "false_perturb_t_to_f_ratio": None,
         "equal_method_size": False,
         "seed": 42,
     },
@@ -335,7 +328,7 @@ PRESET_CONFIGS = [
         "name": "equal_methods",
         "balance_labels": False,
         "perturb_ratio": 100.0,
-        "false_perturb_t_to_f_ratio": 1.0,
+        "false_perturb_t_to_f_ratio": None,
         "equal_method_size": True,
         "seed": 42,
     },
@@ -343,7 +336,7 @@ PRESET_CONFIGS = [
         "name": "equal_methods+label_bal",
         "balance_labels": True,
         "perturb_ratio": 100.0,
-        "false_perturb_t_to_f_ratio": 1.0,
+        "false_perturb_t_to_f_ratio": None,
         "equal_method_size": True,
         "seed": 42,
     },
@@ -372,7 +365,7 @@ PRESET_CONFIGS = [
         "seed": 42,
     },
     {
-        "name": "t_to_f_heavy (0.8)",
+        "name": "t_to_f_heavy (80%)",
         "balance_labels": True,
         "perturb_ratio": 1.0,
         "false_perturb_t_to_f_ratio": 0.8,
@@ -380,7 +373,7 @@ PRESET_CONFIGS = [
         "seed": 42,
     },
     {
-        "name": "f_to_f_heavy (0.2)",
+        "name": "f_to_f_heavy (20%)",
         "balance_labels": True,
         "perturb_ratio": 1.0,
         "false_perturb_t_to_f_ratio": 0.2,
@@ -428,7 +421,9 @@ def main() -> None:
         "--false_perturb_t_to_f_ratio",
         type=float,
         default=0.5,
-        help="T→F fraction among False perturbations (default: 0.5).",
+        help=(
+            "Share of False perturbations that should be T→F " "(default: 0.5)."
+        ),
     )
     parser.add_argument(
         "--equal_methods",
@@ -442,7 +437,10 @@ def main() -> None:
         help="Run all preset configurations and compare.",
     )
     parser.add_argument(
-        "--seed", type=int, default=42, help="Random seed.",
+        "--seed",
+        type=int,
+        default=42,
+        help="Random seed.",
     )
     args = parser.parse_args()
 
