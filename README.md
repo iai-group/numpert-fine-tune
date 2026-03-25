@@ -1,3 +1,9 @@
+# numpert-fine-tune
+
+![coverage](https://img.shields.io/badge/dynamic/json?url=https://gist.githubusercontent.com/vinaysetty/4dc000699f87ec295368ae52250acc7a/raw/coverage.numpert-fine-tune.main.json&label=coverage&query=$.message&color=$.color)
+
+Your project description here...
+
 # LLM Fine-Tuning Module
 
 This module implements the full fine-tuning and inference pipeline for numerical perturbation-aware fact-checking models. It uses [Unsloth](https://github.com/unslothai/unsloth) for efficient LoRA fine-tuning and supports custom batch sampling strategies that group original and perturbed claims together.
