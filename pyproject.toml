@@ -15,6 +15,7 @@ dependencies = [
     "datasets==3.4.1",
     "unsloth==2026.1.4",
     "unsloth-zoo==2026.1.4",
+    "ollama",
     
     
     # NLP tools
