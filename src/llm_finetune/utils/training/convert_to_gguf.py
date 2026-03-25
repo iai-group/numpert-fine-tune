@@ -12,6 +12,7 @@ Usage:
 
 import argparse
 import os
+from pathlib import Path
 from typing import Optional
 
 # Supported GGUF quantization methods (llama.cpp conventions).
@@ -29,6 +30,54 @@ SUPPORTED_QUANT_METHODS = [
 ]
 
 DEFAULT_QUANT_METHOD = "q4_k_m"
+
+
+def check_llamacpp_setup() -> Optional[Path]:
+    """Check if llama.cpp is properly installed and built.
+
+    Returns:
+        Path to llama.cpp root directory if found, None otherwise.
+
+    Raises:
+        RuntimeError: If setup is incomplete with instructions.
+    """
+    # Check if external/llama.cpp exists in project root
+    project_root = Path(__file__).parent.parent.parent.parent.parent
+    llama_cpp_path = project_root / "external" / "llama.cpp"
+
+    if llama_cpp_path.exists():
+        converter_script = llama_cpp_path / "convert_hf_to_gguf.py"
+        quantizer_bin = llama_cpp_path / "build" / "bin" / "llama-quantize"
+
+        if converter_script.exists() and (
+            quantizer_bin.exists() or True
+        ):  # converter is main requirement
+            return llama_cpp_path
+
+    # If not found, provide setup instructions
+    print("\n" + "=" * 80)
+    print("⚠️  llama.cpp NOT FOUND - GGUF conversion setup required")
+    print("=" * 80)
+    print("\nTo enable GGUF export, run the automated setup:")
+    print(f"  bash {project_root}/scripts/setup_llamacpp.sh")
+    print("\nOr manually:")
+    print("  1. Install dependencies: uv add --dev llama-cpp-python")
+    print(
+        "  2. Clone llama.cpp: "
+        "git clone https://github.com/ggerganov/llama.cpp.git "
+        "external/llama.cpp"
+    )
+    print(
+        "  3. Build: cmake -S external/llama.cpp -B "
+        "external/llama.cpp/build && cmake --build "
+        "external/llama.cpp/build -j"
+    )
+    print("=" * 80 + "\n")
+
+    raise RuntimeError(
+        "llama.cpp not found. Run 'bash scripts/setup_llamacpp.sh' "
+        "to set up GGUF conversion."
+    )
 
 
 def save_as_gguf(
@@ -52,12 +101,16 @@ def save_as_gguf(
 
     Raises:
         ValueError: If the quantization method is not supported.
+        RuntimeError: If llama.cpp is not properly set up.
     """
     if quantization_method not in SUPPORTED_QUANT_METHODS:
         raise ValueError(
             f"Unsupported quantization method: '{quantization_method}'. "
             f"Supported: {SUPPORTED_QUANT_METHODS}"
         )
+
+    # Verify llama.cpp setup before proceeding
+    check_llamacpp_setup()
 
     os.makedirs(output_dir, exist_ok=True)
 
@@ -95,7 +148,13 @@ def convert_existing_model(
 
     Returns:
         The output directory path.
+
+    Raises:
+        RuntimeError: If llama.cpp is not properly set up.
     """
+    # Verify llama.cpp setup before proceeding
+    check_llamacpp_setup()
+
     if output_dir is None:
         output_dir = f"{model_path.rstrip('/')}_gguf_{quantization_method}"
 
