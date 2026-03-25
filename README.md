@@ -1,8 +1,6 @@
-# numpert-fine-tune
-
 ![coverage](https://img.shields.io/badge/dynamic/json?url=https://gist.githubusercontent.com/vinaysetty/4dc000699f87ec295368ae52250acc7a/raw/coverage.numpert-fine-tune.main.json&label=coverage&query=$.message&color=$.color)
 
-Your project description here...
+
 
 # LLM Fine-Tuning Module
 
