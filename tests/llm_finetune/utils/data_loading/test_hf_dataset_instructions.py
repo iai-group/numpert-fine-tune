@@ -272,9 +272,9 @@ class TestDetermineLabel:
         assert _determine_perturbed_label("perturb_type1", True) == "True"
         assert _determine_perturbed_label("perturb_type1", False) == "False"
 
-    def test_type2_flips_label(self):
+    def test_type2_always_false(self):
         assert _determine_perturbed_label("perturb_type2", True) == "False"
-        assert _determine_perturbed_label("perturb_type2", False) == "True"
+        assert _determine_perturbed_label("perturb_type2", False) == "False"
 
     def test_type3_always_false(self):
         for t3 in [
@@ -416,7 +416,7 @@ class TestExpandPerturbations:
         assert t1[0]["label"] == "False"  # structure-preserving
 
         t2 = [e for e in expanded if e["perturbation_type"] == "perturb_type2"]
-        assert t2[0]["label"] == "True"  # value-modifying → flipped
+        assert t2[0]["label"] == "False"  # value-modifying → always False
 
     def test_expand_obfuscation_true(self, obfuscation_true_example):
         """obfuscation_True.json: original True + 3 type3 variants (all
@@ -532,10 +532,10 @@ class TestExpandPerturbations:
             allowed_types=[PerturbationType.PERTURB_TYPE1],
         )
 
-        # All types: original(False) + type1(False) + type2(True) = 3
+        # All types: original(False) + type1(False) + type2(False) = 3
         assert len(all_expanded) == 3
         all_labels = {e["label"] for e in all_expanded}
-        assert all_labels == {"True", "False"}  # both labels present
+        assert all_labels == {"False"}  # all False (type2 always False)
 
         # Type1 only: original(False) + type1(False) = 2
         assert len(type1_only) == 2
