@@ -18,6 +18,16 @@ from src.llm_finetune.utils.training.convert_to_gguf import (
 )
 
 
+# Fixture to mock check_llamacpp_setup
+@pytest.fixture(autouse=True)
+def mock_llamacpp_check():
+    """Mock check_llamacpp_setup to avoid requiring llama.cpp in tests."""
+    with patch(
+        "src.llm_finetune.utils.training.convert_to_gguf.check_llamacpp_setup"
+    ):
+        yield
+
+
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
