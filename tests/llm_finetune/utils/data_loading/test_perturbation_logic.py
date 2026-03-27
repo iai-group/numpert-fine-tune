@@ -140,11 +140,11 @@ class TestDeterminePerturbedLabel:
         assert label == "False"
 
     def test_perturb_type2_original_false(self):
-        """Type2 (value-modifying) flips original False to True."""
+        """Type2 (value-modifying) always returns False."""
         label = _determine_perturbed_label(
             PerturbationType.PERTURB_TYPE2.value, False
         )
-        assert label == "True"
+        assert label == "False"
 
     def test_perturb_type3_random_original_true(self):
         """Type3 (obfuscation) always returns False regardless of original."""
@@ -222,7 +222,7 @@ class TestExpandPerturbations:
         expanded = expand_perturbations(examples)
         assert len(expanded) == 2
         assert expanded[1]["perturbation_type"] == "perturb_type2"
-        assert expanded[1]["label"] == "True"  # Flipped from False
+        assert expanded[1]["label"] == "False"  # Type2 always False
 
     def test_example_with_perturb_type3_random(self):
         """Should expand example with perturb_type3_random perturbation."""

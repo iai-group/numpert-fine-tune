@@ -156,14 +156,14 @@ A regex (`_PERTURB_KEY_RE`) scans each key in the JSON object to find perturbati
 - `perturb_type3_masked_True`, `perturb_type3_masked_False`
 - `perturb_type3_removed_True`, `perturb_type3_removed_False`
 
-The `_True`/`_False` suffix on JSON keys indicates the original claim's gold label, **not** the perturbed label. The actual perturbed label is computed by `_determine_perturbed_label()`.
+The `_True`/`_False` suffix on JSON keys indicates the original claim's gold label. The perturbed label is computed by `_determine_perturbed_label()`: type1 preserves the original label, while type2 and type3 always produce `False`.
 
 ### Label Logic
 
 | Perturbation Type | Label Rule | Rationale |
 |---|---|---|
 | `perturb_type1` (structure-preserving) | Same as original | Semantically equivalent rewrite |
-| `perturb_type2` (value-modifying) | Flipped from original | Numerical value changed → truth value inverts |
+| `perturb_type2` (value-modifying) | Always `False` | Numerical value changed → claim unverifiable or false |
 | `perturb_type3_*` (obfuscation) | Always `False` | Original value destroyed → unverifiable |
 
 ### Filtering
