@@ -24,7 +24,7 @@ four perturbation types.  The label-transition rules are:
 
     original_normalized : label unchanged (baseline)
     perturb_type1       : label unchanged (structure-preserving)
-    perturb_type2       : label flipped   (value-modifying)
+    perturb_type2       : always False    (value-modifying)
     perturb_type3_random: always False    (obfuscation)
 
 Source file "range_True.json" contains claims whose *original* label is True.
@@ -47,8 +47,8 @@ Dummy examples and expected outcomes
   9 | range_False.json | original_norm.   | false | false | YES
  10 | range_False.json | type1            | false | false | YES
  11 | range_False.json | type1            | false | true  | NO
- 12 | range_False.json | type2            | true  | true  | YES
- 13 | range_False.json | type2            | true  | false | NO
+ 12 | range_False.json | type2            | false | true  | NO
+ 13 | range_False.json | type2            | false | false | YES
  14 | range_False.json | type3_random     | false | false | YES
  15 | range_False.json | type3_random     | false | FAIL  | ---
 
@@ -73,7 +73,7 @@ per_file_and_type (selected descriptions):
     range_True.json  | perturb_type1       → "True → True — …"
     range_True.json  | perturb_type2       → "True → False — …"
     range_False.json | perturb_type1       → "False → False — …"
-    range_False.json | perturb_type2       → "False → True — …"
+    range_False.json | perturb_type2       → "False → False — …"
     range_False.json | perturb_type3_random→ "False → False — Obfuscation…"
 """
 
@@ -178,19 +178,19 @@ def _build_dummy_data() -> tuple[list[dict], list[dict]]:
             LABEL_FALSE,
             '{"label": true}',
         ),  # 11: wrong
-        # perturb_type2 (value-modifying): gold=true (F→T)
+        # perturb_type2 (value-modifying): gold=false (F→F, always False)
         (
             "range_False.json",
             "perturb_type2",
-            LABEL_TRUE,
+            LABEL_FALSE,
             '{"label": true}',
-        ),  # 12: correct
+        ),  # 12: wrong
         (
             "range_False.json",
             "perturb_type2",
-            LABEL_TRUE,
+            LABEL_FALSE,
             '{"label": false}',
-        ),  # 13: wrong
+        ),  # 13: correct
         # perturb_type3_random (obfuscation): gold=false (always False)
         (
             "range_False.json",
@@ -328,7 +328,7 @@ def main() -> None:
         t1_false = ft["range_False.json | perturb_type1"]
         assert "False \u2192 False" in t1_false["description"]
         t2_false = ft["range_False.json | perturb_type2"]
-        assert "False \u2192 True" in t2_false["description"]
+        assert "False \u2192 False" in t2_false["description"]
         t3_false = ft["range_False.json | perturb_type3_random"]
         assert "False \u2192 False" in t3_false["description"]
         print("  [PASS] file+type descriptions have correct label transitions")

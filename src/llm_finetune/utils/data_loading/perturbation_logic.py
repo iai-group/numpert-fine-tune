@@ -74,8 +74,8 @@ def _determine_perturbed_label(
         # Structure-preserving → same label as original
         return "True" if original_label_bool else "False"
     elif base_type == PerturbationType.PERTURB_TYPE2.value:
-        # Value-modifying → flipped label
-        return "False" if original_label_bool else "True"
+        # Value-modifying → always False
+        return "False"
     else:
         # Type 3 (obfuscation) → always False
         return "False"

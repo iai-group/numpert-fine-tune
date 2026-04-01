@@ -202,7 +202,7 @@ def _compute_scores(
 _PERTURB_TYPE_DESCRIPTIONS = {
     "original_normalized": "Baseline (unperturbed)",
     "perturb_type1": "Structure-preserving (label unchanged)",
-    "perturb_type2": "Value-modifying (label flipped)",
+    "perturb_type2": "Value-modifying (always False)",
     "perturb_type3_random": "Obfuscation: random digits (always False)",
     "perturb_type3_masked": "Obfuscation: masked with # (always False)",
     "perturb_type3_removed": "Obfuscation: numbers removed (always False)",
@@ -222,9 +222,8 @@ def _label_transition(original_label: str, perturb_type: str) -> str:
         # Structure-preserving: label unchanged
         return f"{orig} → {orig}"
     elif perturb_type == "perturb_type2":
-        # Value-modifying: label flipped
-        flipped = "False" if orig == "True" else "True"
-        return f"{orig} → {flipped}"
+        # Value-modifying: always False
+        return f"{orig} → False"
     elif perturb_type.startswith("perturb_type3_"):
         # Type3 obfuscation: always False
         return f"{orig} → False"
