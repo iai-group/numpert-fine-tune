@@ -390,11 +390,11 @@ class TestExpandPerturbations:
 
         t2 = [e for e in expanded if e["perturbation_type"] == "perturb_type2"]
         assert len(t2) == 1
-        assert t2[0]["label"] == "False"  # value-modifying → flipped
+        assert t2[0]["label"] == "False"  # value-modifying → always False
 
     def test_expand_approximation_false(self, approximation_false_example):
         """approximation_False.json: original False + type1 (False) + type2
-        (True)."""
+        (False)."""
         print_separator("TEST: Expand approximation False example")
 
         expanded = expand_perturbations([approximation_false_example])
@@ -447,7 +447,7 @@ class TestExpandPerturbations:
         assert len(expanded) == 2  # original + type2
         t2 = [e for e in expanded if e["perturbation_type"] == "perturb_type2"]
         assert len(t2) == 1
-        assert t2[0]["label"] == "False"  # flipped from True
+        assert t2[0]["label"] == "False"  # value-modifying always False
 
     def test_allowed_types_filter(self, numeration_true_example):
         """Only load type1, skip type2."""
@@ -487,7 +487,7 @@ class TestExpandPerturbations:
 
         For a False dataset:
         - type1 (structure-preserving) keeps the False label
-        - type2 (value-modifying) would flip to True
+        - type2 (value-modifying) is always False (excluded here anyway)
         Selecting only type1 should therefore produce *only* False labels.
         """
         print_separator("TEST: Selective type1 from False dataset (no type2)")
@@ -507,7 +507,7 @@ class TestExpandPerturbations:
         assert types == {"original_normalized", "perturb_type1"}
         assert "perturb_type2" not in types
 
-        # All labels must be False (type2 would have flipped to True)
+        # All labels must be False (type2 is always False regardless)
         assert all(
             e["label"] == "False" for e in expanded
         ), "Excluding type2 from a False file should yield only False labels"
@@ -749,7 +749,7 @@ class TestLoadFactCheckingData:
         assert perturb_dist["perturb_type1"] == 1
         assert "perturb_type2" not in perturb_dist
 
-        # All labels must be False (type2 would have introduced True)
+        # All labels must be False (type2 is always False regardless)
         assert all(
             lbl == '{"label": false}' for lbl in dataset["label"]
         ), "type1-only from False file must produce only False labels"
@@ -807,7 +807,7 @@ class TestLoadFactCheckingData:
         ]
         assert len(type2_entries) == 1
         assert type2_entries[0]["claim_id"] == "train_000001"
-        # type2 from True file flips label → False
+        # type2 is always False
         assert type2_entries[0]["label"] == '{"label": false}'
 
         print("✓ Mixed selective loading correct")

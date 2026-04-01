@@ -640,8 +640,8 @@ class TestDescriptionHelpers:
         assert _label_transition("True", "perturb_type2") == "True → False"
 
     def test_label_transition_type2_false_origin(self):
-        """Type2 on False-origin claim: False → True."""
-        assert _label_transition("False", "perturb_type2") == "False → True"
+        """Type2 on False-origin claim: False → False (always False)."""
+        assert _label_transition("False", "perturb_type2") == "False → False"
 
     def test_label_transition_type3_true_origin(self):
         """Type3 on True-origin: True → False (obfuscation always False)."""
@@ -688,9 +688,9 @@ class TestDescriptionHelpers:
         assert "Value-modifying" in desc
 
     def test_describe_file_and_type_false_type2(self):
-        """False-origin + type2 → 'False → True — Value-modifying'."""
+        """False-origin + type2 → 'False → False — Value-modifying'."""
         desc = _describe_file_and_type("numeration_False.json | perturb_type2")
-        assert "False → True" in desc
+        assert "False → False" in desc
 
     def test_describe_file_and_type_false_type3(self):
         """False-origin + type3 → 'False → False — Obfuscation'."""
