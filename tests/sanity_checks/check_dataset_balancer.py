@@ -1,43 +1,12 @@
-"""Sanity check: dataset balancer on real perturbed data.
+"""Sanity check: dataset balancer on real perturbed data."""
 
-Loads perturbation files from ``data/perturbed_data/{split}_split/``,
-runs them through the dataset_balancer pipeline, and prints a detailed
-report at every stage:
-
-  - Raw input counts per file and per method
-  - Flattened sample counts (originals vs perturbations)
-  - Deduplication effect
-  - Balanced output with label / type / method / file distributions
-  - Multiple configuration runs for easy comparison
-
-Usage::
-
-    # Default: all train_split files, default balancing
-    python -m tests.sanity_checks.check_dataset_balancer
-
-    # Use test split
-    python -m tests.sanity_checks.check_dataset_balancer --split test
-
-    # Specific files only
-    python -m tests.sanity_checks.check_dataset_balancer \\
-        --files numeration_True.json range_True.json
-
-    # Custom single run
-    python -m tests.sanity_checks.check_dataset_balancer \\
-        --perturb_ratio 2.0 --equal_methods --balance_labels
-
-    # Run all preset configurations for comparison
-    python -m tests.sanity_checks.check_dataset_balancer --compare
-"""
 
 from __future__ import annotations
 
 import argparse
 import json
-import random
 from collections import Counter, defaultdict
 from pathlib import Path
-from typing import Optional
 
 from src.llm_finetune.utils.data_loading.balancer.dataset_balancer import (
     Sample,
@@ -200,6 +169,23 @@ def report_balanced(result: list[dict], title: str = "BALANCED OUTPUT") -> None:
     print(f"  Perturbed : {n_pert}")
     print(f"  Ratio (pert/orig): {actual_ratio:.2f}")
 
+    t_to_t_total = sum(
+        1 for s in result if s["is_perturbed"] and s["type"] == "T→T"
+    )
+    false_pert_total = sum(
+        1 for s in result if s["is_perturbed"] and s["type"] in {"T→F", "F→F"}
+    )
+    if n_pert:
+        print("\n  Perturbation class composition:")
+        print(
+            f"    T→T       : {t_to_t_total:>5d}  "
+            f"({100 * t_to_t_total / n_pert:.1f}%)"
+        )
+        print(
+            f"    False pert: {false_pert_total:>5d}  "
+            f"({100 * false_pert_total / n_pert:.1f}%)"
+        )
+
     # T→F / F→F breakdown among False perturbations
     false_pert = [
         s for s in result if s["is_perturbed"] and s["label"] == "False"
@@ -209,7 +195,7 @@ def report_balanced(result: list[dict], title: str = "BALANCED OUTPUT") -> None:
         f_to_f = sum(1 for s in false_pert if s["type"] == "F→F")
         total_fp = t_to_f + f_to_f
         ratio = t_to_f / total_fp if total_fp else 0
-        print(f"\n  False perturbation composition:")
+        print("\n  False perturbation composition:")
         print(f"    T→F : {t_to_f:>5d}  ({100 * ratio:.1f}%)")
         print(f"    F→F : {f_to_f:>5d}  ({100 * (1 - ratio):.1f}%)")
 
@@ -240,7 +226,7 @@ def report_balanced(result: list[dict], title: str = "BALANCED OUTPUT") -> None:
 
 def report_comparison(
     configs: list[dict],
-    file_paths: list[Path],
+    file_paths: list[str | Path],
 ) -> None:
     """Run multiple configs and print a side-by-side summary."""
     _header("MULTI-CONFIG COMPARISON")
@@ -295,6 +281,13 @@ def report_comparison(
         _counter_table(method_ctr, len(result))
 
 
+def write_output_json(output_path: Path, result: list[dict]) -> None:
+    """Write the sampled balanced dataset to a JSON file."""
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(output_path, "w", encoding="utf-8") as handle:
+        json.dump(result, handle, indent=2, ensure_ascii=False)
+
+
 # -------------------------------------------------------------------
 # Preset configurations
 # -------------------------------------------------------------------
@@ -304,80 +297,140 @@ PRESET_CONFIGS = [
         "name": "defaults",
         "balance_labels": True,
         "perturb_ratio": 1.0,
+        "true_perturbation_fraction": 1 / 3,
         "false_perturb_t_to_f_ratio": 0.5,
         "equal_method_size": False,
+        "method_balance_mode": "none",
         "seed": 42,
     },
     {
         "name": "no_balancing",
         "balance_labels": False,
         "perturb_ratio": 100.0,
+        "true_perturbation_fraction": 1 / 3,
         "false_perturb_t_to_f_ratio": None,
         "equal_method_size": False,
+        "method_balance_mode": "none",
         "seed": 42,
     },
     {
-        "name": "balanced_labels_only",
-        "balance_labels": True,
-        "perturb_ratio": 100.0,
-        "false_perturb_t_to_f_ratio": None,
-        "equal_method_size": False,
-        "seed": 42,
-    },
-    {
-        "name": "equal_methods",
+        "name": "fair_split+oversample",
         "balance_labels": False,
-        "perturb_ratio": 100.0,
-        "false_perturb_t_to_f_ratio": None,
-        "equal_method_size": True,
+        "perturb_ratio": 1.0,
+        "true_perturbation_fraction": 1 / 3,
+        "false_perturb_t_to_f_ratio": 0.5,
+        "equal_method_size": False,
+        "method_balance_mode": "oversample",
         "seed": 42,
     },
     {
-        "name": "equal_methods+label_bal",
-        "balance_labels": True,
-        "perturb_ratio": 100.0,
-        "false_perturb_t_to_f_ratio": None,
+        "name": "fair_split+undersample",
+        "balance_labels": False,
+        "perturb_ratio": 1.0,
+        "true_perturbation_fraction": 1 / 3,
+        "false_perturb_t_to_f_ratio": 0.5,
         "equal_method_size": True,
+        "method_balance_mode": "undersample",
         "seed": 42,
     },
     {
-        "name": "ratio_0.5",
-        "balance_labels": True,
+        "name": "t_to_t_heavy (50%)",
+        "balance_labels": False,
+        "perturb_ratio": 1.0,
+        "true_perturbation_fraction": 0.5,
+        "false_perturb_t_to_f_ratio": 0.5,
+        "equal_method_size": False,
+        "method_balance_mode": "oversample",
+        "seed": 42,
+    },
+    {
+        "name": "false_heavy (20% T→T)",
+        "balance_labels": False,
+        "perturb_ratio": 1.0,
+        "true_perturbation_fraction": 0.2,
+        "false_perturb_t_to_f_ratio": 0.5,
+        "equal_method_size": False,
+        "method_balance_mode": "oversample",
+        "seed": 42,
+    },
+    {
+        "name": "ratio_0.5+fair_split",
+        "balance_labels": False,
         "perturb_ratio": 0.5,
+        "true_perturbation_fraction": 1 / 3,
         "false_perturb_t_to_f_ratio": 0.5,
         "equal_method_size": False,
+        "method_balance_mode": "oversample",
         "seed": 42,
     },
     {
-        "name": "ratio_2.0",
-        "balance_labels": True,
+        "name": "ratio_2.0+fair_split",
+        "balance_labels": False,
         "perturb_ratio": 2.0,
+        "true_perturbation_fraction": 1 / 3,
         "false_perturb_t_to_f_ratio": 0.5,
         "equal_method_size": False,
+        "method_balance_mode": "oversample",
         "seed": 42,
     },
     {
-        "name": "ratio_2.0+equal_methods",
-        "balance_labels": True,
+        "name": "ratio_2.0+t_to_t_heavy",
+        "balance_labels": False,
         "perturb_ratio": 2.0,
+        "true_perturbation_fraction": 0.5,
         "false_perturb_t_to_f_ratio": 0.5,
-        "equal_method_size": True,
+        "equal_method_size": False,
+        "method_balance_mode": "oversample",
+        "seed": 42,
+    },
+    {
+        "name": "ratio_2.0+false_heavy",
+        "balance_labels": False,
+        "perturb_ratio": 2.0,
+        "true_perturbation_fraction": 0.2,
+        "false_perturb_t_to_f_ratio": 0.5,
+        "equal_method_size": False,
+        "method_balance_mode": "oversample",
         "seed": 42,
     },
     {
         "name": "t_to_f_heavy (80%)",
         "balance_labels": True,
         "perturb_ratio": 1.0,
+        "true_perturbation_fraction": 1 / 3,
         "false_perturb_t_to_f_ratio": 0.8,
         "equal_method_size": False,
+        "method_balance_mode": "none",
         "seed": 42,
     },
     {
         "name": "f_to_f_heavy (20%)",
         "balance_labels": True,
         "perturb_ratio": 1.0,
+        "true_perturbation_fraction": 1 / 3,
         "false_perturb_t_to_f_ratio": 0.2,
         "equal_method_size": False,
+        "method_balance_mode": "none",
+        "seed": 42,
+    },
+    {
+        "name": "ratio_2.0+t_to_f_heavy",
+        "balance_labels": False,
+        "perturb_ratio": 2.0,
+        "true_perturbation_fraction": 1 / 3,
+        "false_perturb_t_to_f_ratio": 0.8,
+        "equal_method_size": False,
+        "method_balance_mode": "oversample",
+        "seed": 42,
+    },
+    {
+        "name": "ratio_2.0+f_to_f_heavy",
+        "balance_labels": False,
+        "perturb_ratio": 2.0,
+        "true_perturbation_fraction": 1 / 3,
+        "false_perturb_t_to_f_ratio": 0.2,
+        "equal_method_size": False,
+        "method_balance_mode": "oversample",
         "seed": 42,
     },
 ]
@@ -388,8 +441,42 @@ PRESET_CONFIGS = [
 # -------------------------------------------------------------------
 
 
-def main() -> None:
-    """Entry point for the dataset balancer sanity check."""
+def main() -> None:  # noqa: C901
+    r"""Load perturbation files from ``data/perturbed_data/{split}_split/``.
+
+    Runs them through the dataset_balancer pipeline and prints a detailed
+    report at every stage:
+
+    - Raw input counts per file and per method
+    - Flattened sample counts (originals vs perturbations)
+    - Deduplication effect
+    - Balanced output with label / type / method / file distributions
+    - Multiple configuration runs for easy comparison
+
+    Usage::
+
+        # Default: all train_split files, default balancing
+        python -m tests.sanity_checks.check_dataset_balancer
+
+        # Use test split
+        python -m tests.sanity_checks.check_dataset_balancer --split test
+
+        # Specific files only
+        python -m tests.sanity_checks.check_dataset_balancer \\
+            --files numeration_True.json range_True.json
+
+        # Custom single run
+        python -m tests.sanity_checks.check_dataset_balancer \\
+            --perturb_ratio 2.0 --true_perturbation_fraction 0.33 \
+            --method_balance_mode oversample --balance_labels
+
+        # Write the sampled balanced dataset to JSON
+        python -m tests.sanity_checks.check_dataset_balancer \
+            --output_json results/balanced_dataset_debug.json
+
+        # Run all preset configurations for comparison
+        python -m tests.sanity_checks.check_dataset_balancer --compare
+    """
     parser = argparse.ArgumentParser(
         description="Sanity check: dataset balancer on real data",
     )
@@ -426,15 +513,43 @@ def main() -> None:
         ),
     )
     parser.add_argument(
+        "--true_perturbation_fraction",
+        type=float,
+        default=1 / 3,
+        help=(
+            "Share of all perturbed examples that should remain True "
+            "(T→T). Default 0.333 gives a fair T→T/T→F/F→F split "
+            "when false_perturb_t_to_f_ratio=0.5."
+        ),
+    )
+    parser.add_argument(
         "--equal_methods",
         action="store_true",
         default=False,
-        help="Balance perturbation methods equally.",
+        help="Backward-compatible alias for --method_balance_mode undersample.",
+    )
+    parser.add_argument(
+        "--method_balance_mode",
+        choices=["none", "undersample", "oversample"],
+        default=None,
+        help=(
+            "How to balance perturbation methods: leave unchanged, "
+            "undersample to the smallest method, or oversample to the largest."
+        ),
     )
     parser.add_argument(
         "--compare",
         action="store_true",
         help="Run all preset configurations and compare.",
+    )
+    parser.add_argument(
+        "--output_json",
+        type=Path,
+        default=None,
+        help=(
+            "Optional path to write the sampled balanced dataset from the "
+            "single-run configuration as JSON."
+        ),
     )
     parser.add_argument(
         "--seed",
@@ -481,7 +596,9 @@ def main() -> None:
         balance_labels=args.balance_labels,
         perturb_ratio=args.perturb_ratio,
         false_perturb_t_to_f_ratio=args.false_perturb_t_to_f_ratio,
+        true_perturbation_fraction=args.true_perturbation_fraction,
         equal_method_size=args.equal_methods,
+        method_balance_mode=args.method_balance_mode,
         seed=args.seed,
     )
     report_balanced(
@@ -490,10 +607,16 @@ def main() -> None:
             f"BALANCED OUTPUT  "
             f"(labels={args.balance_labels}, "
             f"ratio={args.perturb_ratio}, "
+            f"true_pert={args.true_perturbation_fraction:.3f}, "
             f"t2f={args.false_perturb_t_to_f_ratio}, "
-            f"eq_methods={args.equal_methods})"
+            f"eq_methods={args.equal_methods}, "
+            f"method_mode={args.method_balance_mode})"
         ),
     )
+
+    if args.output_json is not None:
+        write_output_json(args.output_json, result)
+        print(f"\n  Wrote sampled dataset JSON to: {args.output_json}")
 
     # ------- Stage 5: multi-config comparison -------
     if args.compare:

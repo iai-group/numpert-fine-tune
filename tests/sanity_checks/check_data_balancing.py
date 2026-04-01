@@ -45,9 +45,11 @@ from src.llm_finetune.utils.data_loading.hf_dataset_instructions import (
     load_train_and_validation,
     FileLoadConfig,
 )
-from src.llm_finetune.utils.data_loading.data_balancer_old.method_balancer import (
-    MethodBalancer,
+from src.llm_finetune.utils.data_loading.data_balancer_old import (
+    method_balancer,
 )
+
+MethodBalancer = method_balancer.MethodBalancer
 
 SEP = "=" * 80
 DATA_ROOT = Path("data/perturbed_data")

@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 import json
-import os
-import tempfile
 from collections import Counter
 from pathlib import Path
 from typing import Optional
@@ -14,8 +12,11 @@ import pytest
 from src.llm_finetune.utils.data_loading.balancer.dataset_balancer import (
     Sample,
     _assign_type,
+    _compute_true_false_perturbation_targets,
     _determine_perturbed_label,
+    _oversample_fair,
     _parse_perturb_key,
+    _undersample_preserving_method_balance,
     _undersample_fair,
     apply_balancing,
     build_balanced_dataset,
@@ -403,6 +404,114 @@ class TestUndersampleFair:
         assert file_counts["file_b.json"] == 3
 
 
+class TestOversampleFair:
+    def test_no_expansion_needed(self):
+        import random
+
+        rng = random.Random(42)
+        items = [_make_sample(text=f"t{i}") for i in range(3)]
+        result = _oversample_fair(items, 2, rng)
+        assert len(result) == 3
+
+    def test_expands_to_target(self):
+        import random
+
+        rng = random.Random(42)
+        items = [
+            _make_sample(text=f"t{i}", source_file=f"file_{i % 2}.json")
+            for i in range(3)
+        ]
+        result = _oversample_fair(items, 7, rng)
+        assert len(result) == 7
+        assert {s.text for s in items} <= {s.text for s in result}
+
+    def test_multi_file_fairness(self):
+        import random
+
+        rng = random.Random(42)
+        items = [
+            _make_sample(text="a_0", source_file="file_a.json"),
+            _make_sample(text="b_0", source_file="file_b.json"),
+        ]
+
+        result = _oversample_fair(items, 6, rng)
+        file_counts = Counter(s.source_file for s in result)
+        assert file_counts["file_a.json"] == 3
+        assert file_counts["file_b.json"] == 3
+
+
+class TestUndersamplePreservingMethodBalance:
+    def test_balances_methods_as_evenly_as_possible(self):
+        import random
+
+        rng = random.Random(42)
+        items = []
+        for i in range(5):
+            items.append(
+                _make_sample(
+                    text=f"range_{i}",
+                    label="False",
+                    sample_type="T→F",
+                    method="range",
+                    is_perturbed=True,
+                )
+            )
+        for i in range(5):
+            items.append(
+                _make_sample(
+                    text=f"numeration_{i}",
+                    label="False",
+                    sample_type="T→F",
+                    method="numeration",
+                    is_perturbed=True,
+                )
+            )
+        for i in range(5):
+            items.append(
+                _make_sample(
+                    text=f"approx_{i}",
+                    label="False",
+                    sample_type="T→F",
+                    method="approximation",
+                    is_perturbed=True,
+                )
+            )
+
+        result = _undersample_preserving_method_balance(items, 8, rng)
+        counts = Counter(s.perturbation_method for s in result)
+
+        assert len(result) == 8
+        assert max(counts.values()) - min(counts.values()) <= 1
+
+
+class TestComputeTrueFalsePerturbationTargets:
+    def test_defaults_to_fair_thirds_when_possible(self):
+        true_target, false_target = _compute_true_false_perturbation_targets(
+            20,
+            40,
+            1 / 3,
+            30,
+        )
+
+        assert true_target == 10
+        assert false_target == 20
+
+    def test_reallocates_when_true_examples_are_limited(self):
+        true_target, false_target = _compute_true_false_perturbation_targets(
+            3,
+            40,
+            1 / 3,
+            30,
+        )
+
+        assert true_target == 3
+        assert false_target == 27
+
+    def test_invalid_true_fraction_raises(self):
+        with pytest.raises(ValueError, match="true_perturbation_fraction"):
+            _compute_true_false_perturbation_targets(5, 5, 1.5, 6)
+
+
 # ── enforce_coupling ────────────────────────────────────────────
 
 
@@ -454,8 +563,6 @@ class TestApplyBalancing:
     def _make_balanced_set(self):
         """Helper: 4 True originals, 4 False originals,
         4 T→T perturbed, 4 T→F perturbed, 4 F→F perturbed."""
-        import random
-
         samples = []
         for i in range(4):
             samples.append(
@@ -532,6 +639,7 @@ class TestApplyBalancing:
             perturb_ratio=1.0,
             false_perturb_t_to_f_ratio=None,
             equal_method_size=False,
+            method_balance_mode=None,
             rng=rng,
         )
         true_count = sum(1 for s in result if s.label == "True")
@@ -556,6 +664,7 @@ class TestApplyBalancing:
             perturb_ratio=1.0,
             false_perturb_t_to_f_ratio=None,
             equal_method_size=False,
+            method_balance_mode=None,
             rng=rng,
         )
         assert len(result) == 14
@@ -588,12 +697,125 @@ class TestApplyBalancing:
             perturb_ratio=1.0,
             false_perturb_t_to_f_ratio=None,
             equal_method_size=False,
+            method_balance_mode=None,
             rng=rng,
         )
         originals = [s for s in result if not s.is_perturbed]
         perturbed = [s for s in result if s.is_perturbed]
         assert len(originals) == 10
         assert len(perturbed) == 10  # ratio 1.0
+
+    def test_default_fair_split_between_transition_types(self):
+        import random
+
+        rng = random.Random(42)
+        samples = []
+
+        for i in range(9):
+            samples.append(
+                _make_sample(
+                    text=f"orig_{i}",
+                    label="True" if i % 2 == 0 else "False",
+                    claim_id=f"c_{i}",
+                    is_perturbed=False,
+                )
+            )
+            samples.append(
+                _make_sample(
+                    text=f"tt_{i}",
+                    label="True",
+                    sample_type="T→T",
+                    method="numeration",
+                    is_perturbed=True,
+                )
+            )
+            samples.append(
+                _make_sample(
+                    text=f"tf_{i}",
+                    label="False",
+                    sample_type="T→F",
+                    method="range",
+                    is_perturbed=True,
+                )
+            )
+            samples.append(
+                _make_sample(
+                    text=f"ff_{i}",
+                    label="False",
+                    sample_type="F→F",
+                    method="approximation",
+                    is_perturbed=True,
+                )
+            )
+
+        result = apply_balancing(
+            samples,
+            balance_labels=False,
+            perturb_ratio=1.0,
+            rng=rng,
+        )
+
+        perturbed = [s for s in result if s.is_perturbed]
+        assert len([s for s in perturbed if s.type == "T→T"]) == 3
+        assert len([s for s in perturbed if s.type == "T→F"]) == 3
+        assert len([s for s in perturbed if s.type == "F→F"]) == 3
+
+    def test_true_perturbation_fraction_customizes_true_budget(self):
+        import random
+
+        rng = random.Random(42)
+        samples = []
+
+        for i in range(8):
+            samples.append(
+                _make_sample(
+                    text=f"orig_{i}",
+                    label="True" if i % 2 == 0 else "False",
+                    claim_id=f"c_{i}",
+                    is_perturbed=False,
+                )
+            )
+        for i in range(8):
+            samples.append(
+                _make_sample(
+                    text=f"tt_{i}",
+                    label="True",
+                    sample_type="T→T",
+                    method="numeration",
+                    is_perturbed=True,
+                )
+            )
+            samples.append(
+                _make_sample(
+                    text=f"tf_{i}",
+                    label="False",
+                    sample_type="T→F",
+                    method="range",
+                    is_perturbed=True,
+                )
+            )
+            samples.append(
+                _make_sample(
+                    text=f"ff_{i}",
+                    label="False",
+                    sample_type="F→F",
+                    method="approximation",
+                    is_perturbed=True,
+                )
+            )
+
+        result = apply_balancing(
+            samples,
+            balance_labels=False,
+            perturb_ratio=1.0,
+            true_perturbation_fraction=0.75,
+            rng=rng,
+        )
+
+        perturbed = [s for s in result if s.is_perturbed]
+        assert len([s for s in perturbed if s.type == "T→T"]) == 6
+        assert len([s for s in perturbed if s.type == "T→F"]) == 1
+        assert len([s for s in perturbed if s.type == "F→F"]) == 1
 
     def test_method_balancing(self):
         import random
@@ -638,6 +860,7 @@ class TestApplyBalancing:
             perturb_ratio=100.0,  # high ratio, won't limit
             false_perturb_t_to_f_ratio=None,
             equal_method_size=True,
+            method_balance_mode=None,
             rng=rng,
         )
         method_counts = Counter(s.perturbation_method for s in result)
@@ -645,6 +868,445 @@ class TestApplyBalancing:
         assert method_counts["numeration"] == 3
         assert method_counts["approximation"] == 3
         assert method_counts["range"] == 3
+
+    def test_method_balancing_oversample(self):
+        import random
+
+        rng = random.Random(42)
+        samples = []
+        for i in range(10):
+            samples.append(
+                _make_sample(
+                    text=f"num_{i}",
+                    label="True",
+                    sample_type="T→T",
+                    method="numeration",
+                    is_perturbed=True,
+                )
+            )
+        for i in range(5):
+            samples.append(
+                _make_sample(
+                    text=f"approx_{i}",
+                    label="True",
+                    sample_type="T→T",
+                    method="approximation",
+                    is_perturbed=True,
+                )
+            )
+        for i in range(3):
+            samples.append(
+                _make_sample(
+                    text=f"range_{i}",
+                    label="True",
+                    sample_type="T→T",
+                    method="range",
+                    is_perturbed=True,
+                )
+            )
+
+        result = apply_balancing(
+            samples,
+            balance_labels=False,
+            perturb_ratio=100.0,
+            false_perturb_t_to_f_ratio=None,
+            equal_method_size=False,
+            method_balance_mode="oversample",
+            rng=rng,
+        )
+        method_counts = Counter(s.perturbation_method for s in result)
+        assert method_counts["numeration"] == 10
+        assert method_counts["approximation"] == 10
+        assert method_counts["range"] == 10
+
+    def test_method_balancing_undersample_false_types_independently(self):
+        import random
+
+        rng = random.Random(42)
+        samples = []
+
+        for i in range(5):
+            samples.append(
+                _make_sample(
+                    text=f"tf_range_{i}",
+                    label="False",
+                    sample_type="T→F",
+                    method="range",
+                    is_perturbed=True,
+                )
+            )
+        for i in range(2):
+            samples.append(
+                _make_sample(
+                    text=f"tf_masked_{i}",
+                    label="False",
+                    sample_type="T→F",
+                    method="masked",
+                    is_perturbed=True,
+                )
+            )
+        for i in range(4):
+            samples.append(
+                _make_sample(
+                    text=f"ff_approx_{i}",
+                    label="False",
+                    sample_type="F→F",
+                    method="approximation",
+                    is_perturbed=True,
+                )
+            )
+        for i in range(1):
+            samples.append(
+                _make_sample(
+                    text=f"ff_random_{i}",
+                    label="False",
+                    sample_type="F→F",
+                    method="random",
+                    is_perturbed=True,
+                )
+            )
+
+        result = apply_balancing(
+            samples,
+            balance_labels=False,
+            perturb_ratio=100.0,
+            false_perturb_t_to_f_ratio=None,
+            equal_method_size=False,
+            method_balance_mode="undersample",
+            rng=rng,
+        )
+
+        t_to_f_counts = Counter(
+            s.perturbation_method for s in result if s.type == "T→F"
+        )
+        f_to_f_counts = Counter(
+            s.perturbation_method for s in result if s.type == "F→F"
+        )
+
+        assert t_to_f_counts == Counter({"range": 2, "masked": 2})
+        assert f_to_f_counts == Counter({"approximation": 1, "random": 1})
+
+    def test_method_balancing_oversample_false_types_independently(self):
+        import random
+
+        rng = random.Random(42)
+        samples = []
+
+        for i in range(5):
+            samples.append(
+                _make_sample(
+                    text=f"tf_range_{i}",
+                    label="False",
+                    sample_type="T→F",
+                    method="range",
+                    is_perturbed=True,
+                )
+            )
+        for i in range(2):
+            samples.append(
+                _make_sample(
+                    text=f"tf_masked_{i}",
+                    label="False",
+                    sample_type="T→F",
+                    method="masked",
+                    is_perturbed=True,
+                )
+            )
+        for i in range(4):
+            samples.append(
+                _make_sample(
+                    text=f"ff_approx_{i}",
+                    label="False",
+                    sample_type="F→F",
+                    method="approximation",
+                    is_perturbed=True,
+                )
+            )
+        for i in range(1):
+            samples.append(
+                _make_sample(
+                    text=f"ff_random_{i}",
+                    label="False",
+                    sample_type="F→F",
+                    method="random",
+                    is_perturbed=True,
+                )
+            )
+
+        result = apply_balancing(
+            samples,
+            balance_labels=False,
+            perturb_ratio=100.0,
+            false_perturb_t_to_f_ratio=None,
+            equal_method_size=False,
+            method_balance_mode="oversample",
+            rng=rng,
+        )
+
+        t_to_f_counts = Counter(
+            s.perturbation_method for s in result if s.type == "T→F"
+        )
+        f_to_f_counts = Counter(
+            s.perturbation_method for s in result if s.type == "F→F"
+        )
+
+        assert t_to_f_counts == Counter({"range": 5, "masked": 5})
+        assert f_to_f_counts == Counter({"approximation": 4, "random": 4})
+
+    def test_method_oversample_respects_perturb_ratio(self):
+        import random
+
+        rng = random.Random(42)
+        samples = []
+
+        for i in range(4):
+            samples.append(
+                _make_sample(
+                    text=f"orig_{i}",
+                    label="True",
+                    claim_id=f"c_{i}",
+                    is_perturbed=False,
+                )
+            )
+
+        for i in range(5):
+            samples.append(
+                _make_sample(
+                    text=f"num_{i}",
+                    label="True",
+                    sample_type="T→T",
+                    method="numeration",
+                    is_perturbed=True,
+                )
+            )
+
+        for i in range(2):
+            samples.append(
+                _make_sample(
+                    text=f"neg_{i}",
+                    label="True",
+                    sample_type="T→T",
+                    method="negative",
+                    is_perturbed=True,
+                )
+            )
+
+        result = apply_balancing(
+            samples,
+            balance_labels=False,
+            perturb_ratio=2.0,
+            false_perturb_t_to_f_ratio=None,
+            equal_method_size=False,
+            rng=rng,
+            method_balance_mode="oversample",
+        )
+
+        originals = [s for s in result if not s.is_perturbed]
+        perturbed = [s for s in result if s.is_perturbed]
+        assert len(originals) == 4
+        assert len(perturbed) == 8
+
+    def test_method_balancing_none_leaves_counts_unchanged(self):
+        import random
+
+        rng = random.Random(42)
+        samples = []
+        for i in range(4):
+            samples.append(
+                _make_sample(
+                    text=f"num_{i}",
+                    label="True",
+                    sample_type="T→T",
+                    method="numeration",
+                    is_perturbed=True,
+                )
+            )
+        for i in range(2):
+            samples.append(
+                _make_sample(
+                    text=f"neg_{i}",
+                    label="True",
+                    sample_type="T→T",
+                    method="negative",
+                    is_perturbed=True,
+                )
+            )
+
+        result = apply_balancing(
+            samples,
+            balance_labels=False,
+            perturb_ratio=100.0,
+            false_perturb_t_to_f_ratio=None,
+            equal_method_size=False,
+            method_balance_mode="none",
+            rng=rng,
+        )
+        method_counts = Counter(s.perturbation_method for s in result)
+        assert method_counts["numeration"] == 4
+        assert method_counts["negative"] == 2
+
+    def test_invalid_method_balance_mode_raises(self):
+        import random
+
+        rng = random.Random(42)
+        samples = [
+            _make_sample(
+                text="num_0",
+                label="True",
+                sample_type="T→T",
+                method="numeration",
+                is_perturbed=True,
+            )
+        ]
+
+        with pytest.raises(ValueError, match="method_balance_mode"):
+            apply_balancing(
+                samples,
+                balance_labels=False,
+                perturb_ratio=100.0,
+                false_perturb_t_to_f_ratio=None,
+                equal_method_size=False,
+                method_balance_mode="bad-mode",
+                rng=rng,
+            )
+
+    def test_equal_method_size_conflicts_with_oversample(self):
+        import random
+
+        rng = random.Random(42)
+        samples = [
+            _make_sample(
+                text="num_0",
+                label="True",
+                sample_type="T→T",
+                method="numeration",
+                is_perturbed=True,
+            )
+        ]
+
+        with pytest.raises(ValueError, match="equal_method_size=True"):
+            apply_balancing(
+                samples,
+                balance_labels=False,
+                perturb_ratio=100.0,
+                false_perturb_t_to_f_ratio=None,
+                equal_method_size=True,
+                method_balance_mode="oversample",
+                rng=rng,
+            )
+
+    def test_method_oversample_respects_ratio_and_false_composition(self):
+        import random
+
+        rng = random.Random(42)
+        samples = []
+
+        for i in range(4):
+            samples.append(
+                _make_sample(
+                    text=f"orig_t_{i}",
+                    label="True",
+                    claim_id=f"ct_{i}",
+                    is_perturbed=False,
+                )
+            )
+            samples.append(
+                _make_sample(
+                    text=f"orig_f_{i}",
+                    label="False",
+                    claim_id=f"cf_{i}",
+                    is_perturbed=False,
+                )
+            )
+
+        for i in range(5):
+            samples.append(
+                _make_sample(
+                    text=f"tt_num_{i}",
+                    label="True",
+                    sample_type="T→T",
+                    method="numeration",
+                    is_perturbed=True,
+                )
+            )
+        for i in range(2):
+            samples.append(
+                _make_sample(
+                    text=f"tt_neg_{i}",
+                    label="True",
+                    sample_type="T→T",
+                    method="negative",
+                    is_perturbed=True,
+                )
+            )
+        for i in range(5):
+            samples.append(
+                _make_sample(
+                    text=f"tf_range_{i}",
+                    label="False",
+                    sample_type="T→F",
+                    method="range",
+                    is_perturbed=True,
+                )
+            )
+        for i in range(2):
+            samples.append(
+                _make_sample(
+                    text=f"tf_masked_{i}",
+                    label="False",
+                    sample_type="T→F",
+                    method="masked",
+                    is_perturbed=True,
+                )
+            )
+        for i in range(5):
+            samples.append(
+                _make_sample(
+                    text=f"ff_approx_{i}",
+                    label="False",
+                    sample_type="F→F",
+                    method="approximation",
+                    is_perturbed=True,
+                )
+            )
+        for i in range(2):
+            samples.append(
+                _make_sample(
+                    text=f"ff_random_{i}",
+                    label="False",
+                    sample_type="F→F",
+                    method="random",
+                    is_perturbed=True,
+                )
+            )
+
+        result = apply_balancing(
+            samples,
+            balance_labels=False,
+            perturb_ratio=2.0,
+            false_perturb_t_to_f_ratio=0.5,
+            equal_method_size=False,
+            method_balance_mode="oversample",
+            rng=rng,
+        )
+
+        originals = [s for s in result if not s.is_perturbed]
+        perturbed = [s for s in result if s.is_perturbed]
+        true_perturbed = [s for s in perturbed if s.type == "T→T"]
+        t_to_f = [s for s in perturbed if s.type == "T→F"]
+        f_to_f = [s for s in perturbed if s.type == "F→F"]
+
+        assert len(originals) == 8
+        assert len(perturbed) == 16
+        assert len(true_perturbed) == 5
+        assert len(t_to_f) + len(f_to_f) == 11
+        assert abs(len(t_to_f) - len(f_to_f)) <= 1
+
+        t_to_f_counts = Counter(s.perturbation_method for s in t_to_f)
+        f_to_f_counts = Counter(s.perturbation_method for s in f_to_f)
+
+        assert max(t_to_f_counts.values()) - min(t_to_f_counts.values()) <= 1
+        assert max(f_to_f_counts.values()) - min(f_to_f_counts.values()) <= 1
 
     def test_false_perturb_composition(self):
         import random
@@ -682,6 +1344,7 @@ class TestApplyBalancing:
             perturb_ratio=100.0,
             false_perturb_t_to_f_ratio=0.5,
             equal_method_size=False,
+            method_balance_mode=None,
             rng=rng,
         )
         t_to_f = [s for s in result if s.type == "T→F"]
@@ -725,6 +1388,7 @@ class TestApplyBalancing:
             perturb_ratio=100.0,
             false_perturb_t_to_f_ratio=0.5,
             equal_method_size=False,
+            method_balance_mode=None,
             rng=rng,
         )
         t_to_f = [s for s in result if s.type == "T→F"]
@@ -768,6 +1432,7 @@ class TestApplyBalancing:
             perturb_ratio=100.0,
             false_perturb_t_to_f_ratio=None,
             equal_method_size=False,
+            method_balance_mode=None,
             rng=rng,
         )
         t_to_f = [s for s in result if s.type == "T→F"]
@@ -832,6 +1497,7 @@ class TestApplyBalancing:
             perturb_ratio=1.0,
             false_perturb_t_to_f_ratio=0.1,
             equal_method_size=False,
+            method_balance_mode=None,
             rng=rng,
         )
 
@@ -841,9 +1507,9 @@ class TestApplyBalancing:
         f_to_f = [s for s in perturbed if s.type == "F→F"]
 
         assert len(perturbed) == 50
-        assert len(t_to_t) == 20
+        assert len(t_to_t) == 17
         assert len(t_to_f) == 3
-        assert len(f_to_f) == 27
+        assert len(f_to_f) == 30
 
 
 # ── build_balanced_dataset (integration) ────────────────────────
@@ -1010,6 +1676,132 @@ class TestBuildBalancedDataset:
         perturbed = [s for s in result if s["is_perturbed"]]
         # With ratio 1.0, perturbed <= originals
         assert len(perturbed) <= len(originals) + 1
+
+    def test_method_balance_mode_oversample(self, tmp_path):
+        records = []
+        for i in range(5):
+            records.append(
+                _make_record(
+                    claim_id=f"num_{i}",
+                    label="True",
+                    normalized_claim=f"Numeration claim {i}.",
+                    method="numeration",
+                    perturb_fields={
+                        "perturb_type1_True": f"Numeration perturb {i}.",
+                    },
+                )
+            )
+        for i in range(2):
+            records.append(
+                _make_record(
+                    claim_id=f"neg_{i}",
+                    label="True",
+                    normalized_claim=f"Negative claim {i}.",
+                    method="negative",
+                    perturb_fields={
+                        "perturb_type1_True": f"Negative perturb {i}.",
+                    },
+                )
+            )
+
+        path = _write_json(records, tmp_path, "methods.json")
+        result = build_balanced_dataset(
+            [path],
+            balance_labels=False,
+            perturb_ratio=100.0,
+            method_balance_mode="oversample",
+            seed=42,
+        )
+
+        method_counts = Counter(
+            s["perturbation_method"] for s in result if s["is_perturbed"]
+        )
+        assert method_counts["numeration"] == 5
+        assert method_counts["negative"] == 5
+
+    def test_method_balance_mode_undersample(self, tmp_path):
+        records = []
+        for i in range(5):
+            records.append(
+                _make_record(
+                    claim_id=f"num_{i}",
+                    label="True",
+                    normalized_claim=f"Numeration claim {i}.",
+                    method="numeration",
+                    perturb_fields={
+                        "perturb_type1_True": f"Numeration perturb {i}.",
+                    },
+                )
+            )
+        for i in range(2):
+            records.append(
+                _make_record(
+                    claim_id=f"neg_{i}",
+                    label="True",
+                    normalized_claim=f"Negative claim {i}.",
+                    method="negative",
+                    perturb_fields={
+                        "perturb_type1_True": f"Negative perturb {i}.",
+                    },
+                )
+            )
+
+        path = _write_json(records, tmp_path, "methods.json")
+        result = build_balanced_dataset(
+            [path],
+            balance_labels=False,
+            perturb_ratio=100.0,
+            method_balance_mode="undersample",
+            seed=42,
+        )
+
+        method_counts = Counter(
+            s["perturbation_method"] for s in result if s["is_perturbed"]
+        )
+        assert method_counts["numeration"] == 2
+        assert method_counts["negative"] == 2
+
+    def test_method_balance_mode_none(self, tmp_path):
+        records = []
+        for i in range(5):
+            records.append(
+                _make_record(
+                    claim_id=f"num_{i}",
+                    label="True",
+                    normalized_claim=f"Numeration claim {i}.",
+                    method="numeration",
+                    perturb_fields={
+                        "perturb_type1_True": f"Numeration perturb {i}.",
+                    },
+                )
+            )
+        for i in range(2):
+            records.append(
+                _make_record(
+                    claim_id=f"neg_{i}",
+                    label="True",
+                    normalized_claim=f"Negative claim {i}.",
+                    method="negative",
+                    perturb_fields={
+                        "perturb_type1_True": f"Negative perturb {i}.",
+                    },
+                )
+            )
+
+        path = _write_json(records, tmp_path, "methods.json")
+        result = build_balanced_dataset(
+            [path],
+            balance_labels=False,
+            perturb_ratio=100.0,
+            method_balance_mode="none",
+            seed=42,
+        )
+
+        method_counts = Counter(
+            s["perturbation_method"] for s in result if s["is_perturbed"]
+        )
+        assert method_counts["numeration"] == 5
+        assert method_counts["negative"] == 2
 
 
 # ── compute_stats ───────────────────────────────────────────────

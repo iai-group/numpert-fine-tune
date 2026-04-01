@@ -14,7 +14,7 @@ import re
 from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
+from typing import Literal, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -23,6 +23,8 @@ PERTURB_FIELD_PATTERN = re.compile(
 )
 
 EXCLUDED_METHODS = frozenset({"removed"})
+VALID_METHOD_BALANCE_MODES = frozenset({"none", "undersample", "oversample"})
+MethodBalanceMode = Literal["none", "undersample", "oversample"]
 
 
 @dataclass
@@ -93,6 +95,86 @@ def _assign_type(original_label: str, perturbed_label: str) -> str:
         )
 
 
+def _extract_record_core(
+    record: dict,
+    source_file: str,
+) -> tuple[str, str, str, Optional[str]] | None:
+    """Extract the fields needed to build samples from one record."""
+    claim_id = record.get("claim_id")
+    original_label = record.get("label")
+    normalized_claim = record.get("normalized_claim")
+    perturbation_method = record.get("pertubation_method")
+
+    if not claim_id or not original_label or not normalized_claim:
+        logger.warning(
+            "Skipping record missing required fields in %s",
+            source_file,
+        )
+        return None
+
+    if perturbation_method in EXCLUDED_METHODS:
+        return None
+
+    return claim_id, original_label, normalized_claim, perturbation_method
+
+
+def _iter_perturbation_samples(
+    record: dict,
+    source_file: str,
+    claim_id: str,
+    original_label: str,
+    perturbation_method: Optional[str],
+) -> list[Sample]:
+    """Build all valid perturbation samples for one record."""
+    perturbed_samples: list[Sample] = []
+
+    for key, value in record.items():
+        if not key.startswith("perturb_type"):
+            continue
+
+        parsed = _parse_perturb_key(key)
+        if parsed is None:
+            logger.warning("Could not parse perturb key: %s", key)
+            continue
+
+        perturb_type, label_from_key = parsed
+        sub_type = perturb_type.split("_", 1)
+        if len(sub_type) > 1 and sub_type[1] in EXCLUDED_METHODS:
+            continue
+
+        if not value or not isinstance(value, str) or not value.strip():
+            continue
+
+        if label_from_key != original_label:
+            logger.warning(
+                "Label mismatch for %s in claim %s: "
+                "key says %s, record says %s. Skipping.",
+                key,
+                claim_id,
+                label_from_key,
+                original_label,
+            )
+            continue
+
+        perturbed_label = _determine_perturbed_label(
+            original_label, perturb_type
+        )
+        sample_type = _assign_type(original_label, perturbed_label)
+        perturbed_samples.append(
+            Sample(
+                text=value.strip(),
+                label=perturbed_label,
+                source_claim_id=claim_id,
+                type=sample_type,
+                perturbation_method=perturbation_method,
+                is_perturbed=True,
+                source_file=source_file,
+            )
+        )
+
+    return perturbed_samples
+
+
 def flatten_samples(
     file_data: list[tuple[str, list[dict]]],
 ) -> list[Sample]:
@@ -100,23 +182,17 @@ def flatten_samples(
     samples = []
     for source_file, records in file_data:
         for record in records:
-            claim_id = record.get("claim_id")
-            original_label = record.get("label")
-            normalized_claim = record.get("normalized_claim")
-            perturbation_method = record.get("pertubation_method")
-
-            if not claim_id or not original_label or not normalized_claim:
-                logger.warning(
-                    "Skipping record missing required fields in %s",
-                    source_file,
-                )
+            record_core = _extract_record_core(record, source_file)
+            if record_core is None:
                 continue
 
-            # Skip records whose method is excluded entirely
-            if perturbation_method in EXCLUDED_METHODS:
-                continue
+            (
+                claim_id,
+                original_label,
+                normalized_claim,
+                perturbation_method,
+            ) = record_core
 
-            # Original sample
             samples.append(
                 Sample(
                     text=normalized_claim,
@@ -128,57 +204,15 @@ def flatten_samples(
                     source_file=source_file,
                 )
             )
-
-            # Perturbation samples
-            for key, value in record.items():
-                if not key.startswith("perturb_type"):
-                    continue
-
-                parsed = _parse_perturb_key(key)
-                if parsed is None:
-                    logger.warning("Could not parse perturb key: %s", key)
-                    continue
-
-                perturb_type, label_from_key = parsed
-
-                # Skip excluded perturbation sub-types
-                # (e.g. type3_removed)
-                sub_type = perturb_type.split("_", 1)
-                if len(sub_type) > 1 and sub_type[1] in EXCLUDED_METHODS:
-                    continue
-
-                # Skip empty values
-                if not value or not isinstance(value, str) or not value.strip():
-                    continue
-
-                # Validate label consistency
-                if label_from_key != original_label:
-                    logger.warning(
-                        "Label mismatch for %s in claim %s: "
-                        "key says %s, record says %s. Skipping.",
-                        key,
-                        claim_id,
-                        label_from_key,
-                        original_label,
-                    )
-                    continue
-
-                perturbed_label = _determine_perturbed_label(
-                    original_label, perturb_type
+            samples.extend(
+                _iter_perturbation_samples(
+                    record,
+                    source_file,
+                    claim_id,
+                    original_label,
+                    perturbation_method,
                 )
-                sample_type = _assign_type(original_label, perturbed_label)
-
-                samples.append(
-                    Sample(
-                        text=value.strip(),
-                        label=perturbed_label,
-                        source_claim_id=claim_id,
-                        type=sample_type,
-                        perturbation_method=perturbation_method,
-                        is_perturbed=True,
-                        source_file=source_file,
-                    )
-                )
+            )
 
     return samples
 
@@ -243,76 +277,253 @@ def _undersample_fair(
     return selected
 
 
-def _balance_methods(
-    perturbed: list[Sample], rng: random.Random
+def _oversample_fair(
+    items: list[Sample],
+    target_count: int,
+    rng: random.Random,
 ) -> list[Sample]:
-    """Balance perturbation methods within each label group."""
+    """Oversample to target_count while spreading repeats across files."""
+    if len(items) >= target_count or not items:
+        return list(items)
+
+    by_file: dict[str, list[Sample]] = defaultdict(list)
+    for sample in items:
+        by_file[sample.source_file].append(sample)
+
+    for file_samples in by_file.values():
+        rng.shuffle(file_samples)
+
+    selected = list(items)
+    file_keys = sorted(by_file.keys())
+    next_index = {key: 0 for key in file_keys}
+
+    while len(selected) < target_count:
+        for key in file_keys:
+            if len(selected) >= target_count:
+                break
+
+            file_samples = by_file[key]
+            if not file_samples:
+                continue
+
+            if next_index[key] >= len(file_samples):
+                rng.shuffle(file_samples)
+                next_index[key] = 0
+
+            selected.append(file_samples[next_index[key]])
+            next_index[key] += 1
+
+    return selected
+
+
+def _undersample_preserving_method_balance(
+    items: list[Sample],
+    target_count: int,
+    rng: random.Random,
+) -> list[Sample]:
+    """Undersample while keeping method counts as even as possible."""
+    if len(items) <= target_count:
+        return list(items)
+    if target_count <= 0:
+        return []
+
+    by_method: dict[Optional[str], list[Sample]] = defaultdict(list)
+    for sample in items:
+        by_method[sample.perturbation_method].append(sample)
+
+    methods = list(by_method.keys())
+    rng.shuffle(methods)
+
+    target_by_method = {method: 0 for method in methods}
+    remaining_capacity = {
+        method: len(method_samples)
+        for method, method_samples in by_method.items()
+    }
+
+    remaining = target_count
+    while remaining > 0:
+        progressed = False
+        for method in methods:
+            if remaining == 0:
+                break
+            if remaining_capacity[method] <= 0:
+                continue
+
+            target_by_method[method] += 1
+            remaining_capacity[method] -= 1
+            remaining -= 1
+            progressed = True
+
+        if not progressed:
+            break
+
+    selected: list[Sample] = []
+    for method in methods:
+        selected.extend(
+            _undersample_fair(by_method[method], target_by_method[method], rng)
+        )
+
+    return selected
+
+
+def _compute_true_false_perturbation_targets(
+    true_perturbed_count: int,
+    false_perturbed_count: int,
+    true_perturbation_fraction: float,
+    target_total: Optional[int] = None,
+) -> tuple[int, int]:
+    """Compute feasible T→T vs False-perturbation counts.
+
+    ``true_perturbation_fraction`` is interpreted as the share of all
+    perturbed examples that should remain True (that is, be ``T→T``).
+    The remaining perturbation budget is allocated to False-producing
+    perturbations, which can later be split into ``T→F`` and ``F→F``.
+    """
+    if not 0 <= true_perturbation_fraction <= 1:
+        raise ValueError("true_perturbation_fraction must be between 0 and 1")
+
+    kept_true = max(0, true_perturbed_count)
+    kept_false = max(0, false_perturbed_count)
+    kept_total = kept_true + kept_false
+
+    if target_total is None or kept_total <= target_total:
+        return kept_true, kept_false
+
+    if target_total <= 0:
+        return 0, 0
+
+    if true_perturbation_fraction == 0:
+        return 0, min(kept_false, target_total)
+
+    if true_perturbation_fraction == 1:
+        return min(kept_true, target_total), 0
+
+    min_true = max(0, target_total - kept_false)
+    max_true = min(kept_true, target_total)
+    ideal_true = target_total * true_perturbation_fraction
+    candidates = {
+        min_true,
+        max_true,
+        max(min_true, min(max_true, int(ideal_true))),
+        max(min_true, min(max_true, int(ideal_true) + 1)),
+        max(min_true, min(max_true, round(ideal_true))),
+    }
+
+    best_true = min(
+        candidates,
+        key=lambda count: (
+            abs((count / target_total) - true_perturbation_fraction),
+            abs(count - ideal_true),
+        ),
+    )
+    return best_true, target_total - best_true
+
+
+def _resolve_method_balance_mode(
+    equal_method_size: bool,
+    method_balance_mode: MethodBalanceMode | None,
+) -> MethodBalanceMode:
+    """Resolve method balancing settings with backward compatibility."""
+    if method_balance_mode is None:
+        return "undersample" if equal_method_size else "none"
+
+    if method_balance_mode not in VALID_METHOD_BALANCE_MODES:
+        valid_modes = ", ".join(sorted(VALID_METHOD_BALANCE_MODES))
+        raise ValueError(f"method_balance_mode must be one of: {valid_modes}")
+
+    if equal_method_size and method_balance_mode != "undersample":
+        raise ValueError(
+            "equal_method_size=True is only compatible with "
+            "method_balance_mode='undersample'"
+        )
+
+    return method_balance_mode
+
+
+def _balance_methods(
+    perturbed: list[Sample],
+    rng: random.Random,
+    mode: MethodBalanceMode,
+) -> list[Sample]:
+    """Balance perturbation methods within each perturbation type."""
+    if mode == "none":
+        return list(perturbed)
+
     result = []
 
-    for label in ("True", "False"):
-        label_samples = [s for s in perturbed if s.label == label]
+    for sample_type in ("T→T", "T→F", "F→F"):
+        type_samples = [s for s in perturbed if s.type == sample_type]
 
         by_method: dict[Optional[str], list[Sample]] = defaultdict(list)
-        for s in label_samples:
+        for s in type_samples:
             by_method[s.perturbation_method].append(s)
 
         if not by_method:
             continue
 
-        min_size = min(len(v) for v in by_method.values())
+        target_size = (
+            min(len(v) for v in by_method.values())
+            if mode == "undersample"
+            else max(len(v) for v in by_method.values())
+        )
 
         for method_samples in by_method.values():
-            result.extend(_undersample_fair(method_samples, min_size, rng))
+            if mode == "undersample":
+                result.extend(
+                    _undersample_fair(method_samples, target_size, rng)
+                )
+            else:
+                result.extend(
+                    _oversample_fair(method_samples, target_size, rng)
+                )
 
     return result
 
 
-def _compute_false_perturbation_targets(
+def _fit_false_perturbation_counts(
     t_to_f_count: int,
     f_to_f_count: int,
     t_to_f_fraction: float,
-    target_total: Optional[int] = None,
 ) -> tuple[int, int]:
-    """Compute feasible T→F/F→F counts under a target fraction.
-
-    ``t_to_f_fraction`` is interpreted as the share of False
-    perturbations that should be T→F.
-    """
-    if not 0 <= t_to_f_fraction <= 1:
-        raise ValueError("false_perturb_t_to_f_ratio must be between 0 and 1")
-
+    """Fit false-perturbation counts to the desired T→F share."""
     if t_to_f_count == 0 or f_to_f_count == 0:
-        kept_t_to_f = t_to_f_count
-        kept_f_to_f = f_to_f_count
-    elif t_to_f_fraction == 0:
-        kept_t_to_f = 0
-        kept_f_to_f = f_to_f_count
-    elif t_to_f_fraction == 1:
-        kept_t_to_f = t_to_f_count
-        kept_f_to_f = 0
-    else:
-        actual_fraction = t_to_f_count / (t_to_f_count + f_to_f_count)
+        return t_to_f_count, f_to_f_count
 
-        if actual_fraction > t_to_f_fraction:
-            kept_f_to_f = f_to_f_count
-            kept_t_to_f = min(
+    if t_to_f_fraction == 0:
+        return 0, f_to_f_count
+
+    if t_to_f_fraction == 1:
+        return t_to_f_count, 0
+
+    actual_fraction = t_to_f_count / (t_to_f_count + f_to_f_count)
+    if actual_fraction > t_to_f_fraction:
+        return (
+            min(
                 t_to_f_count,
                 int(f_to_f_count * t_to_f_fraction / (1 - t_to_f_fraction)),
-            )
-        elif actual_fraction < t_to_f_fraction:
-            kept_t_to_f = t_to_f_count
-            kept_f_to_f = min(
+            ),
+            f_to_f_count,
+        )
+
+    if actual_fraction < t_to_f_fraction:
+        return (
+            t_to_f_count,
+            min(
                 f_to_f_count,
                 int(t_to_f_count * (1 - t_to_f_fraction) / t_to_f_fraction),
-            )
-        else:
-            kept_t_to_f = t_to_f_count
-            kept_f_to_f = f_to_f_count
+            ),
+        )
 
-    kept_total = kept_t_to_f + kept_f_to_f
-    if target_total is None or kept_total <= target_total:
-        return kept_t_to_f, kept_f_to_f
+    return t_to_f_count, f_to_f_count
 
+
+def _trim_false_perturbation_counts(
+    kept_t_to_f: int,
+    kept_f_to_f: int,
+    t_to_f_fraction: float,
+    target_total: int,
+) -> tuple[int, int]:
+    """Trim already-fitted false-perturbation counts to a total budget."""
     if target_total <= 0:
         return 0, 0
 
@@ -329,14 +540,8 @@ def _compute_false_perturbation_targets(
         min_t_to_f,
         max_t_to_f,
         max(min_t_to_f, min(max_t_to_f, int(ideal_t_to_f))),
-        max(
-            min_t_to_f,
-            min(max_t_to_f, int(ideal_t_to_f) + 1),
-        ),
-        max(
-            min_t_to_f,
-            min(max_t_to_f, round(ideal_t_to_f)),
-        ),
+        max(min_t_to_f, min(max_t_to_f, int(ideal_t_to_f) + 1)),
+        max(min_t_to_f, min(max_t_to_f, round(ideal_t_to_f))),
     }
 
     best_t_to_f = min(
@@ -349,30 +554,77 @@ def _compute_false_perturbation_targets(
     return best_t_to_f, target_total - best_t_to_f
 
 
+def _compute_false_perturbation_targets(
+    t_to_f_count: int,
+    f_to_f_count: int,
+    t_to_f_fraction: float,
+    target_total: Optional[int] = None,
+) -> tuple[int, int]:
+    """Compute feasible T→F/F→F counts under a target fraction.
+
+    ``t_to_f_fraction`` is interpreted as the share of False
+    perturbations that should be T→F.
+    """
+    if not 0 <= t_to_f_fraction <= 1:
+        raise ValueError("false_perturb_t_to_f_ratio must be between 0 and 1")
+
+    kept_t_to_f, kept_f_to_f = _fit_false_perturbation_counts(
+        t_to_f_count,
+        f_to_f_count,
+        t_to_f_fraction,
+    )
+
+    kept_total = kept_t_to_f + kept_f_to_f
+    if target_total is None or kept_total <= target_total:
+        return kept_t_to_f, kept_f_to_f
+
+    return _trim_false_perturbation_counts(
+        kept_t_to_f,
+        kept_f_to_f,
+        t_to_f_fraction,
+        target_total,
+    )
+
+
 def apply_balancing(
     samples: list[Sample],
     balance_labels: bool,
     perturb_ratio: float,
-    false_perturb_t_to_f_ratio: Optional[float],
-    equal_method_size: bool,
-    rng: random.Random,
+    false_perturb_t_to_f_ratio: Optional[float] = 0.5,
+    equal_method_size: bool = False,
+    rng: Optional[random.Random] = None,
+    method_balance_mode: MethodBalanceMode | None = None,
+    true_perturbation_fraction: float = 1 / 3,
 ) -> list[Sample]:
-    """Apply all balancing constraints via undersampling.
+    """Apply all balancing constraints.
 
     Priority (highest first):
         1. Deduplication (already done before this call)
         2. Coupling (done after this call)
         3. Label balancing
-        4. Method balancing
-        5. Ratio constraints
+        4. Ratio constraints
+        5. Method balancing
 
     We apply from lowest to highest priority so that higher-priority
     constraints get the final say.
     """
+    if rng is None:
+        rng = random.Random()
+
+    resolved_method_balance_mode = _resolve_method_balance_mode(
+        equal_method_size, method_balance_mode
+    )
+
     originals = [s for s in samples if not s.is_perturbed]
     perturbed = [s for s in samples if s.is_perturbed]
 
-    # --- 5. Ratio constraints (lowest priority) ---
+    # --- 5. Method balancing (lowest priority) ---
+
+    perturbed = _balance_methods(
+        perturbed, rng, mode=resolved_method_balance_mode
+    )
+
+    # --- 4. Ratio constraints ---
 
     true_perturbed = [s for s in perturbed if s.label == "True"]
     false_perturbed = [s for s in perturbed if s.label == "False"]
@@ -387,13 +639,24 @@ def apply_balancing(
     # 5b. Perturbation ratio (perturbed / originals)
     if originals and perturbed:
         target_perturbed = int(len(originals) * perturb_ratio)
-        true_budget = min(len(true_perturbed), target_perturbed)
-        selected_true_perturbed = _undersample_fair(
-            true_perturbed, true_budget, rng
+        (
+            true_budget,
+            remaining_false_budget,
+        ) = _compute_true_false_perturbation_targets(
+            len(true_perturbed),
+            len(false_perturbed),
+            true_perturbation_fraction,
+            target_total=target_perturbed,
         )
-        remaining_false_budget = max(
-            0, target_perturbed - len(selected_true_perturbed)
-        )
+
+        if resolved_method_balance_mode == "none":
+            selected_true_perturbed = _undersample_fair(
+                true_perturbed, true_budget, rng
+            )
+        else:
+            selected_true_perturbed = _undersample_preserving_method_balance(
+                true_perturbed, true_budget, rng
+            )
 
     # 5a. False perturbation composition (share of T→F among
     # False perturbations)
@@ -404,19 +667,28 @@ def apply_balancing(
             false_perturb_t_to_f_ratio,
             target_total=remaining_false_budget,
         )
-        t_to_f = _undersample_fair(t_to_f, target_t_to_f, rng)
-        f_to_f = _undersample_fair(f_to_f, target_f_to_f, rng)
+        if resolved_method_balance_mode == "none":
+            t_to_f = _undersample_fair(t_to_f, target_t_to_f, rng)
+            f_to_f = _undersample_fair(f_to_f, target_f_to_f, rng)
+        else:
+            t_to_f = _undersample_preserving_method_balance(
+                t_to_f, target_t_to_f, rng
+            )
+            f_to_f = _undersample_preserving_method_balance(
+                f_to_f, target_f_to_f, rng
+            )
         false_perturbed = t_to_f + f_to_f
     elif remaining_false_budget is not None:
-        false_perturbed = _undersample_fair(
-            false_perturbed, remaining_false_budget, rng
-        )
+        if resolved_method_balance_mode == "none":
+            false_perturbed = _undersample_fair(
+                false_perturbed, remaining_false_budget, rng
+            )
+        else:
+            false_perturbed = _undersample_preserving_method_balance(
+                false_perturbed, remaining_false_budget, rng
+            )
 
     perturbed = selected_true_perturbed + false_perturbed
-
-    # --- 4. Method balancing ---
-    if equal_method_size:
-        perturbed = _balance_methods(perturbed, rng)
 
     # Recombine
     all_samples = originals + perturbed
@@ -506,8 +778,10 @@ def build_balanced_dataset(
     file_paths: list[str | Path],
     balance_labels: bool = True,
     perturb_ratio: float = 1.0,
-    false_perturb_t_to_f_ratio: float | None = None,
+    false_perturb_t_to_f_ratio: float | None = 0.5,
+    true_perturbation_fraction: float = 1 / 3,
     equal_method_size: bool = False,
+    method_balance_mode: MethodBalanceMode | None = None,
     seed: int | None = None,
 ) -> list[dict]:
     """Build a balanced, deduplicated dataset from multiple JSON files.
@@ -516,11 +790,17 @@ def build_balanced_dataset(
         file_paths: Paths to JSON files containing claim records.
         balance_labels: Enforce equal True/False sample counts.
         perturb_ratio: Target ratio of perturbed to original samples.
+        true_perturbation_fraction: Desired share of perturbed
+            examples that should remain True (``T→T``). The remaining
+            perturbation budget goes to False-producing perturbations.
         false_perturb_t_to_f_ratio: Desired share of False
             perturbations that should be T→F. ``0.5`` means equal
             T→F/F→F counts. ``None`` disables the constraint.
-        equal_method_size: Balance perturbation methods equally
-            within each label group.
+        equal_method_size: Backward-compatible alias for
+            ``method_balance_mode='undersample'``.
+        method_balance_mode: How to balance perturbation methods within
+            each perturbation type (``T→T``, ``T→F``, ``F→F``). Use
+            ``'undersample'``, ``'oversample'``, or ``'none'``.
         seed: Random seed for deterministic output.
 
     Returns:
@@ -544,7 +824,9 @@ def build_balanced_dataset(
         balance_labels=balance_labels,
         perturb_ratio=perturb_ratio,
         false_perturb_t_to_f_ratio=false_perturb_t_to_f_ratio,
+        true_perturbation_fraction=true_perturbation_fraction,
         equal_method_size=equal_method_size,
+        method_balance_mode=method_balance_mode,
         rng=rng,
     )
 
