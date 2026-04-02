@@ -124,10 +124,7 @@ def expand_perturbations(
         original_label_str = _normalize_label(example["label"])
         original_label_bool = original_label_str == "True"
 
-        # Read pertubation_method (typo is in the raw JSON data)
-        method = example.get(
-            "pertubation_method", example.get("perturbation_method", "")
-        )
+        method = example.get("perturbation_method", "")
 
         original_entry = {
             "claim_id": example["claim_id"],

@@ -75,7 +75,7 @@ def report_raw_input(
         label_ctr["True"] += t
         label_ctr["False"] += f
         for r in records:
-            m = r.get("pertubation_method", "unknown")
+            m = r.get("perturbation_method", "unknown")
             method_ctr[m] += 1
         print(f"  {fname:<35s}  {n:>8d}  {t:>6d}  {f:>6d}")
 

@@ -42,7 +42,7 @@ def _make_record(
         "claim_id": claim_id,
         "label": label,
         "normalized_claim": normalized_claim,
-        "pertubation_method": method,
+        "perturbation_method": method,
         "claim": normalized_claim,
         "doc": "Evidence text.",
     }
@@ -114,7 +114,7 @@ class TestParseKey:
         )
 
     def test_non_perturb_key_returns_none(self):
-        assert _parse_perturb_key("pertubation_method") is None
+        assert _parse_perturb_key("perturbation_method") is None
         assert _parse_perturb_key("claim_id") is None
         assert _parse_perturb_key("label") is None
 
@@ -1896,7 +1896,7 @@ class TestEdgeCases:
             assert s["type"] == "T→F"
 
     def test_removed_method_excluded_entirely(self, tmp_path):
-        """Records with pertubation_method='removed' are skipped."""
+        """Records with perturbation_method='removed' are skipped."""
         recs = [
             _make_record(
                 "c1",

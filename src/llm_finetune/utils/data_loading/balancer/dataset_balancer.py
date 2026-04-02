@@ -103,9 +103,7 @@ def _extract_record_core(
     claim_id = record.get("claim_id")
     original_label = record.get("label")
     normalized_claim = record.get("normalized_claim")
-    perturbation_method = record.get("perturbation_method") or record.get(
-        "pertubation_method"
-    )
+    perturbation_method = record.get("perturbation_method")
 
     if not claim_id or not original_label or not normalized_claim:
         logger.warning(
@@ -872,8 +870,9 @@ def build_balanced_dataset(
         rng=rng,
     )
 
-    # 5. Coupling
-    coupled = enforce_coupling(balanced, deduped)
+    # 5. Coupling — pass the pre-dedup pool so that originals removed
+    # during deduplication can still be re-added to satisfy coupling.
+    coupled = enforce_coupling(balanced, all_samples)
 
     # 6. Shuffle
     rng.shuffle(coupled)

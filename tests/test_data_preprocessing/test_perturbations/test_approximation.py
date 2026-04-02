@@ -643,7 +643,7 @@ class TestProcessClaims:
         process_claims(str(input_file), str(output_file))
         result = json.loads(output_file.read_text(encoding="utf-8"))
         assert len(result) > 0
-        assert result[0]["pertubation_method"] == "approximation"
+        assert result[0]["perturbation_method"] == "approximation"
         assert "perturb_type1_True" in result[0]
         assert "perturb_type2_True" in result[0]
 
