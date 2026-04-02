@@ -46,7 +46,7 @@ from src.llm_finetune.utils.data_loading.perturbation_types import (
 from src.llm_finetune.utils.data_loading.perturbation_logic import (
     expand_perturbations,
 )
-from src.llm_finetune.utils.data_loading.hf_dataset_instructions import (
+from src.llm_finetune.utils.data_loading.loader import (
     load_json_files,
 )
 

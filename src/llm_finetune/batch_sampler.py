@@ -1,4 +1,12 @@
-"""Batch sampling utilities for perturbation-aware batching."""
+"""Batch sampling utilities for perturbation-aware batching.
+
+.. deprecated::
+    This module is legacy code that is not currently in active use.
+    The claim-grouping logic does not work as intended with the current
+    training pipeline and may produce unexpected batch compositions.
+    It is retained for reference but should not be relied upon for
+    production training runs.
+"""
 
 from torch.utils.data import Sampler
 from collections import defaultdict

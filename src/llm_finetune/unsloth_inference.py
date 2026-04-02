@@ -12,8 +12,8 @@ from tqdm import tqdm
 from unsloth import FastLanguageModel
 
 from src.llm_finetune.config import prefix
-from src.llm_finetune.utils.data_loading.hf_dataset_instructions import (
-    load_fact_checking_data,
+from src.llm_finetune.utils.data_loading.loader import load_fact_checking_data
+from src.llm_finetune.utils.data_loading.perturbation_types import (
     FileLoadConfig,
     parse_file_config,
 )

@@ -12,56 +12,87 @@ This module implements the full fine-tuning and inference pipeline for numerical
 
 ```
 src/llm_finetune/
-├── batch_sampler.py               # Perturbation-aware batch sampler
+├── batch_sampler.py               # Perturbation-aware batch sampler (legacy, see note below)
 ├── config.py                      # Path prefix configuration
 ├── unsloth_finetune.py            # Training entry point
 ├── unsloth_inference.py           # Inference entry point
 ├── upload_model_hf.py             # Upload trained model to HuggingFace Hub
 ├── utils/
 │   ├── data_loading/
+│   │   ├── loader.py                  # Unified entry point: load_split(), load_fact_checking_data(), load_json_files()
 │   │   ├── perturbation_types.py      # PerturbationType enum, FileLoadConfig
 │   │   ├── perturbation_logic.py      # expand_perturbations() core engine
 │   │   ├── conversation.py            # Convert examples to SFTTrainer chat format
-│   │   ├── class_balancer.py          # Label balancing & perturbation ratio control
-│   │   ├── hf_dataset_instructions.py # High-level data loading API (orchestration)
-│   │   └── sequence_len_utility.py    # Sequence length analysis & plotting
+│   │   ├── sequence_len_utility.py    # Sequence length analysis & plotting
+│   │   └── balancer/
+│   │       └── dataset_balancer.py    # Balanced data loading path (label/ratio/method balancing)
 │   ├── training/
 │   │   ├── convert_to_gguf.py         # GGUF quantization (in-pipeline & standalone)
 │   │   └── training_config_export.py  # Save training params & data provenance to JSON
 │   └── inference/
 │       ├── inference_config_export.py # Save inference run parameters to JSON
-│       └── metrics.py                 # Structured metrics computation & reporting
+│       ├── metrics.py                 # Structured metrics computation & reporting
+│       └── unperturbed_claims.py      # Deduplicate unperturbed claims across files
 ```
 
 ---
 
 ## Data Loading Pipeline
 
-The data loading pipeline converts raw perturbed JSON files into a HuggingFace `Dataset` ready for `SFTTrainer`. The flow is:
+The data loading pipeline converts raw perturbed JSON files into a HuggingFace `Dataset` ready for `SFTTrainer`. All data loading goes through the unified `load_split()` function in `loader.py`, which routes to one of two paths:
 
+### Two Data Loading Paths
+
+**Non-balanced path** (default, `use_balancer=False`):
 ```
 Raw JSON files
-  → load_json_files()                   # Read files into list of dicts
+  → load_fact_checking_data()           # Read files + per-file type filtering
   → expand_perturbations()              # Explode each example into 1 original + N perturbed rows
   → convert_to_conversations()          # Format as system/user/assistant chat messages
   → Dataset.from_list()                 # HuggingFace Dataset
 ```
 
-### Entry Points
+**Balanced path** (`use_balancer=True`):
+```
+Raw JSON files
+  → build_balanced_dataset()            # Load, flatten, deduplicate, balance (with per-file type filtering)
+  → _enrich_samples()                   # Attach evidence docs & perturbation type labels
+  → convert_to_conversations()          # Format as system/user/assistant chat messages
+  → Dataset.from_list()                 # HuggingFace Dataset
+```
 
-There are two high-level functions in `hf_dataset_instructions.py`:
+The balanced path is activated automatically when any balancing option is set (`--balance_labels`, `--perturb_ratio != 1.0`, or `--equal_perturbation_methods`).
 
-| Function | Purpose |
-|---|---|
-| `load_fact_checking_data()` | Load a single split (train/val/test) |
-| `load_train_and_validation()` | Load both train and validation splits at once |
+### Entry Point
 
-Both functions accept data either as simple file paths or as `FileLoadConfig` objects for per-file perturbation type control.
+The primary entry point is `load_split()` in `loader.py`:
+
+```python
+from src.llm_finetune.utils.data_loading.loader import load_split
+
+dataset = load_split(
+    file_configs=configs,      # FileLoadConfig list (path + optional type filter)
+    json_paths=paths,          # or simple path list (mutually exclusive with file_configs)
+    split="train",
+    expand_perturbations=True,
+    include_doc=True,
+    use_balancer=False,        # set True to enable label/ratio/method balancing
+    balance_labels=False,
+    perturb_ratio=1.0,
+    false_perturb_t_to_f_ratio=0.5,
+    equal_perturbation_methods=False,
+    seed=3407,
+)
+```
+
+Per-file perturbation type filtering (via `FileLoadConfig.perturb_types`) is respected in **both** paths. In the balanced path, `load_split()` builds a `{filename: {allowed_types}}` mapping from the configs and passes it to the balancer's `flatten_samples()`, which filters perturbation keys during record expansion.
+
+`loader.py` also exports `load_fact_checking_data()` and `load_train_and_validation()` for direct use, but `load_split()` is the recommended interface as it handles both paths uniformly.
 
 ### Simple Loading (All Types)
 
 ```python
-from src.llm_finetune.utils.data_loading.hf_dataset_instructions import load_fact_checking_data
+from src.llm_finetune.utils.data_loading.loader import load_fact_checking_data
 
 dataset = load_fact_checking_data(
     json_paths=["data/perturbed_data/train_split/numeration_true.json"],
@@ -78,8 +109,10 @@ This loads every perturbation key found in the JSON file (`perturb_type1`, `pert
 Use `FileLoadConfig` to control which perturbation types are extracted from each file:
 
 ```python
-from src.llm_finetune.utils.data_loading.hf_dataset_instructions import (
+from src.llm_finetune.utils.data_loading.loader import (
     load_fact_checking_data,
+)
+from src.llm_finetune.utils.data_loading.perturbation_types import (
     FileLoadConfig,
 )
 from src.llm_finetune.utils.data_loading.perturbation_types import PerturbationType
@@ -231,37 +264,59 @@ ALL_PERTURB_TYPES          = STRUCTURE_PRESERVING_TYPES | VALUE_MODIFYING_TYPES 
 
 ---
 
-## Dataset Balancing (`DatasetBalancer`)
+## Dataset Balancing (`build_balanced_dataset`)
 
-`src.llm_finetune.utils.data_loading.class_balancer` provides `DatasetBalancer` for controlling label and perturbation distributions in the training set.
+`src.llm_finetune.utils.data_loading.balancer.dataset_balancer` provides `build_balanced_dataset()` for controlling label and perturbation distributions in the training set.
 
 ### Features
 
 - **Label balancing**: Downsample the majority class (True/False) to match the minority class.
 - **Perturbation ratio**: Control the ratio of perturbed to non-perturbed (original) examples. A ratio of `1.0` means equal counts.
-- **False perturbation split**: Among False-labeled perturbed examples, control the share that are True→False (value-modified originals) versus False→False (structure-preserved false claims). Only `perturb_type1` perturbations are used for F→F to ensure they are semantically close to the original.
+- **True perturbation fraction**: Control the share of perturbed examples that remain True (T→T) vs produce False (T→F, F→F).
+- **False perturbation split**: Among False-labeled perturbed examples, control the share that are T→F versus F→F.
+- **Method balancing**: Undersample or oversample so each perturbation method contributes equally within each perturbation type.
+- **Cross-file fairness**: Undersampling and oversampling use round-robin across source files to avoid exhausting any single file.
+- **Coupling**: Ensures that for every selected perturbation, the corresponding original claim is also included.
+- **Per-file type filtering**: When `FileLoadConfig.perturb_types` is set, only the specified perturbation types are extracted from that file.
 
 ### Usage
 
-```python
-from src.llm_finetune.utils.data_loading.class_balancer import DatasetBalancer
+The balancer is invoked automatically by `load_split()` when `use_balancer=True`. Direct usage:
 
-balancer = DatasetBalancer(
-    dataset=train_data,
-    balance_labels=True,          # Balance True/False distribution
-    perturb_ratio=1.0,            # 1:1 perturbed to original
-    false_perturb_t_to_f_ratio=0.67,  # 67% T→F, 33% F→F among False perturbations
-    seed=42,
+```python
+from src.llm_finetune.utils.data_loading.balancer.dataset_balancer import (
+    build_balanced_dataset,
 )
-balanced_dataset = balancer.balance()
+
+result = build_balanced_dataset(
+    file_paths=["data/.../numeration_True.json", "data/.../numeration_False.json"],
+    balance_labels=True,
+    perturb_ratio=1.0,
+    false_perturb_t_to_f_ratio=0.5,
+    equal_method_size=True,
+    seed=42,
+    allowed_types_by_file={"numeration_False.json": {"type1"}},  # optional per-file filtering
+)
 ```
 
-The balancer categorises every example into one of five bins:
+### Pipeline
+
+The balancer operates in a fixed priority pipeline:
+
+1. **Load** — Read JSON files into (filename, records) pairs.
+2. **Flatten** — Expand each record into original + perturbation `Sample` objects (applying per-file type filtering here).
+3. **Deduplicate** — Remove samples with identical text.
+4. **Balance** — Apply constraints in order (method balance → ratio → label balance), with higher-priority constraints getting the final say.
+5. **Couple** — Ensure originals are present for every selected perturbation.
+6. **Shuffle** — Deterministic shuffle based on seed.
+
+### Sample Categories
+
+The balancer categorises every example into one of four types:
 
 | Category | Description |
 |---|---|
-| Original True | Unperturbed claims with True label |
-| Original False | Unperturbed claims with False label |
+| Original | Unperturbed claims (always included for coupling) |
 | T→T | True-labeled perturbations of True originals (type1) |
 | T→F | False-labeled perturbations of True originals (type2, type3) |
 | F→F | False-labeled perturbations of False originals (type1 only) |
@@ -269,6 +324,8 @@ The balancer categorises every example into one of five bins:
 ---
 
 ## Batch Sampler (`EnhancedPerturbationBatchSampler`)
+
+> **Note:** The batch sampler is legacy code that is not currently in active use. The claim-grouping logic does not work as intended with the current training pipeline and may produce unexpected batch compositions. It is retained for reference but should not be relied upon for production training runs.
 
 `src.llm_finetune.batch_sampler` implements `EnhancedPerturbationBatchSampler`, a PyTorch `Sampler` that constructs training batches with awareness of claim structure.
 
