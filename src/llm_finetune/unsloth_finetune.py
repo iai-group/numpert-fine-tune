@@ -18,14 +18,12 @@ from unsloth import FastLanguageModel, is_bfloat16_supported
 from unsloth.chat_templates import get_chat_template
 
 from src.llm_finetune.config import prefix
+
 from src.llm_finetune.utils.data_loading.hf_dataset_instructions import (
-    load_train_and_validation,
     FileLoadConfig,
     parse_file_config,
 )
-from src.llm_finetune.utils.data_loading.data_balancer_old.class_balancer import (
-    DatasetBalancer,
-)
+from src.llm_finetune.utils.data_loading.loader import load_split
 from src.llm_finetune.batch_sampler import EnhancedPerturbationBatchSampler
 from src.llm_finetune.utils.naming import generate_run_name
 from src.llm_finetune.utils.training.convert_to_gguf import (
@@ -146,7 +144,7 @@ def finetune(  # noqa: C901
     expand_perturbations: bool = True,
     balance_labels: bool = False,
     perturb_ratio: float = 1.0,
-    false_perturb_t_to_f_ratio: float = None,
+    false_perturb_t_to_f_ratio: Optional[float] = None,
     equal_perturbation_methods: bool = False,
     batch_match_claim_id: bool = False,
     split_large_claims: bool = True,
@@ -323,34 +321,38 @@ def finetune(  # noqa: C901
         }
 
     print("Loading datasets...")
-    datasets = load_train_and_validation(
-        train_json_paths=train_json_paths,
-        val_json_paths=val_json_paths,
-        train_file_configs=train_file_configs,
-        val_file_configs=val_file_configs,
-        expand_perturbations_flag=expand_perturbations,
-        include_doc=True,
+    should_balance = expand_perturbations and (
+        balance_labels or perturb_ratio != 1.0 or equal_perturbation_methods
     )
-
-    train_data = datasets["train"]
-    val_data = datasets["validation"]
+    train_data = load_split(
+        file_configs=train_file_configs,
+        json_paths=train_json_paths,
+        split="train",
+        expand_perturbations=expand_perturbations,
+        include_doc=True,
+        use_balancer=should_balance,
+        balance_labels=balance_labels,
+        perturb_ratio=perturb_ratio,
+        false_perturb_t_to_f_ratio=false_perturb_t_to_f_ratio,
+        equal_perturbation_methods=equal_perturbation_methods,
+        seed=3407 + start_epoch,
+    )
+    val_data = load_split(
+        file_configs=val_file_configs,
+        json_paths=val_json_paths,
+        split="validation",
+        expand_perturbations=expand_perturbations,
+        include_doc=True,
+        use_balancer=should_balance,
+        balance_labels=balance_labels,
+        perturb_ratio=perturb_ratio,
+        false_perturb_t_to_f_ratio=false_perturb_t_to_f_ratio,
+        equal_perturbation_methods=equal_perturbation_methods,
+        seed=3407 + start_epoch,
+    )
 
     print(f"Loaded train dataset size: {len(train_data)}")
     print(f"Loaded validation dataset size: {len(val_data)}")
-
-    # Apply balancing to training data
-    if balance_labels or perturb_ratio != 1.0 or equal_perturbation_methods:
-        balancer = DatasetBalancer(
-            dataset=train_data,
-            balance_labels=balance_labels,
-            perturb_ratio=perturb_ratio,
-            false_perturb_t_to_f_ratio=false_perturb_t_to_f_ratio,
-            equal_perturbation_methods=equal_perturbation_methods,
-            seed=3407 + start_epoch,
-        )
-        train_data = balancer.balance()
-
-    print(f"\nFinal train dataset size: {len(train_data)}")
 
     # Show perturbation distribution
     train_perturb_dist = Counter(train_data["perturbation_type"])
