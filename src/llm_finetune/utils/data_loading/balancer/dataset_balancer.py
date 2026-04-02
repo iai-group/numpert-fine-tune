@@ -103,7 +103,9 @@ def _extract_record_core(
     claim_id = record.get("claim_id")
     original_label = record.get("label")
     normalized_claim = record.get("normalized_claim")
-    perturbation_method = record.get("pertubation_method")
+    perturbation_method = record.get("perturbation_method") or record.get(
+        "pertubation_method"
+    )
 
     if not claim_id or not original_label or not normalized_claim:
         logger.warning(
@@ -124,8 +126,20 @@ def _iter_perturbation_samples(
     claim_id: str,
     original_label: str,
     perturbation_method: Optional[str],
+    allowed_perturb_types: set[str] | None = None,
 ) -> list[Sample]:
-    """Build all valid perturbation samples for one record."""
+    """Build all valid perturbation samples for one record.
+
+    Args:
+        record: The record dict containing perturbation fields.
+        source_file: The source filename this record came from.
+        claim_id: The claim identifier.
+        original_label: The original label ("True" or "False").
+        perturbation_method: The perturbation method name, if any.
+        allowed_perturb_types: If given, only perturbation keys whose
+            parsed type (e.g. ``"type1"``, ``"type3_random"``) is in
+            this set will be kept.  ``None`` keeps all types.
+    """
     perturbed_samples: list[Sample] = []
 
     for key, value in record.items():
@@ -138,6 +152,13 @@ def _iter_perturbation_samples(
             continue
 
         perturb_type, label_from_key = parsed
+
+        if (
+            allowed_perturb_types is not None
+            and perturb_type not in allowed_perturb_types
+        ):
+            continue
+
         sub_type = perturb_type.split("_", 1)
         if len(sub_type) > 1 and sub_type[1] in EXCLUDED_METHODS:
             continue
@@ -177,10 +198,24 @@ def _iter_perturbation_samples(
 
 def flatten_samples(
     file_data: list[tuple[str, list[dict]]],
+    allowed_types_by_file: dict[str, set[str]] | None = None,
 ) -> list[Sample]:
-    """Flatten input records into individual samples."""
+    """Flatten input records into individual samples.
+
+    Args:
+        file_data: List of (filename, records) tuples to flatten.
+        allowed_types_by_file: Optional mapping of source filename to
+            the set of perturbation type keys (e.g. ``{"type1", "type2"}``)
+            allowed for that file.  Files absent from the dict (or when
+            the whole mapping is ``None``) have no restriction.
+    """
     samples = []
     for source_file, records in file_data:
+        file_allowed = (
+            allowed_types_by_file.get(source_file)
+            if allowed_types_by_file is not None
+            else None
+        )
         for record in records:
             record_core = _extract_record_core(record, source_file)
             if record_core is None:
@@ -211,6 +246,7 @@ def flatten_samples(
                     claim_id,
                     original_label,
                     perturbation_method,
+                    allowed_perturb_types=file_allowed,
                 )
             )
 
@@ -783,6 +819,7 @@ def build_balanced_dataset(
     equal_method_size: bool = False,
     method_balance_mode: MethodBalanceMode | None = None,
     seed: int | None = None,
+    allowed_types_by_file: dict[str, set[str]] | None = None,
 ) -> list[dict]:
     """Build a balanced, deduplicated dataset from multiple JSON files.
 
@@ -802,6 +839,9 @@ def build_balanced_dataset(
             each perturbation type (``T→T``, ``T→F``, ``F→F``). Use
             ``'undersample'``, ``'oversample'``, or ``'none'``.
         seed: Random seed for deterministic output.
+        allowed_types_by_file: Optional mapping of source filename
+            (e.g. ``Path(path).name``) to the set of perturbation type
+            keys allowed for that file.  ``None`` keeps all types.
 
     Returns:
         List of sample dicts with keys: text, label, source_claim_id,
@@ -812,8 +852,10 @@ def build_balanced_dataset(
     # 1. Load
     file_data = load_files(file_paths)
 
-    # 2. Flatten
-    all_samples = flatten_samples(file_data)
+    # 2. Flatten (with optional per-file type filtering)
+    all_samples = flatten_samples(
+        file_data, allowed_types_by_file=allowed_types_by_file
+    )
 
     # 3. Deduplicate
     deduped = deduplicate(all_samples)

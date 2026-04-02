@@ -11,7 +11,7 @@
         "normalized_claim": "\"[In 2014-2015] coverage for the rotavirus vaccine exceeded the 95% target and the pneumococcal vaccine reached 91.5%.\"",
         "label": "False",
         "claim_id": "test_000003",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "\"[In 2014-2015] coverage for the rotavirus vaccine exceeded the -95% target and the pneumococcal vaccine reached -91.5%.\""
     },
     {
@@ -26,7 +26,7 @@
         "normalized_claim": "\"80% of the population continues to occupy less than 10% of South Africa's land\"",
         "label": "False",
         "claim_id": "test_000016",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "\"-80% of the population continues to occupy less than -10% of South Africa's land\""
     },
     {
@@ -41,7 +41,7 @@
         "normalized_claim": "No, Trey Gowdy Did Not Make This Statement Claiming ‘20% Of The Population’ Is Trying To Indoctrinate The Rest",
         "label": "False",
         "claim_id": "test_000026",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "No, Trey Gowdy Did Not Make This Statement Claiming ‘-20% Of The Population’ Is Trying To Indoctrinate The Rest"
     },
     {
@@ -55,7 +55,7 @@
         "normalized_claim": "Says in Newark \"we’re paying 80 percent of the school budget from local property taxes.\"",
         "label": "False",
         "claim_id": "test_000050",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "Says in Newark \"we’re paying -80 percent of the school budget from local property taxes.\""
     },
     {
@@ -70,7 +70,7 @@
         "normalized_claim": "\"In 1994, 39% of South Africans had access to electricity, today, 86% of South Africans have access to electricity.\"",
         "label": "False",
         "claim_id": "test_000082",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "\"In 1994, -39% of South Africans had access to electricity, today, -86% of South Africans have access to electricity.\""
     },
     {
@@ -85,7 +85,7 @@
         "normalized_claim": "In India, 95% of the rape cases have a Muslim perpetrator. Of 84734 rape cases, 81000 rapes had a Muslim rapist, 96% of the victims are non-Muslims",
         "label": "False",
         "claim_id": "test_000098",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "In India, -95% of the rape cases have a Muslim perpetrator. Of 84734 rape cases, 81000 rapes had a Muslim rapist, -96% of the victims are non-Muslims"
     },
     {
@@ -100,7 +100,7 @@
         "normalized_claim": "“CDC says 60% of Americans have parasites.”",
         "label": "False",
         "claim_id": "test_000102",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "“CDC says -60% of Americans have parasites.”"
     },
     {
@@ -115,7 +115,7 @@
         "normalized_claim": "90 percent of COVID-19 patients recover successfully when treated with hydroxychloroquine.",
         "label": "False",
         "claim_id": "test_000129",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "-90 percent of COVID-19 patients recover successfully when treated with hydroxychloroquine."
     },
     {
@@ -130,7 +130,7 @@
         "normalized_claim": "COVID-19 is a type of flu and is not a pandemic; PCR tests are up to 94% false positive; only 98 COVID-19 related deaths have been reported in Ireland.",
         "label": "False",
         "claim_id": "test_000137",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "COVID-19 is a type of flu and is not a pandemic; PCR tests are up to -94% false positive; only 98 COVID-19 related deaths have been reported in Ireland."
     },
     {
@@ -145,7 +145,7 @@
         "normalized_claim": "“60% of patients admitted to the hospital in the UK have been fully vaccinated”",
         "label": "False",
         "claim_id": "test_000152",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "“-60% of patients admitted to the hospital in the UK have been fully vaccinated”"
     },
     {
@@ -160,7 +160,7 @@
         "normalized_claim": "Vaccine herd immunity doesn’t exist because 100% of the population would have to be vaccinated for it to work.",
         "label": "False",
         "claim_id": "test_000186",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "Vaccine herd immunity doesn’t exist because -100% of the population would have to be vaccinated for it to work."
     },
     {
@@ -175,7 +175,7 @@
         "normalized_claim": "“Under part 2 of the infrastructure bill, upon death the entire value of your accumulated wealth and estate will be taxed at 61%.”",
         "label": "False",
         "claim_id": "test_000232",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "“Under part 2 of the infrastructure bill, upon death the entire value of your accumulated wealth and estate will be taxed at -61%.”"
     },
     {
@@ -190,7 +190,7 @@
         "normalized_claim": "A presidential preference survey recorded Davao City Mayor Sara Duterte-Carpio getting 94% of votes while Vice President Leni Robredo received 5%, and Sen. Grace Poe got 1%.",
         "label": "False",
         "claim_id": "test_000237",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "A presidential preference survey recorded Davao City Mayor Sara Duterte-Carpio getting -94% of votes while Vice President Leni Robredo received -5%, and Sen. Grace Poe got -1%."
     },
     {
@@ -204,7 +204,7 @@
         "normalized_claim": "Public employees receive \"something like 25 percent of the paychecks that are issued in Rhode Island.\"",
         "label": "False",
         "claim_id": "test_000248",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "Public employees receive \"something like -25 percent of the paychecks that are issued in Rhode Island.\""
     },
     {
@@ -219,7 +219,7 @@
         "normalized_claim": "The CDC said that 75% of COVID-19 deaths have involved people with at least four comorbidities.",
         "label": "False",
         "claim_id": "test_000264",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "The CDC said that -75% of COVID-19 deaths have involved people with at least four comorbidities."
     },
     {
@@ -234,7 +234,7 @@
         "normalized_claim": "\"About 60% of unemployed youth aged below 35 years have never worked.\"",
         "label": "False",
         "claim_id": "test_000279",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "\"About -60% of unemployed youth aged below 35 years have never worked.\""
     },
     {
@@ -248,7 +248,7 @@
         "normalized_claim": "\"Oregon is the only state out of the 50 states in the USA that continues to pay 100% of the medical benefits for its employees and their families.\"",
         "label": "False",
         "claim_id": "test_000347",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "\"Oregon is the only state out of the 50 states in the USA that continues to pay -100% of the medical benefits for its employees and their families.\""
     },
     {
@@ -262,7 +262,7 @@
         "normalized_claim": "\"Poll Finds 38% of Americans Say They Will Not Drink Corona Beer Because of Virus.\"",
         "label": "False",
         "claim_id": "test_000357",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "\"Poll Finds -38% of Americans Say They Will Not Drink Corona Beer Because of Virus.\""
     },
     {
@@ -277,7 +277,7 @@
         "normalized_claim": "20-30% of the population is going to die with each vaccine.",
         "label": "False",
         "claim_id": "test_000391",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "-20-30% of the population is going to die with each vaccine."
     },
     {
@@ -292,7 +292,7 @@
         "normalized_claim": "“While the global economy contracted by an average of 3.6% last year, we still managed to grow our economy by 0.3% over the same period”.",
         "label": "False",
         "claim_id": "test_000397",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "“While the global economy contracted by an average of -3.6% last year, we still managed to grow our economy by -0.3% over the same period”."
     },
     {
@@ -306,7 +306,7 @@
         "normalized_claim": "The WIC program \"is an incredibly cost effective program, serving nearly 10,000,000 Americans each year and costing less than $100 per person. In my district, more than 18 percent of residents suffer from food insecurity and depend on WIC to make ends meet.\"",
         "label": "False",
         "claim_id": "test_000442",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "The WIC program \"is an incredibly cost effective program, serving nearly 10,000,000 Americans each year and costing less than $100 per person. In my district, more than -18 percent of residents suffer from food insecurity and depend on WIC to make ends meet.\""
     },
     {
@@ -321,7 +321,7 @@
         "normalized_claim": "Canadian outlet Global News did not report that Pfizer’s COVID-19 vaccine recorded a 12% efficacy rate",
         "label": "False",
         "claim_id": "test_000444",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "Canadian outlet Global News did not report that Pfizer’s COVID-19 vaccine recorded a -12% efficacy rate"
     },
     {
@@ -336,7 +336,7 @@
         "normalized_claim": "A University of Adelaide study found that lauric acid killed 93% of colon cancer cells in 2 days",
         "label": "False",
         "claim_id": "test_000447",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "A University of Adelaide study found that lauric acid killed -93% of colon cancer cells in 2 days"
     },
     {
@@ -351,7 +351,7 @@
         "normalized_claim": "70 per cent of the persons arrested during protests in Charlotte had out-of-state IDs.",
         "label": "False",
         "claim_id": "test_000464",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "-70 per cent of the persons arrested during protests in Charlotte had out-of-state IDs."
     },
     {
@@ -366,7 +366,7 @@
         "normalized_claim": "Italy did not reduce its reported tally of COVID-19 deaths by 97%",
         "label": "False",
         "claim_id": "test_000490",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "Italy did not reduce its reported tally of COVID-19 deaths by -97%"
     },
     {
@@ -381,7 +381,7 @@
         "normalized_claim": "As Kalonji seeds have 100 per cent of Hydroxychloroquine, taking them can prevent COVID-19",
         "label": "False",
         "claim_id": "test_000502",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "As Kalonji seeds have -100 per cent of Hydroxychloroquine, taking them can prevent COVID-19"
     },
     {
@@ -396,7 +396,7 @@
         "normalized_claim": "“Blacks living on less than $2 a day fell from 16% to 2.5% since 1996.”",
         "label": "False",
         "claim_id": "test_000510",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "“Blacks living on less than $2 a day fell from -16% to -2.5% since 1996.”"
     },
     {
@@ -411,7 +411,7 @@
         "normalized_claim": "Food prices have gone up 7% and egg prices have gone up 700%",
         "label": "False",
         "claim_id": "test_000519",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "Food prices have gone up -7% and egg prices have gone up -700%"
     },
     {
@@ -426,7 +426,7 @@
         "normalized_claim": "Says Military Times reported that a study found “60% of sailors who had been fully vaccinated with 2-shot series vaccines are now at risk for heart disease.”",
         "label": "False",
         "claim_id": "test_000540",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "Says Military Times reported that a study found “-60% of sailors who had been fully vaccinated with 2-shot series vaccines are now at risk for heart disease.”"
     },
     {
@@ -440,7 +440,7 @@
         "normalized_claim": "State employees will have to pay 100 percent of their pensions and health insurance after 2012.",
         "label": "False",
         "claim_id": "test_000562",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "State employees will have to pay -100 percent of their pensions and health insurance after 2012."
     },
     {
@@ -455,7 +455,7 @@
         "normalized_claim": "Infrastructure bill includes 61 percent tax on assets after a person dies",
         "label": "False",
         "claim_id": "test_000597",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "Infrastructure bill includes -61 percent tax on assets after a person dies"
     },
     {
@@ -470,7 +470,7 @@
         "normalized_claim": "Pres. Ferdinand Marcos, in his last will and testament, left 90% of his wealth to the Filipino people",
         "label": "False",
         "claim_id": "test_000598",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "Pres. Ferdinand Marcos, in his last will and testament, left -90% of his wealth to the Filipino people"
     },
     {
@@ -485,7 +485,7 @@
         "normalized_claim": "“The yearly cost of religious tax exemptions: $71,000,000,000. If the church paid taxes, everyone would only have to pay 3% taxes.”",
         "label": "False",
         "claim_id": "test_000612",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "“The yearly cost of religious tax exemptions: $71,000,000,000. If the church paid taxes, everyone would only have to pay -3% taxes.”"
     },
     {
@@ -500,7 +500,7 @@
         "normalized_claim": "Government is going to slash pension of the employees by 30 per cent.",
         "label": "False",
         "claim_id": "test_000621",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "Government is going to slash pension of the employees by -30 per cent."
     },
     {
@@ -515,7 +515,7 @@
         "normalized_claim": "Nirav Modi told a London court that his share in the Rs 13,000 crore PNB scam was 32 per cent and the rest was taken by Congress leaders",
         "label": "False",
         "claim_id": "test_000641",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "Nirav Modi told a London court that his share in the Rs 13,000 crore PNB scam was -32 per cent and the rest was taken by Congress leaders"
     },
     {
@@ -530,7 +530,7 @@
         "normalized_claim": "Sniffing rosemary increases human memory by up to 75 percent.",
         "label": "False",
         "claim_id": "test_000643",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "Sniffing rosemary increases human memory by up to -75 percent."
     },
     {
@@ -544,7 +544,7 @@
         "normalized_claim": "U.S. House opponent Paul Ryan supports \"cutting funding for veterans by 24 percent.\"",
         "label": "False",
         "claim_id": "test_000660",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "U.S. House opponent Paul Ryan supports \"cutting funding for veterans by -24 percent.\""
     },
     {
@@ -559,7 +559,7 @@
         "normalized_claim": "A study found an “82% miscarriage rate” among women between 30 days and 20 weeks pregnant who got an mRNA COVID-19 vaccine.",
         "label": "False",
         "claim_id": "test_000700",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "A study found an “-82% miscarriage rate” among women between 30 days and 20 weeks pregnant who got an mRNA COVID-19 vaccine."
     },
     {
@@ -574,7 +574,7 @@
         "normalized_claim": "\"The elimination of income and sales taxes in New York is equal to 9 percent of taxable income, meaning that if you make $100,000 a year you lose $9,000\"",
         "label": "False",
         "claim_id": "test_000710",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "\"The elimination of income and sales taxes in New York is equal to -9 percent of taxable income, meaning that if you make $100,000 a year you lose $9,000\""
     },
     {
@@ -588,7 +588,7 @@
         "normalized_claim": "The default rate for college students has grown from 40 percent 10 years ago to about 50 percent today, and \"perhaps as many as 800,000 young Ohioans are facing default on their student loans.\"",
         "label": "False",
         "claim_id": "test_000715",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "The default rate for college students has grown from -40 percent 10 years ago to about -50 percent today, and \"perhaps as many as 800,000 young Ohioans are facing default on their student loans.\""
     },
     {
@@ -602,7 +602,7 @@
         "normalized_claim": "\"The downsizing of Pinellas County government resulted in about 1,200 people being laid off in a 12 percent unemployment market. … I can tell you that every one of them was hired from the time that Ms. Latvala went into office in 2000.\"",
         "label": "False",
         "claim_id": "test_000721",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "\"The downsizing of Pinellas County government resulted in about 1,200 people being laid off in a -12 percent unemployment market. … I can tell you that every one of them was hired from the time that Ms. Latvala went into office in 2000.\""
     },
     {
@@ -617,7 +617,7 @@
         "normalized_claim": "Chris Brown supports Donald Trump and shares his values 100%",
         "label": "False",
         "claim_id": "test_000736",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "Chris Brown supports Donald Trump and shares his values -100%"
     },
     {
@@ -632,7 +632,7 @@
         "normalized_claim": "Fake: 82% of Czechs believe that the Malaysian Boeing was shot down by Ukrainian army",
         "label": "False",
         "claim_id": "test_000782",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "Fake: -82% of Czechs believe that the Malaysian Boeing was shot down by Ukrainian army"
     },
     {
@@ -647,7 +647,7 @@
         "normalized_claim": "\"The number of learners who passed matric increased from 78% in 2019 to 80% in 2022.\"",
         "label": "False",
         "claim_id": "test_000784",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "\"The number of learners who passed matric increased from -78% in 2019 to -80% in 2022.\""
     },
     {
@@ -661,7 +661,7 @@
         "normalized_claim": "“USPS failed to deliver 27% of mail-in ballots in South Florida”",
         "label": "False",
         "claim_id": "test_000806",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "“USPS failed to deliver -27% of mail-in ballots in South Florida”"
     },
     {
@@ -675,7 +675,7 @@
         "normalized_claim": "\"Prior to Obamacare here in Wisconsin, 95 percent of Wisconsinites were covered by insurance. After Obamacare, 95 percent of Wisconsinites were covered by insurance. It hasn’t had an impact.\"",
         "label": "False",
         "claim_id": "test_000807",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "\"Prior to Obamacare here in Wisconsin, -95 percent of Wisconsinites were covered by insurance. After Obamacare, -95 percent of Wisconsinites were covered by insurance. It hasn’t had an impact.\""
     },
     {
@@ -690,7 +690,7 @@
         "normalized_claim": "States have a 55% tax and disproportionately influence the price of LPG cylinders",
         "label": "False",
         "claim_id": "test_000812",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "States have a -55% tax and disproportionately influence the price of LPG cylinders"
     },
     {
@@ -704,7 +704,7 @@
         "normalized_claim": "\"Over 73% of all donations raised (from the ALS Ice Bucket Challenge) are going to fundraising, overhead, executive salaries, and external donations.\"",
         "label": "False",
         "claim_id": "test_000922",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "\"Over -73% of all donations raised (from the ALS Ice Bucket Challenge) are going to fundraising, overhead, executive salaries, and external donations.\""
     },
     {
@@ -718,7 +718,7 @@
         "normalized_claim": "A new bill \"was written into the new health care reform initiative ensuring that Congress will be 100 percent exempt.\"",
         "label": "False",
         "claim_id": "test_001005",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "A new bill \"was written into the new health care reform initiative ensuring that Congress will be -100 percent exempt.\""
     },
     {
@@ -733,7 +733,7 @@
         "normalized_claim": "Nirav Modi told a London court that his share in the Rs 13,000 crore PNB scam was 32 per cent; the rest was taken by BJP leaders.",
         "label": "False",
         "claim_id": "test_001063",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "Nirav Modi told a London court that his share in the Rs 13,000 crore PNB scam was -32 per cent; the rest was taken by BJP leaders."
     },
     {
@@ -747,7 +747,7 @@
         "normalized_claim": "Says salaries and benefits for Wisconsin state employee comprised 8.5 percent of the 2009-2011 state budget.",
         "label": "False",
         "claim_id": "test_001065",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "Says salaries and benefits for Wisconsin state employee comprised -8.5 percent of the 2009-2011 state budget."
     },
     {
@@ -762,7 +762,7 @@
         "normalized_claim": "\"Trudeau's foundation owns 40% of Acuitas Therapeutics which makes mechanic lipids for Pfizer.\"",
         "label": "False",
         "claim_id": "test_001077",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "\"Trudeau's foundation owns -40% of Acuitas Therapeutics which makes mechanic lipids for Pfizer.\""
     },
     {
@@ -777,7 +777,7 @@
         "normalized_claim": "Up to 49% of the ingredients in COVID-19 vaccines can be changed without the approval of the Federal Drug Administration because they are still manufactured under emergency use authorization.",
         "label": "False",
         "claim_id": "test_001138",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "Up to -49% of the ingredients in COVID-19 vaccines can be changed without the approval of the Federal Drug Administration because they are still manufactured under emergency use authorization."
     },
     {
@@ -792,7 +792,7 @@
         "normalized_claim": "Some reports suggest Covid-19 vaccines have caused a 2,000% increase in miscarriages.",
         "label": "False",
         "claim_id": "test_001162",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "Some reports suggest Covid-19 vaccines have caused a -2,000% increase in miscarriages."
     },
     {
@@ -807,7 +807,7 @@
         "normalized_claim": "New Scientific Study Shows 95% Of Men Who Wear Skinny Jeans Are Attracted To Men",
         "label": "False",
         "claim_id": "test_001187",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "New Scientific Study Shows -95% Of Men Who Wear Skinny Jeans Are Attracted To Men"
     },
     {
@@ -822,7 +822,7 @@
         "normalized_claim": "\"80% of people taking the Moderna vaccine had significant side effects, via Bill Gates.\"",
         "label": "False",
         "claim_id": "test_001207",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "\"-80% of people taking the Moderna vaccine had significant side effects, via Bill Gates.\""
     },
     {
@@ -836,7 +836,7 @@
         "normalized_claim": "A study of where teachers apply to work found that \"less than 5 percent wanted to work in rural Wisconsin.\"",
         "label": "False",
         "claim_id": "test_001213",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "A study of where teachers apply to work found that \"less than -5 percent wanted to work in rural Wisconsin.\""
     },
     {
@@ -851,7 +851,7 @@
         "normalized_claim": "“WHO data shows [that] ivermectin reduces COVID-19 mortality by 81%, but they won’t recommend it?”",
         "label": "False",
         "claim_id": "test_001214",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "“WHO data shows [that] ivermectin reduces COVID-19 mortality by -81%, but they won’t recommend it?”"
     },
     {
@@ -866,7 +866,7 @@
         "normalized_claim": "“25% of residents in German nursing home died after Pfizer vaccine”; a team including a soldier in uniform used force to vaccinate residents",
         "label": "False",
         "claim_id": "test_001272",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "“-25% of residents in German nursing home died after Pfizer vaccine”; a team including a soldier in uniform used force to vaccinate residents"
     },
     {
@@ -881,7 +881,7 @@
         "normalized_claim": "Says that \"when Congressman (Steve) Cohen took office in 2007, the unemployment rate was at 4.8 percent. The unemployment rate in Shelby County has reached 9.7 percent.\"",
         "label": "False",
         "claim_id": "test_001277",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "Says that \"when Congressman (Steve) Cohen took office in 2007, the unemployment rate was at -4.8 percent. The unemployment rate in Shelby County has reached -9.7 percent.\""
     },
     {
@@ -896,7 +896,7 @@
         "normalized_claim": "Did Jim Carrey Say, ‘America Is Morally Upside Down Because The Wealthiest 1% Tricked The Dumbest 20%’?",
         "label": "False",
         "claim_id": "test_001278",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "Did Jim Carrey Say, ‘America Is Morally Upside Down Because The Wealthiest 1% Tricked The Dumbest -20%’?"
     },
     {
@@ -911,7 +911,7 @@
         "normalized_claim": "In 2012, 80% of murders stemmed from otherwise law-abiding citizens involved in interpersonal disputes.",
         "label": "False",
         "claim_id": "test_001292",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "In 2012, -80% of murders stemmed from otherwise law-abiding citizens involved in interpersonal disputes."
     },
     {
@@ -926,7 +926,7 @@
         "normalized_claim": "More than 94 per cent of Victorians who received two vaccine doses now have COVID-19.",
         "label": "False",
         "claim_id": "test_001299",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "More than -94 per cent of Victorians who received two vaccine doses now have COVID-19."
     },
     {
@@ -940,7 +940,7 @@
         "normalized_claim": "Under Obamacare, \"75 percent of small businesses now say they are going to be forced to either fire workers or cut their hours.\"",
         "label": "False",
         "claim_id": "test_001314",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "Under Obamacare, \"-75 percent of small businesses now say they are going to be forced to either fire workers or cut their hours.\""
     },
     {
@@ -955,7 +955,7 @@
         "normalized_claim": "In 2013, only 76% of total votes were transmitted or counted. In 2019, 961 [vote counting] machines became defective and 1,000 SD cards had to be replaced.",
         "label": "False",
         "claim_id": "test_001319",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "In 2013, only -76% of total votes were transmitted or counted. In 2019, 961 [vote counting] machines became defective and 1,000 SD cards had to be replaced."
     },
     {
@@ -970,7 +970,7 @@
         "normalized_claim": "Using saunas once a week reduces risk of death from any cause by 30 to 40%, maybe even more. Use of saunas three times a week reduces this a further 30 to 40%.",
         "label": "False",
         "claim_id": "test_001323",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "Using saunas once a week reduces risk of death from any cause by -30 to 40%, maybe even more. Use of saunas three times a week reduces this a further -30 to 40%."
     },
     {
@@ -985,7 +985,7 @@
         "normalized_claim": "\"Our aggressive push of this [universal access to basic education] agenda has this year seen us achieve 100% transition rate.\"",
         "label": "False",
         "claim_id": "test_001360",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "\"Our aggressive push of this [universal access to basic education] agenda has this year seen us achieve -100% transition rate.\""
     },
     {
@@ -1000,7 +1000,7 @@
         "normalized_claim": "\"Rural schools enroll 40 percent of American children, but receive only 22 percent of federal education funding.\"",
         "label": "False",
         "claim_id": "test_001414",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "\"Rural schools enroll -40 percent of American children, but receive only -22 percent of federal education funding.\""
     },
     {
@@ -1015,7 +1015,7 @@
         "normalized_claim": "\"[Sugar-sweetened drinks] account for just 3% of daily calorie intake in South Africa.\"",
         "label": "False",
         "claim_id": "test_001437",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "\"[Sugar-sweetened drinks] account for just -3% of daily calorie intake in South Africa.\""
     },
     {
@@ -1030,7 +1030,7 @@
         "normalized_claim": "Beto O’Rourke Says 40 Percent Of Iowa’s Incarcerated Population Is Black",
         "label": "False",
         "claim_id": "test_001468",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "Beto O’Rourke Says -40 Percent Of Iowa’s Incarcerated Population Is Black"
     },
     {
@@ -1044,7 +1044,7 @@
         "normalized_claim": "\"Our courts find that 80 percent of those who do file for asylum aren’t qualified for it, do not merit that relief.\"",
         "label": "False",
         "claim_id": "test_001474",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "\"Our courts find that -80 percent of those who do file for asylum aren’t qualified for it, do not merit that relief.\""
     },
     {
@@ -1059,7 +1059,7 @@
         "normalized_claim": "“In terms of the 2015 to 2016 information submitted to the Employment Equity Commission, the representation of whites at top management levels amounted to 72%, while African representation was at 10%. The representation of coloureds stood at 4.5%, and Indians 8.7%.”",
         "label": "False",
         "claim_id": "test_001528",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "“In terms of the 2015 to 2016 information submitted to the Employment Equity Commission, the representation of whites at top management levels amounted to -72%, while African representation was at -10%. The representation of coloureds stood at -4.5%, and Indians -8.7%.”"
     },
     {
@@ -1074,7 +1074,7 @@
         "normalized_claim": "A recent study says coconut oil removes 93% of colon cancer cells in 2 days",
         "label": "False",
         "claim_id": "test_001595",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "A recent study says coconut oil removes -93% of colon cancer cells in 2 days"
     },
     {
@@ -1089,7 +1089,7 @@
         "normalized_claim": "53% of Americans made aware of the Hunter Biden laptop story would have changed their vote in 2020.",
         "label": "False",
         "claim_id": "test_001617",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "-53% of Americans made aware of the Hunter Biden laptop story would have changed their vote in 2020."
     },
     {
@@ -1104,7 +1104,7 @@
         "normalized_claim": "\"My opponent supported policies that increased tuition by 18 percent.\"",
         "label": "False",
         "claim_id": "test_001660",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "\"My opponent supported policies that increased tuition by -18 percent.\""
     },
     {
@@ -1119,7 +1119,7 @@
         "normalized_claim": "“In 2014, more than 62% of South Africans made their democratic choice to choose a political party of their choice.”",
         "label": "False",
         "claim_id": "test_001665",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "“In 2014, more than -62% of South Africans made their democratic choice to choose a political party of their choice.”"
     },
     {
@@ -1134,7 +1134,7 @@
         "normalized_claim": "\"I had prostate cancer, five, six years ago. My chance of surviving prostate cancer, and thank God I was cured of it, in the United States, 82%. My chances of surviving prostate cancer in England, only 44% under socialized medicine.\"",
         "label": "False",
         "claim_id": "test_001667",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "\"I had prostate cancer, five, six years ago. My chance of surviving prostate cancer, and thank God I was cured of it, in the United States, -82%. My chances of surviving prostate cancer in England, only -44% under socialized medicine.\""
     },
     {
@@ -1149,7 +1149,7 @@
         "normalized_claim": "“The recommended percentage of the budget that should go to education according to the United Nations is 26%.”",
         "label": "False",
         "claim_id": "test_001685",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "“The recommended percentage of the budget that should go to education according to the United Nations is -26%.”"
     },
     {
@@ -1163,7 +1163,7 @@
         "normalized_claim": "\"There is a 34 percent increase in violent crime in the state of California. … And that’s just within the last year.\"",
         "label": "False",
         "claim_id": "test_001686",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "\"There is a -34 percent increase in violent crime in the state of California. … And that’s just within the last year.\""
     },
     {
@@ -1177,7 +1177,7 @@
         "normalized_claim": "\"75 percent of the (air traffic control) towers the Obama Administration is closing are located in Republican Congressional Districts.\"",
         "label": "False",
         "claim_id": "test_001696",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "\"-75 percent of the (air traffic control) towers the Obama Administration is closing are located in Republican Congressional Districts.\""
     },
     {
@@ -1192,7 +1192,7 @@
         "normalized_claim": "”The post-1994 governments have cumulatively bought less than 7% of the targeted 30% of land meant for redistribution over a period of 25 years.”",
         "label": "False",
         "claim_id": "test_001703",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "”The post-1994 governments have cumulatively bought less than -7% of the targeted -30% of land meant for redistribution over a period of 25 years.”"
     },
     {
@@ -1207,7 +1207,7 @@
         "normalized_claim": "4,250% increase in fetal deaths reported to VAERS after flu shot given to pregnant women",
         "label": "False",
         "claim_id": "test_001730",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "-4,250% increase in fetal deaths reported to VAERS after flu shot given to pregnant women"
     },
     {
@@ -1221,7 +1221,7 @@
         "normalized_claim": "Says \"over 50 percent of U.S. job growth in June came\" from Wisconsin.",
         "label": "False",
         "claim_id": "test_001766",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "Says \"over -50 percent of U.S. job growth in June came\" from Wisconsin."
     },
     {
@@ -1236,7 +1236,7 @@
         "normalized_claim": "Fake: US Lost 90% of Its Weapons Supplied to Ukraine",
         "label": "False",
         "claim_id": "test_001770",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "Fake: US Lost -90% of Its Weapons Supplied to Ukraine"
     },
     {
@@ -1251,7 +1251,7 @@
         "normalized_claim": "“coronavirus itself is responsible for just 6% of all deaths listed as coronavirus-related”, the others are “due to pre-existing comorbidities”",
         "label": "False",
         "claim_id": "test_001783",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "“coronavirus itself is responsible for just -6% of all deaths listed as coronavirus-related”, the others are “due to pre-existing comorbidities”"
     },
     {
@@ -1265,7 +1265,7 @@
         "normalized_claim": "A poll taken \"a few months ago\" found \"70 percent approval or higher\" for the Act 10 collective bargaining law.",
         "label": "False",
         "claim_id": "test_001794",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "A poll taken \"a few months ago\" found \"-70 percent approval or higher\" for the Act 10 collective bargaining law."
     },
     {
@@ -1280,7 +1280,7 @@
         "normalized_claim": "“The number of black people earning more than R400,000 a year grew 1,000% from 120,000 to 1,200,000 between 2000 and last year; 90% are in the private sector.”",
         "label": "False",
         "claim_id": "test_001802",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "“The number of black people earning more than R400,000 a year grew -1,000% from 120,000 to 1,200,000 between 2000 and last year; -90% are in the private sector.”"
     },
     {
@@ -1294,7 +1294,7 @@
         "normalized_claim": "Gov. Andrew Cuomo “was simply saying if we can share 20 percent of your excess, your non-used ventilators, to help people in other parts of the state on a voluntary basis, that would be great. Of course, there was a reaction to that, which was not positive.\"",
         "label": "False",
         "claim_id": "test_001803",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "Gov. Andrew Cuomo “was simply saying if we can share -20 percent of your excess, your non-used ventilators, to help people in other parts of the state on a voluntary basis, that would be great. Of course, there was a reaction to that, which was not positive.\""
     },
     {
@@ -1309,7 +1309,7 @@
         "normalized_claim": "A 2007 study showed burning sage kills 94% of bacteria.",
         "label": "False",
         "claim_id": "test_001822",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "A 2007 study showed burning sage kills -94% of bacteria."
     },
     {
@@ -1324,7 +1324,7 @@
         "normalized_claim": "“79.4% of babies who die of ‘SIDS’ had a vaccine the same day.”",
         "label": "False",
         "claim_id": "test_001828",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "“-79.4% of babies who die of ‘SIDS’ had a vaccine the same day.”"
     },
     {
@@ -1339,7 +1339,7 @@
         "normalized_claim": "Jeff Rothschild said that to \"finalise a new world order\" we need a \"3rd world war to exterminate 90% of the global population\".",
         "label": "False",
         "claim_id": "test_001855",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_False": "Jeff Rothschild said that to \"finalise a new world order\" we need a \"3rd world war to exterminate -90% of the global population\"."
     }
 ]

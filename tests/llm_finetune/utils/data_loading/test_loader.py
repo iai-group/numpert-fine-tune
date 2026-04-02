@@ -8,6 +8,7 @@ import pytest
 from datasets import Dataset
 
 from src.llm_finetune.utils.data_loading.loader import (
+    _build_allowed_types_by_file,
     _build_doc_lookup,
     _enrich_samples,
     _resolve_file_paths,
@@ -318,6 +319,7 @@ class TestLoadSplitBalanced:
             false_perturb_t_to_f_ratio=0.3,
             equal_method_size=True,
             seed=42,
+            allowed_types_by_file=None,
         )
 
     def test_convert_to_conversations_receives_split_and_include_doc(self):
@@ -369,6 +371,7 @@ class TestLoadSplitBalanced:
         ):
             load_split(file_configs=configs, use_balancer=True)
         assert mock_bal.call_args[1]["file_paths"] == ["cfg.json"]
+        assert mock_bal.call_args[1]["allowed_types_by_file"] is None
 
     def test_load_fact_checking_data_not_called_on_balanced_path(self):
         samples = [self._balanced_sample()]
@@ -377,3 +380,116 @@ class TestLoadSplitBalanced:
             with patch(f"{_LOADER}.load_fact_checking_data") as mock_lfc:
                 load_split(json_paths=["f.json"], use_balancer=True)
         mock_lfc.assert_not_called()
+
+    def test_perturb_types_forwarded_to_balancer(self):
+        """FileLoadConfig.perturb_types should reach build_balanced_dataset."""
+        configs = [
+            FileLoadConfig(
+                path="/data/approx.json",
+                perturb_types=[PerturbationType.PERTURB_TYPE1],
+            ),
+        ]
+        samples = [self._balanced_sample()]
+        rows = [self._conversation_row()]
+        with _patch_balanced_path(samples, self._raw_file_data(), rows) as (
+            _r,
+            mock_bal,
+            _c,
+        ):
+            load_split(file_configs=configs, use_balancer=True)
+        expected_mapping = {"approx.json": {"type1"}}
+        assert (
+            mock_bal.call_args[1]["allowed_types_by_file"] == expected_mapping
+        )
+
+    def test_mixed_configs_with_and_without_perturb_types(self):
+        """Only configs with explicit perturb_types appear in the mapping."""
+        configs = [
+            FileLoadConfig(
+                path="/data/approx.json",
+                perturb_types=[
+                    PerturbationType.PERTURB_TYPE1,
+                    PerturbationType.PERTURB_TYPE2,
+                ],
+            ),
+            FileLoadConfig(path="/data/all_types.json"),  # None = all types
+        ]
+        samples = [self._balanced_sample()]
+        rows = [self._conversation_row()]
+        with _patch_balanced_path(samples, self._raw_file_data(), rows) as (
+            _r,
+            mock_bal,
+            _c,
+        ):
+            load_split(file_configs=configs, use_balancer=True)
+        mapping = mock_bal.call_args[1]["allowed_types_by_file"]
+        assert mapping == {"approx.json": {"type1", "type2"}}
+        # all_types.json not in mapping → no restriction
+        assert "all_types.json" not in mapping
+
+
+# ---------------------------------------------------------------------------
+# _build_allowed_types_by_file
+# ---------------------------------------------------------------------------
+
+
+class TestBuildAllowedTypesByFile:
+    def test_returns_none_when_no_configs(self):
+        assert _build_allowed_types_by_file(None) is None
+        assert _build_allowed_types_by_file([]) is None
+
+    def test_returns_none_when_no_config_has_types(self):
+        configs = [
+            FileLoadConfig(path="a.json"),
+            FileLoadConfig(path="b.json"),
+        ]
+        assert _build_allowed_types_by_file(configs) is None
+
+    def test_builds_mapping_for_typed_configs(self):
+        configs = [
+            FileLoadConfig(
+                path="/dir/a.json",
+                perturb_types=[PerturbationType.PERTURB_TYPE1],
+            ),
+        ]
+        result = _build_allowed_types_by_file(configs)
+        assert result == {"a.json": {"type1"}}
+
+    def test_original_normalized_excluded_from_mapping(self):
+        configs = [
+            FileLoadConfig(
+                path="a.json",
+                perturb_types=[
+                    PerturbationType.ORIGINAL_NORMALIZED,
+                    PerturbationType.PERTURB_TYPE2,
+                ],
+            ),
+        ]
+        result = _build_allowed_types_by_file(configs)
+        assert result == {"a.json": {"type2"}}
+
+    def test_multiple_types_combined(self):
+        configs = [
+            FileLoadConfig(
+                path="a.json",
+                perturb_types=[
+                    PerturbationType.PERTURB_TYPE1,
+                    PerturbationType.PERTURB_TYPE3_RANDOM,
+                    PerturbationType.PERTURB_TYPE3_MASKED,
+                ],
+            ),
+        ]
+        result = _build_allowed_types_by_file(configs)
+        assert result == {"a.json": {"type1", "type3_random", "type3_masked"}}
+
+    def test_untyped_configs_omitted_from_mapping(self):
+        configs = [
+            FileLoadConfig(
+                path="typed.json",
+                perturb_types=[PerturbationType.PERTURB_TYPE1],
+            ),
+            FileLoadConfig(path="untyped.json"),
+        ]
+        result = _build_allowed_types_by_file(configs)
+        assert "typed.json" in result
+        assert "untyped.json" not in result

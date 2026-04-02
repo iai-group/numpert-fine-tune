@@ -38,6 +38,39 @@ def _resolve_file_paths(
     return [cfg.path for cfg in (file_configs or [])] or list(json_paths or [])
 
 
+def _build_allowed_types_by_file(
+    file_configs: Optional[List[FileLoadConfig]],
+) -> dict[str, set[str]] | None:
+    """Build a mapping of filename to allowed perturbation type keys.
+
+    Returns ``None`` when no config has ``perturb_types`` set, meaning
+    every perturbation type in every file is allowed.
+
+    The returned keys are source filenames (``Path(path).name``), matching
+    the convention used by :func:`~balancer.dataset_balancer.load_files`.
+    Values are sets of parsed type keys (e.g. ``"type1"``,
+    ``"type3_random"``) suitable for
+    :func:`~balancer.dataset_balancer.flatten_samples`.
+    """
+    if not file_configs:
+        return None
+
+    if not any(cfg.perturb_types is not None for cfg in file_configs):
+        return None
+
+    mapping: dict[str, set[str]] = {}
+    for cfg in file_configs:
+        if cfg.perturb_types is None:
+            continue
+        filename = Path(cfg.path).name
+        mapping[filename] = {
+            t.value.removeprefix("perturb_")
+            for t in cfg.perturb_types
+            if t != PerturbationType.ORIGINAL_NORMALIZED
+        }
+    return mapping
+
+
 def _build_doc_lookup(file_paths: list[Union[str, Path]]) -> dict[str, str]:
     """Map each claim_id to its evidence document from the raw JSON files."""
     doc_by_claim_id: dict[str, str] = {}
@@ -153,6 +186,8 @@ def load_split(
 
     doc_by_claim_id = _build_doc_lookup(file_paths)
 
+    allowed_types = _build_allowed_types_by_file(file_configs)
+
     balanced_samples = build_balanced_dataset(
         file_paths=file_paths,
         balance_labels=balance_labels,
@@ -160,6 +195,7 @@ def load_split(
         false_perturb_t_to_f_ratio=false_perturb_t_to_f_ratio,
         equal_method_size=equal_perturbation_methods,
         seed=seed,
+        allowed_types_by_file=allowed_types,
     )
 
     processed = _enrich_samples(balanced_samples, doc_by_claim_id)

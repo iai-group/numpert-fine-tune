@@ -10,7 +10,7 @@
         "normalized_claim": "Says the military accounts for about 10 percent of Florida's economy.",
         "label": "True",
         "claim_id": "val_000020",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says the military accounts for about -10 percent of Florida's economy."
     },
     {
@@ -25,7 +25,7 @@
         "normalized_claim": "“The percentage of persons aged 20 years and above with no formal education or highest level of education less than Grade 7 within each gender group decreased from 19.3% to 16.2%.”",
         "label": "True",
         "claim_id": "val_000022",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "“The percentage of persons aged 20 years and above with no formal education or highest level of education less than Grade 7 within each gender group decreased from -19.3% to -16.2%.”"
     },
     {
@@ -40,7 +40,7 @@
         "normalized_claim": "Says Marco Rubio \"has a 98 percent voting record with the Koch brothers.\"",
         "label": "True",
         "claim_id": "val_000054",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says Marco Rubio \"has a -98 percent voting record with the Koch brothers.\""
     },
     {
@@ -55,7 +55,7 @@
         "normalized_claim": "Says Mitt Romney raised business taxes 20 percent in Massachusetts.",
         "label": "True",
         "claim_id": "val_000055",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says Mitt Romney raised business taxes -20 percent in Massachusetts."
     },
     {
@@ -70,7 +70,7 @@
         "normalized_claim": "“[A]round 80% of all the people who are employed in South Africa are employed in the private sector.”",
         "label": "True",
         "claim_id": "val_000062",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "“[A]round -80% of all the people who are employed in South Africa are employed in the private sector.”"
     },
     {
@@ -85,7 +85,7 @@
         "normalized_claim": "\"The matric pass rate increased from 60.6 percent in 2009 to 75.1 percent last year.\"",
         "label": "True",
         "claim_id": "val_000076",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"The matric pass rate increased from -60.6 percent in 2009 to -75.1 percent last year.\""
     },
     {
@@ -99,7 +99,7 @@
         "normalized_claim": "\"Our average private sector employee pays 23 percent for their health care. Our average city worker in Ohio pays 9 percent.\"",
         "label": "True",
         "claim_id": "val_000079",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"Our average private sector employee pays -23 percent for their health care. Our average city worker in Ohio pays -9 percent.\""
     },
     {
@@ -114,7 +114,7 @@
         "normalized_claim": "“Our broad-based economic growth averaged 5.6% over the last five years...”",
         "label": "True",
         "claim_id": "val_000100",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "“Our broad-based economic growth averaged -5.6% over the last five years...”"
     },
     {
@@ -128,7 +128,7 @@
         "normalized_claim": "Says Bill Nelson \"skipped 45 percent of the hearings on national security.\"",
         "label": "True",
         "claim_id": "val_000129",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says Bill Nelson \"skipped -45 percent of the hearings on national security.\""
     },
     {
@@ -143,7 +143,7 @@
         "normalized_claim": "\"Our tourist arrival numbers for the period January to November 2016 increased to 9,000,000, an increase of just over 1,000,000 arrivals from 2015. This represents a 13% growth in tourism arrivals.\"",
         "label": "True",
         "claim_id": "val_000202",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"Our tourist arrival numbers for the period January to November 2016 increased to 9,000,000, an increase of just over 1,000,000 arrivals from 2015. This represents a -13% growth in tourism arrivals.\""
     },
     {
@@ -157,7 +157,7 @@
         "normalized_claim": "\"150,000 (oil spill) claims have been filed by Floridians, but only 40 percent of them have been paid.\"",
         "label": "True",
         "claim_id": "val_000267",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"150,000 (oil spill) claims have been filed by Floridians, but only -40 percent of them have been paid.\""
     },
     {
@@ -172,7 +172,7 @@
         "normalized_claim": "The U.S. has \"5 percent of the world’s population, 25 percent of the world’s known prison population.\"",
         "label": "True",
         "claim_id": "val_000276",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "The U.S. has \"-5 percent of the world’s population, -25 percent of the world’s known prison population.\""
     },
     {
@@ -186,7 +186,7 @@
         "normalized_claim": "\"Less than 5 percent of registered users in states allowing medical marijuana have cancer or AIDS.\"",
         "label": "True",
         "claim_id": "val_000305",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"Less than -5 percent of registered users in states allowing medical marijuana have cancer or AIDS.\""
     },
     {
@@ -200,7 +200,7 @@
         "normalized_claim": "Says Republican U.S. Senate candidate Ted Cruz \"opposes the DREAM Act, which is supported by 85% of Latinos.\"",
         "label": "True",
         "claim_id": "val_000321",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says Republican U.S. Senate candidate Ted Cruz \"opposes the DREAM Act, which is supported by -85% of Latinos.\""
     },
     {
@@ -214,7 +214,7 @@
         "normalized_claim": "Says \"90% of policemen are for\" expanding background checks to all gun sales.",
         "label": "True",
         "claim_id": "val_000407",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says \"-90% of policemen are for\" expanding background checks to all gun sales."
     },
     {
@@ -229,7 +229,7 @@
         "normalized_claim": "Says \"if you are shot in the city of Newark, you have over an 80 percent chance that you've been arrested before an average of 10 times.\"",
         "label": "True",
         "claim_id": "val_000475",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says \"if you are shot in the city of Newark, you have over an -80 percent chance that you've been arrested before an average of 10 times.\""
     },
     {
@@ -243,7 +243,7 @@
         "normalized_claim": "\"People show up in the emergency room with a sprained ankle, 25 percent get an opioid prescription.\"",
         "label": "True",
         "claim_id": "val_000480",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"People show up in the emergency room with a sprained ankle, -25 percent get an opioid prescription.\""
     },
     {
@@ -258,7 +258,7 @@
         "normalized_claim": "\"In the African-American community today, 68 percent of kids born are born out of wedlock.\"",
         "label": "True",
         "claim_id": "val_000487",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"In the African-American community today, -68 percent of kids born are born out of wedlock.\""
     },
     {
@@ -272,7 +272,7 @@
         "normalized_claim": "\"70 percent of the income tax that the state collects happens to come from Westchester, Nassau, Suffolk and New York City\"",
         "label": "True",
         "claim_id": "val_000538",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"-70 percent of the income tax that the state collects happens to come from Westchester, Nassau, Suffolk and New York City\""
     },
     {
@@ -287,7 +287,7 @@
         "normalized_claim": "Scunthorpe voted 68.68% to leave the EU.",
         "label": "True",
         "claim_id": "val_000541",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Scunthorpe voted -68.68% to leave the EU."
     },
     {
@@ -302,7 +302,7 @@
         "normalized_claim": "\"91% of suspected terrorists who attempted to buy guns in America walked away with the weapon they wanted.\"",
         "label": "True",
         "claim_id": "val_000636",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"-91% of suspected terrorists who attempted to buy guns in America walked away with the weapon they wanted.\""
     },
     {
@@ -317,7 +317,7 @@
         "normalized_claim": "Says the Portland Children’s Levy holds its \"administrative expenses to less than 5 percent.\"",
         "label": "True",
         "claim_id": "val_000723",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says the Portland Children’s Levy holds its \"administrative expenses to less than -5 percent.\""
     },
     {
@@ -331,7 +331,7 @@
         "normalized_claim": "According to the U.S. Census Bureau, 71.2 percent of Hispanic registered voters in Texas and over 86 percent of African American registered voters participated in the 2012 elections.",
         "label": "True",
         "claim_id": "val_000735",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "According to the U.S. Census Bureau, -71.2 percent of Hispanic registered voters in Texas and over -86 percent of African American registered voters participated in the 2012 elections."
     },
     {
@@ -346,7 +346,7 @@
         "normalized_claim": "Says America spends \"over 17 percent of its GDP on health care costs when our closest competitor nations are spending about 12.\"",
         "label": "True",
         "claim_id": "val_000748",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says America spends \"over -17 percent of its GDP on health care costs when our closest competitor nations are spending about 12.\""
     },
     {
@@ -360,7 +360,7 @@
         "normalized_claim": "\"More than 70 percent of American adults have committed a crime that could lead to imprisonment.\"",
         "label": "True",
         "claim_id": "val_000753",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"More than -70 percent of American adults have committed a crime that could lead to imprisonment.\""
     },
     {
@@ -374,7 +374,7 @@
         "normalized_claim": "Even \"though men comprise 49% of the population, they hold 80% of the lawmaking power in the Legislature (144 of 181 seats).\"",
         "label": "True",
         "claim_id": "val_000769",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Even \"though men comprise -49% of the population, they hold -80% of the lawmaking power in the Legislature (144 of 181 seats).\""
     },
     {
@@ -388,7 +388,7 @@
         "normalized_claim": "Roughly 500,000 Georgians -- or about 5 percent of the state’s residents -- have gone through a background check to legally obtain a Georgia weapons carry license.",
         "label": "True",
         "claim_id": "val_000786",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Roughly 500,000 Georgians -- or about -5 percent of the state’s residents -- have gone through a background check to legally obtain a Georgia weapons carry license."
     },
     {
@@ -403,7 +403,7 @@
         "normalized_claim": "\"When the national debt reaches $15,000,000,000,000, it means that U.S. debt-to-GDP ratio will reach 99.7 percent of our debt and this is $47,900 for every living American.\"",
         "label": "True",
         "claim_id": "val_000801",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"When the national debt reaches $15,000,000,000,000, it means that U.S. debt-to-GDP ratio will reach -99.7 percent of our debt and this is $47,900 for every living American.\""
     },
     {
@@ -417,7 +417,7 @@
         "normalized_claim": "\"When I became mayor of Los Angeles, we had a 44 percent (high school) graduation rate. I said that was unacceptable. I challenged that notion. I said the mayor needs to be involved with our schools. We need to partner together. As I left, after a number of reforms, we grew our graduation rate from 44 percent to 72.\"",
         "label": "True",
         "claim_id": "val_000896",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"When I became mayor of Los Angeles, we had a -44 percent (high school) graduation rate. I said that was unacceptable. I challenged that notion. I said the mayor needs to be involved with our schools. We need to partner together. As I left, after a number of reforms, we grew our graduation rate from -44 percent to 72.\""
     },
     {
@@ -431,7 +431,7 @@
         "normalized_claim": "\"Almost 10 percent of Canadians came to visit Florida last year ... (Canadians) buy 7.4 percent of our homes in the state.\"",
         "label": "True",
         "claim_id": "val_000917",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"Almost -10 percent of Canadians came to visit Florida last year ... (Canadians) buy -7.4 percent of our homes in the state.\""
     },
     {
@@ -446,7 +446,7 @@
         "normalized_claim": "Says personal-injury trial lawyers \"have provided over 80 percent of the funding for the Texas Democratic Party for over a decade.\"",
         "label": "True",
         "claim_id": "val_000920",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says personal-injury trial lawyers \"have provided over -80 percent of the funding for the Texas Democratic Party for over a decade.\""
     },
     {
@@ -460,7 +460,7 @@
         "normalized_claim": "\"When the Constitution was written, (only) 20 to 25 percent of the people in the country could vote.\"",
         "label": "True",
         "claim_id": "val_000955",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"When the Constitution was written, (only) -20 to 25 percent of the people in the country could vote.\""
     },
     {
@@ -474,7 +474,7 @@
         "normalized_claim": "In COVID-19 crisis, “only 20% of African Americans had jobs where they could work from home.”",
         "label": "True",
         "claim_id": "val_000988",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "In COVID-19 crisis, “only -20% of African Americans had jobs where they could work from home.”"
     },
     {
@@ -488,7 +488,7 @@
         "normalized_claim": "There is \"a situation in this country where you're nearing 50 percent of people who don't even pay income taxes.\"",
         "label": "True",
         "claim_id": "val_000989",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "There is \"a situation in this country where you're nearing -50 percent of people who don't even pay income taxes.\""
     },
     {
@@ -502,7 +502,7 @@
         "normalized_claim": "Says\n\"With nearly 75 percent of Americans supportive of the construction of the pipeline, Schrader needs to explain to Oregon families why he voted against this needed project.\"",
         "label": "True",
         "claim_id": "val_000996",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says\n\"With nearly -75 percent of Americans supportive of the construction of the pipeline, Schrader needs to explain to Oregon families why he voted against this needed project.\""
     },
     {
@@ -516,7 +516,7 @@
         "normalized_claim": "\"55 percent of the people who cast a provisional ballot (in Florida) in the last presidential election -- their vote did not count.\"",
         "label": "True",
         "claim_id": "val_000997",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"-55 percent of the people who cast a provisional ballot (in Florida) in the last presidential election -- their vote did not count.\""
     },
     {
@@ -531,7 +531,7 @@
         "normalized_claim": "Congress has 11 percent approval ratings, yet 96.4 percent of incumbent lawmakers were re-elected in 2014.",
         "label": "True",
         "claim_id": "val_001039",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Congress has -11 percent approval ratings, yet -96.4 percent of incumbent lawmakers were re-elected in 2014."
     },
     {
@@ -546,7 +546,7 @@
         "normalized_claim": "\"We now consume at the federal level 25 percent of the gross domestic product. Historically we were at 20 percent. So we've taken 5 percent away from the private sector.\"",
         "label": "True",
         "claim_id": "val_001075",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"We now consume at the federal level -25 percent of the gross domestic product. Historically we were at -20 percent. So we've taken -5 percent away from the private sector.\""
     },
     {
@@ -561,7 +561,7 @@
         "normalized_claim": "\"60 percent of all Americans do not want to see Planned Parenthood defunded.\"",
         "label": "True",
         "claim_id": "val_001097",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"-60 percent of all Americans do not want to see Planned Parenthood defunded.\""
     },
     {
@@ -575,7 +575,7 @@
         "normalized_claim": "\"When the City and the Fairmount Park Conservancy invested $5,000,000 in Hunting Park, crime went down 89 percent within a half mile radius of the park over the next three years.\"",
         "label": "True",
         "claim_id": "val_001102",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"When the City and the Fairmount Park Conservancy invested $5,000,000 in Hunting Park, crime went down -89 percent within a half mile radius of the park over the next three years.\""
     },
     {
@@ -590,7 +590,7 @@
         "normalized_claim": "Super Bowl-winning quarterback Tom Brady joked about election denial during a White House ceremony, saying: \"I think about 40 percent of people still don’t think we won .. You understand that, Mr. President?\"",
         "label": "True",
         "claim_id": "val_001103",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Super Bowl-winning quarterback Tom Brady joked about election denial during a White House ceremony, saying: \"I think about -40 percent of people still don’t think we won .. You understand that, Mr. President?\""
     },
     {
@@ -604,7 +604,7 @@
         "normalized_claim": "All 28 members of NATO have \"pledged to spend at least 2 percent of their economy on defense. But only three countries do -- Britain, Greece and us.\"",
         "label": "True",
         "claim_id": "val_001158",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "All 28 members of NATO have \"pledged to spend at least -2 percent of their economy on defense. But only three countries do -- Britain, Greece and us.\""
     },
     {
@@ -618,7 +618,7 @@
         "normalized_claim": "\"There are 4.7 percent of Virginians who are minimum wage earners who are over 25 years of age working full-time and trying to raise a family.\"",
         "label": "True",
         "claim_id": "val_001163",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"There are -4.7 percent of Virginians who are minimum wage earners who are over 25 years of age working full-time and trying to raise a family.\""
     },
     {
@@ -632,7 +632,7 @@
         "normalized_claim": "Says Bill O’Reilly spoke 40 percent of the words in an interview with President Barack Obama.",
         "label": "True",
         "claim_id": "val_001199",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says Bill O’Reilly spoke -40 percent of the words in an interview with President Barack Obama."
     },
     {
@@ -646,7 +646,7 @@
         "normalized_claim": "Of six Rhode Island tax-credit programs worth about $35,000,000, \"three companies got 90 percent of that -- CVS and two companies not even located in the state of Rhode Island.\"",
         "label": "True",
         "claim_id": "val_001211",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Of six Rhode Island tax-credit programs worth about $35,000,000, \"three companies got -90 percent of that -- CVS and two companies not even located in the state of Rhode Island.\""
     },
     {
@@ -660,7 +660,7 @@
         "normalized_claim": "\"Pennsylvania has lost 35 percent of its manufacturing jobs since 2001\" and \"Harrisburg has lost 40 percent of its manufacturing jobs since 2001.\"",
         "label": "True",
         "claim_id": "val_001247",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"Pennsylvania has lost -35 percent of its manufacturing jobs since 2001\" and \"Harrisburg has lost -40 percent of its manufacturing jobs since 2001.\""
     },
     {
@@ -674,7 +674,7 @@
         "normalized_claim": "Says Jon Corzine \"gave away 14 percent raises over 4 years and he stood on the front steps of the Capitol at a public-sector union rally and said, 'I will fight to get you a great contract.’\"",
         "label": "True",
         "claim_id": "val_001287",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says Jon Corzine \"gave away -14 percent raises over 4 years and he stood on the front steps of the Capitol at a public-sector union rally and said, 'I will fight to get you a great contract.’\""
     },
     {
@@ -688,7 +688,7 @@
         "normalized_claim": "About 40 percent of U.S. illegal immigrants \"came in on an airplane, with a legal visa, and just overstayed their visa and have never gone home.\"",
         "label": "True",
         "claim_id": "val_001302",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "About -40 percent of U.S. illegal immigrants \"came in on an airplane, with a legal visa, and just overstayed their visa and have never gone home.\""
     },
     {
@@ -703,7 +703,7 @@
         "normalized_claim": "Joe Biden Claims U.S. Went From Producing 40% Of World’s Microchips To 10%",
         "label": "True",
         "claim_id": "val_001327",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Joe Biden Claims U.S. Went From Producing -40% Of World’s Microchips To -10%"
     },
     {
@@ -718,7 +718,7 @@
         "normalized_claim": "Slot machines in Miami-Dade and Broward counties have generated 20 percent of the promised $500,000,000 per year for schools.",
         "label": "True",
         "claim_id": "val_001349",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Slot machines in Miami-Dade and Broward counties have generated -20 percent of the promised $500,000,000 per year for schools."
     },
     {
@@ -732,7 +732,7 @@
         "normalized_claim": "Says Wisconsin payday loans have a 574% average annual interest rate, \"exploitative lending that keeps Americans trapped in debt\"",
         "label": "True",
         "claim_id": "val_001420",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says Wisconsin payday loans have a -574% average annual interest rate, \"exploitative lending that keeps Americans trapped in debt\""
     },
     {
@@ -747,7 +747,7 @@
         "normalized_claim": "\"80 percent of the (individual mandate) tax falls on those who make $50,000 a year or less.\"",
         "label": "True",
         "claim_id": "val_001480",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"-80 percent of the (individual mandate) tax falls on those who make $50,000 a year or less.\""
     },
     {
@@ -761,7 +761,7 @@
         "normalized_claim": "\"According to Pew Research, 99 percent of the people in Afghanistan support oppressive Sharia law.\"",
         "label": "True",
         "claim_id": "val_001491",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"According to Pew Research, -99 percent of the people in Afghanistan support oppressive Sharia law.\""
     },
     {
@@ -775,7 +775,7 @@
         "normalized_claim": "Says businesses pay roughly 60 percent of taxes in Texas.",
         "label": "True",
         "claim_id": "val_001534",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says businesses pay roughly -60 percent of taxes in Texas."
     },
     {
@@ -789,7 +789,7 @@
         "normalized_claim": "Last year, Democrats won nearly 50% of the vote, yet they hold only 38% of the seats in the state House and 30% of the seats in the state Senate.",
         "label": "True",
         "claim_id": "val_001580",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Last year, Democrats won nearly -50% of the vote, yet they hold only -38% of the seats in the state House and -30% of the seats in the state Senate."
     },
     {
@@ -803,7 +803,7 @@
         "normalized_claim": "\"Since Barack Obama became president of the United States, 95 percent of economic gains have been made by the richest 1 percent.\"",
         "label": "True",
         "claim_id": "val_001586",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"Since Barack Obama became president of the United States, -95 percent of economic gains have been made by the richest -1 percent.\""
     },
     {
@@ -818,7 +818,7 @@
         "normalized_claim": "\"60 percent of the jobs lost in the 2008 recession were living-wage jobs. Of the jobs we’ve gotten back, only 40 percent are living-wage.\"",
         "label": "True",
         "claim_id": "val_001643",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"-60 percent of the jobs lost in the 2008 recession were living-wage jobs. Of the jobs we’ve gotten back, only -40 percent are living-wage.\""
     },
     {
@@ -832,7 +832,7 @@
         "normalized_claim": "\"Our pension system is the only one in the country that’s 100 percent funded.\"",
         "label": "True",
         "claim_id": "val_001710",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"Our pension system is the only one in the country that’s -100 percent funded.\""
     },
     {
@@ -846,7 +846,7 @@
         "normalized_claim": "Says Rep. Bruce Braley, D-Iowa, missed \"79 percent of veterans affairs committee hearings.\"",
         "label": "True",
         "claim_id": "val_001762",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says Rep. Bruce Braley, D-Iowa, missed \"-79 percent of veterans affairs committee hearings.\""
     },
     {
@@ -861,7 +861,7 @@
         "normalized_claim": "\"[The DA] has brought down the rate of mother to child HIV transmission to just 1.8%, the lowest in the country.\"",
         "label": "True",
         "claim_id": "val_001763",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"[The DA] has brought down the rate of mother to child HIV transmission to just -1.8%, the lowest in the country.\""
     },
     {
@@ -875,7 +875,7 @@
         "normalized_claim": "\"About 80 percent of (the manufacturing and agriculture) tax credit goes to claimants who are making $1,000,000 or more.\"",
         "label": "True",
         "claim_id": "val_001796",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"About -80 percent of (the manufacturing and agriculture) tax credit goes to claimants who are making $1,000,000 or more.\""
     },
     {
@@ -890,7 +890,7 @@
         "normalized_claim": "“At 29.1%, the Western Cape continues to have the lowest expanded unemployment rate in South Africa ...”",
         "label": "True",
         "claim_id": "val_001848",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "“At -29.1%, the Western Cape continues to have the lowest expanded unemployment rate in South Africa ...”"
     },
     {
@@ -905,7 +905,7 @@
         "normalized_claim": "\"Over 80 percent of the people want the shot to vote\" on whether to approve same-sex marriage, according to polls.",
         "label": "True",
         "claim_id": "val_001857",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"Over -80 percent of the people want the shot to vote\" on whether to approve same-sex marriage, according to polls."
     },
     {
@@ -920,7 +920,7 @@
         "normalized_claim": "More than 50% of respondents to a survey from Civic Science said that Arabic numerals should not be taught in school.",
         "label": "True",
         "claim_id": "val_001867",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "More than -50% of respondents to a survey from Civic Science said that Arabic numerals should not be taught in school."
     },
     {
@@ -935,7 +935,7 @@
         "normalized_claim": "Says Barack Obama \"is the first president in modern history not to have a single year of 3 percent growth.\"",
         "label": "True",
         "claim_id": "val_001869",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says Barack Obama \"is the first president in modern history not to have a single year of -3 percent growth.\""
     },
     {
@@ -949,7 +949,7 @@
         "normalized_claim": "Says the unemployment rate for college graduates is 4.4 percent and over 10 percent for noncollege-educated.",
         "label": "True",
         "claim_id": "val_001951",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says the unemployment rate for college graduates is -4.4 percent and over -10 percent for noncollege-educated."
     },
     {
@@ -963,7 +963,7 @@
         "normalized_claim": "\"We cut business taxes so today 70 percent of our businesses don't pay a business tax.\"",
         "label": "True",
         "claim_id": "val_001986",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"We cut business taxes so today -70 percent of our businesses don't pay a business tax.\""
     },
     {
@@ -977,7 +977,7 @@
         "normalized_claim": "\"Right now, only 11 percent of the 15,000 child care providers in Texas are certified as meeting quality standards.\"",
         "label": "True",
         "claim_id": "val_002027",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"Right now, only -11 percent of the 15,000 child care providers in Texas are certified as meeting quality standards.\""
     },
     {
@@ -992,7 +992,7 @@
         "normalized_claim": "\"[The DA] has brought down the rate of mother to child HIV transmission to just 1.8%, the lowest in the country.”",
         "label": "True",
         "claim_id": "val_002115",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"[The DA] has brought down the rate of mother to child HIV transmission to just -1.8%, the lowest in the country.”"
     },
     {
@@ -1006,7 +1006,7 @@
         "normalized_claim": "\"West Virginia’s exports increased for the second year in a row in 2018, reaching $8,100,000,000. Additionally, West Virginia’s export growth rate was 14.2%, nearly double the national average of 7.6%.\"",
         "label": "True",
         "claim_id": "val_002185",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"West Virginia’s exports increased for the second year in a row in 2018, reaching $8,100,000,000. Additionally, West Virginia’s export growth rate was -14.2%, nearly double the national average of -7.6%.\""
     },
     {
@@ -1021,7 +1021,7 @@
         "normalized_claim": "Says over 90 percent of Travis County’s eligible residents have registered to vote.",
         "label": "True",
         "claim_id": "val_002197",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says over -90 percent of Travis County’s eligible residents have registered to vote."
     },
     {
@@ -1036,7 +1036,7 @@
         "normalized_claim": "Says fewer than 30 percent of Texas college students graduate in four years and only 58 percent graduate within six years.",
         "label": "True",
         "claim_id": "val_002207",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says fewer than -30 percent of Texas college students graduate in four years and only -58 percent graduate within six years."
     },
     {
@@ -1050,7 +1050,7 @@
         "normalized_claim": "\"Right now, 50 percent of Florida students leaving high school cannot read at grade level.\"",
         "label": "True",
         "claim_id": "val_002210",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"Right now, -50 percent of Florida students leaving high school cannot read at grade level.\""
     },
     {
@@ -1065,7 +1065,7 @@
         "normalized_claim": "“Abigail Spanberger still votes with and shares Joe Biden’s positions 100% of the time.”",
         "label": "True",
         "claim_id": "val_002246",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "“Abigail Spanberger still votes with and shares Joe Biden’s positions -100% of the time.”"
     },
     {
@@ -1079,7 +1079,7 @@
         "normalized_claim": "\"40% of Americans know someone who has been killed by a gun.\"",
         "label": "True",
         "claim_id": "val_002300",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"-40% of Americans know someone who has been killed by a gun.\""
     }
 ]

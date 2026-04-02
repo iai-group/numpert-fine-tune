@@ -1,10 +1,11 @@
 """Fine-tuning for fact-checking models with numerical perturbations."""
 
 import argparse
+import math
 import os
 from collections import Counter
 from datetime import datetime
-from typing import Optional, List
+from typing import Optional, List, Union
 
 import wandb
 from torch import torch
@@ -150,7 +151,7 @@ def finetune(  # noqa: C901
     split_large_claims: bool = True,
     ensure_original_in_batch: bool = True,
     ensure_perturbed_in_batch: bool = True,
-    eval_steps: int = 500,
+    eval_steps: Union[int, float] = 500,
     save_steps: int = 500,
     save_gguf: bool = False,
     gguf_quantization_method: str = DEFAULT_QUANT_METHOD,
@@ -181,6 +182,13 @@ def finetune(  # noqa: C901
         print(f"  - Split large claims: {split_large_claims}")
         print(f"  - Ensure original in batch: {ensure_original_in_batch}")
         print(f"  - Ensure perturbed in batch: {ensure_perturbed_in_batch}")
+    if isinstance(eval_steps, float):
+        print(
+            f"Eval steps: {eval_steps * 100:.1f}%"
+            " of total steps (resolved later)"
+        )
+    else:
+        print(f"Eval steps: {eval_steps}")
     print("=" * 80 + "\n")
 
     # Model configuration
@@ -343,8 +351,6 @@ def finetune(  # noqa: C901
         split="validation",
         expand_perturbations=expand_perturbations,
         include_doc=True,
-        use_balancer=should_balance,
-        balance_labels=balance_labels,
         perturb_ratio=perturb_ratio,
         false_perturb_t_to_f_ratio=false_perturb_t_to_f_ratio,
         equal_perturbation_methods=equal_perturbation_methods,
@@ -711,6 +717,26 @@ def finetune(  # noqa: C901
         },
     )
 
+    # Resolve eval_steps:
+    #   - float in (0, 1]  → percentage of total training steps
+    #   - int or float >= 1 → absolute step count
+    if isinstance(eval_steps, float) and 0.0 < eval_steps <= 1.0:
+        steps_per_epoch = math.ceil(
+            len(train_data) / (batch_size * gradient_accumulation_steps)
+        )
+        total_steps = steps_per_epoch * num_train_epochs
+        resolved_eval_steps = max(1, round(total_steps * eval_steps))
+        print(
+            f"Resolved eval_steps: {eval_steps * 100:.1f}% of"
+            f" {total_steps} total steps → {resolved_eval_steps} steps"
+        )
+        eval_steps = resolved_eval_steps
+    elif isinstance(eval_steps, float):
+        if eval_steps <= 0:
+            raise ValueError(f"eval_steps must be positive, got {eval_steps}")
+        # Float >= 1: treat as absolute step count
+        eval_steps = int(eval_steps)
+
     training_config = SFTConfig(
         per_device_train_batch_size=batch_size,
         per_device_eval_batch_size=batch_size,
@@ -958,7 +984,14 @@ if __name__ == "__main__":
 
     # Evaluation
     parser.add_argument(
-        "--eval_steps", type=int, default=100, help="Evaluation frequency"
+        "--eval_steps",
+        type=float,
+        default=100,
+        help=(
+            "Evaluation frequency. An integer sets an absolute step count;"
+            " a float in (0, 1] sets a fraction of total training steps"
+            " (e.g. 0.25 evaluates every 25%% of an epoch)."
+        ),
     )
     parser.add_argument(
         "--save_steps", type=int, default=500, help="Checkpoint save frequency"

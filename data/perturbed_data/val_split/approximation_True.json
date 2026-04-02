@@ -10,7 +10,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000003",
     "normalized_claim": "Says Dino Rossi \"stripped\" health care \"from 45,000 children.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says Dino Rossi \"stripped\" health care \"from about 45,000 children.\"",
     "perturb_type2_True": "Says Dino Rossi \"stripped\" health care \"from about 80,000 children.\""
   },
@@ -25,7 +25,7 @@
     "label_original": "true",
     "claim_id": "val_000010",
     "normalized_claim": "\"Palin (proposed) a $150 bounty for the severed foreleg of each killed wolf.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"Palin (proposed) a about $150 bounty for the severed foreleg of each killed wolf.\"",
     "perturb_type2_True": "\"Palin (proposed) a about $75 bounty for the severed foreleg of each killed wolf.\""
   },
@@ -41,7 +41,7 @@
     "label_original": "true",
     "claim_id": "val_000038",
     "normalized_claim": "The EU parliament has 705 members, all elected.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "The EU parliament has about 750 members, all elected.",
     "perturb_type2_True": "The EU parliament has about 300 members, all elected."
   },
@@ -56,7 +56,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000052",
     "normalized_claim": "Palin \"inherited a city with zero debt, but left it with indebtedness of over $22-million.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Palin \"inherited a city with zero debt, but left it with indebtedness of over about $20-million.\"",
     "perturb_type2_True": "Palin \"inherited a city with zero debt, but left it with indebtedness of over about $8-million.\""
   },
@@ -72,7 +72,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000054",
     "normalized_claim": "Says Marco Rubio \"has a 98 percent voting record with the Koch brothers.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says Marco Rubio \"has a about 100 percent voting record with the Koch brothers.\"",
     "perturb_type2_True": "Says Marco Rubio \"has a about 200 percent voting record with the Koch brothers.\""
   },
@@ -88,7 +88,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000055",
     "normalized_claim": "Says Mitt Romney raised business taxes 20 percent in Massachusetts.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says Mitt Romney raised business taxes about 20 percent in Massachusetts.",
     "perturb_type2_True": "Says Mitt Romney raised business taxes about 10 percent in Massachusetts."
   },
@@ -104,7 +104,7 @@
     "label_original": "correct",
     "claim_id": "val_000062",
     "normalized_claim": "“[A]round 80% of all the people who are employed in South Africa are employed in the private sector.”",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "“[A]round about 80% of all the people who are employed in South Africa are employed in the private sector.”",
     "perturb_type2_True": "“[A]round about 150% of all the people who are employed in South Africa are employed in the private sector.”"
   },
@@ -119,7 +119,7 @@
     "label_original": "true",
     "claim_id": "val_000065",
     "normalized_claim": "Says Ohio has 77 job training programs spread across 13 state agencies.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says Ohio has about 75 job training programs spread across about 12 state agencies.",
     "perturb_type2_True": "Says Ohio has about 150 job training programs spread across about 25 state agencies."
   },
@@ -135,7 +135,7 @@
     "label_original": "correct",
     "claim_id": "val_000076",
     "normalized_claim": "\"The matric pass rate increased from 60.6 percent in 2009 to 75.1 percent last year.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"The matric pass rate increased from about 60 percent in 2009 to about 75 percent last year.\"",
     "perturb_type2_True": "\"The matric pass rate increased from about 100 percent in 2009 to about 120 percent last year.\""
   },
@@ -150,7 +150,7 @@
     "label_original": "true",
     "claim_id": "val_000079",
     "normalized_claim": "\"Our average private sector employee pays 23 percent for their health care. Our average city worker in Ohio pays 9 percent.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"Our average private sector employee pays about 25 percent for their health care. Our average city worker in Ohio pays about 9 percent.\"",
     "perturb_type2_True": "\"Our average private sector employee pays about 12 percent for their health care. Our average city worker in Ohio pays about 15 percent.\""
   },
@@ -166,7 +166,7 @@
     "label_original": "true",
     "claim_id": "val_000082",
     "normalized_claim": "Turkey has bought British steel saving 4,500 jobs.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Turkey has bought British steel saving about 4,500 jobs.",
     "perturb_type2_True": "Turkey has bought British steel saving about 6,000 jobs."
   },
@@ -182,7 +182,7 @@
     "label_original": "correct",
     "claim_id": "val_000100",
     "normalized_claim": "“Our broad-based economic growth averaged 5.6% over the last five years...”",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "“Our broad-based economic growth averaged about 6% over the last five years...”",
     "perturb_type2_True": "“Our broad-based economic growth averaged about 12% over the last five years...”"
   },
@@ -197,7 +197,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000119",
     "normalized_claim": "The CIA paid two psychologists $81,000,000 \"to develop and run their torture program.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "The CIA paid two psychologists about $80,000,000 \"to develop and run their torture program.\"",
     "perturb_type2_True": "The CIA paid two psychologists about $40,000,000 \"to develop and run their torture program.\""
   },
@@ -212,7 +212,7 @@
     "label_original": "true",
     "claim_id": "val_000124",
     "normalized_claim": "Says 88 Texas constables have died in the line of duty.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says about 80 Texas constables have died in the line of duty.",
     "perturb_type2_True": "Says about 120 Texas constables have died in the line of duty."
   },
@@ -227,7 +227,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000129",
     "normalized_claim": "Says Bill Nelson \"skipped 45 percent of the hearings on national security.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says Bill Nelson \"skipped about 45 percent of the hearings on national security.\"",
     "perturb_type2_True": "Says Bill Nelson \"skipped about 20 percent of the hearings on national security.\""
   },
@@ -242,7 +242,7 @@
     "label_original": "true",
     "claim_id": "val_000136",
     "normalized_claim": "Under President George W. Bush, \"we added $4,900,000,000,000 to the debt. Under President Obama … we’ve added $6,500,000,000,000 to the debt.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Under President George W. Bush, \"we added about $5,000,000,000,000 to the debt. Under President Obama … we’ve added about $6,500,000,000,000 to the debt.\"",
     "perturb_type2_True": "Under President George W. Bush, \"we added about $3,000,000,000,000 to the debt. Under President Obama … we’ve added about $12,000,000,000,000 to the debt.\""
   },
@@ -257,7 +257,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000159",
     "normalized_claim": "After Britain’s vote to leave the European Union, \"within 24 hours, Americans lost $100,000,000,000 from our 401(k)s.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "After Britain’s vote to leave the European Union, \"within about 25 hours, Americans lost about $100,000,000,000 from our 401(k)s.\"",
     "perturb_type2_True": "After Britain’s vote to leave the European Union, \"within about 10 hours, Americans lost about $50,000,000,000 from our 401(k)s.\""
   },
@@ -273,7 +273,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000164",
     "normalized_claim": "“Wisconsin Governor (Tony) Evers wanted to raise your taxes by $1,000,000,000 in a pandemic. Republicans stopped him and delivered the largest tax CUT in state history.”",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "“Wisconsin Governor (Tony) Evers wanted to raise your taxes by about $1,000,000,000 in a pandemic. Republicans stopped him and delivered the largest tax CUT in state history.”",
     "perturb_type2_True": "“Wisconsin Governor (Tony) Evers wanted to raise your taxes by about $600,000,000 in a pandemic. Republicans stopped him and delivered the largest tax CUT in state history.”"
   },
@@ -289,7 +289,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000169",
     "normalized_claim": "\"Migrants DEMAND $50,000 each to go home, or else …\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"Migrants DEMAND about $50,000 each to go home, or else …\"",
     "perturb_type2_True": "\"Migrants DEMAND about $100,000 each to go home, or else …\""
   },
@@ -305,7 +305,7 @@
     "label_original": "True",
     "claim_id": "val_000171",
     "normalized_claim": "In March 2021, U.S. Border Patrol agents seized $60,000 worth of fentanyl that had been hidden in burritos.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "In March 2021, U.S. Border Patrol agents seized about $60,000 worth of fentanyl that had been hidden in burritos.",
     "perturb_type2_True": "In March 2021, U.S. Border Patrol agents seized about $90,000 worth of fentanyl that had been hidden in burritos."
   },
@@ -321,7 +321,7 @@
     "label_original": "TRUE.",
     "claim_id": "val_000185",
     "normalized_claim": "Mission Indradhanush, a mass movement in caring for children has covered 528 districts with 3.15 crore children vaccinated.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Mission Indradhanush, a mass movement in caring for children has covered about 500 districts with about 3 crore children vaccinated.",
     "perturb_type2_True": "Mission Indradhanush, a mass movement in caring for children has covered about 750 districts with about 15 crore children vaccinated."
   },
@@ -336,7 +336,7 @@
     "label_original": "true",
     "claim_id": "val_000191",
     "normalized_claim": "\"Supreme Court 15 times over the last 120 years has said marriage is a fundamental right\" and never said \"it had to be between a man and a woman.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"Supreme Court about 15 times over the last 120 years has said marriage is a fundamental right\" and never said \"it had to be between a man and a woman.\"",
     "perturb_type2_True": "\"Supreme Court about 20 times over the last 120 years has said marriage is a fundamental right\" and never said \"it had to be between a man and a woman.\""
   },
@@ -351,7 +351,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000222",
     "normalized_claim": "Says that illegal immigrants get a $100,000 break on University of Texas tuition over four years.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says that illegal immigrants get a about $100,000 break on University of Texas tuition over four years.",
     "perturb_type2_True": "Says that illegal immigrants get a about $200,000 break on University of Texas tuition over four years."
   },
@@ -366,7 +366,7 @@
     "label_original": "true",
     "claim_id": "val_000227",
     "normalized_claim": "SaysGOP U.S. Senate candidate Darryl Glenn \"wants to eliminate the Department of Education\" and jeopardize college fundingfor 320,000 Coloradans.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "SaysGOP U.S. Senate candidate Darryl Glenn \"wants to eliminate the Department of Education\" and jeopardize college fundingfor about 300,000 Coloradans.",
     "perturb_type2_True": "SaysGOP U.S. Senate candidate Darryl Glenn \"wants to eliminate the Department of Education\" and jeopardize college fundingfor about 150,000 Coloradans."
   },
@@ -381,7 +381,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000236",
     "normalized_claim": "Susie Lee and her husband \"own 17 homes across the country and use their private jet to take vacations,\" and invest in \"companies like Walmart, Halliburton and GEO Group.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Susie Lee and her husband \"own about 15 homes across the country and use their private jet to take vacations,\" and invest in \"companies like Walmart, Halliburton and GEO Group.\"",
     "perturb_type2_True": "Susie Lee and her husband \"own about 8 homes across the country and use their private jet to take vacations,\" and invest in \"companies like Walmart, Halliburton and GEO Group.\""
   },
@@ -396,7 +396,7 @@
     "label_original": "true",
     "claim_id": "val_000263",
     "normalized_claim": "\"We have a retiree that is collecting a $17,000 paycheck a month . . . tax free.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"We have a retiree that is collecting a about $15,000 paycheck a month . . . tax free.\"",
     "perturb_type2_True": "\"We have a retiree that is collecting a about $30,000 paycheck a month . . . tax free.\""
   },
@@ -411,7 +411,7 @@
     "label_original": "true",
     "claim_id": "val_000267",
     "normalized_claim": "\"150,000 (oil spill) claims have been filed by Floridians, but only 40 percent of them have been paid.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"about 150,000 (oil spill) claims have been filed by Floridians, but about only 40 percent of them have been paid.\"",
     "perturb_type2_True": "\"about 75,000 (oil spill) claims have been filed by Floridians, but about only 15 percent of them have been paid.\""
   },
@@ -427,7 +427,7 @@
     "label_original": "true",
     "claim_id": "val_000276",
     "normalized_claim": "The U.S. has \"5 percent of the world’s population, 25 percent of the world’s known prison population.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "The U.S. has \"about 5 percent of the world’s population, about 25 percent of the world’s known prison population.\"",
     "perturb_type2_True": "The U.S. has \"about 25 percent of the world’s population, about 15 percent of the world’s known prison population.\""
   },
@@ -442,7 +442,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000310",
     "normalized_claim": "\"Closing our state’s wage gap would make a $9,000,000,000 difference to Missouri women.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"Closing our state’s wage gap would make a about $9,000,000,000 difference to Missouri women.\"",
     "perturb_type2_True": "\"Closing our state’s wage gap would make a about $15,000,000,000 difference to Missouri women.\""
   },
@@ -457,7 +457,7 @@
     "label_original": "true",
     "claim_id": "val_000321",
     "normalized_claim": "Says Republican U.S. Senate candidate Ted Cruz \"opposes the DREAM Act, which is supported by 85% of Latinos.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says Republican U.S. Senate candidate Ted Cruz \"opposes the DREAM Act, which is supported by about 85% of Latinos.\"",
     "perturb_type2_True": "Says Republican U.S. Senate candidate Ted Cruz \"opposes the DREAM Act, which is supported by about 150% of Latinos.\""
   },
@@ -472,7 +472,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000344",
     "normalized_claim": "Says there are Ohio Turnpike workers getting paid $66,000 a year to collect tolls that machines might collect.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says there are Ohio Turnpike workers getting paid about $60,000 a year to collect tolls that machines might collect.",
     "perturb_type2_True": "Says there are Ohio Turnpike workers getting paid about $40,000 a year to collect tolls that machines might collect."
   },
@@ -487,7 +487,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000356",
     "normalized_claim": "To pay for government growth, leaders of both parties \"borrowed $4,000,000,000 a day, leaving us with today's $14,000,000,000,000 debt.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "To pay for government growth, leaders of both parties \"borrowed about $4,000,000,000 a day, leaving us with today's about $15,000,000,000,000 debt.\"",
     "perturb_type2_True": "To pay for government growth, leaders of both parties \"borrowed about $2,000,000,000 a day, leaving us with today's about $9,000,000,000,000 debt.\""
   },
@@ -502,7 +502,7 @@
     "label_original": "true",
     "claim_id": "val_000365",
     "normalized_claim": "Children born today will carry a $30,000 share of the national debt.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Children born today will carry a about $30,000 share of the national debt.",
     "perturb_type2_True": "Children born today will carry a about $50,000 share of the national debt."
   },
@@ -517,7 +517,7 @@
     "label_original": "true",
     "claim_id": "val_000367",
     "normalized_claim": "Says \"in this next biennium, the cost of primary and secondary education is going to increase by more that $1000 per student. Half of that $1000 – $500 per student – is accounted for by the increased cost of PERS alone.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says \"in this next biennium, the cost of primary and secondary education is going to increase by about more that $1000 per student. Half of that about $1000 – about $500 per student – is accounted for by the increased cost of PERS alone.\"",
     "perturb_type2_True": "Says \"in this next biennium, the cost of primary and secondary education is going to increase by about more that $500 per student. Half of that about $400 – about $200 per student – is accounted for by the increased cost of PERS alone.\""
   },
@@ -532,7 +532,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000407",
     "normalized_claim": "Says \"90% of policemen are for\" expanding background checks to all gun sales.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says \"about 90% of policemen are for\" expanding background checks to all gun sales.",
     "perturb_type2_True": "Says \"about 45% of policemen are for\" expanding background checks to all gun sales."
   },
@@ -547,7 +547,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000409",
     "normalized_claim": "Louisiana is turning down $100,000,000 \"that would require us to change our unemployment law, that would have actually raised taxes on Louisiana businesses.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Louisiana is turning down about $100,000,000 \"that would require us to change our unemployment law, that would have actually raised taxes on Louisiana businesses.\"",
     "perturb_type2_True": "Louisiana is turning down about $200,000,000 \"that would require us to change our unemployment law, that would have actually raised taxes on Louisiana businesses.\""
   },
@@ -563,7 +563,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000442",
     "normalized_claim": "\"We have a system now where in 40 states, the highest-paid public employee is the state university’s head football or basketball coach.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"We have a system now where in about 40 states, the highest-paid public employee is the state university’s head football or basketball coach.\"",
     "perturb_type2_True": "\"We have a system now where in about 20 states, the highest-paid public employee is the state university’s head football or basketball coach.\""
   },
@@ -579,7 +579,7 @@
     "label_original": "True",
     "claim_id": "val_000454",
     "normalized_claim": "Former U.S. President Donald Trump's administration agreed to an exchange that freed 5,000 Taliban prisoners.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Former U.S. President Donald Trump's administration agreed to an exchange that freed about 5,000 Taliban prisoners.",
     "perturb_type2_True": "Former U.S. President Donald Trump's administration agreed to an exchange that freed about 10,000 Taliban prisoners."
   },
@@ -594,7 +594,7 @@
     "label_original": "true",
     "claim_id": "val_000467",
     "normalized_claim": "Says in the 2016 presidential election, \"I won that one by 42 points -- 42 points -- West Virginia.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says in the 2016 presidential election, \"I won that one by about 40 points -- about 40 points -- West Virginia.\"",
     "perturb_type2_True": "Says in the 2016 presidential election, \"I won that one by about 75 points -- about 80 points -- West Virginia.\""
   },
@@ -609,7 +609,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000471",
     "normalized_claim": "Last year, \"244 suspected terrorists walked into gun shops and attempted to purchase a firearm; 223 were able to get the firearm.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Last year, \"about 250 suspected terrorists walked into gun shops and attempted to purchase a firearm; about 200 were able to get the firearm.\"",
     "perturb_type2_True": "Last year, \"about 100 suspected terrorists walked into gun shops and attempted to purchase a firearm; about 300 were able to get the firearm.\""
   },
@@ -624,7 +624,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000473",
     "normalized_claim": "\"One hundred and ninety-four countries signed the Paris Agreement to control greenhouse gases. Our own voluntary agreement to accomplish the same goal — the Under2 MOU — has 165 signatories, representing a billion people.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"One hundred and ninety-four countries signed the Paris Agreement to control greenhouse gases. Our own voluntary agreement to accomplish the same goal — the Under2 MOU — has about 150 signatories, representing a billion people.\"",
     "perturb_type2_True": "\"One hundred and ninety-four countries signed the Paris Agreement to control greenhouse gases. Our own voluntary agreement to accomplish the same goal — the Under2 MOU — has about 300 signatories, representing a billion people.\""
   },
@@ -639,7 +639,7 @@
     "label_original": "true",
     "claim_id": "val_000474",
     "normalized_claim": "“Some states are only getting 50 tests per day, and the Utah Jazz got 58.”",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "“Some states are only getting about 50 tests per day, and the Utah Jazz got about 60.”",
     "perturb_type2_True": "“Some states are only getting about 75 tests per day, and the Utah Jazz got about 40.”"
   },
@@ -655,7 +655,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000475",
     "normalized_claim": "Says \"if you are shot in the city of Newark, you have over an 80 percent chance that you've been arrested before an average of 10 times.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says \"if you are shot in the city of Newark, you have over an about 80 percent chance that you've been arrested before an average of about 10 times.\"",
     "perturb_type2_True": "Says \"if you are shot in the city of Newark, you have over an about 40 percent chance that you've been arrested before an average of about 20 times.\""
   },
@@ -670,7 +670,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000480",
     "normalized_claim": "\"People show up in the emergency room with a sprained ankle, 25 percent get an opioid prescription.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"People show up in the emergency room with a sprained ankle, about 25 percent get an opioid prescription.\"",
     "perturb_type2_True": "\"People show up in the emergency room with a sprained ankle, about 45 percent get an opioid prescription.\""
   },
@@ -685,7 +685,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000482",
     "normalized_claim": "\"Expanding Medicaid would bring 40,000 jobs to North Carolina.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"Expanding Medicaid would bring about 40,000 jobs to North Carolina.\"",
     "perturb_type2_True": "\"Expanding Medicaid would bring about 75,000 jobs to North Carolina.\""
   },
@@ -701,7 +701,7 @@
     "label_original": "true",
     "claim_id": "val_000487",
     "normalized_claim": "\"In the African-American community today, 68 percent of kids born are born out of wedlock.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"In the African-American community today, about 75 percent of kids born are born out of wedlock.\"",
     "perturb_type2_True": "\"In the African-American community today, about 120 percent of kids born are born out of wedlock.\""
   },
@@ -717,7 +717,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000503",
     "normalized_claim": "\"In exchange for five minutes with Bill Clinton, the government of Qatar was going to give $1,000,000 to the Clinton Foundation.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"In exchange for five minutes with Bill Clinton, the government of Qatar was going to give about $1,000,000 to the Clinton Foundation.\"",
     "perturb_type2_True": "\"In exchange for five minutes with Bill Clinton, the government of Qatar was going to give about $600,000 to the Clinton Foundation.\""
   },
@@ -733,7 +733,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000521",
     "normalized_claim": "Says \"by reducing chronic health care costs in the State of Georgia, we can reduce the $32,800,000,000 lost each year due to lack of productivity and economic costs.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says \"by reducing chronic health care costs in the State of Georgia, we can reduce the about $30,000,000,000 lost each year due to lack of productivity and economic costs.\"",
     "perturb_type2_True": "Says \"by reducing chronic health care costs in the State of Georgia, we can reduce the about $15,000,000,000 lost each year due to lack of productivity and economic costs.\""
   },
@@ -748,7 +748,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000530",
     "normalized_claim": "Agriculture contributes $71,000,000,000 to Georgia’s economy annually, making it the state’s largest industry.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Agriculture contributes about $75,000,000,000 to Georgia’s economy annually, making it the state’s largest industry.",
     "perturb_type2_True": "Agriculture contributes about $120,000,000,000 to Georgia’s economy annually, making it the state’s largest industry."
   },
@@ -764,7 +764,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000535",
     "normalized_claim": "“For every dollar in federal taxes my constituents pay, we get a mere 93 cents back.”",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "“For every dollar in federal taxes my constituents pay, we get about a mere 100 cents back.”",
     "perturb_type2_True": "“For every dollar in federal taxes my constituents pay, we get about a mere 200 cents back.”"
   },
@@ -779,7 +779,7 @@
     "label_original": "true",
     "claim_id": "val_000538",
     "normalized_claim": "\"70 percent of the income tax that the state collects happens to come from Westchester, Nassau, Suffolk and New York City\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"about 70 percent of the income tax that the state collects happens to come from Westchester, Nassau, Suffolk and New York City\"",
     "perturb_type2_True": "\"about 30 percent of the income tax that the state collects happens to come from Westchester, Nassau, Suffolk and New York City\""
   },
@@ -794,7 +794,7 @@
     "label_original": "true",
     "claim_id": "val_000540",
     "normalized_claim": "\"It costs $10,000 a year to keep a child in school; it costs $30,000 a year to keep someone in prison.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"It costs about $10,000 a year to keep a child in school; it costs about $30,000 a year to keep someone in prison.\"",
     "perturb_type2_True": "\"It costs about $15,000 a year to keep a child in school; it costs about $60,000 a year to keep someone in prison.\""
   },
@@ -810,7 +810,7 @@
     "label_original": "true",
     "claim_id": "val_000541",
     "normalized_claim": "Scunthorpe voted 68.68% to leave the EU.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Scunthorpe voted about 75% to leave the EU.",
     "perturb_type2_True": "Scunthorpe voted about 30% to leave the EU."
   },
@@ -825,7 +825,7 @@
     "label_original": "true",
     "claim_id": "val_000558",
     "normalized_claim": "\"Seven years later, (Scott Walker) has not hit his first campaign promise of creating 250,000 jobs.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"Seven years later, (Scott Walker) has not hit his first campaign promise of creating about 250,000 jobs.\"",
     "perturb_type2_True": "\"Seven years later, (Scott Walker) has not hit his first campaign promise of creating about 120,000 jobs.\""
   },
@@ -840,7 +840,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000610",
     "normalized_claim": "On immigration, \"the president said 22 times, 22 times, that he couldn't do what he eventually did.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "On immigration, \"the president said about 20 times, about 20 times, that he couldn't do what he eventually did.\"",
     "perturb_type2_True": "On immigration, \"the president said about 40 times, about 40 times, that he couldn't do what he eventually did.\""
   },
@@ -855,7 +855,7 @@
     "label_original": "True",
     "claim_id": "val_000620",
     "normalized_claim": "A customer closed out his million-dollar account after his bank refused to validate a 50-cent parking ticket.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "A customer closed out his million-dollar account after his bank refused to validate a about 50-cent parking ticket.",
     "perturb_type2_True": "A customer closed out his million-dollar account after his bank refused to validate a about 30-cent parking ticket."
   },
@@ -870,7 +870,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000627",
     "normalized_claim": "\"For every one mile of light-rail track that will be built, 16 miles of new road capacity will be built.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"For every one mile of light-rail track that will be built, about 15 miles of new road capacity will be built.\"",
     "perturb_type2_True": "\"For every one mile of light-rail track that will be built, about 8 miles of new road capacity will be built.\""
   },
@@ -886,7 +886,7 @@
     "label_original": "true",
     "claim_id": "val_000631",
     "normalized_claim": "Says for every dollar the state spent on audits last year, it delivered $64 in cost savings.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says for every dollar the state spent on audits last year, it delivered about $60 in cost savings.",
     "perturb_type2_True": "Says for every dollar the state spent on audits last year, it delivered about $120 in cost savings."
   },
@@ -902,7 +902,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000636",
     "normalized_claim": "\"91% of suspected terrorists who attempted to buy guns in America walked away with the weapon they wanted.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"about 100% of suspected terrorists who attempted to buy guns in America walked away with the weapon they wanted.\"",
     "perturb_type2_True": "\"about 50% of suspected terrorists who attempted to buy guns in America walked away with the weapon they wanted.\""
   },
@@ -918,7 +918,7 @@
     "label_original": "true",
     "claim_id": "val_000664",
     "normalized_claim": "\"With one stroke of his pen, President Bush has denied health insurance to 3,800,000 kids who were due to get it under this bipartisan expansion of the Children's Health Insurance Program.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"With one stroke of his pen, President Bush has denied health insurance to about 4,000,000 kids who were due to get it under this bipartisan expansion of the Children's Health Insurance Program.\"",
     "perturb_type2_True": "\"With one stroke of his pen, President Bush has denied health insurance to about 2,500,000 kids who were due to get it under this bipartisan expansion of the Children's Health Insurance Program.\""
   },
@@ -933,7 +933,7 @@
     "label_original": "true",
     "claim_id": "val_000667",
     "normalized_claim": "Says he \"fought against $3,000,000,000 in cuts to public education since 2003.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says he \"fought against about $3,000,000,000 in cuts to public education since 2003.\"",
     "perturb_type2_True": "Says he \"fought against about $1,200,000,000 in cuts to public education since 2003.\""
   },
@@ -948,7 +948,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000674",
     "normalized_claim": "Gov. Maggie Hassan’s budget proposal \"raises taxes on small businesses and increases taxes and fees by $100,000,000.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Gov. Maggie Hassan’s budget proposal \"raises taxes on small businesses and increases taxes and fees by about $100,000,000.\"",
     "perturb_type2_True": "Gov. Maggie Hassan’s budget proposal \"raises taxes on small businesses and increases taxes and fees by about $150,000,000.\""
   },
@@ -963,7 +963,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000692",
     "normalized_claim": "\"President Trump has lifted the prospect of voters across Vermont, overseeing a 11,742 decline of Vermont residents on food stamps.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"President Trump has lifted the prospect of voters across Vermont, overseeing a about 12,000 decline of Vermont residents on food stamps.\"",
     "perturb_type2_True": "\"President Trump has lifted the prospect of voters across Vermont, overseeing a about 25,000 decline of Vermont residents on food stamps.\""
   },
@@ -979,7 +979,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000702",
     "normalized_claim": "Raising the minimum wage to $10.10 an hour \"will destroy between half a million and 1,000,000 jobs.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Raising the minimum wage to about $10 an hour \"will destroy between half a million and 1,000,000 jobs.\"",
     "perturb_type2_True": "Raising the minimum wage to about $15 an hour \"will destroy between half a million and 1,000,000 jobs.\""
   },
@@ -995,7 +995,7 @@
     "label_original": "True",
     "claim_id": "val_000704",
     "normalized_claim": "Colin Kaepernick made a $25,000 donation to an activist group named after Assata Shakur, who was convicted in the murder of a police officer.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Colin Kaepernick made a about $25,000 donation to an activist group named after Assata Shakur, who was convicted in the murder of a police officer.",
     "perturb_type2_True": "Colin Kaepernick made a about $10,000 donation to an activist group named after Assata Shakur, who was convicted in the murder of a police officer."
   },
@@ -1010,7 +1010,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000720",
     "normalized_claim": "Long-term federal investment in U.S. airports is urgent because \"there was a recent survey of the top airports … in the world, and there was not a single U.S. airport that came in the top 25.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Long-term federal investment in U.S. airports is urgent because \"there was a recent survey of the top airports … in the world, and there was not a single U.S. airport that came in the top about 25.\"",
     "perturb_type2_True": "Long-term federal investment in U.S. airports is urgent because \"there was a recent survey of the top airports … in the world, and there was not a single U.S. airport that came in the top about 40.\""
   },
@@ -1025,7 +1025,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000735",
     "normalized_claim": "According to the U.S. Census Bureau, 71.2 percent of Hispanic registered voters in Texas and over 86 percent of African American registered voters participated in the 2012 elections.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "According to the U.S. Census Bureau, about 75 percent of Hispanic registered voters in Texas and about over 80 percent of African American registered voters participated in the 2012 elections.",
     "perturb_type2_True": "According to the U.S. Census Bureau, about 150 percent of Hispanic registered voters in Texas and about over 30 percent of African American registered voters participated in the 2012 elections."
   },
@@ -1040,7 +1040,7 @@
     "label_original": "true",
     "claim_id": "val_000750",
     "normalized_claim": "\"Over the past five years the federal government has paid out $601,000,000 in retirement and disability benefits to deceased former federal employees.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"Over the past five years the federal government has paid out about $600,000,000 in retirement and disability benefits to deceased former federal employees.\"",
     "perturb_type2_True": "\"Over the past five years the federal government has paid out about $300,000,000 in retirement and disability benefits to deceased former federal employees.\""
   },
@@ -1056,7 +1056,7 @@
     "label_original": "TRUE.",
     "claim_id": "val_000755",
     "normalized_claim": "3.8 crore poor women provided with free LPG connections, target raised to 8 crore.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "About 4 crore poor women provided with free LPG connections, target raised to about 8 crore.",
     "perturb_type2_True": "About 12 crore poor women provided with free LPG connections, target raised to about 10 crore."
   },
@@ -1071,7 +1071,7 @@
     "label_original": "true",
     "claim_id": "val_000769",
     "normalized_claim": "Even \"though men comprise 49% of the population, they hold 80% of the lawmaking power in the Legislature (144 of 181 seats).\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Even \"though men comprise about 50% of the population, they hold about 80% of the lawmaking power in the Legislature (about 150 of about 200 seats).\"",
     "perturb_type2_True": "Even \"though men comprise about 90% of the population, they hold about 50% of the lawmaking power in the Legislature (about 60 of about 120 seats).\""
   },
@@ -1086,7 +1086,7 @@
     "label_original": "true",
     "claim_id": "val_000782",
     "normalized_claim": "“Taxpayers spent $70,000,000 to develop this drug ( remdesivir).\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "“Taxpayers spent about $70,000,000 to develop this drug ( remdesivir).\"",
     "perturb_type2_True": "“Taxpayers spent about $120,000,000 to develop this drug ( remdesivir).\""
   },
@@ -1102,7 +1102,7 @@
     "label_original": "true",
     "claim_id": "val_000801",
     "normalized_claim": "\"When the national debt reaches $15,000,000,000,000, it means that U.S. debt-to-GDP ratio will reach 99.7 percent of our debt and this is $47,900 for every living American.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"When the national debt reaches about $15,000,000,000,000, it means that U.S. debt-to-GDP ratio will reach about 100 percent of our debt and this is about $50,000 for every living American.\"",
     "perturb_type2_True": "\"When the national debt reaches about $25,000,000,000,000, it means that U.S. debt-to-GDP ratio will reach about 40 percent of our debt and this is about $25,000 for every living American.\""
   },
@@ -1118,7 +1118,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000815",
     "normalized_claim": "$6,000,000,000 water bond program voters passed in 2011 \"has yet to be tapped.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "About $6,000,000,000 water bond program voters passed in 2011 \"has yet to be tapped.\"",
     "perturb_type2_True": "About $10,000,000,000 water bond program voters passed in 2011 \"has yet to be tapped.\""
   },
@@ -1133,7 +1133,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000861",
     "normalized_claim": "\"We've cut taxes 50 times and look what has happened to our revenues. They've grown.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"We've cut taxes about 50 times and look what has happened to our revenues. They've grown.\"",
     "perturb_type2_True": "\"We've cut taxes about 20 times and look what has happened to our revenues. They've grown.\""
   },
@@ -1148,7 +1148,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000871",
     "normalized_claim": "\"A small business in my district\" needed \"31 different permits and fees just to be able to expand.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"A small business in my district\" needed \"about 30 different permits and fees just to be able to expand.\"",
     "perturb_type2_True": "\"A small business in my district\" needed \"about 20 different permits and fees just to be able to expand.\""
   },
@@ -1163,7 +1163,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000896",
     "normalized_claim": "\"When I became mayor of Los Angeles, we had a 44 percent (high school) graduation rate. I said that was unacceptable. I challenged that notion. I said the mayor needs to be involved with our schools. We need to partner together. As I left, after a number of reforms, we grew our graduation rate from 44 percent to 72.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"When I became mayor of Los Angeles, we had a about 40 percent (high school) graduation rate. I said that was unacceptable. I challenged that notion. I said the mayor needs to be involved with our schools. We need to partner together. As I left, after a number of reforms, we grew our graduation rate from about 40 percent to about 75.\"",
     "perturb_type2_True": "\"When I became mayor of Los Angeles, we had a about 60 percent (high school) graduation rate. I said that was unacceptable. I challenged that notion. I said the mayor needs to be involved with our schools. We need to partner together. As I left, after a number of reforms, we grew our graduation rate from about 75 percent to about 45.\""
   },
@@ -1179,7 +1179,7 @@
     "label_original": "true",
     "claim_id": "val_000906",
     "normalized_claim": "\"One in 10 babies born in this country is born in Texas.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"One in about 10 babies born in this country is born in Texas.\"",
     "perturb_type2_True": "\"One in about 6 babies born in this country is born in Texas.\""
   },
@@ -1195,7 +1195,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000920",
     "normalized_claim": "Says personal-injury trial lawyers \"have provided over 80 percent of the funding for the Texas Democratic Party for over a decade.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says personal-injury trial lawyers \"have provided about over 80 percent of the funding for the Texas Democratic Party for over a decade.\"",
     "perturb_type2_True": "Says personal-injury trial lawyers \"have provided about over 50 percent of the funding for the Texas Democratic Party for over a decade.\""
   },
@@ -1210,7 +1210,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000932",
     "normalized_claim": "Says Wisconsin measures have \"prevented the death of at least 300 Wisconsinites, and perhaps as many as 1,400 lives.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says Wisconsin measures have \"prevented the death of about at least 300 Wisconsinites, and perhaps about as many as 1,500 lives.\"",
     "perturb_type2_True": "Says Wisconsin measures have \"prevented the death of about at least 200 Wisconsinites, and perhaps about as many as 3,000 lives.\""
   },
@@ -1225,7 +1225,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000955",
     "normalized_claim": "\"When the Constitution was written, (only) 20 to 25 percent of the people in the country could vote.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"When the Constitution was written, (about only) 20 to 25 percent of the people in the country could vote.\"",
     "perturb_type2_True": "\"When the Constitution was written, (about only) 40 to 25 percent of the people in the country could vote.\""
   },
@@ -1241,7 +1241,7 @@
     "label_original": "true",
     "claim_id": "val_000982",
     "normalized_claim": "\"I saved the taxpayers $2-billion on a bogus Air Force Boeing tanker deal where people went to jail.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"I saved the taxpayers about $2-billion on a bogus Air Force Boeing tanker deal where people went to jail.\"",
     "perturb_type2_True": "\"I saved the taxpayers about $12-billion on a bogus Air Force Boeing tanker deal where people went to jail.\""
   },
@@ -1256,7 +1256,7 @@
     "label_original": "true",
     "claim_id": "val_000988",
     "normalized_claim": "In COVID-19 crisis, “only 20% of African Americans had jobs where they could work from home.”",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "In COVID-19 crisis, “about only 20% of African Americans had jobs where they could work from home.”",
     "perturb_type2_True": "In COVID-19 crisis, “about only 10% of African Americans had jobs where they could work from home.”"
   },
@@ -1271,7 +1271,7 @@
     "label_original": "true",
     "claim_id": "val_000989",
     "normalized_claim": "There is \"a situation in this country where you're nearing 50 percent of people who don't even pay income taxes.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "There is \"a situation in this country where you're nearing about 50 percent of people who don't even pay income taxes.\"",
     "perturb_type2_True": "There is \"a situation in this country where you're nearing about 30 percent of people who don't even pay income taxes.\""
   },
@@ -1286,7 +1286,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000992",
     "normalized_claim": "\"The chances of being killed by a refugee committing a terrorist act is 1 in 3,600,000,000.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"The chances of being killed by a refugee committing a terrorist act is about 1 in about 4,000,000,000.\"",
     "perturb_type2_True": "\"The chances of being killed by a refugee committing a terrorist act is about 25 in about 6,000,000,000.\""
   },
@@ -1301,7 +1301,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_000997",
     "normalized_claim": "\"55 percent of the people who cast a provisional ballot (in Florida) in the last presidential election -- their vote did not count.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"about 55 percent of the people who cast a provisional ballot (in Florida) in the last presidential election -- their vote did not count.\"",
     "perturb_type2_True": "\"about 80 percent of the people who cast a provisional ballot (in Florida) in the last presidential election -- their vote did not count.\""
   },
@@ -1316,7 +1316,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001019",
     "normalized_claim": "Says Thom Tillis voted to support Trump’s emergency declaration to fund the border wall even though it would \"raid $80,000,000 from North Carolina.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says Thom Tillis voted to support Trump’s emergency declaration to fund the border wall even though it would \"raid about $80,000,000 from North Carolina.\"",
     "perturb_type2_True": "Says Thom Tillis voted to support Trump’s emergency declaration to fund the border wall even though it would \"raid about $50,000,000 from North Carolina.\""
   },
@@ -1332,7 +1332,7 @@
     "label_original": "true",
     "claim_id": "val_001039",
     "normalized_claim": "Congress has 11 percent approval ratings, yet 96.4 percent of incumbent lawmakers were re-elected in 2014.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Congress has about 12 percent approval ratings, yet about 100 percent of incumbent lawmakers were re-elected in 2014.",
     "perturb_type2_True": "Congress has about 6 percent approval ratings, yet about 150 percent of incumbent lawmakers were re-elected in 2014."
   },
@@ -1348,7 +1348,7 @@
     "label_original": "true",
     "claim_id": "val_001044",
     "normalized_claim": "House Speaker Dean Cannon says that freshmen lawmakers account for one-third of the 120-member House, and that two-thirds of the chamber have two years or less experience.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "House Speaker Dean Cannon says that freshmen lawmakers account for one-third of the about 120-member House, and that two-thirds of the chamber have two years or less experience.",
     "perturb_type2_True": "House Speaker Dean Cannon says that freshmen lawmakers account for one-third of the about 200-member House, and that two-thirds of the chamber have two years or less experience."
   },
@@ -1363,7 +1363,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001046",
     "normalized_claim": "President Trump’s tariffs are \"taking $1,400,000,000 out of working people’s pockets every month.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "President Trump’s tariffs are \"taking about $1,500,000,000 out of working people’s pockets every month.\"",
     "perturb_type2_True": "President Trump’s tariffs are \"taking about $600,000,000 out of working people’s pockets every month.\""
   },
@@ -1379,7 +1379,7 @@
     "label_original": "true",
     "claim_id": "val_001075",
     "normalized_claim": "\"We now consume at the federal level 25 percent of the gross domestic product. Historically we were at 20 percent. So we've taken 5 percent away from the private sector.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"We now consume at the federal level about 25 percent of the gross domestic product. Historically we were at about 20 percent. So we've taken about 5 percent away from the private sector.\"",
     "perturb_type2_True": "\"We now consume at the federal level about 50 percent of the gross domestic product. Historically we were at about 10 percent. So we've taken about 25 percent away from the private sector.\""
   },
@@ -1394,7 +1394,7 @@
     "label_original": "true",
     "claim_id": "val_001087",
     "normalized_claim": "\"The legislature was never given the opportunity to debate or vote on loaning $75,000,000 to 38 Studios.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"The legislature was never given the opportunity to debate or vote on loaning about $75,000,000 to 38 Studios.\"",
     "perturb_type2_True": "\"The legislature was never given the opportunity to debate or vote on loaning about $150,000,000 to 38 Studios.\""
   },
@@ -1409,7 +1409,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001095",
     "normalized_claim": "Says Romney called Russia our No. 1 enemy.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says Romney called Russia our No. About 1 enemy.",
     "perturb_type2_True": "Says Romney called Russia our No. About 20 enemy."
   },
@@ -1425,7 +1425,7 @@
     "label_original": "true",
     "claim_id": "val_001097",
     "normalized_claim": "\"60 percent of all Americans do not want to see Planned Parenthood defunded.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"about 60 percent of all Americans do not want to see Planned Parenthood defunded.\"",
     "perturb_type2_True": "\"about 90 percent of all Americans do not want to see Planned Parenthood defunded.\""
   },
@@ -1440,7 +1440,7 @@
     "label_original": "true",
     "claim_id": "val_001102",
     "normalized_claim": "\"When the City and the Fairmount Park Conservancy invested $5,000,000 in Hunting Park, crime went down 89 percent within a half mile radius of the park over the next three years.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"When the City and the Fairmount Park Conservancy invested about $5,000,000 in Hunting Park, crime went down about 80 percent within a half mile radius of the park over the next three years.\"",
     "perturb_type2_True": "\"When the City and the Fairmount Park Conservancy invested about $2,500,000 in Hunting Park, crime went down about 150 percent within a half mile radius of the park over the next three years.\""
   },
@@ -1455,7 +1455,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001117",
     "normalized_claim": "Says Texas has \"11 different felonies you can commit with an oyster.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says Texas has \"about 12 different felonies you can commit with an oyster.\"",
     "perturb_type2_True": "Says Texas has \"about 20 different felonies you can commit with an oyster.\""
   },
@@ -1471,7 +1471,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001121",
     "normalized_claim": "\"They say teachers only make on averagein New Jersey 60,000 dollars a year.They only work 180 days.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"They say teachers only make on averagein New Jersey about 60,000 dollars a year.They only work 180 days.\"",
     "perturb_type2_True": "\"They say teachers only make on averagein New Jersey about 30,000 dollars a year.They only work 180 days.\""
   },
@@ -1486,7 +1486,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001130",
     "normalized_claim": "Says Gov. Rick Scott returned \"$1,000,000 in federal funding that would have helped the state cover the cost of overseeing insurance rates under the new health care law.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says Gov. Rick Scott returned \"about $1,000,000 in federal funding that would have helped the state cover the cost of overseeing insurance rates under the new health care law.\"",
     "perturb_type2_True": "Says Gov. Rick Scott returned \"about $400,000 in federal funding that would have helped the state cover the cost of overseeing insurance rates under the new health care law.\""
   },
@@ -1501,7 +1501,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001135",
     "normalized_claim": "\"Wisconsin lost over 600 farms last year & our farmers can't afford the #TrumpShutdown.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"Wisconsin lost over about 600 farms last year & our farmers can't afford the #TrumpShutdown.\"",
     "perturb_type2_True": "\"Wisconsin lost over about 1000 farms last year & our farmers can't afford the #TrumpShutdown.\""
   },
@@ -1516,7 +1516,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001158",
     "normalized_claim": "All 28 members of NATO have \"pledged to spend at least 2 percent of their economy on defense. But only three countries do -- Britain, Greece and us.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "All about 30 members of NATO have \"pledged to spend about at least 2 percent of their economy on defense. But only three countries do -- Britain, Greece and us.\"",
     "perturb_type2_True": "All about 50 members of NATO have \"pledged to spend about at least 50 percent of their economy on defense. But only three countries do -- Britain, Greece and us.\""
   },
@@ -1531,7 +1531,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001163",
     "normalized_claim": "\"There are 4.7 percent of Virginians who are minimum wage earners who are over 25 years of age working full-time and trying to raise a family.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"There are about 5 percent of Virginians who are minimum wage earners who are over 25 years of age working full-time and trying to raise a family.\"",
     "perturb_type2_True": "\"There are about 50 percent of Virginians who are minimum wage earners who are over 25 years of age working full-time and trying to raise a family.\""
   },
@@ -1547,7 +1547,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001177",
     "normalized_claim": "“Teachers can only deduct up to $250 for school supplies on their taxes, but billionaires can write off the entire cost of a private jet.”",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "“Teachers can only deduct about up to $250 for school supplies on their taxes, but billionaires can write off the entire cost of a private jet.”",
     "perturb_type2_True": "“Teachers can only deduct about up to $400 for school supplies on their taxes, but billionaires can write off the entire cost of a private jet.”"
   },
@@ -1562,7 +1562,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001199",
     "normalized_claim": "Says Bill O’Reilly spoke 40 percent of the words in an interview with President Barack Obama.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says Bill O’Reilly spoke about 40 percent of the words in an interview with President Barack Obama.",
     "perturb_type2_True": "Says Bill O’Reilly spoke about 80 percent of the words in an interview with President Barack Obama."
   },
@@ -1577,7 +1577,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001247",
     "normalized_claim": "\"Pennsylvania has lost 35 percent of its manufacturing jobs since 2001\" and \"Harrisburg has lost 40 percent of its manufacturing jobs since 2001.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"Pennsylvania has lost about 35 percent of its manufacturing jobs since 2001\" and \"Harrisburg has lost about 40 percent of its manufacturing jobs since 2001.\"",
     "perturb_type2_True": "\"Pennsylvania has lost about 70 percent of its manufacturing jobs since 2001\" and \"Harrisburg has lost about 20 percent of its manufacturing jobs since 2001.\""
   },
@@ -1593,7 +1593,7 @@
     "label_original": "true",
     "claim_id": "val_001278",
     "normalized_claim": "West Virginia is poised to “receive $25M for 160 orphaned well clean-up projects across the state.”",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "West Virginia is poised to “receive about $25M for about 150 orphaned well clean-up projects across the state.”",
     "perturb_type2_True": "West Virginia is poised to “receive about $45M for about 300 orphaned well clean-up projects across the state.”"
   },
@@ -1608,7 +1608,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001287",
     "normalized_claim": "Says Jon Corzine \"gave away 14 percent raises over 4 years and he stood on the front steps of the Capitol at a public-sector union rally and said, 'I will fight to get you a great contract.’\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says Jon Corzine \"gave away about 15 percent raises over 4 years and he stood on the front steps of the Capitol at a public-sector union rally and said, 'I will fight to get you a great contract.’\"",
     "perturb_type2_True": "Says Jon Corzine \"gave away about 30 percent raises over 4 years and he stood on the front steps of the Capitol at a public-sector union rally and said, 'I will fight to get you a great contract.’\""
   },
@@ -1624,7 +1624,7 @@
     "label_original": "correct",
     "claim_id": "val_001290",
     "normalized_claim": "“To curb water wastage, the Department of Water and Sanitation has begun its programme of training 15,000 young people as artisans.”",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "“To curb water wastage, the Department of Water and Sanitation has begun its programme of training about 15,000 young people as artisans.”",
     "perturb_type2_True": "“To curb water wastage, the Department of Water and Sanitation has begun its programme of training about 7,500 young people as artisans.”"
   },
@@ -1639,7 +1639,7 @@
     "label_original": "true",
     "claim_id": "val_001291",
     "normalized_claim": "\"When we say ‘one vote matters,’ it’s not just a saying – it has proven true 141 times in #Ohio over the last five years.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"When we say ‘one vote matters,’ it’s not just a saying – it has proven true about 150 times in #Ohio over the last five years.\"",
     "perturb_type2_True": "\"When we say ‘one vote matters,’ it’s not just a saying – it has proven true about 300 times in #Ohio over the last five years.\""
   },
@@ -1654,7 +1654,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001304",
     "normalized_claim": "\"By spring 2014, parents of 60,000 students in New York state had refused to let them take the Common Core Tests.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"By spring 2014, parents of about 60,000 students in New York state had refused to let them take the Common Core Tests.\"",
     "perturb_type2_True": "\"By spring 2014, parents of about 25,000 students in New York state had refused to let them take the Common Core Tests.\""
   },
@@ -1670,7 +1670,7 @@
     "label_original": "True",
     "claim_id": "val_001327",
     "normalized_claim": "Joe Biden Claims U.S. Went From Producing 40% Of World’s Microchips To 10%",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Joe Biden Claims U.S. Went From Producing about 40% Of World’s Microchips To about 10%",
     "perturb_type2_True": "Joe Biden Claims U.S. Went From Producing about 75% Of World’s Microchips To about 6%"
   },
@@ -1686,7 +1686,7 @@
     "label_original": "correct",
     "claim_id": "val_001332",
     "normalized_claim": "558 people were killed by the police in 2018, while 201 people died in police custody",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "About 600 people were killed by the police in 2018, while about 200 people died in police custody",
     "perturb_type2_True": "About 1200 people were killed by the police in 2018, while about 100 people died in police custody"
   },
@@ -1702,7 +1702,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001349",
     "normalized_claim": "Slot machines in Miami-Dade and Broward counties have generated 20 percent of the promised $500,000,000 per year for schools.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Slot machines in Miami-Dade and Broward counties have generated about 20 percent of the promised about $500,000,000 per year for schools.",
     "perturb_type2_True": "Slot machines in Miami-Dade and Broward counties have generated about 8 percent of the promised about $750,000,000 per year for schools."
   },
@@ -1717,7 +1717,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001351",
     "normalized_claim": "\"As bank president, Alex Sink eliminated thousands of Florida jobs while taking over $8,000,000 in salary and bonuses.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"As bank president, Alex Sink eliminated thousands of Florida jobs while taking over about $8,000,000 in salary and bonuses.\"",
     "perturb_type2_True": "\"As bank president, Alex Sink eliminated thousands of Florida jobs while taking over about $15,000,000 in salary and bonuses.\""
   },
@@ -1733,7 +1733,7 @@
     "label_original": "Mostly True",
     "claim_id": "val_001355",
     "normalized_claim": "Caravan migrants demanded $50,000 payments from the U.S. in order to go home.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Caravan migrants demanded about $50,000 payments from the U.S. in order to go home.",
     "perturb_type2_True": "Caravan migrants demanded about $90,000 payments from the U.S. in order to go home."
   },
@@ -1748,7 +1748,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001368",
     "normalized_claim": "Says President Donald Trump as a candidate mentioned WikiLeaks \"over 160 times in speeches\" in the last month of the campaign.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says President Donald Trump as a candidate mentioned WikiLeaks \"over about 150 times in speeches\" in the last month of the campaign.",
     "perturb_type2_True": "Says President Donald Trump as a candidate mentioned WikiLeaks \"over about 90 times in speeches\" in the last month of the campaign."
   },
@@ -1763,7 +1763,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001375",
     "normalized_claim": "\"While fat-cat bureaucrats at the Department of Education are getting paid an average salary of $102,000 a year, teachers in Georgia are getting paid half of that.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"While fat-cat bureaucrats at the Department of Education are getting paid an average salary of about $100,000 a year, teachers in Georgia are getting paid half of that.\"",
     "perturb_type2_True": "\"While fat-cat bureaucrats at the Department of Education are getting paid an average salary of about $200,000 a year, teachers in Georgia are getting paid half of that.\""
   },
@@ -1779,7 +1779,7 @@
     "label_original": "Mostly True",
     "claim_id": "val_001388",
     "normalized_claim": "Some 700-plus undocumented migrants, including sex offenders, were apprehended by the U.S. Border Patrol overnight.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "About Some 700-plus undocumented migrants, including sex offenders, were apprehended by the U.S. Border Patrol overnight.",
     "perturb_type2_True": "About Some 350-plus undocumented migrants, including sex offenders, were apprehended by the U.S. Border Patrol overnight."
   },
@@ -1794,7 +1794,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001395",
     "normalized_claim": "Says \"Every year air pollution protections are delayed, another 34,000 people will die prematurely.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says \"Every year air pollution protections are delayed, another about 30,000 people will die prematurely.\"",
     "perturb_type2_True": "Says \"Every year air pollution protections are delayed, another about 45,000 people will die prematurely.\""
   },
@@ -1809,7 +1809,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001409",
     "normalized_claim": "\"McCain lobbied for (a) $10-million pork project honoring conservative justice.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"McCain lobbied for (a) about $10-million pork project honoring conservative justice.\"",
     "perturb_type2_True": "\"McCain lobbied for (a) about $20-million pork project honoring conservative justice.\""
   },
@@ -1824,7 +1824,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001418",
     "normalized_claim": "Says 21,000,000 people \"still suffer slavery today.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says about 20,000,000 people \"still suffer slavery today.\"",
     "perturb_type2_True": "Says about 30,000,000 people \"still suffer slavery today.\""
   },
@@ -1839,7 +1839,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001420",
     "normalized_claim": "Says Wisconsin payday loans have a 574% average annual interest rate, \"exploitative lending that keeps Americans trapped in debt\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says Wisconsin payday loans have a about 600% average annual interest rate, \"exploitative lending that keeps Americans trapped in debt\"",
     "perturb_type2_True": "Says Wisconsin payday loans have a about 300% average annual interest rate, \"exploitative lending that keeps Americans trapped in debt\""
   },
@@ -1855,7 +1855,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001432",
     "normalized_claim": "Georgia is one of seven states to lose jobs in 2011 and has lost 8,200 jobs so far.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Georgia is one of seven states to lose jobs in 2011 and has lost about 8,000 jobs so far.",
     "perturb_type2_True": "Georgia is one of seven states to lose jobs in 2011 and has lost about 12,000 jobs so far."
   },
@@ -1870,7 +1870,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001434",
     "normalized_claim": "\"It turns out that Texas has an $18,000,000,000 budget shortfall and can't afford its new science textbooks.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"It turns out that Texas has an about $20,000,000,000 budget shortfall and can't afford its new science textbooks.\"",
     "perturb_type2_True": "\"It turns out that Texas has an about $8,000,000,000 budget shortfall and can't afford its new science textbooks.\""
   },
@@ -1885,7 +1885,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001447",
     "normalized_claim": "\"215 members of Congress just voted to let your ISP spy on what type of underwear you buy and sell that data to advertisers.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"about 200 members of Congress just voted to let your ISP spy on what type of underwear you buy and sell that data to advertisers.\"",
     "perturb_type2_True": "\"about 400 members of Congress just voted to let your ISP spy on what type of underwear you buy and sell that data to advertisers.\""
   },
@@ -1900,7 +1900,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001448",
     "normalized_claim": "The Seminole gambling compact offers \"$3,000,000,000 in guaranteed revenue, the largest share for any state in history.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "The Seminole gambling compact offers \"about $3,000,000,000 in guaranteed revenue, the largest share for any state in history.\"",
     "perturb_type2_True": "The Seminole gambling compact offers \"about $4,500,000,000 in guaranteed revenue, the largest share for any state in history.\""
   },
@@ -1915,7 +1915,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001456",
     "normalized_claim": "$50,000. That's what every child owes today because Washington politicians have run up a huge spending tab and left our kids the bill.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "About $50,000. That's what every child owes today because Washington politicians have run up a huge spending tab and left our kids the bill.\"",
     "perturb_type2_True": "About $25,000. That's what every child owes today because Washington politicians have run up a huge spending tab and left our kids the bill.\""
   },
@@ -1931,7 +1931,7 @@
     "label_original": "True",
     "claim_id": "val_001466",
     "normalized_claim": "A Florida car dealer quoted $30,000 to replace the battery on a Chevrolet Volt",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "A Florida car dealer quoted about $30,000 to replace the battery on a Chevrolet Volt",
     "perturb_type2_True": "A Florida car dealer quoted about $12,000 to replace the battery on a Chevrolet Volt"
   },
@@ -1947,7 +1947,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001480",
     "normalized_claim": "\"80 percent of the (individual mandate) tax falls on those who make $50,000 a year or less.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"about 80 percent of the (individual mandate) tax falls on those who make about $50,000 a year or less.\"",
     "perturb_type2_True": "\"about 40 percent of the (individual mandate) tax falls on those who make about $25,000 a year or less.\""
   },
@@ -1962,7 +1962,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001482",
     "normalized_claim": "\"Right now in Ohio 200,000 people are getting opioid treatment because they have insurance under the Affordable Care Act.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"Right now in Ohio about 200,000 people are getting opioid treatment because they have insurance under the Affordable Care Act.\"",
     "perturb_type2_True": "\"Right now in Ohio about 400,000 people are getting opioid treatment because they have insurance under the Affordable Care Act.\""
   },
@@ -1977,7 +1977,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001491",
     "normalized_claim": "\"According to Pew Research, 99 percent of the people in Afghanistan support oppressive Sharia law.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"According to Pew Research, about 100 percent of the people in Afghanistan support oppressive Sharia law.\"",
     "perturb_type2_True": "\"According to Pew Research, about 60 percent of the people in Afghanistan support oppressive Sharia law.\""
   },
@@ -1993,7 +1993,7 @@
     "label_original": "True",
     "claim_id": "val_001507",
     "normalized_claim": "Vaping company Dr. Dabbler offered track star Sha'Carri Richardson $250,000 to test its products.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Vaping company Dr. Dabbler offered track star Sha'Carri Richardson about $250,000 to test its products.",
     "perturb_type2_True": "Vaping company Dr. Dabbler offered track star Sha'Carri Richardson about $400,000 to test its products."
   },
@@ -2008,7 +2008,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001586",
     "normalized_claim": "\"Since Barack Obama became president of the United States, 95 percent of economic gains have been made by the richest 1 percent.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"Since Barack Obama became president of the United States, about 95 percent of economic gains have been made by the richest about 1 percent.\"",
     "perturb_type2_True": "\"Since Barack Obama became president of the United States, about 150 percent of economic gains have been made by the richest about 10 percent.\""
   },
@@ -2023,7 +2023,7 @@
     "label_original": "true",
     "claim_id": "val_001611",
     "normalized_claim": "AIG \"said they were giving $57,000,000 (in retention payments) to people who were being terminated.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "AIG \"said they were giving about $60,000,000 (in retention payments) to people who were being terminated.\"",
     "perturb_type2_True": "AIG \"said they were giving about $100,000,000 (in retention payments) to people who were being terminated.\""
   },
@@ -2039,7 +2039,7 @@
     "label_original": "TRUE",
     "claim_id": "val_001615",
     "normalized_claim": "There were 5 national waterways before 2014. There are 106 national waterways since 2014.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "There were about 5 national waterways before 2014. There are about 100 national waterways since 2014.",
     "perturb_type2_True": "There were about 10 national waterways before 2014. There are about 200 national waterways since 2014."
   },
@@ -2054,7 +2054,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001624",
     "normalized_claim": "\"Of the topfive cities for staged automobile accidents, three are in Florida. … We rank No. 1 in the country in staged auto accidents.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"Of the topfive cities for staged automobile accidents, three are in Florida. … We rank No. About 1 in the country in staged auto accidents.\"",
     "perturb_type2_True": "\"Of the topfive cities for staged automobile accidents, three are in Florida. … We rank No. About 12 in the country in staged auto accidents.\""
   },
@@ -2070,7 +2070,7 @@
     "label_original": "TRUE",
     "claim_id": "val_001630",
     "normalized_claim": "For building innovative skills 2,400 Atal tinkering labs sanctioned in schools at 20 lakh rupees each.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "For building innovative skills about 2,500 Atal tinkering labs sanctioned in schools at about 20 lakh rupees each.",
     "perturb_type2_True": "For building innovative skills about 4,500 Atal tinkering labs sanctioned in schools at about 12 lakh rupees each."
   },
@@ -2085,7 +2085,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001633",
     "normalized_claim": "\"We are $20,000,000,000,000 in debt. The Congressional Budget Office projects an additional $129,000,000,000,000 of accumulated deficits over the next 30 years.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"We are about $20,000,000,000,000 in debt. The Congressional Budget Office projects about an additional $120,000,000,000,000 of accumulated deficits over the next 30 years.\"",
     "perturb_type2_True": "\"We are about $10,000,000,000,000 in debt. The Congressional Budget Office projects about an additional $60,000,000,000,000 of accumulated deficits over the next 30 years.\""
   },
@@ -2101,7 +2101,7 @@
     "label_original": "true",
     "claim_id": "val_001643",
     "normalized_claim": "\"60 percent of the jobs lost in the 2008 recession were living-wage jobs. Of the jobs we’ve gotten back, only 40 percent are living-wage.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"about 60 percent of the jobs lost in the 2008 recession were living-wage jobs. Of the jobs we’ve gotten back, about only 40 percent are living-wage.\"",
     "perturb_type2_True": "\"about 90 percent of the jobs lost in the 2008 recession were living-wage jobs. Of the jobs we’ve gotten back, about only 80 percent are living-wage.\""
   },
@@ -2117,7 +2117,7 @@
     "label_original": "true",
     "claim_id": "val_001671",
     "normalized_claim": "Says 18 states and the District of Columbia have voted Democratic in six consecutive presidential elections.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says about 20 states and the District of Columbia have voted Democratic in six consecutive presidential elections.",
     "perturb_type2_True": "Says about 8 states and the District of Columbia have voted Democratic in six consecutive presidential elections."
   },
@@ -2133,7 +2133,7 @@
     "label_original": "correct",
     "claim_id": "val_001690",
     "normalized_claim": "We have an average of 400,000 cases being filed in our courts every year",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "We have an average of about 400,000 cases being filed in our courts every year",
     "perturb_type2_True": "We have an average of about 800,000 cases being filed in our courts every year"
   },
@@ -2149,7 +2149,7 @@
     "label_original": "True",
     "claim_id": "val_001707",
     "normalized_claim": "In 2018, White House Press Secretary Sarah Huckabee Sanders was listed as one of the 10 \"most admired\" women in the United States.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "In 2018, White House Press Secretary Sarah Huckabee Sanders was listed as one of the about 10 \"most admired\" women in the United States.",
     "perturb_type2_True": "In 2018, White House Press Secretary Sarah Huckabee Sanders was listed as one of the about 5 \"most admired\" women in the United States."
   },
@@ -2164,7 +2164,7 @@
     "label_original": "true",
     "claim_id": "val_001710",
     "normalized_claim": "\"Our pension system is the only one in the country that’s 100 percent funded.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"Our pension system is the only one in the country that’s about 100 percent funded.\"",
     "perturb_type2_True": "\"Our pension system is the only one in the country that’s about 60 percent funded.\""
   },
@@ -2179,7 +2179,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001741",
     "normalized_claim": "Says U.S. Senate candidate Tammy Baldwin \"proposed a $3,900,000,000,000 tax increase -- a tax increase so extreme\" that \"even Nancy Pelosi voted against it.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says U.S. Senate candidate Tammy Baldwin \"proposed a about $4,000,000,000,000 tax increase -- a tax increase so extreme\" that \"even Nancy Pelosi voted against it.\"",
     "perturb_type2_True": "Says U.S. Senate candidate Tammy Baldwin \"proposed a about $1,500,000,000,000 tax increase -- a tax increase so extreme\" that \"even Nancy Pelosi voted against it.\""
   },
@@ -2194,7 +2194,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001762",
     "normalized_claim": "Says Rep. Bruce Braley, D-Iowa, missed \"79 percent of veterans affairs committee hearings.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says Rep. Bruce Braley, D-Iowa, missed \"about 80 percent of veterans affairs committee hearings.\"",
     "perturb_type2_True": "Says Rep. Bruce Braley, D-Iowa, missed \"about 150 percent of veterans affairs committee hearings.\""
   },
@@ -2210,7 +2210,7 @@
     "label_original": "correct",
     "claim_id": "val_001763",
     "normalized_claim": "\"[The DA] has brought down the rate of mother to child HIV transmission to just 1.8%, the lowest in the country.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"[The DA] has brought down the rate of mother to child HIV transmission to about just 2%, the lowest in the country.\"",
     "perturb_type2_True": "\"[The DA] has brought down the rate of mother to child HIV transmission to about just 20%, the lowest in the country.\""
   },
@@ -2226,7 +2226,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001782",
     "normalized_claim": "\"The proudest accomplishment (of my tenure) was leaving the state with a $1,200,000,000 surplus, which was the largest we’d ever had, and getting spending under control and a balanced budget.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"The proudest accomplishment (of my tenure) was leaving the state with a about $1,200,000,000 surplus, which was the largest we’d ever had, and getting spending under control and a balanced budget.\"",
     "perturb_type2_True": "\"The proudest accomplishment (of my tenure) was leaving the state with a about $750,000,000 surplus, which was the largest we’d ever had, and getting spending under control and a balanced budget.\""
   },
@@ -2241,7 +2241,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001800",
     "normalized_claim": "\"When Deborah took office, the (Sellwood Bridge) project had languished for years, with only $11,000,000 in funds. With her leadership the remaining funding was secured that got the project moving forward.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"When Deborah took office, the (Sellwood Bridge) project had languished for years, with about only $12,000,000 in funds. With her leadership the remaining funding was secured that got the project moving forward.\"",
     "perturb_type2_True": "\"When Deborah took office, the (Sellwood Bridge) project had languished for years, with about only $20,000,000 in funds. With her leadership the remaining funding was secured that got the project moving forward.\""
   },
@@ -2256,7 +2256,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001828",
     "normalized_claim": "\"I delivered to you a budget that ... cuts taxes by $2,000,000,000.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"I delivered to you a budget that ... cuts taxes by about $2,000,000,000.\"",
     "perturb_type2_True": "\"I delivered to you a budget that ... cuts taxes by about $800,000,000.\""
   },
@@ -2272,7 +2272,7 @@
     "label_original": "correct",
     "claim_id": "val_001839",
     "normalized_claim": "“30,000,000 South Africans have to make ends meet with less [than] R1,000 a month.”",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "“about 30,000,000 South Africans have to make ends meet with less [than] R1,000 a month.”",
     "perturb_type2_True": "“about 15,000,000 South Africans have to make ends meet with less [than] R1,000 a month.”"
   },
@@ -2288,7 +2288,7 @@
     "label_original": "correct",
     "claim_id": "val_001848",
     "normalized_claim": "“At 29.1%, the Western Cape continues to have the lowest expanded unemployment rate in South Africa ...”",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "“At about 30%, the Western Cape continues to have the lowest expanded unemployment rate in South Africa ...”",
     "perturb_type2_True": "“At about 45%, the Western Cape continues to have the lowest expanded unemployment rate in South Africa ...”"
   },
@@ -2304,7 +2304,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001857",
     "normalized_claim": "\"Over 80 percent of the people want the shot to vote\" on whether to approve same-sex marriage, according to polls.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"about Over 80 percent of the people want the shot to vote\" on whether to approve same-sex marriage, according to polls.",
     "perturb_type2_True": "\"about Over 50 percent of the people want the shot to vote\" on whether to approve same-sex marriage, according to polls."
   },
@@ -2319,7 +2319,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001859",
     "normalized_claim": "Dave Brat \"worked on Democrat Gov. Tim Kaine’s Council of Economic Advisors while Kaine tried to raise our taxes by over $1,000,000,000.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Dave Brat \"worked on Democrat Gov. Tim Kaine’s Council of Economic Advisors while Kaine tried to raise our taxes by about over $1,000,000,000.\"",
     "perturb_type2_True": "Dave Brat \"worked on Democrat Gov. Tim Kaine’s Council of Economic Advisors while Kaine tried to raise our taxes by about over $400,000,000.\""
   },
@@ -2335,7 +2335,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001869",
     "normalized_claim": "Says Barack Obama \"is the first president in modern history not to have a single year of 3 percent growth.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says Barack Obama \"is the first president in modern history not to have a single year of about 3 percent growth.\"",
     "perturb_type2_True": "Says Barack Obama \"is the first president in modern history not to have a single year of about 20 percent growth.\""
   },
@@ -2351,7 +2351,7 @@
     "label_original": "true",
     "claim_id": "val_001890",
     "normalized_claim": "Those earning under £34,000 are not affected by the National Insurance (NI) rise.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Those earning about under £30,000 are not affected by the National Insurance (NI) rise.",
     "perturb_type2_True": "Those earning about under £45,000 are not affected by the National Insurance (NI) rise."
   },
@@ -2366,7 +2366,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001911",
     "normalized_claim": "Says Virginia House Republicans are sacrificing $5,000,000 a day in U.S. funds by refusing to expand Medicaid.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says Virginia House Republicans are sacrificing about $5,000,000 a day in U.S. funds by refusing to expand Medicaid.",
     "perturb_type2_True": "Says Virginia House Republicans are sacrificing about $9,000,000 a day in U.S. funds by refusing to expand Medicaid."
   },
@@ -2382,7 +2382,7 @@
     "label_original": "correct",
     "claim_id": "val_001928",
     "normalized_claim": "'We put it in our manifesto, to construct 57 mega dams…\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "'We put it in our manifesto, to construct about 60 mega dams…\"",
     "perturb_type2_True": "'We put it in our manifesto, to construct about 40 mega dams…\""
   },
@@ -2397,7 +2397,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001931",
     "normalized_claim": "Women \"receive only 77 cents for every dollar a man earns.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Women \"receive about only 75 cents for every dollar a man earns.\"",
     "perturb_type2_True": "Women \"receive about only 150 cents for every dollar a man earns.\""
   },
@@ -2413,7 +2413,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001939",
     "normalized_claim": "\"Welcome 2 Pres Biden’s America where inflation is costing households an extra $175 a month.”",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"Welcome 2 Pres Biden’s America where inflation is costing households about an extra $150 a month.”",
     "perturb_type2_True": "\"Welcome 2 Pres Biden’s America where inflation is costing households about an extra $300 a month.”"
   },
@@ -2428,7 +2428,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001946",
     "normalized_claim": "Says taking millionaires off food stamps and unemployment would save $20,000,000.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says taking millionaires off food stamps and unemployment would save about $20,000,000.",
     "perturb_type2_True": "Says taking millionaires off food stamps and unemployment would save about $12,000,000."
   },
@@ -2443,7 +2443,7 @@
     "label_original": "true",
     "claim_id": "val_001951",
     "normalized_claim": "Says the unemployment rate for college graduates is 4.4 percent and over 10 percent for noncollege-educated.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says the unemployment rate for college graduates is about 4 percent and over about 10 percent for noncollege-educated.",
     "perturb_type2_True": "Says the unemployment rate for college graduates is about 20 percent and over about 20 percent for noncollege-educated."
   },
@@ -2458,7 +2458,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001964",
     "normalized_claim": "Postmaster General Louis DeJoy “gave $400,000 to Republicans just this year” and has “between $30 and $75,000,000 in assets of direct competitors to the United States Postal Service.”",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Postmaster General Louis DeJoy “gave about $400,000 to Republicans just this year” and has “about between $30 and $75,000,000 in assets of direct competitors to the United States Postal Service.”",
     "perturb_type2_True": "Postmaster General Louis DeJoy “gave about $250,000 to Republicans just this year” and has “about between $50 and $75,000,000 in assets of direct competitors to the United States Postal Service.”"
   },
@@ -2473,7 +2473,7 @@
     "label_original": "true",
     "claim_id": "val_001976",
     "normalized_claim": "\"There’s actually 600 abortions done after the 20th week of pregnancy every year in Ohio.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"There’s actually about 600 abortions done after the 20th week of pregnancy every year in Ohio.\"",
     "perturb_type2_True": "\"There’s actually about 400 abortions done after the 20th week of pregnancy every year in Ohio.\""
   },
@@ -2488,7 +2488,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_001986",
     "normalized_claim": "\"We cut business taxes so today 70 percent of our businesses don't pay a business tax.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"We cut business taxes so today about 70 percent of our businesses don't pay a business tax.\"",
     "perturb_type2_True": "\"We cut business taxes so today about 150 percent of our businesses don't pay a business tax.\""
   },
@@ -2504,7 +2504,7 @@
     "label_original": "True",
     "claim_id": "val_002009",
     "normalized_claim": "Hugh Hefner paid $75,000 to be interred next to Marilyn Monroe in a Los Angeles cemetery.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Hugh Hefner paid about $75,000 to be interred next to Marilyn Monroe in a Los Angeles cemetery.",
     "perturb_type2_True": "Hugh Hefner paid about $150,000 to be interred next to Marilyn Monroe in a Los Angeles cemetery."
   },
@@ -2519,7 +2519,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_002027",
     "normalized_claim": "\"Right now, only 11 percent of the 15,000 child care providers in Texas are certified as meeting quality standards.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"Right now, about only 12 percent of the about 15,000 child care providers in Texas are certified as meeting quality standards.\"",
     "perturb_type2_True": "\"Right now, about only 7 percent of the about 20,000 child care providers in Texas are certified as meeting quality standards.\""
   },
@@ -2534,7 +2534,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_002037",
     "normalized_claim": "\"Creating 25 jobs in Umatilla County has the same impact as 500 jobs in the metro region.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"Creating about 25 jobs in Umatilla County has the same impact as about 500 jobs in the metro region.\"",
     "perturb_type2_True": "\"Creating about 50 jobs in Umatilla County has the same impact as about 750 jobs in the metro region.\""
   },
@@ -2549,7 +2549,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_002086",
     "normalized_claim": "Says Donald\"Trump got, you know, $1,800,000,000 worth of free media. I got, like, none.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says Donald\"Trump got, you know, about $2,000,000,000 worth of free media. I got, like, none.\"",
     "perturb_type2_True": "Says Donald\"Trump got, you know, about $800,000,000 worth of free media. I got, like, none.\""
   },
@@ -2565,7 +2565,7 @@
     "label_original": "TRUE",
     "claim_id": "val_002106",
     "normalized_claim": "Hyderabad Police seized Rs 8 crore cash withdrawn from BJP’s bank account.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Hyderabad Police seized about Rs 8 crore cash withdrawn from BJP’s bank account.",
     "perturb_type2_True": "Hyderabad Police seized about Rs 12 crore cash withdrawn from BJP’s bank account."
   },
@@ -2581,7 +2581,7 @@
     "label_original": "correct",
     "claim_id": "val_002115",
     "normalized_claim": "\"[The DA] has brought down the rate of mother to child HIV transmission to just 1.8%, the lowest in the country.”",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"[The DA] has brought down the rate of mother to child HIV transmission to about just 2%, the lowest in the country.”",
     "perturb_type2_True": "\"[The DA] has brought down the rate of mother to child HIV transmission to about just 50%, the lowest in the country.”"
   },
@@ -2597,7 +2597,7 @@
     "label_original": "True",
     "claim_id": "val_002122",
     "normalized_claim": "Some 91 minutes before stopping the shooter, one or more law enforcement officers went inside Robb Elementary School and rescued their own children.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "About Some 100 minutes before stopping the shooter, one or more law enforcement officers went inside Robb Elementary School and rescued their own children.",
     "perturb_type2_True": "About Some 50 minutes before stopping the shooter, one or more law enforcement officers went inside Robb Elementary School and rescued their own children."
   },
@@ -2612,7 +2612,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_002130",
     "normalized_claim": "\"There is $50,000,000,000 a year wasted in the Medicare program.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"There is about $50,000,000,000 a year wasted in the Medicare program.\"",
     "perturb_type2_True": "\"There is about $20,000,000,000 a year wasted in the Medicare program.\""
   },
@@ -2627,7 +2627,7 @@
     "label_original": "true",
     "claim_id": "val_002132",
     "normalized_claim": "The federal government is spending $46,000 a year per family (or group of four) and could balance its budget by dropping that to $30,000.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "The federal government is spending about $50,000 a year per family (or group of four) and could balance its budget by dropping that to about $30,000.",
     "perturb_type2_True": "The federal government is spending about $75,000 a year per family (or group of four) and could balance its budget by dropping that to about $15,000."
   },
@@ -2643,7 +2643,7 @@
     "label_original": "true",
     "claim_id": "val_002133",
     "normalized_claim": "When the New York State Senate voted to legalize abortion in 1970, 12 Republican senators voted in favor of it.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "When the New York State Senate voted to legalize abortion in 1970, about 12 Republican senators voted in favor of it.",
     "perturb_type2_True": "When the New York State Senate voted to legalize abortion in 1970, about 6 Republican senators voted in favor of it."
   },
@@ -2658,7 +2658,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_002136",
     "normalized_claim": "\"If out-of-state drivers paid gas tax, they would contribute $73,000,000 to fix our roads\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"If out-of-state drivers paid gas tax, they would contribute about $75,000,000 to fix our roads\"",
     "perturb_type2_True": "\"If out-of-state drivers paid gas tax, they would contribute about $150,000,000 to fix our roads\""
   },
@@ -2673,7 +2673,7 @@
     "label_original": "true",
     "claim_id": "val_002162",
     "normalized_claim": "\"We're borrowing 40 cents of every dollar we spend.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"We're borrowing about 40 cents of every dollar we spend.\"",
     "perturb_type2_True": "\"We're borrowing about 75 cents of every dollar we spend.\""
   },
@@ -2688,7 +2688,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_002172",
     "normalized_claim": "\"It’s estimated that in 2018 alone, dead people received $1,000,000,000 in benefits from Medicare, Medicaid, social security payments, and federal pensions.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"It’s estimated that in 2018 alone, dead people received about $1,000,000,000 in benefits from Medicare, Medicaid, social security payments, and federal pensions.\"",
     "perturb_type2_True": "\"It’s estimated that in 2018 alone, dead people received about $500,000,000 in benefits from Medicare, Medicaid, social security payments, and federal pensions.\""
   },
@@ -2704,7 +2704,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_002173",
     "normalized_claim": "The oil industry has \"9,000 permits to drill now. They could be drilling right now, yesterday, last week, last year.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "The oil industry has \"about 9,000 permits to drill now. They could be drilling right now, yesterday, last week, last year.\"",
     "perturb_type2_True": "The oil industry has \"about 20,000 permits to drill now. They could be drilling right now, yesterday, last week, last year.\""
   },
@@ -2719,7 +2719,7 @@
     "label_original": "true",
     "claim_id": "val_002176",
     "normalized_claim": "With only 67 bills or so passed into law, \"2013 was the least productive year in congressional history since we’ve been keeping record.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "With about only 60 bills or so passed into law, \"2013 was the least productive year in congressional history since we’ve been keeping record.\"",
     "perturb_type2_True": "With about only 100 bills or so passed into law, \"2013 was the least productive year in congressional history since we’ve been keeping record.\""
   },
@@ -2735,7 +2735,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_002183",
     "normalized_claim": "Says 3,000 Americans \"died of gunfire\" between the time of the Ebola scare in Dallas and the midterm elections.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says about 3,000 Americans \"died of gunfire\" between the time of the Ebola scare in Dallas and the midterm elections.",
     "perturb_type2_True": "Says about 1,200 Americans \"died of gunfire\" between the time of the Ebola scare in Dallas and the midterm elections."
   },
@@ -2751,7 +2751,7 @@
     "label_original": "true",
     "claim_id": "val_002187",
     "normalized_claim": "Lizbeth Benacquisto \"broke election law 105 times, hiding special interest contributors.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Lizbeth Benacquisto \"broke election law about 100 times, hiding special interest contributors.\"",
     "perturb_type2_True": "Lizbeth Benacquisto \"broke election law about 60 times, hiding special interest contributors.\""
   },
@@ -2766,7 +2766,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_002190",
     "normalized_claim": "Says enrolling a student in a subsidized lunch program triggers an \"at risk\" designation, resulting in an extra $6,000 to $7,000 of state school aid per student.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says enrolling a student in a subsidized lunch program triggers an \"at risk\" designation, resulting in about an extra $6,000 to $7,000 of state school aid per student.",
     "perturb_type2_True": "Says enrolling a student in a subsidized lunch program triggers an \"at risk\" designation, resulting in about an extra $9,000 to $7,000 of state school aid per student."
   },
@@ -2782,7 +2782,7 @@
     "label_original": "true",
     "claim_id": "val_002197",
     "normalized_claim": "Says over 90 percent of Travis County’s eligible residents have registered to vote.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says about over 90 percent of Travis County’s eligible residents have registered to vote.",
     "perturb_type2_True": "Says about over 150 percent of Travis County’s eligible residents have registered to vote."
   },
@@ -2798,7 +2798,7 @@
     "label_original": "true",
     "claim_id": "val_002207",
     "normalized_claim": "Says fewer than 30 percent of Texas college students graduate in four years and only 58 percent graduate within six years.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says about fewer than 30 percent of Texas college students graduate in four years and about only 60 percent graduate within six years.",
     "perturb_type2_True": "Says about fewer than 15 percent of Texas college students graduate in four years and about only 25 percent graduate within six years."
   },
@@ -2813,7 +2813,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_002210",
     "normalized_claim": "\"Right now, 50 percent of Florida students leaving high school cannot read at grade level.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"Right now, about 50 percent of Florida students leaving high school cannot read at grade level.\"",
     "perturb_type2_True": "\"Right now, about 90 percent of Florida students leaving high school cannot read at grade level.\""
   },
@@ -2828,7 +2828,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_002213",
     "normalized_claim": "Since 1938 the minimum wage has been increased \"23 times\" and was raised \"21 times during Democratic congresses, and only twice during Republican ones.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Since 1938 the minimum wage has been increased \"about 25 times\" and was raised \"about 20 times during Democratic congresses, and only twice during Republican ones.\"",
     "perturb_type2_True": "Since 1938 the minimum wage has been increased \"about 40 times\" and was raised \"about 8 times during Democratic congresses, and only twice during Republican ones.\""
   },
@@ -2843,7 +2843,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_002226",
     "normalized_claim": "\"When you have 8,000 veterans a year committing suicide, then you have a serious problem.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"When you have about 8,000 veterans a year committing suicide, then you have a serious problem.\"",
     "perturb_type2_True": "\"When you have about 4,000 veterans a year committing suicide, then you have a serious problem.\""
   },
@@ -2858,7 +2858,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_002232",
     "normalized_claim": "Says Dan Patrick \"supported giving a $5,000 taxpayer-funded voucher to every family to buy a car.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says Dan Patrick \"supported giving a about $5,000 taxpayer-funded voucher to every family to buy a car.\"",
     "perturb_type2_True": "Says Dan Patrick \"supported giving a about $10,000 taxpayer-funded voucher to every family to buy a car.\""
   },
@@ -2874,7 +2874,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_002246",
     "normalized_claim": "“Abigail Spanberger still votes with and shares Joe Biden’s positions 100% of the time.”",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "“Abigail Spanberger still votes with and shares Joe Biden’s positions about 100% of the time.”",
     "perturb_type2_True": "“Abigail Spanberger still votes with and shares Joe Biden’s positions about 200% of the time.”"
   },
@@ -2889,7 +2889,7 @@
     "label_original": "true",
     "claim_id": "val_002249",
     "normalized_claim": "\"We've had 11,000 attempts to amend the Constitution since 1789.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"We've had about 12,000 attempts to amend the Constitution since 1789.\"",
     "perturb_type2_True": "\"We've had about 6,000 attempts to amend the Constitution since 1789.\""
   },
@@ -2904,7 +2904,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_002298",
     "normalized_claim": "\"Giving the facts: 73,000 jobs created ... since '11. Do you know how many direct jobs in the auto industry? 1,800.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"Giving the facts: about 75,000 jobs created ... since '11. Do you know how many direct jobs in the auto industry? About 2,000.\"",
     "perturb_type2_True": "\"Giving the facts: about 150,000 jobs created ... since '11. Do you know how many direct jobs in the auto industry? About 1,200.\""
   },
@@ -2919,7 +2919,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_002300",
     "normalized_claim": "\"40% of Americans know someone who has been killed by a gun.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"about 40% of Americans know someone who has been killed by a gun.\"",
     "perturb_type2_True": "\"about 20% of Americans know someone who has been killed by a gun.\""
   },
@@ -2934,7 +2934,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_002304",
     "normalized_claim": "Says Chris Abele, opponent in Milwaukee County executive race, \"failed to finish 3 separate colleges, dropping out all 3 times.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says Chris Abele, opponent in Milwaukee County executive race, \"failed to finish about 3 separate colleges, dropping out all about 3 times.\"",
     "perturb_type2_True": "Says Chris Abele, opponent in Milwaukee County executive race, \"failed to finish about 25 separate colleges, dropping out all about 12 times.\""
   },
@@ -2949,7 +2949,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_002305",
     "normalized_claim": "\"Eleven individuals who make over $30,000,000 each got $22,000,000 credit\" from Wisconsin's manufacturing and agriculture tax credit.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"Eleven individuals who make about over $30,000,000 each got about $20,000,000 credit\" from Wisconsin's manufacturing and agriculture tax credit.",
     "perturb_type2_True": "\"Eleven individuals who make about over $45,000,000 each got about $40,000,000 credit\" from Wisconsin's manufacturing and agriculture tax credit."
   },
@@ -2964,7 +2964,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_002315",
     "normalized_claim": "Says Rick Scott’s proposal for election reform \"only mandates 48 hours of early voting.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Says Rick Scott’s proposal for election reform \"only mandates about 50 hours of early voting.\"",
     "perturb_type2_True": "Says Rick Scott’s proposal for election reform \"only mandates about 25 hours of early voting.\""
   },
@@ -2980,7 +2980,7 @@
     "label_original": "mostly-true",
     "claim_id": "val_002355",
     "normalized_claim": "Some 8,100,000 of the estimated 11,000,000 to 12,000,000 people \"in this country illegally are working.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "About Some 8,000,000 of the estimated about 12,000,000 to about 12,000,000 people \"in this country illegally are working.\"",
     "perturb_type2_True": "About Some 5,000,000 of the estimated about 5,000,000 to about 25,000,000 people \"in this country illegally are working.\""
   },
@@ -2995,7 +2995,7 @@
     "label_original": "true",
     "claim_id": "val_002358",
     "normalized_claim": "\"Donna Shalala left me with 12,000,000 doses\" of smallpox vaccine and \"I created enough\" to vaccinate \"every man, woman and child against smallpox in America.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "\"Donna Shalala left me with about 12,000,000 doses\" of smallpox vaccine and \"I created enough\" to vaccinate \"every man, woman and child against smallpox in America.\"",
     "perturb_type2_True": "\"Donna Shalala left me with about 25,000,000 doses\" of smallpox vaccine and \"I created enough\" to vaccinate \"every man, woman and child against smallpox in America.\""
   },
@@ -3011,7 +3011,7 @@
     "label_original": "True",
     "claim_id": "val_002382",
     "normalized_claim": "Ohio is giving away $1,000,000 to five residents who have received their COVID-19 vaccination in a \"Vax-a-Million\" lottery.",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "Ohio is giving away about $1,000,000 to five residents who have received their COVID-19 vaccination in a \"Vax-a-Million\" lottery.",
     "perturb_type2_True": "Ohio is giving away about $2,000,000 to five residents who have received their COVID-19 vaccination in a \"Vax-a-Million\" lottery."
   },
@@ -3027,7 +3027,7 @@
     "label_original": "true",
     "claim_id": "val_002412",
     "normalized_claim": "The Biden administration \"published a study concluding 4 (of) 5 new cars on the road by 2050 will still require liquid fuels.\"",
-    "pertubation_method": "approximation",
+    "perturbation_method": "approximation",
     "perturb_type1_True": "The Biden administration \"published a study concluding about 4 (of) about 5 new cars on the road by 2050 will still require liquid fuels.\"",
     "perturb_type2_True": "The Biden administration \"published a study concluding about 50 (of) about 12 new cars on the road by 2050 will still require liquid fuels.\""
   }
