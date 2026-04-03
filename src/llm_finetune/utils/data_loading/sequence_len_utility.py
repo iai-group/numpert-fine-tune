@@ -3,9 +3,7 @@ import matplotlib.pyplot as plt
 from typing import Dict, List, Optional
 import numpy as np
 
-from src.llm_finetune.utils.data_loading.loader import (
-    load_fact_checking_data,
-)
+from src.llm_finetune.utils.data_loading.pipeline import load_split
 
 
 def analyze_sequence_lengths(
@@ -24,10 +22,10 @@ def analyze_sequence_lengths(
     print(f"ANALYZING SEQUENCE LENGTHS - {split.upper()}")
     print("=" * 80)
 
-    dataset = load_fact_checking_data(
+    dataset = load_split(
         json_paths=json_paths,
         split=split,
-        expand_perturbations_flag=expand_perturbations,
+        expand_perturbations=expand_perturbations,
         include_doc=True,
     )
 

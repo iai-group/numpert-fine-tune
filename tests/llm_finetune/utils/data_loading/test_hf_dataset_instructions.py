@@ -830,7 +830,7 @@ class TestLoadFactCheckingData:
 
     def test_no_paths_or_configs_raises(self):
         with pytest.raises(
-            ValueError, match="Either json_paths or file_configs"
+            ValueError, match="at least one file path must be provided"
         ):
             load_fact_checking_data()
 

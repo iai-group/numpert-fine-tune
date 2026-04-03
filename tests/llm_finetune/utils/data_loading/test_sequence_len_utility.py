@@ -104,10 +104,7 @@ def mock_tokenizer_with_lengths():
     return tokenizer
 
 
-@patch(
-    "src.llm_finetune.utils.data_loading.sequence_len_utility"
-    ".load_fact_checking_data"
-)
+@patch("src.llm_finetune.utils.data_loading.sequence_len_utility" ".load_split")
 @patch("src.llm_finetune.utils.data_loading.sequence_len_utility.plt")
 def test_analyze_sequence_lengths_basic(
     mock_plt, mock_load_data, mock_dataset, mock_tokenizer_with_lengths
@@ -129,10 +126,7 @@ def test_analyze_sequence_lengths_basic(
     assert result["stats"]["total_examples"] == 5
 
 
-@patch(
-    "src.llm_finetune.utils.data_loading.sequence_len_utility"
-    ".load_fact_checking_data"
-)
+@patch("src.llm_finetune.utils.data_loading.sequence_len_utility" ".load_split")
 @patch("src.llm_finetune.utils.data_loading.sequence_len_utility.plt")
 def test_analyze_sequence_lengths_stats_calculation(
     mock_plt, mock_load_data, mock_tokenizer_with_lengths
@@ -187,10 +181,7 @@ def test_analyze_sequence_lengths_stats_calculation(
     assert stats["median_length"] > 0
 
 
-@patch(
-    "src.llm_finetune.utils.data_loading.sequence_len_utility"
-    ".load_fact_checking_data"
-)
+@patch("src.llm_finetune.utils.data_loading.sequence_len_utility" ".load_split")
 @patch("src.llm_finetune.utils.data_loading.sequence_len_utility.plt")
 def test_analyze_sequence_lengths_max_examples(
     mock_plt, mock_load_data, mock_tokenizer_with_lengths
@@ -238,10 +229,7 @@ def test_analyze_sequence_lengths_max_examples(
     assert result["stats"]["total_examples"] == 3
 
 
-@patch(
-    "src.llm_finetune.utils.data_loading.sequence_len_utility"
-    ".load_fact_checking_data"
-)
+@patch("src.llm_finetune.utils.data_loading.sequence_len_utility" ".load_split")
 @patch("src.llm_finetune.utils.data_loading.sequence_len_utility.plt")
 def test_analyze_sequence_lengths_too_long_examples(
     mock_plt, mock_load_data, mock_tokenizer_with_lengths
@@ -289,10 +277,7 @@ def test_analyze_sequence_lengths_too_long_examples(
     assert result["too_long_examples"][0]["length"] == 9000
 
 
-@patch(
-    "src.llm_finetune.utils.data_loading.sequence_len_utility"
-    ".load_fact_checking_data"
-)
+@patch("src.llm_finetune.utils.data_loading.sequence_len_utility" ".load_split")
 @patch("src.llm_finetune.utils.data_loading.sequence_len_utility.plt")
 def test_analyze_sequence_lengths_recommended_length(
     mock_plt, mock_load_data, mock_tokenizer_with_lengths
@@ -336,10 +321,7 @@ def test_analyze_sequence_lengths_recommended_length(
     assert recommended > 0
 
 
-@patch(
-    "src.llm_finetune.utils.data_loading.sequence_len_utility"
-    ".load_fact_checking_data"
-)
+@patch("src.llm_finetune.utils.data_loading.sequence_len_utility" ".load_split")
 @patch("src.llm_finetune.utils.data_loading.sequence_len_utility.plt")
 def test_analyze_sequence_lengths_split_parameter(
     mock_plt, mock_load_data, mock_tokenizer_with_lengths
@@ -382,10 +364,7 @@ def test_analyze_sequence_lengths_split_parameter(
     assert call_kwargs["split"] == "validation"
 
 
-@patch(
-    "src.llm_finetune.utils.data_loading.sequence_len_utility"
-    ".load_fact_checking_data"
-)
+@patch("src.llm_finetune.utils.data_loading.sequence_len_utility" ".load_split")
 @patch("src.llm_finetune.utils.data_loading.sequence_len_utility.plt")
 def test_analyze_sequence_lengths_expand_perturbations_flag(
     mock_plt, mock_load_data, mock_tokenizer_with_lengths
@@ -424,13 +403,10 @@ def test_analyze_sequence_lengths_expand_perturbations_flag(
     )
 
     call_kwargs = mock_load_data.call_args[1]
-    assert call_kwargs["expand_perturbations_flag"] is False
+    assert call_kwargs["expand_perturbations"] is False
 
 
-@patch(
-    "src.llm_finetune.utils.data_loading.sequence_len_utility"
-    ".load_fact_checking_data"
-)
+@patch("src.llm_finetune.utils.data_loading.sequence_len_utility" ".load_split")
 @patch("src.llm_finetune.utils.data_loading.sequence_len_utility.plt.savefig")
 def test_analyze_sequence_lengths_saves_plot(
     mock_savefig, mock_load_data, mock_tokenizer_with_lengths

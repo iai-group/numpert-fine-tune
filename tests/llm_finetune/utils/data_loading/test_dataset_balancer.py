@@ -9,7 +9,7 @@ from typing import Optional
 
 import pytest
 
-from src.llm_finetune.utils.data_loading.balancer.dataset_balancer import (
+from src.llm_finetune.utils.data_loading.dataset_balancer import (
     Sample,
     _assign_type,
     _compute_true_false_perturbation_targets,
@@ -1571,6 +1571,7 @@ class TestBuildBalancedDataset:
             "perturbation_method",
             "is_perturbed",
             "source_file",
+            "perturb_type_key",
         }
 
     def test_deterministic_with_seed(self, tmp_path):
