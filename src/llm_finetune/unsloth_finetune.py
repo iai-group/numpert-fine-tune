@@ -182,13 +182,16 @@ def finetune(  # noqa: C901
         print(f"  - Split large claims: {split_large_claims}")
         print(f"  - Ensure original in batch: {ensure_original_in_batch}")
         print(f"  - Ensure perturbed in batch: {ensure_perturbed_in_batch}")
-    if isinstance(eval_steps, float):
+    if isinstance(eval_steps, float) and 0.0 < eval_steps <= 1.0:
         print(
             f"Eval steps: {eval_steps * 100:.1f}%"
             " of total steps (resolved later)"
         )
     else:
-        print(f"Eval steps: {eval_steps}")
+        resolved = (
+            int(eval_steps) if isinstance(eval_steps, float) else eval_steps
+        )
+        print(f"Eval steps: {resolved}")
     print("=" * 80 + "\n")
 
     # Model configuration
@@ -942,10 +945,11 @@ if __name__ == "__main__":
     parser.add_argument(
         "--false_perturb_t_to_f_ratio",
         type=float,
-        default=0.67,
+        default=None,
         help=(
-            "Share of False perturbed examples that should be T→F "
-            "(0.5 = equal T→F/F→F counts)"
+            "Among False perturbed examples, the fraction that are T→F flips "
+            "(e.g. 0.67 → 67%% T→F, 0.5 → equal T→F/F→F). "
+            "Omit to keep the natural distribution (no ratio constraint)."
         ),
     )
     parser.add_argument(

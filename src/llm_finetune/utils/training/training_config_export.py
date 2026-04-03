@@ -142,7 +142,15 @@ def build_training_config(
         balance_labels: Whether label balancing is applied.
         perturb_ratio: Ratio of perturbed to original examples.
         false_perturb_t_to_f_ratio: Among *False* perturbed examples,
-            the proportion that are True→False flips.
+            the proportion that are True→False flips (e.g. ``0.67``
+            means 67 % of False examples come from True→False
+            perturbations).  ``None`` disables this ratio constraint
+            and keeps the natural distribution of False examples.
+        equal_perturbation_methods: When ``True``, each perturbation
+            method contributes an equal number of examples, preventing
+            any single method from dominating the training distribution.
+            When ``False`` (default), the natural distribution from
+            ``perturb_ratio`` and ``false_perturb_t_to_f_ratio`` is used.
         batch_match_claim_id: Whether claim-id batching is active.
         split_large_claims: Split large claim groups across batches.
         ensure_original_in_batch: Require an original example per batch.
