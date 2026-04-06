@@ -19,13 +19,11 @@ src/llm_finetune/
 ├── upload_model_hf.py             # Upload trained model to HuggingFace Hub
 ├── utils/
 │   ├── data_loading/
-│   │   ├── loader.py                  # Unified entry point: load_split(), load_fact_checking_data(), load_json_files()
-│   │   ├── perturbation_types.py      # PerturbationType enum, FileLoadConfig
-│   │   ├── perturbation_logic.py      # expand_perturbations() core engine
+│   │   ├── pipeline.py                # Unified entry point: load_split()
+│   │   ├── dataset_balancer.py        # Core engine: load, flatten, deduplicate, balance, couple, shuffle
+│   │   ├── perturbation_types.py      # PerturbationType enum, FileLoadConfig, parse_file_config()
 │   │   ├── conversation.py            # Convert examples to SFTTrainer chat format
-│   │   ├── sequence_len_utility.py    # Sequence length analysis & plotting
-│   │   └── balancer/
-│   │       └── dataset_balancer.py    # Balanced data loading path (label/ratio/method balancing)
+│   │   └── sequence_len_utility.py    # Sequence length analysis & plotting
 │   ├── training/
 │   │   ├── convert_to_gguf.py         # GGUF quantization (in-pipeline & standalone)
 │   │   └── training_config_export.py  # Save training params & data provenance to JSON
@@ -39,36 +37,26 @@ src/llm_finetune/
 
 ## Data Loading Pipeline
 
-The data loading pipeline converts raw perturbed JSON files into a HuggingFace `Dataset` ready for `SFTTrainer`. All data loading goes through the unified `load_split()` function in `loader.py`, which routes to one of two paths:
+The data loading pipeline converts raw perturbed JSON files into a HuggingFace `Dataset` ready for `SFTTrainer`. All data loading goes through the unified `load_split()` function in `pipeline.py`, which always routes through `dataset_balancer` as the single core engine.
 
-### Two Data Loading Paths
+### Pipeline Flow
 
-**Non-balanced path** (default, `use_balancer=False`):
 ```
 Raw JSON files
-  → load_fact_checking_data()           # Read files + per-file type filtering
-  → expand_perturbations()              # Explode each example into 1 original + N perturbed rows
-  → convert_to_conversations()          # Format as system/user/assistant chat messages
-  → Dataset.from_list()                 # HuggingFace Dataset
-```
-
-**Balanced path** (`use_balancer=True`):
-```
-Raw JSON files
-  → build_balanced_dataset()            # Load, flatten, deduplicate, balance (with per-file type filtering)
+  → build_balanced_dataset()            # Load, flatten, deduplicate, balance, couple, shuffle
   → _enrich_samples()                   # Attach evidence docs & perturbation type labels
   → convert_to_conversations()          # Format as system/user/assistant chat messages
   → Dataset.from_list()                 # HuggingFace Dataset
 ```
 
-The balanced path is activated automatically when any balancing option is set (`--balance_labels`, `--perturb_ratio != 1.0`, or `--equal_perturbation_methods`).
+When no balancing flags are set, the balancer still performs load → flatten/expand → deduplicate → couple → shuffle, just without any under-/over-sampling. This means the same code path is used regardless of whether data balancing is requested.
 
 ### Entry Point
 
-The primary entry point is `load_split()` in `loader.py`:
+The primary entry point is `load_split()` in `pipeline.py`:
 
 ```python
-from src.llm_finetune.utils.data_loading.loader import load_split
+from src.llm_finetune.utils.data_loading.pipeline import load_split
 
 dataset = load_split(
     file_configs=configs,      # FileLoadConfig list (path + optional type filter)
@@ -76,28 +64,26 @@ dataset = load_split(
     split="train",
     expand_perturbations=True,
     include_doc=True,
-    use_balancer=False,        # set True to enable label/ratio/method balancing
     balance_labels=False,
-    perturb_ratio=1.0,
-    false_perturb_t_to_f_ratio=0.5,
+    perturb_ratio=None,        # None = keep all perturbations; float = target ratio
+    false_perturb_t_to_f_ratio=None,
     equal_perturbation_methods=False,
     seed=3407,
 )
 ```
 
-Per-file perturbation type filtering (via `FileLoadConfig.perturb_types`) is respected in **both** paths. In the balanced path, `load_split()` builds a `{filename: {allowed_types}}` mapping from the configs and passes it to the balancer's `flatten_samples()`, which filters perturbation keys during record expansion.
+Per-file perturbation type filtering (via `FileLoadConfig.perturb_types`) is respected. `load_split()` builds a `{filename: {allowed_types}}` mapping from the configs and passes it to the balancer's `flatten_samples()`, which filters perturbation keys during record expansion.
 
-`loader.py` also exports `load_fact_checking_data()` and `load_train_and_validation()` for direct use, but `load_split()` is the recommended interface as it handles both paths uniformly.
 
 ### Simple Loading (All Types)
 
 ```python
-from src.llm_finetune.utils.data_loading.loader import load_fact_checking_data
+from src.llm_finetune.utils.data_loading.pipeline import load_split
 
-dataset = load_fact_checking_data(
+dataset = load_split(
     json_paths=["data/perturbed_data/train_split/numeration_true.json"],
     split="train",
-    expand_perturbations_flag=True,
+    expand_perturbations=True,
     include_doc=True,
 )
 ```
@@ -109,15 +95,13 @@ This loads every perturbation key found in the JSON file (`perturb_type1`, `pert
 Use `FileLoadConfig` to control which perturbation types are extracted from each file:
 
 ```python
-from src.llm_finetune.utils.data_loading.loader import (
-    load_fact_checking_data,
-)
+from src.llm_finetune.utils.data_loading.pipeline import load_split
 from src.llm_finetune.utils.data_loading.perturbation_types import (
     FileLoadConfig,
+    PerturbationType,
 )
-from src.llm_finetune.utils.data_loading.perturbation_types import PerturbationType
 
-dataset = load_fact_checking_data(
+dataset = load_split(
     file_configs=[
         # Load type1 + type2 from true-labeled claims
         FileLoadConfig(
@@ -147,72 +131,6 @@ path/to/file.json:type3_random      → Load only type3_random
 ```
 
 Type names accept shorthand — `type1` is automatically expanded to `perturb_type1`. This is used by the training scripts via `--train_json` and `--val_json` arguments.
-
----
-
-## Perturbation Expansion (`expand_perturbations`)
-
-The `expand_perturbations()` function in `src.llm_finetune.utils.data_loading.perturbation_logic` is the core engine that converts a raw JSON example into multiple rows — one per perturbation variant.
-
-### How It Works
-
-Given a raw JSON entry like:
-
-```json
-{
-    "claim_id": "abc123",
-    "normalized_claim": "The rate increased by 50 percent.",
-    "doc": "Evidence text...",
-    "label": true,
-    "perturb_type1_True": "The rate increased by fifty percent.",
-    "perturb_type2_True": "The rate increased by fifty-five percent.",
-    "perturb_type3_random_False": "The rate increased by 87 percent."
-}
-```
-
-`expand_perturbations()` produces:
-
-| # | claim | label | perturbation_type |
-|---|---|---|---|
-| 1 | The rate increased by 50 percent. | True | `original_normalized` |
-| 2 | The rate increased by fifty percent. | True | `perturb_type1` |
-| 3 | The rate increased by fifty-five percent. | False | `perturb_type2` |
-| 4 | The rate increased by 87 percent. | False | `perturb_type3_random` |
-
-### Key Detection
-
-A regex (`_PERTURB_KEY_RE`) scans each key in the JSON object to find perturbation entries. Recognised key patterns:
-
-- `perturb_type1_True`, `perturb_type1_False`
-- `perturb_type2_True`, `perturb_type2_False`
-- `perturb_type3_random_True`, `perturb_type3_random_False`
-- `perturb_type3_masked_True`, `perturb_type3_masked_False`
-- `perturb_type3_removed_True`, `perturb_type3_removed_False`
-
-The `_True`/`_False` suffix on JSON keys indicates the original claim's gold label. The perturbed label is computed by `_determine_perturbed_label()`: type1 preserves the original label, while type2 and type3 always produce `False`.
-
-### Label Logic
-
-| Perturbation Type | Label Rule | Rationale |
-|---|---|---|
-| `perturb_type1` (structure-preserving) | Same as original | Semantically equivalent rewrite |
-| `perturb_type2` (value-modifying) | Always `False` | Numerical value changed → claim unverifiable or false |
-| `perturb_type3_*` (obfuscation) | Always `False` | Original value destroyed → unverifiable |
-
-### Filtering
-
-When `allowed_types` is provided, only perturbation keys whose base type matches the filter are included. The original (`ORIGINAL_NORMALIZED`) entry is always emitted:
-
-```python
-expanded = expand_perturbations(
-    examples,
-    allowed_types=[PerturbationType.PERTURB_TYPE1],  # Only structure-preserving
-)
-```
-
-### Skipping Empty Keys
-
-If a perturbation key is present but its value is empty or `None` (the perturbation module did not produce output for that claim), the entry is silently skipped.
 
 ---
 
@@ -266,12 +184,12 @@ ALL_PERTURB_TYPES          = STRUCTURE_PRESERVING_TYPES | VALUE_MODIFYING_TYPES 
 
 ## Dataset Balancing (`build_balanced_dataset`)
 
-`src.llm_finetune.utils.data_loading.balancer.dataset_balancer` provides `build_balanced_dataset()` for controlling label and perturbation distributions in the training set.
+`src.llm_finetune.utils.data_loading.dataset_balancer` provides `build_balanced_dataset()` — the core engine that all data loading flows through. It handles loading, expansion, deduplication, coupling, and (optionally) balancing in one pass.
 
 ### Features
 
 - **Label balancing**: Downsample the majority class (True/False) to match the minority class.
-- **Perturbation ratio**: Control the ratio of perturbed to non-perturbed (original) examples. A ratio of `1.0` means equal counts.
+- **Perturbation ratio**: Control the ratio of perturbed to non-perturbed (original) examples. `None` (the default in `load_split`) keeps all perturbations; `1.0` means equal counts.
 - **True perturbation fraction**: Control the share of perturbed examples that remain True (T→T) vs produce False (T→F, F→F).
 - **False perturbation split**: Among False-labeled perturbed examples, control the share that are T→F versus F→F.
 - **Method balancing**: Undersample or oversample so each perturbation method contributes equally within each perturbation type.
@@ -281,10 +199,10 @@ ALL_PERTURB_TYPES          = STRUCTURE_PRESERVING_TYPES | VALUE_MODIFYING_TYPES 
 
 ### Usage
 
-The balancer is invoked automatically by `load_split()` when `use_balancer=True`. Direct usage:
+The balancer is invoked automatically by `load_split()`. Direct usage:
 
 ```python
-from src.llm_finetune.utils.data_loading.balancer.dataset_balancer import (
+from src.llm_finetune.utils.data_loading.dataset_balancer import (
     build_balanced_dataset,
 )
 
@@ -392,12 +310,11 @@ The training script orchestrates the full pipeline:
 1. **Load model** via Unsloth `FastLanguageModel` (4-bit quantised by default).
 2. **Apply LoRA** adapters to attention and MLP projection layers.
 3. **Set chat template** (Llama-3.1 or ChatML depending on model family).
-4. **Load & expand data** via `load_train_and_validation()`.
-5. **Balance dataset** via `DatasetBalancer` (optional).
-6. **Tokenise** with instruction masking — only the assistant response tokens are trained on (instruction tokens get label `-100`).
-7. **Build batch sampler** (if `batch_match_claim_id` is enabled) before removing metadata columns.
-8. **Train** with `SFTTrainer` or `PerturbationAwareSFTTrainer`.
-9. **Save** LoRA weights and merged 16-bit model.
+4. **Load & expand data** via `load_split()` (calls `pipeline.load_split()` for both train and validation splits).
+5. **Tokenise** with instruction masking — only the assistant response tokens are trained on (instruction tokens get label `-100`).
+6. **Build batch sampler** (if `batch_match_claim_id` is enabled) before removing metadata columns.
+7. **Train** with `SFTTrainer` or `PerturbationAwareSFTTrainer`.
+8. **Save** LoRA weights and merged 16-bit model.
 
 ### CLI Usage
 
@@ -447,8 +364,8 @@ python -m src.llm_finetune.unsloth_finetune \
 | `--max_seq_length` | 16384 | Maximum sequence length in tokens |
 | `--expand_perturbations` | `True` | Expand perturbation keys into separate examples |
 | `--balance_labels` | `False` | Balance True/False label distribution |
-| `--perturb_ratio` | 1.0 | Perturbed-to-original ratio |
-| `--false_perturb_t_to_f_ratio` | 0.67 | Fraction of False perturbations that are T→F |
+| `--perturb_ratio` | 1.0 | Perturbed-to-original ratio (in `load_split`, `None` keeps all) |
+| `--false_perturb_t_to_f_ratio` | 0.67 | Fraction of False perturbations that are T→F (`None` disables) |
 | `--batch_match_claim_id` | `False` | Enable claim-aware batch grouping |
 | `--debug` | `False` | Print conversation format and tokenisation diagnostics |
 
@@ -819,7 +736,7 @@ During inference, the pipeline automatically:
 
 ### Source File Tracking
 
-The data loading pipeline (`load_fact_checking_data()`) annotates every expanded example with a `source_file` field containing the JSON filename (e.g. `approximation_True.json`). This field flows through the conversation formatter and into the HuggingFace dataset, enabling per-file metric breakdowns without any extra configuration.
+The data loading pipeline (`load_split()`) annotates every expanded example with a `source_file` field containing the JSON filename (e.g. `approximation_True.json`). This field flows through the conversation formatter and into the HuggingFace dataset, enabling per-file metric breakdowns without any extra configuration.
 
 ---
 
