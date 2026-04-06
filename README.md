@@ -209,7 +209,7 @@ from src.llm_finetune.utils.data_loading.dataset_balancer import (
 result = build_balanced_dataset(
     file_paths=["data/.../numeration_True.json", "data/.../numeration_False.json"],
     balance_labels=True,
-    perturb_ratio=1.0,
+    perturb_ratio=1.0,  # explicitly set; default is None (keep all)
     false_perturb_t_to_f_ratio=0.5,
     equal_method_size=True,
     seed=42,
@@ -364,7 +364,7 @@ python -m src.llm_finetune.unsloth_finetune \
 | `--max_seq_length` | 16384 | Maximum sequence length in tokens |
 | `--expand_perturbations` | `True` | Expand perturbation keys into separate examples |
 | `--balance_labels` | `False` | Balance True/False label distribution |
-| `--perturb_ratio` | 1.0 | Perturbed-to-original ratio (in `load_split`, `None` keeps all) |
+| `--perturb_ratio` | `None` | Perturbed-to-original ratio (`None` keeps all; e.g. `1.0` = 1:1) |
 | `--false_perturb_t_to_f_ratio` | 0.67 | Fraction of False perturbations that are T→F (`None` disables) |
 | `--batch_match_claim_id` | `False` | Enable claim-aware batch grouping |
 | `--debug` | `False` | Print conversation format and tokenisation diagnostics |
@@ -404,7 +404,7 @@ A machine-readable JSON file written to the model output directory at the start 
   "data": {
     "expand_perturbations": true,
     "balance_labels": true,
-    "perturb_ratio": 1.0,
+    "perturb_ratio": null,
     "false_perturb_t_to_f_ratio": 0.67,
     "train_files": [
       {

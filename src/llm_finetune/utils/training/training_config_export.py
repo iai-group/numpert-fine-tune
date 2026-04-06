@@ -108,7 +108,7 @@ def build_training_config(
     learning_rate: float = 1e-4,
     expand_perturbations: bool = True,
     balance_labels: bool = False,
-    perturb_ratio: float = 1.0,
+    perturb_ratio: Optional[float] = None,
     false_perturb_t_to_f_ratio: Optional[float] = None,
     equal_perturbation_methods: bool = False,
     batch_match_claim_id: bool = False,

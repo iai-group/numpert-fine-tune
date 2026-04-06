@@ -144,7 +144,7 @@ def finetune(  # noqa: C901
     max_seq_length: int = 16384,
     expand_perturbations: bool = True,
     balance_labels: bool = False,
-    perturb_ratio: float = 1.0,
+    perturb_ratio: Optional[float] = None,
     false_perturb_t_to_f_ratio: Optional[float] = None,
     equal_perturbation_methods: bool = False,
     batch_match_claim_id: bool = False,
@@ -935,8 +935,9 @@ if __name__ == "__main__":
     parser.add_argument(
         "--perturb_ratio",
         type=float,
-        default=1.0,
-        help="Ratio of perturbed to non-perturbed examples (1.0 = 1:1)",
+        default=None,
+        help="Ratio of perturbed to non-perturbed examples "
+        "(default: None = keep all)",
     )
     parser.add_argument(
         "--false_perturb_t_to_f_ratio",
