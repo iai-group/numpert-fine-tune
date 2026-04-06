@@ -364,9 +364,17 @@ python -m src.llm_finetune.unsloth_finetune \
 | `--max_seq_length` | 16384 | Maximum sequence length in tokens |
 | `--expand_perturbations` | `True` | Expand perturbation keys into separate examples |
 | `--balance_labels` | `False` | Balance True/False label distribution |
-| `--perturb_ratio` | `None` | Perturbed-to-original ratio (`None` keeps all; e.g. `1.0` = 1:1) |
-| `--false_perturb_t_to_f_ratio` | 0.67 | Fraction of False perturbations that are T→F (`None` disables) |
+| `--perturb_ratio` | `None` | Ratio of perturbed to original examples; `None` disables the constraint (keep all) |
+| `--false_perturb_t_to_f_ratio` | `None` | Among False perturbed examples, fraction that are T→F flips (e.g. `0.67`); `None` disables the constraint |
+| `--equal_perturbation_methods` | `False` | Undersample so each perturbation method (numeration, range, …) contributes equally |
 | `--batch_match_claim_id` | `False` | Enable claim-aware batch grouping |
+| `--split_large_claims` | `True` | Split claims with more examples than the batch size across multiple batches (requires `--batch_match_claim_id`) |
+| `--ensure_original_in_batch` | `True` | Guarantee each batch contains at least one original example (requires `--batch_match_claim_id`) |
+| `--ensure_perturbed_in_batch` | `True` | Guarantee each batch contains at least one perturbed example (requires `--batch_match_claim_id`) |
+| `--eval_steps` | 500 | Evaluation frequency; float in `(0, 1]` is treated as a fraction of total training steps |
+| `--save_steps` | 500 | Checkpoint save frequency (steps) |
+| `--save_gguf` | `False` | Also save a GGUF-quantized version of the final model |
+| `--gguf_quantization_method` | `q8_0` | GGUF quantization method (e.g. `q4_k_m`) |
 | `--debug` | `False` | Print conversation format and tokenisation diagnostics |
 
 ### Output Structure
