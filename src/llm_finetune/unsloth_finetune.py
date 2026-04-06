@@ -350,9 +350,10 @@ def finetune(  # noqa: C901
         split="validation",
         expand_perturbations=expand_perturbations,
         include_doc=True,
-        perturb_ratio=perturb_ratio,
-        false_perturb_t_to_f_ratio=false_perturb_t_to_f_ratio,
-        equal_perturbation_methods=equal_perturbation_methods,
+        balance_labels=False,
+        perturb_ratio=None,
+        false_perturb_t_to_f_ratio=None,
+        equal_perturbation_methods=False,
         seed=3407 + start_epoch,
     )
 

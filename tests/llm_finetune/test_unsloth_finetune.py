@@ -667,7 +667,13 @@ class TestFinetune:
             )
             assert mock_load_split.call_count == 2
             train_call_kwargs = mock_load_split.call_args_list[0][1]
+            val_call_kwargs = mock_load_split.call_args_list[1][1]
             assert train_call_kwargs["balance_labels"] is True
+            assert val_call_kwargs["split"] == "validation"
+            assert val_call_kwargs["balance_labels"] is False
+            assert val_call_kwargs["perturb_ratio"] is None
+            assert val_call_kwargs["false_perturb_t_to_f_ratio"] is None
+            assert val_call_kwargs["equal_perturbation_methods"] is False
 
     def test_balancer_not_called_when_disabled(self, tmp_path):
         """balance_labels=False is forwarded to load_split."""
