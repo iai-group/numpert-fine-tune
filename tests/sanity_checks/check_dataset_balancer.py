@@ -8,7 +8,7 @@ import json
 from collections import Counter, defaultdict
 from pathlib import Path
 
-from src.llm_finetune.utils.data_loading.balancer.dataset_balancer import (
+from src.llm_finetune.utils.data_loading.dataset_balancer import (
     Sample,
     build_balanced_dataset,
     compute_stats,

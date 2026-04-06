@@ -38,6 +38,7 @@ class Sample:
     perturbation_method: Optional[str]
     is_perturbed: bool
     source_file: str
+    perturb_type_key: Optional[str] = None  # e.g. "type1", "type3_random"
 
 
 def load_files(
@@ -95,17 +96,30 @@ def _assign_type(original_label: str, perturbed_label: str) -> str:
         )
 
 
+def _normalize_label(label) -> str:
+    """Normalize a label value (bool or string) to ``"True"``/``"False"``."""
+    if isinstance(label, bool):
+        return "True" if label else "False"
+    if isinstance(label, str):
+        lowered = label.strip().lower()
+        if lowered == "true":
+            return "True"
+        if lowered == "false":
+            return "False"
+    raise ValueError(f"Cannot normalize label: {label!r}")
+
+
 def _extract_record_core(
     record: dict,
     source_file: str,
 ) -> tuple[str, str, str, Optional[str]] | None:
     """Extract the fields needed to build samples from one record."""
     claim_id = record.get("claim_id")
-    original_label = record.get("label")
+    raw_label = record.get("label")
     normalized_claim = record.get("normalized_claim")
     perturbation_method = record.get("perturbation_method")
 
-    if not claim_id or not original_label or not normalized_claim:
+    if not claim_id or raw_label is None or not normalized_claim:
         logger.warning(
             "Skipping record missing required fields in %s",
             source_file,
@@ -114,6 +128,8 @@ def _extract_record_core(
 
     if perturbation_method in EXCLUDED_METHODS:
         return None
+
+    original_label = _normalize_label(raw_label)
 
     return claim_id, original_label, normalized_claim, perturbation_method
 
@@ -188,6 +204,7 @@ def _iter_perturbation_samples(
                 perturbation_method=perturbation_method,
                 is_perturbed=True,
                 source_file=source_file,
+                perturb_type_key=perturb_type,
             )
         )
 
@@ -623,7 +640,7 @@ def _compute_false_perturbation_targets(
 def apply_balancing(
     samples: list[Sample],
     balance_labels: bool,
-    perturb_ratio: float,
+    perturb_ratio: Optional[float] = None,
     false_perturb_t_to_f_ratio: Optional[float] = 0.5,
     equal_method_size: bool = False,
     rng: Optional[random.Random] = None,
@@ -641,6 +658,9 @@ def apply_balancing(
 
     We apply from lowest to highest priority so that higher-priority
     constraints get the final say.
+
+    When ``perturb_ratio`` is ``None``, no ratio constraint is applied
+    and all perturbations are kept.
     """
     if rng is None:
         rng = random.Random()
@@ -671,7 +691,7 @@ def apply_balancing(
     selected_true_perturbed = list(true_perturbed)
 
     # 5b. Perturbation ratio (perturbed / originals)
-    if originals and perturbed:
+    if perturb_ratio is not None and originals and perturbed:
         target_perturbed = int(len(originals) * perturb_ratio)
         (
             true_budget,
@@ -811,7 +831,7 @@ def compute_stats(samples: list[dict]) -> dict:
 def build_balanced_dataset(
     file_paths: list[str | Path],
     balance_labels: bool = True,
-    perturb_ratio: float = 1.0,
+    perturb_ratio: Optional[float] = 1.0,
     false_perturb_t_to_f_ratio: float | None = 0.5,
     true_perturbation_fraction: float = 1 / 3,
     equal_method_size: bool = False,
@@ -887,6 +907,7 @@ def build_balanced_dataset(
             "perturbation_method": s.perturbation_method,
             "is_perturbed": s.is_perturbed,
             "source_file": s.source_file,
+            "perturb_type_key": s.perturb_type_key,
         }
         for s in coupled
     ]

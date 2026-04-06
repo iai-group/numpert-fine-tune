@@ -20,7 +20,7 @@ from unsloth.chat_templates import get_chat_template
 
 from src.llm_finetune.config import prefix
 
-from src.llm_finetune.utils.data_loading.loader import load_split
+from src.llm_finetune.utils.data_loading.pipeline import load_split
 from src.llm_finetune.utils.data_loading.perturbation_types import (
     FileLoadConfig,
     parse_file_config,
@@ -144,7 +144,7 @@ def finetune(  # noqa: C901
     max_seq_length: int = 16384,
     expand_perturbations: bool = True,
     balance_labels: bool = False,
-    perturb_ratio: float = 1.0,
+    perturb_ratio: Optional[float] = None,
     false_perturb_t_to_f_ratio: Optional[float] = None,
     equal_perturbation_methods: bool = False,
     batch_match_claim_id: bool = False,
@@ -332,16 +332,12 @@ def finetune(  # noqa: C901
         }
 
     print("Loading datasets...")
-    should_balance = expand_perturbations and (
-        balance_labels or perturb_ratio != 1.0 or equal_perturbation_methods
-    )
     train_data = load_split(
         file_configs=train_file_configs,
         json_paths=train_json_paths,
         split="train",
         expand_perturbations=expand_perturbations,
         include_doc=True,
-        use_balancer=should_balance,
         balance_labels=balance_labels,
         perturb_ratio=perturb_ratio,
         false_perturb_t_to_f_ratio=false_perturb_t_to_f_ratio,
@@ -939,8 +935,9 @@ if __name__ == "__main__":
     parser.add_argument(
         "--perturb_ratio",
         type=float,
-        default=1.0,
-        help="Ratio of perturbed to non-perturbed examples (1.0 = 1:1)",
+        default=None,
+        help="Ratio of perturbed to non-perturbed examples "
+        "(default: None = keep all)",
     )
     parser.add_argument(
         "--false_perturb_t_to_f_ratio",

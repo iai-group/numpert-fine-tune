@@ -1,13 +1,13 @@
-"""Tests for src/llm_finetune/utils/data_loading/loader.py."""
+"""Tests for src/llm_finetune/utils/data_loading/pipeline.py."""
 
 from __future__ import annotations
 
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import pytest
 from datasets import Dataset
 
-from src.llm_finetune.utils.data_loading.loader import (
+from src.llm_finetune.utils.data_loading.pipeline import (
     _build_allowed_types_by_file,
     _build_doc_lookup,
     _enrich_samples,
@@ -23,7 +23,7 @@ from src.llm_finetune.utils.data_loading.perturbation_types import (
 # Helpers
 # ---------------------------------------------------------------------------
 
-_LOADER = "src.llm_finetune.utils.data_loading.loader"
+_PIPELINE = "src.llm_finetune.utils.data_loading.pipeline"
 
 
 def _make_raw_record(claim_id: str, doc: str = "evidence text") -> dict:
@@ -42,6 +42,7 @@ def _make_balanced_sample(
     perturbation_method: str | None = None,
     source_file: str = "file.json",
     label: str = "True",
+    perturb_type_key: str | None = None,
 ) -> dict:
     return {
         "source_claim_id": source_claim_id,
@@ -51,6 +52,7 @@ def _make_balanced_sample(
         "type": type_,
         "perturbation_method": perturbation_method,
         "source_file": source_file,
+        "perturb_type_key": perturb_type_key,
     }
 
 
@@ -98,7 +100,7 @@ class TestBuildDocLookup:
                 ],
             )
         ]
-        with patch(f"{_LOADER}._load_raw_json_files", return_value=raw):
+        with patch(f"{_PIPELINE}._load_raw_json_files", return_value=raw):
             result = _build_doc_lookup(["file.json"])
         assert result == {"c1": "doc one", "c2": "doc two"}
 
@@ -107,19 +109,19 @@ class TestBuildDocLookup:
             ("file1.json", [_make_raw_record("c1", "first")]),
             ("file2.json", [_make_raw_record("c1", "second")]),
         ]
-        with patch(f"{_LOADER}._load_raw_json_files", return_value=raw):
+        with patch(f"{_PIPELINE}._load_raw_json_files", return_value=raw):
             result = _build_doc_lookup(["file1.json", "file2.json"])
         assert result["c1"] == "first"
 
     def test_records_missing_claim_id_are_skipped(self):
         raw = [("file.json", [{"doc": "no id here"}])]
-        with patch(f"{_LOADER}._load_raw_json_files", return_value=raw):
+        with patch(f"{_PIPELINE}._load_raw_json_files", return_value=raw):
             result = _build_doc_lookup(["file.json"])
         assert result == {}
 
     def test_records_missing_doc_default_to_empty_string(self):
         raw = [("file.json", [{"claim_id": "c1"}])]
-        with patch(f"{_LOADER}._load_raw_json_files", return_value=raw):
+        with patch(f"{_PIPELINE}._load_raw_json_files", return_value=raw):
             result = _build_doc_lookup(["file.json"])
         assert result == {"c1": ""}
 
@@ -194,51 +196,99 @@ class TestEnrichSamples:
 # ---------------------------------------------------------------------------
 
 
-class TestLoadSplitUnbalanced:
-    def test_delegates_to_load_fact_checking_data(self):
-        mock_ds = MagicMock(spec=Dataset)
-        with patch(
-            f"{_LOADER}.load_fact_checking_data", return_value=mock_ds
-        ) as mock_lfc:
-            result = load_split(json_paths=["t.json"], split="train")
-        mock_lfc.assert_called_once_with(
-            json_paths=["t.json"],
-            file_configs=None,
-            split="train",
-            expand_perturbations_flag=True,
-            include_doc=True,
-        )
-        assert result is mock_ds
+class TestLoadSplitDefaults:
+    """Tests for load_split with default (no balancing) settings."""
 
-    def test_expand_perturbations_forwarded(self):
+    def test_calls_balancer_with_defaults(self):
+        samples = [_make_balanced_sample("c1", is_perturbed=False)]
+        raw = [("t.json", [{"claim_id": "c1", "doc": "d"}])]
+        rows = [
+            {
+                "claim_id": "c1",
+                "conversations": [{"role": "user", "content": "q"}],
+                "label": '{"label": true}',
+                "perturbation_type": "original_normalized",
+            }
+        ]
         with patch(
-            f"{_LOADER}.load_fact_checking_data", return_value=MagicMock()
-        ) as mock_lfc:
-            load_split(json_paths=["t.json"], expand_perturbations=False)
-        assert mock_lfc.call_args[1]["expand_perturbations_flag"] is False
-
-    def test_include_doc_forwarded(self):
-        with patch(
-            f"{_LOADER}.load_fact_checking_data", return_value=MagicMock()
-        ) as mock_lfc:
-            load_split(json_paths=["t.json"], include_doc=False)
-        assert mock_lfc.call_args[1]["include_doc"] is False
-
-    def test_file_configs_forwarded(self):
-        configs = [FileLoadConfig(path="a.json")]
-        with patch(
-            f"{_LOADER}.load_fact_checking_data", return_value=MagicMock()
-        ) as mock_lfc:
-            load_split(file_configs=configs)
-        assert mock_lfc.call_args[1]["file_configs"] == configs
-
-    def test_balancer_not_called_on_unbalanced_path(self):
-        with patch(
-            f"{_LOADER}.load_fact_checking_data", return_value=MagicMock()
+            f"{_PIPELINE}._load_raw_json_files", return_value=raw
+        ), patch(
+            f"{_PIPELINE}.build_balanced_dataset", return_value=samples
+        ) as mock_bal, patch(
+            f"{_PIPELINE}.convert_to_conversations", return_value=rows
         ):
-            with patch(f"{_LOADER}.build_balanced_dataset") as mock_bal:
-                load_split(json_paths=["t.json"], use_balancer=False)
-        mock_bal.assert_not_called()
+            load_split(json_paths=["t.json"], split="train")
+        mock_bal.assert_called_once()
+        kwargs = mock_bal.call_args[1]
+        assert kwargs["balance_labels"] is False
+        assert kwargs["perturb_ratio"] is None
+
+    def test_expand_perturbations_false_sends_empty_allowed_types(self):
+        samples = [_make_balanced_sample("c1", is_perturbed=False)]
+        raw = [("t.json", [{"claim_id": "c1", "doc": "d"}])]
+        rows = [
+            {
+                "claim_id": "c1",
+                "conversations": [{"role": "user", "content": "q"}],
+                "label": '{"label": true}',
+                "perturbation_type": "original_normalized",
+            }
+        ]
+        with patch(
+            f"{_PIPELINE}._load_raw_json_files", return_value=raw
+        ), patch(
+            f"{_PIPELINE}.build_balanced_dataset", return_value=samples
+        ) as mock_bal, patch(
+            f"{_PIPELINE}.convert_to_conversations", return_value=rows
+        ):
+            load_split(json_paths=["t.json"], expand_perturbations=False)
+        allowed = mock_bal.call_args[1]["allowed_types_by_file"]
+        # Empty set per file means no perturbed keys pass the filter
+        assert allowed == {"t.json": set()}
+
+    def test_include_doc_forwarded_to_conversations(self):
+        samples = [_make_balanced_sample("c1", is_perturbed=False)]
+        raw = [("t.json", [{"claim_id": "c1", "doc": "d"}])]
+        rows = [
+            {
+                "claim_id": "c1",
+                "conversations": [{"role": "user", "content": "q"}],
+                "label": '{"label": true}',
+                "perturbation_type": "original_normalized",
+            }
+        ]
+        with patch(
+            f"{_PIPELINE}._load_raw_json_files", return_value=raw
+        ), patch(
+            f"{_PIPELINE}.build_balanced_dataset", return_value=samples
+        ), patch(
+            f"{_PIPELINE}.convert_to_conversations", return_value=rows
+        ) as mock_conv:
+            load_split(json_paths=["t.json"], include_doc=False)
+        _, kwargs = mock_conv.call_args
+        assert kwargs["include_doc"] is False
+
+    def test_file_configs_resolved_to_paths(self):
+        configs = [FileLoadConfig(path="a.json")]
+        samples = [_make_balanced_sample("c1", is_perturbed=False)]
+        raw = [("a.json", [{"claim_id": "c1", "doc": "d"}])]
+        rows = [
+            {
+                "claim_id": "c1",
+                "conversations": [{"role": "user", "content": "q"}],
+                "label": '{"label": true}',
+                "perturbation_type": "original_normalized",
+            }
+        ]
+        with patch(
+            f"{_PIPELINE}._load_raw_json_files", return_value=raw
+        ), patch(
+            f"{_PIPELINE}.build_balanced_dataset", return_value=samples
+        ) as mock_bal, patch(
+            f"{_PIPELINE}.convert_to_conversations", return_value=rows
+        ):
+            load_split(file_configs=configs)
+        assert mock_bal.call_args[1]["file_paths"] == ["a.json"]
 
 
 # ---------------------------------------------------------------------------
@@ -253,11 +303,11 @@ def _patch_balanced_path(balanced_samples, doc_lookup_raw, conversation_data):
     @contextlib.contextmanager
     def ctx():
         with patch(
-            f"{_LOADER}._load_raw_json_files", return_value=doc_lookup_raw
+            f"{_PIPELINE}._load_raw_json_files", return_value=doc_lookup_raw
         ) as p1, patch(
-            f"{_LOADER}.build_balanced_dataset", return_value=balanced_samples
+            f"{_PIPELINE}.build_balanced_dataset", return_value=balanced_samples
         ) as p2, patch(
-            f"{_LOADER}.convert_to_conversations",
+            f"{_PIPELINE}.convert_to_conversations",
             return_value=conversation_data,
         ) as p3:
             yield p1, p2, p3
@@ -285,13 +335,13 @@ class TestLoadSplitBalanced:
 
     def test_raises_when_no_paths(self):
         with pytest.raises(ValueError, match="at least one file path"):
-            load_split(use_balancer=True)
+            load_split()
 
     def test_returns_dataset(self):
         samples = [self._balanced_sample()]
         rows = [self._conversation_row()]
         with _patch_balanced_path(samples, self._raw_file_data(), rows):
-            result = load_split(json_paths=["f.json"], use_balancer=True)
+            result = load_split(json_paths=["f.json"])
         assert isinstance(result, Dataset)
         assert len(result) == 1
 
@@ -305,7 +355,6 @@ class TestLoadSplitBalanced:
         ):
             load_split(
                 json_paths=["f.json"],
-                use_balancer=True,
                 balance_labels=True,
                 perturb_ratio=0.5,
                 false_perturb_t_to_f_ratio=0.3,
@@ -332,7 +381,6 @@ class TestLoadSplitBalanced:
         ):
             load_split(
                 json_paths=["f.json"],
-                use_balancer=True,
                 split="validation",
                 include_doc=False,
             )
@@ -351,12 +399,14 @@ class TestLoadSplitBalanced:
             captured.append(data)
             return rows
 
-        with patch(f"{_LOADER}._load_raw_json_files", return_value=raw), patch(
-            f"{_LOADER}.build_balanced_dataset", return_value=samples
+        with patch(
+            f"{_PIPELINE}._load_raw_json_files", return_value=raw
         ), patch(
-            f"{_LOADER}.convert_to_conversations", side_effect=capture_conv
+            f"{_PIPELINE}.build_balanced_dataset", return_value=samples
+        ), patch(
+            f"{_PIPELINE}.convert_to_conversations", side_effect=capture_conv
         ):
-            load_split(json_paths=["f.json"], use_balancer=True)
+            load_split(json_paths=["f.json"])
 
         assert captured[0][0]["doc"] == "expected doc"
 
@@ -369,17 +419,9 @@ class TestLoadSplitBalanced:
             mock_bal,
             _c,
         ):
-            load_split(file_configs=configs, use_balancer=True)
+            load_split(file_configs=configs)
         assert mock_bal.call_args[1]["file_paths"] == ["cfg.json"]
         assert mock_bal.call_args[1]["allowed_types_by_file"] is None
-
-    def test_load_fact_checking_data_not_called_on_balanced_path(self):
-        samples = [self._balanced_sample()]
-        rows = [self._conversation_row()]
-        with _patch_balanced_path(samples, self._raw_file_data(), rows):
-            with patch(f"{_LOADER}.load_fact_checking_data") as mock_lfc:
-                load_split(json_paths=["f.json"], use_balancer=True)
-        mock_lfc.assert_not_called()
 
     def test_perturb_types_forwarded_to_balancer(self):
         """FileLoadConfig.perturb_types should reach build_balanced_dataset."""
@@ -396,7 +438,7 @@ class TestLoadSplitBalanced:
             mock_bal,
             _c,
         ):
-            load_split(file_configs=configs, use_balancer=True)
+            load_split(file_configs=configs)
         expected_mapping = {"approx.json": {"type1"}}
         assert (
             mock_bal.call_args[1]["allowed_types_by_file"] == expected_mapping
@@ -421,7 +463,7 @@ class TestLoadSplitBalanced:
             mock_bal,
             _c,
         ):
-            load_split(file_configs=configs, use_balancer=True)
+            load_split(file_configs=configs)
         mapping = mock_bal.call_args[1]["allowed_types_by_file"]
         assert mapping == {"approx.json": {"type1", "type2"}}
         # all_types.json not in mapping → no restriction

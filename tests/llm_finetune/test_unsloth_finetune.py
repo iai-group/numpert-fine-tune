@@ -645,8 +645,7 @@ class TestFinetune:
     # -- New dataset balancer --
 
     def test_balancer_called_when_enabled(self, tmp_path):
-        """balance_labels=True causes load_split to be called with
-        use_balancer=True."""
+        """balance_labels=True is forwarded to load_split."""
         from src.llm_finetune.unsloth_finetune import finetune
 
         train_ds = create_mock_dataset(4, 2)
@@ -668,12 +667,10 @@ class TestFinetune:
             )
             assert mock_load_split.call_count == 2
             train_call_kwargs = mock_load_split.call_args_list[0][1]
-            assert train_call_kwargs["use_balancer"] is True
             assert train_call_kwargs["balance_labels"] is True
 
     def test_balancer_not_called_when_disabled(self, tmp_path):
-        """balance_labels=False and default perturb_ratio passes
-        use_balancer=False."""
+        """balance_labels=False is forwarded to load_split."""
         from src.llm_finetune.unsloth_finetune import finetune
 
         train_ds = create_mock_dataset(4, 2)
@@ -695,7 +692,7 @@ class TestFinetune:
             )
             assert mock_load_split.call_count == 2
             train_call_kwargs = mock_load_split.call_args_list[0][1]
-            assert train_call_kwargs["use_balancer"] is False
+            assert train_call_kwargs["balance_labels"] is False
 
 
 # ---------------------------------------------------------------------------
@@ -1053,8 +1050,7 @@ class TestFinetuneEdgeCases:
     # -- perturb_ratio != 1.0 triggers balancer --
 
     def test_perturb_ratio_triggers_balancer(self, tmp_path):
-        """perturb_ratio != 1.0 causes load_split to be called with
-        use_balancer=True even with balance_labels=False."""
+        """perturb_ratio is forwarded to load_split."""
         from src.llm_finetune.unsloth_finetune import finetune
 
         train_ds = create_mock_dataset(4, 2)
@@ -1077,7 +1073,6 @@ class TestFinetuneEdgeCases:
             )
             assert mock_load_split.call_count == 2
             train_call_kwargs = mock_load_split.call_args_list[0][1]
-            assert train_call_kwargs["use_balancer"] is True
             assert train_call_kwargs["perturb_ratio"] == 0.5
 
     # -- Default chat template (non-llama, non-qwen) --
