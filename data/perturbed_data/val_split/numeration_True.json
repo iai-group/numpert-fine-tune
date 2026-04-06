@@ -10,7 +10,7 @@
         "normalized_claim": "Says Dino Rossi \"stripped\" health care \"from 45,000 children.\"",
         "label": "True",
         "claim_id": "val_000003",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says Dino Rossi \"stripped\" health care \"from forty-five thousand children.\"",
         "perturb_type2_True": "Says Dino Rossi \"stripped\" health care \"from forty-nine thousand, five hundred children.\""
     },
@@ -25,7 +25,7 @@
         "normalized_claim": "\"Palin (proposed) a $150 bounty for the severed foreleg of each killed wolf.\"",
         "label": "True",
         "claim_id": "val_000010",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Palin (proposed) a one hundred and fifty dollars bounty for the severed foreleg of each killed wolf.\"",
         "perturb_type2_True": "\"Palin (proposed) a one hundred and sixty-five dollars bounty for the severed foreleg of each killed wolf.\""
     },
@@ -40,7 +40,7 @@
         "normalized_claim": "Says the military accounts for about 10 percent of Florida's economy.",
         "label": "True",
         "claim_id": "val_000020",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says the military accounts for about ten percent of Florida's economy.",
         "perturb_type2_True": "Says the military accounts for about eleven percent of Florida's economy."
     },
@@ -55,7 +55,7 @@
         "normalized_claim": "\"The first time he ever voted as a Democrat was here in Florida in 2008. He only voted four times in his life, and he's asking Floridians to come out and vote for him.\"",
         "label": "True",
         "claim_id": "val_000021",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"The first time he ever voted as a Democrat was here in Florida in two thousand and eight. He only voted four times in his life, and he's asking Floridians to come out and vote for him.\"",
         "perturb_type2_True": "\"The first time he ever voted as a Democrat was here in Florida in two thousand and thirteen. He only voted four times in his life, and he's asking Floridians to come out and vote for him.\""
     },
@@ -71,7 +71,7 @@
         "normalized_claim": "“The percentage of persons aged 20 years and above with no formal education or highest level of education less than Grade 7 within each gender group decreased from 19.3% to 16.2%.”",
         "label": "True",
         "claim_id": "val_000022",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "“The percentage of persons aged twenty years and above with no formal education or highest level of education less than Grade seven within each gender group decreased from nineteen point three percent to sixteen point two percent.”",
         "perturb_type2_True": "“The percentage of persons aged twenty-five years and above with no formal education or highest level of education less than Grade eight within each gender group decreased from twenty-one percent to eighteen percent.”"
     },
@@ -87,7 +87,7 @@
         "normalized_claim": "The EU parliament has 705 members, all elected.",
         "label": "True",
         "claim_id": "val_000038",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "The EU parliament has seven hundred and five members, all elected.",
         "perturb_type2_True": "The EU parliament has seven hundred and seventy-six members, all elected."
     },
@@ -102,7 +102,7 @@
         "normalized_claim": "Palin \"inherited a city with zero debt, but left it with indebtedness of over $22-million.\"",
         "label": "True",
         "claim_id": "val_000052",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Palin \"inherited a city with zero debt, but left it with indebtedness of over twenty-two dollars-million.\"",
         "perturb_type2_True": "Palin \"inherited a city with zero debt, but left it with indebtedness of over twenty-four dollars-million.\""
     },
@@ -118,7 +118,7 @@
         "normalized_claim": "Says Marco Rubio \"has a 98 percent voting record with the Koch brothers.\"",
         "label": "True",
         "claim_id": "val_000054",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says Marco Rubio \"has a ninety-eight percent voting record with the Koch brothers.\"",
         "perturb_type2_True": "Says Marco Rubio \"has a one hundred and eight percent voting record with the Koch brothers.\""
     },
@@ -134,7 +134,7 @@
         "normalized_claim": "Says Mitt Romney raised business taxes 20 percent in Massachusetts.",
         "label": "True",
         "claim_id": "val_000055",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says Mitt Romney raised business taxes twenty percent in Massachusetts.",
         "perturb_type2_True": "Says Mitt Romney raised business taxes twenty-two percent in Massachusetts."
     },
@@ -150,7 +150,7 @@
         "normalized_claim": "“[A]round 80% of all the people who are employed in South Africa are employed in the private sector.”",
         "label": "True",
         "claim_id": "val_000062",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "“[A]round eighty percent of all the people who are employed in South Africa are employed in the private sector.”",
         "perturb_type2_True": "“[A]round eighty-eight percent of all the people who are employed in South Africa are employed in the private sector.”"
     },
@@ -166,7 +166,7 @@
         "normalized_claim": "In 2019, more than 3,000,000 households in our country benefited from free basic water services while more than 2,000,000 households benefited from free basic electricity.” ",
         "label": "True",
         "claim_id": "val_000063",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "In two thousand and nineteen, more than three million households in our country benefited from free basic water services while more than two million households benefited from free basic electricity.”",
         "perturb_type2_True": "In two thousand and twenty-four, more than three million, three hundred thousand households in our country benefited from free basic water services while more than two million, two hundred thousand households benefited from free basic electricity.”"
     },
@@ -181,7 +181,7 @@
         "normalized_claim": "Says Ohio has 77 job training programs spread across 13 state agencies.",
         "label": "True",
         "claim_id": "val_000065",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says Ohio has seventy-seven job training programs spread across thirteen state agencies.",
         "perturb_type2_True": "Says Ohio has eighty-five job training programs spread across fourteen state agencies."
     },
@@ -197,7 +197,7 @@
         "normalized_claim": "\"The matric pass rate increased from 60.6 percent in 2009 to 75.1 percent last year.\"",
         "label": "True",
         "claim_id": "val_000076",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"The matric pass rate increased from sixty point six percent in two thousand and nine to seventy-five point one percent last year.\"",
         "perturb_type2_True": "\"The matric pass rate increased from sixty-seven percent in two thousand and fourteen to eighty-three percent last year.\""
     },
@@ -212,7 +212,7 @@
         "normalized_claim": "\"Our average private sector employee pays 23 percent for their health care. Our average city worker in Ohio pays 9 percent.\"",
         "label": "True",
         "claim_id": "val_000079",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Our average private sector employee pays twenty-three percent for their health care. Our average city worker in Ohio pays nine percent.\"",
         "perturb_type2_True": "\"Our average private sector employee pays twenty-five percent for their health care. Our average city worker in Ohio pays ten percent.\""
     },
@@ -228,7 +228,7 @@
         "normalized_claim": "Turkey has bought British steel saving 4,500 jobs.",
         "label": "True",
         "claim_id": "val_000082",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Turkey has bought British steel saving four thousand, five hundred jobs.",
         "perturb_type2_True": "Turkey has bought British steel saving four thousand, nine hundred and fifty jobs."
     },
@@ -244,7 +244,7 @@
         "normalized_claim": "“Our broad-based economic growth averaged 5.6% over the last five years...”",
         "label": "True",
         "claim_id": "val_000100",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "“Our broad-based economic growth averaged five point six percent over the last five years...”",
         "perturb_type2_True": "“Our broad-based economic growth averaged seven percent over the last five years...”"
     },
@@ -259,7 +259,7 @@
         "normalized_claim": "“In one of the states that determined the outcome” of the 2016 presidential race, “the winning margin averaged out to just two votes per precinct, two votes.”",
         "label": "True",
         "claim_id": "val_000111",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "“In one of the states that determined the outcome” of the two thousand and sixteen presidential race, “the winning margin averaged out to just two votes per precinct, two votes.”",
         "perturb_type2_True": "“In one of the states that determined the outcome” of the two thousand and twenty-one presidential race, “the winning margin averaged out to just two votes per precinct, two votes.”"
     },
@@ -274,7 +274,7 @@
         "normalized_claim": "The CIA paid two psychologists $81,000,000 \"to develop and run their torture program.\"",
         "label": "True",
         "claim_id": "val_000119",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "The CIA paid two psychologists eighty-one million dollars \"to develop and run their torture program.\"",
         "perturb_type2_True": "The CIA paid two psychologists eighty-nine million, one hundred thousand dollars \"to develop and run their torture program.\""
     },
@@ -289,7 +289,7 @@
         "normalized_claim": "Says 88 Texas constables have died in the line of duty.",
         "label": "True",
         "claim_id": "val_000124",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says eighty-eight Texas constables have died in the line of duty.",
         "perturb_type2_True": "Says ninety-seven Texas constables have died in the line of duty."
     },
@@ -304,7 +304,7 @@
         "normalized_claim": "Says Bill Nelson \"skipped 45 percent of the hearings on national security.\"",
         "label": "True",
         "claim_id": "val_000129",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says Bill Nelson \"skipped forty-five percent of the hearings on national security.\"",
         "perturb_type2_True": "Says Bill Nelson \"skipped fifty percent of the hearings on national security.\""
     },
@@ -319,7 +319,7 @@
         "normalized_claim": "Under President George W. Bush, \"we added $4,900,000,000,000 to the debt. Under President Obama … we’ve added $6,500,000,000,000 to the debt.\"",
         "label": "True",
         "claim_id": "val_000136",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Under President George W. Bush, \"we added four trillion, nine hundred billion dollars to the debt. Under President Obama … we’ve added six trillion, five hundred billion dollars to the debt.\"",
         "perturb_type2_True": "Under President George W. Bush, \"we added five trillion, three hundred and ninety billion dollars to the debt. Under President Obama … we’ve added seven trillion, one hundred and fifty billion dollars to the debt.\""
     },
@@ -334,7 +334,7 @@
         "normalized_claim": "\"At $587 apiece, USA would need to bring home about 33,100,000,000 gold medals to pay off our national debt.\"",
         "label": "True",
         "claim_id": "val_000151",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"At five hundred and eighty-seven dollars apiece, USA would need to bring home about thirty-three billion, one hundred million gold medals to pay off our national debt.\"",
         "perturb_type2_True": "\"At six hundred and forty-six dollars apiece, USA would need to bring home about thirty-six billion, four hundred and ten million gold medals to pay off our national debt.\""
     },
@@ -349,7 +349,7 @@
         "normalized_claim": "After Britain’s vote to leave the European Union, \"within 24 hours, Americans lost $100,000,000,000 from our 401(k)s.\"",
         "label": "True",
         "claim_id": "val_000159",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "After Britain’s vote to leave the European Union, \"within twenty-four hours, Americans lost one hundred billion dollars from our 401(k)s.\"",
         "perturb_type2_True": "After Britain’s vote to leave the European Union, \"within eighty-four hours, Americans lost one hundred and ten billion dollars from our 401(k)s.\""
     },
@@ -365,7 +365,7 @@
         "normalized_claim": "“Wisconsin Governor (Tony) Evers wanted to raise your taxes by $1,000,000,000 in a pandemic. Republicans stopped him and delivered the largest tax CUT in state history.”",
         "label": "True",
         "claim_id": "val_000164",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "“Wisconsin Governor (Tony) Evers wanted to raise your taxes by one billion dollars in a pandemic. Republicans stopped him and delivered the largest tax CUT in state history.”",
         "perturb_type2_True": "“Wisconsin Governor (Tony) Evers wanted to raise your taxes by one billion, one hundred million dollars in a pandemic. Republicans stopped him and delivered the largest tax CUT in state history.”"
     },
@@ -381,7 +381,7 @@
         "normalized_claim": "\"Migrants DEMAND $50,000 each to go home, or else …\"",
         "label": "True",
         "claim_id": "val_000169",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Migrants DEMAND fifty thousand dollars each to go home, or else …\"",
         "perturb_type2_True": "\"Migrants DEMAND fifty-five thousand dollars each to go home, or else …\""
     },
@@ -397,7 +397,7 @@
         "normalized_claim": "In March 2021, U.S. Border Patrol agents seized $60,000 worth of fentanyl that had been hidden in burritos.",
         "label": "True",
         "claim_id": "val_000171",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "In March two thousand and twenty-one, U.S. Border Patrol agents seized sixty thousand dollars worth of fentanyl that had been hidden in burritos.",
         "perturb_type2_True": "In March two thousand and twenty-six, U.S. Border Patrol agents seized sixty-six thousand dollars worth of fentanyl that had been hidden in burritos."
     },
@@ -413,7 +413,7 @@
         "normalized_claim": "Mission Indradhanush, a mass movement in caring for children has covered 528 districts with 3.15 crore children vaccinated.",
         "label": "True",
         "claim_id": "val_000185",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Mission Indradhanush, a mass movement in caring for children has covered five hundred and twenty-eight districts with three point one five crore children vaccinated.",
         "perturb_type2_True": "Mission Indradhanush, a mass movement in caring for children has covered five hundred and eighty-one districts with four crore children vaccinated."
     },
@@ -428,7 +428,7 @@
         "normalized_claim": "\"Supreme Court 15 times over the last 120 years has said marriage is a fundamental right\" and never said \"it had to be between a man and a woman.\"",
         "label": "True",
         "claim_id": "val_000191",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Supreme Court fifteen times over the last one hundred and twenty years has said marriage is a fundamental right\" and never said \"it had to be between a man and a woman.\"",
         "perturb_type2_True": "\"Supreme Court sixteen times over the last one hundred and twenty-five years has said marriage is a fundamental right\" and never said \"it had to be between a man and a woman.\""
     },
@@ -444,7 +444,7 @@
         "normalized_claim": "\"Our tourist arrival numbers for the period January to November 2016 increased to 9,000,000, an increase of just over 1,000,000 arrivals from 2015. This represents a 13% growth in tourism arrivals.\"",
         "label": "True",
         "claim_id": "val_000202",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Our tourist arrival numbers for the period January to November two thousand and sixteen increased to nine million, an increase of just over one million arrivals from two thousand and fifteen. This represents a thirteen percent growth in tourism arrivals.\"",
         "perturb_type2_True": "\"Our tourist arrival numbers for the period January to November two thousand and twenty-one increased to nine million, nine hundred thousand, an increase of just over one million, one hundred thousand arrivals from two thousand and twenty. This represents a fourteen percent growth in tourism arrivals.\""
     },
@@ -459,7 +459,7 @@
         "normalized_claim": "\"In total, we have added nearly 75,000 private sector jobs in New Jersey since we took office in January 2010.\"",
         "label": "True",
         "claim_id": "val_000206",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"In total, we have added nearly seventy-five thousand private sector jobs in New Jersey since we took office in January two thousand and ten.\"",
         "perturb_type2_True": "\"In total, we have added nearly eighty-two thousand, five hundred private sector jobs in New Jersey since we took office in January two thousand and fifteen.\""
     },
@@ -474,7 +474,7 @@
         "normalized_claim": "\"Every child born today inherits a $30,000 share in a national debt that stands at more than $13,000,000,000,000.\"",
         "label": "True",
         "claim_id": "val_000209",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Every child born today inherits a thirty thousand dollars share in a national debt that stands at more than thirteen trillion dollars.\"",
         "perturb_type2_True": "\"Every child born today inherits a thirty-three thousand dollars share in a national debt that stands at more than fourteen trillion, three hundred billion dollars.\""
     },
@@ -489,7 +489,7 @@
         "normalized_claim": "Says that illegal immigrants get a $100,000 break on University of Texas tuition over four years.",
         "label": "True",
         "claim_id": "val_000222",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says that illegal immigrants get a one hundred thousand dollars break on University of Texas tuition over four years.",
         "perturb_type2_True": "Says that illegal immigrants get a one hundred and ten thousand dollars break on University of Texas tuition over four years."
     },
@@ -504,7 +504,7 @@
         "normalized_claim": "SaysGOP U.S. Senate candidate Darryl Glenn \"wants to eliminate the Department of Education\" and jeopardize college fundingfor 320,000 Coloradans.",
         "label": "True",
         "claim_id": "val_000227",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "SaysGOP U.S. Senate candidate Darryl Glenn \"wants to eliminate the Department of Education\" and jeopardize college fundingfor three hundred and twenty thousand Coloradans.",
         "perturb_type2_True": "SaysGOP U.S. Senate candidate Darryl Glenn \"wants to eliminate the Department of Education\" and jeopardize college fundingfor three hundred and fifty-two thousand Coloradans."
     },
@@ -519,7 +519,7 @@
         "normalized_claim": "Susie Lee and her husband \"own 17 homes across the country and use their private jet to take vacations,\" and invest in \"companies like Walmart, Halliburton and GEO Group.\"",
         "label": "True",
         "claim_id": "val_000236",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Susie Lee and her husband \"own seventeen homes across the country and use their private jet to take vacations,\" and invest in \"companies like Walmart, Halliburton and GEO Group.\"",
         "perturb_type2_True": "Susie Lee and her husband \"own nineteen homes across the country and use their private jet to take vacations,\" and invest in \"companies like Walmart, Halliburton and GEO Group.\""
     },
@@ -534,7 +534,7 @@
         "normalized_claim": "\"We have a retiree that is collecting a $17,000 paycheck a month . . . tax free.\"",
         "label": "True",
         "claim_id": "val_000263",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"We have a retiree that is collecting a seventeen thousand dollars paycheck a month... tax free.\"",
         "perturb_type2_True": "\"We have a retiree that is collecting a eighteen thousand, seven hundred dollars paycheck a month... tax free.\""
     },
@@ -549,7 +549,7 @@
         "normalized_claim": "\"150,000 (oil spill) claims have been filed by Floridians, but only 40 percent of them have been paid.\"",
         "label": "True",
         "claim_id": "val_000267",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"one hundred and fifty thousand (oil spill) claims have been filed by Floridians, but only forty percent of them have been paid.\"",
         "perturb_type2_True": "\"one hundred and sixty-five thousand (oil spill) claims have been filed by Floridians, but only forty-four percent of them have been paid.\""
     },
@@ -565,7 +565,7 @@
         "normalized_claim": "The U.S. has \"5 percent of the world’s population, 25 percent of the world’s known prison population.\"",
         "label": "True",
         "claim_id": "val_000276",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "The U.S. has \"five percent of the world’s population, twenty-five percent of the world’s known prison population.\"",
         "perturb_type2_True": "The U.S. has \"six percent of the world’s population, twenty-eight percent of the world’s known prison population.\""
     },
@@ -580,7 +580,7 @@
         "normalized_claim": "California \"cut about $1,300,000,000 in child care (during the recession). We’ve only reinvested about $300,000,000.\"",
         "label": "True",
         "claim_id": "val_000298",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "California \"cut about one billion, three hundred million dollars in child care (during the recession). We’ve only reinvested about three hundred million dollars.\"",
         "perturb_type2_True": "California \"cut about one billion, four hundred and thirty million dollars in child care (during the recession). We’ve only reinvested about three hundred and thirty million dollars.\""
     },
@@ -595,7 +595,7 @@
         "normalized_claim": "\"Less than 5 percent of registered users in states allowing medical marijuana have cancer or AIDS.\"",
         "label": "True",
         "claim_id": "val_000305",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Less than five percent of registered users in states allowing medical marijuana have cancer or AIDS.\"",
         "perturb_type2_True": "\"Less than six percent of registered users in states allowing medical marijuana have cancer or AIDS.\""
     },
@@ -611,7 +611,7 @@
         "normalized_claim": "\"We have almost 68,000 Georgia students who are required by law to attend a chronically failing school.\"",
         "label": "True",
         "claim_id": "val_000306",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"We have almost sixty-eight thousand Georgia students who are required by law to attend a chronically failing school.\"",
         "perturb_type2_True": "\"We have almost seventy-four thousand, eight hundred Georgia students who are required by law to attend a chronically failing school.\""
     },
@@ -626,7 +626,7 @@
         "normalized_claim": "\"Closing our state’s wage gap would make a $9,000,000,000 difference to Missouri women.\"",
         "label": "True",
         "claim_id": "val_000310",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Closing our state’s wage gap would make a nine billion dollars difference to Missouri women.\"",
         "perturb_type2_True": "\"Closing our state’s wage gap would make a nine billion, nine hundred million dollars difference to Missouri women.\""
     },
@@ -641,7 +641,7 @@
         "normalized_claim": "Says Republican U.S. Senate candidate Ted Cruz \"opposes the DREAM Act, which is supported by 85% of Latinos.\"",
         "label": "True",
         "claim_id": "val_000321",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says Republican U.S. Senate candidate Ted Cruz \"opposes the DREAM Act, which is supported by eighty-five percent of Latinos.\"",
         "perturb_type2_True": "Says Republican U.S. Senate candidate Ted Cruz \"opposes the DREAM Act, which is supported by ninety-four percent of Latinos.\""
     },
@@ -656,7 +656,7 @@
         "normalized_claim": "\"Americans now spend 100 days out of the year working for government before we even start working for ourselves.\"",
         "label": "True",
         "claim_id": "val_000323",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Americans now spend one hundred days out of the year working for government before we even start working for ourselves.\"",
         "perturb_type2_True": "\"Americans now spend one hundred and five days out of the year working for government before we even start working for ourselves.\""
     },
@@ -672,7 +672,7 @@
         "normalized_claim": "Since a new immigration program was implemented, the number of Venezuelans trying to enter the U.S. illegally decreased “from about 1,100 per day to less than 250 per day on average.”",
         "label": "True",
         "claim_id": "val_000338",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Since a new immigration program was implemented, the number of Venezuelans trying to enter the U.S. illegally decreased “from about one thousand, one hundred per day to less than two hundred and fifty per day on average.”",
         "perturb_type2_True": "Since a new immigration program was implemented, the number of Venezuelans trying to enter the U.S. illegally decreased “from about one thousand, two hundred and ten per day to less than two hundred and seventy-five per day on average.”"
     },
@@ -687,7 +687,7 @@
         "normalized_claim": "Says there are Ohio Turnpike workers getting paid $66,000 a year to collect tolls that machines might collect.",
         "label": "True",
         "claim_id": "val_000344",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says there are Ohio Turnpike workers getting paid sixty-six thousand dollars a year to collect tolls that machines might collect.",
         "perturb_type2_True": "Says there are Ohio Turnpike workers getting paid seventy-two thousand, six hundred dollars a year to collect tolls that machines might collect."
     },
@@ -702,7 +702,7 @@
         "normalized_claim": "To pay for government growth, leaders of both parties \"borrowed $4,000,000,000 a day, leaving us with today's $14,000,000,000,000 debt.\"",
         "label": "True",
         "claim_id": "val_000356",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "To pay for government growth, leaders of both parties \"borrowed four billion dollars a day, leaving us with today's fourteen trillion dollars debt.\"",
         "perturb_type2_True": "To pay for government growth, leaders of both parties \"borrowed four billion, four hundred million dollars a day, leaving us with today's fifteen trillion, four hundred billion dollars debt.\""
     },
@@ -717,7 +717,7 @@
         "normalized_claim": "Children born today will carry a $30,000 share of the national debt.",
         "label": "True",
         "claim_id": "val_000365",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Children born today will carry a thirty thousand dollars share of the national debt.",
         "perturb_type2_True": "Children born today will carry a thirty-three thousand dollars share of the national debt."
     },
@@ -732,7 +732,7 @@
         "normalized_claim": "Says \"in this next biennium, the cost of primary and secondary education is going to increase by more that $1000 per student. Half of that $1000 – $500 per student – is accounted for by the increased cost of PERS alone.\"",
         "label": "True",
         "claim_id": "val_000367",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says \"in this next biennium, the cost of primary and secondary education is going to increase by more that one thousand dollars per student. Half of that one thousand dollars – five hundred dollars per student – is accounted for by the increased cost of PERS alone.\"",
         "perturb_type2_True": "Says \"in this next biennium, the cost of primary and secondary education is going to increase by more that one thousand, one hundred dollars per student. Half of that one thousand, one hundred dollars – five hundred and fifty dollars per student – is accounted for by the increased cost of PERS alone.\""
     },
@@ -747,7 +747,7 @@
         "normalized_claim": "Says more than $3,500,000,000 in state revenue that is supposed to be dedicated to basic needs and functions is being diverted to \"make the books look balanced.\"",
         "label": "True",
         "claim_id": "val_000370",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says more than three billion, five hundred million dollars in state revenue that is supposed to be dedicated to basic needs and functions is being diverted to \"make the books look balanced.\"",
         "perturb_type2_True": "Says more than three billion, eight hundred and fifty million dollars in state revenue that is supposed to be dedicated to basic needs and functions is being diverted to \"make the books look balanced.\""
     },
@@ -762,7 +762,7 @@
         "normalized_claim": "Says that under his tax plan, seniors making less than $50,000 per year won't pay any income taxes.",
         "label": "True",
         "claim_id": "val_000397",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says that under his tax plan, seniors making less than fifty thousand dollars per year won't pay any income taxes.",
         "perturb_type2_True": "Says that under his tax plan, seniors making less than fifty-five thousand dollars per year won't pay any income taxes."
     },
@@ -777,7 +777,7 @@
         "normalized_claim": "Says \"90% of policemen are for\" expanding background checks to all gun sales.",
         "label": "True",
         "claim_id": "val_000407",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says \"ninety percent of policemen are for\" expanding background checks to all gun sales.",
         "perturb_type2_True": "Says \"ninety-nine percent of policemen are for\" expanding background checks to all gun sales."
     },
@@ -792,7 +792,7 @@
         "normalized_claim": "Louisiana is turning down $100,000,000 \"that would require us to change our unemployment law, that would have actually raised taxes on Louisiana businesses.\"",
         "label": "True",
         "claim_id": "val_000409",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Louisiana is turning down one hundred million dollars \"that would require us to change our unemployment law, that would have actually raised taxes on Louisiana businesses.\"",
         "perturb_type2_True": "Louisiana is turning down one hundred and ten million dollars \"that would require us to change our unemployment law, that would have actually raised taxes on Louisiana businesses.\""
     },
@@ -808,7 +808,7 @@
         "normalized_claim": "\"We have a system now where in 40 states, the highest-paid public employee is the state university’s head football or basketball coach.\"",
         "label": "True",
         "claim_id": "val_000442",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"We have a system now where in forty states, the highest-paid public employee is the state university’s head football or basketball coach.\"",
         "perturb_type2_True": "\"We have a system now where in forty-four states, the highest-paid public employee is the state university’s head football or basketball coach.\""
     },
@@ -824,7 +824,7 @@
         "normalized_claim": "In 2019, more than 3,000,000 households in our country benefited from free basic water services while more than 2,000,000 households benefited from free basic electricity.\"",
         "label": "True",
         "claim_id": "val_000445",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "In two thousand and nineteen, more than three million households in our country benefited from free basic water services while more than two million households benefited from free basic electricity.\"",
         "perturb_type2_True": "In two thousand and twenty-four, more than three million, three hundred thousand households in our country benefited from free basic water services while more than two million, two hundred thousand households benefited from free basic electricity.\""
     },
@@ -840,7 +840,7 @@
         "normalized_claim": "Former U.S. President Donald Trump's administration agreed to an exchange that freed 5,000 Taliban prisoners.",
         "label": "True",
         "claim_id": "val_000454",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Former U.S. President Donald Trump's administration agreed to an exchange that freed five thousand Taliban prisoners.",
         "perturb_type2_True": "Former U.S. President Donald Trump's administration agreed to an exchange that freed five thousand, five hundred Taliban prisoners."
     },
@@ -855,7 +855,7 @@
         "normalized_claim": "Federal spending on entitlements \"is projected to consume all revenue by 2045.\"",
         "label": "True",
         "claim_id": "val_000462",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Federal spending on entitlements \"is projected to consume all revenue by two thousand and forty-five.\"",
         "perturb_type2_True": "Federal spending on entitlements \"is projected to consume all revenue by two thousand and fifty.\""
     },
@@ -870,7 +870,7 @@
         "normalized_claim": "Says in the 2016 presidential election, \"I won that one by 42 points -- 42 points -- West Virginia.\"",
         "label": "True",
         "claim_id": "val_000467",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says in the two thousand and sixteen presidential election, \"I won that one by forty-two points -- forty-two points -- West Virginia.\"",
         "perturb_type2_True": "Says in the two thousand and twenty-one presidential election, \"I won that one by forty-six points -- forty-six points -- West Virginia.\""
     },
@@ -885,7 +885,7 @@
         "normalized_claim": "Last year, \"244 suspected terrorists walked into gun shops and attempted to purchase a firearm; 223 were able to get the firearm.\"",
         "label": "True",
         "claim_id": "val_000471",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Last year, \"two hundred and forty-four suspected terrorists walked into gun shops and attempted to purchase a firearm; two hundred and twenty-three were able to get the firearm.\"",
         "perturb_type2_True": "Last year, \"two hundred and sixty-eight suspected terrorists walked into gun shops and attempted to purchase a firearm; two hundred and forty-five were able to get the firearm.\""
     },
@@ -900,7 +900,7 @@
         "normalized_claim": "\"One hundred and ninety-four countries signed the Paris Agreement to control greenhouse gases. Our own voluntary agreement to accomplish the same goal — the Under2 MOU — has 165 signatories, representing a billion people.\"",
         "label": "True",
         "claim_id": "val_000473",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"One hundred and ninety-four countries signed the Paris Agreement to control greenhouse gases. Our own voluntary agreement to accomplish the same goal — the Under2 MOU — has one hundred and sixty-five signatories, representing a billion people.\"",
         "perturb_type2_True": "\"One hundred and ninety-four countries signed the Paris Agreement to control greenhouse gases. Our own voluntary agreement to accomplish the same goal — the Under2 MOU — has one hundred and eighty-two signatories, representing a billion people.\""
     },
@@ -915,7 +915,7 @@
         "normalized_claim": "“Some states are only getting 50 tests per day, and the Utah Jazz got 58.”",
         "label": "True",
         "claim_id": "val_000474",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "“Some states are only getting fifty tests per day, and the Utah Jazz got fifty-eight.”",
         "perturb_type2_True": "“Some states are only getting fifty-five tests per day, and the Utah Jazz got sixty-four.”"
     },
@@ -931,7 +931,7 @@
         "normalized_claim": "Says \"if you are shot in the city of Newark, you have over an 80 percent chance that you've been arrested before an average of 10 times.\"",
         "label": "True",
         "claim_id": "val_000475",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says \"if you are shot in the city of Newark, you have over an eighty percent chance that you've been arrested before an average of ten times.\"",
         "perturb_type2_True": "Says \"if you are shot in the city of Newark, you have over an eighty-eight percent chance that you've been arrested before an average of eleven times.\""
     },
@@ -946,7 +946,7 @@
         "normalized_claim": "Says Bernie Sanders chose \"to spend his honeymoon in the Soviet Union in 1988.\"",
         "label": "True",
         "claim_id": "val_000476",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says Bernie Sanders chose \"to spend his honeymoon in the Soviet Union in one thousand, nine hundred and eighty-eight.\"",
         "perturb_type2_True": "Says Bernie Sanders chose \"to spend his honeymoon in the Soviet Union in one thousand, nine hundred and ninety-three.\""
     },
@@ -961,7 +961,7 @@
         "normalized_claim": "\"People show up in the emergency room with a sprained ankle, 25 percent get an opioid prescription.\"",
         "label": "True",
         "claim_id": "val_000480",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"People show up in the emergency room with a sprained ankle, twenty-five percent get an opioid prescription.\"",
         "perturb_type2_True": "\"People show up in the emergency room with a sprained ankle, twenty-eight percent get an opioid prescription.\""
     },
@@ -976,7 +976,7 @@
         "normalized_claim": "\"Expanding Medicaid would bring 40,000 jobs to North Carolina.\"",
         "label": "True",
         "claim_id": "val_000482",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Expanding Medicaid would bring forty thousand jobs to North Carolina.\"",
         "perturb_type2_True": "\"Expanding Medicaid would bring forty-four thousand jobs to North Carolina.\""
     },
@@ -991,7 +991,7 @@
         "normalized_claim": "\"For every week that (state lawmakers are) able to cut off our timeline, it saves (Georgia taxpayers) approximately $100,000.\"",
         "label": "True",
         "claim_id": "val_000485",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"For every week that (state lawmakers are) able to cut off our timeline, it saves (Georgia taxpayers) approximately one hundred thousand dollars.\"",
         "perturb_type2_True": "\"For every week that (state lawmakers are) able to cut off our timeline, it saves (Georgia taxpayers) approximately one hundred and ten thousand dollars.\""
     },
@@ -1007,7 +1007,7 @@
         "normalized_claim": "\"In the African-American community today, 68 percent of kids born are born out of wedlock.\"",
         "label": "True",
         "claim_id": "val_000487",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"In the African-American community today, sixty-eight percent of kids born are born out of wedlock.\"",
         "perturb_type2_True": "\"In the African-American community today, seventy-five percent of kids born are born out of wedlock.\""
     },
@@ -1023,7 +1023,7 @@
         "normalized_claim": "\"In exchange for five minutes with Bill Clinton, the government of Qatar was going to give $1,000,000 to the Clinton Foundation.\"",
         "label": "True",
         "claim_id": "val_000503",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"In exchange for five minutes with Bill Clinton, the government of Qatar was going to give one million dollars to the Clinton Foundation.\"",
         "perturb_type2_True": "\"In exchange for five minutes with Bill Clinton, the government of Qatar was going to give one million, one hundred thousand dollars to the Clinton Foundation.\""
     },
@@ -1039,7 +1039,7 @@
         "normalized_claim": "Says \"by reducing chronic health care costs in the State of Georgia, we can reduce the $32,800,000,000 lost each year due to lack of productivity and economic costs.\"",
         "label": "True",
         "claim_id": "val_000521",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says \"by reducing chronic health care costs in the State of Georgia, we can reduce the thirty-two billion, eight hundred million dollars lost each year due to lack of productivity and economic costs.\"",
         "perturb_type2_True": "Says \"by reducing chronic health care costs in the State of Georgia, we can reduce the thirty-six billion, eighty million dollars lost each year due to lack of productivity and economic costs.\""
     },
@@ -1054,7 +1054,7 @@
         "normalized_claim": "Agriculture contributes $71,000,000,000 to Georgia’s economy annually, making it the state’s largest industry.",
         "label": "True",
         "claim_id": "val_000530",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Agriculture contributes seventy-one billion dollars to Georgia’s economy annually, making it the state’s largest industry.",
         "perturb_type2_True": "Agriculture contributes seventy-eight billion, one hundred million dollars to Georgia’s economy annually, making it the state’s largest industry."
     },
@@ -1070,7 +1070,7 @@
         "normalized_claim": "“For every dollar in federal taxes my constituents pay, we get a mere 93 cents back.”",
         "label": "True",
         "claim_id": "val_000535",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "“For every dollar in federal taxes my constituents pay, we get a mere ninety-three dollars cents back.”",
         "perturb_type2_True": "“For every dollar in federal taxes my constituents pay, we get a mere one hundred and two dollars cents back.”"
     },
@@ -1085,7 +1085,7 @@
         "normalized_claim": "\"70 percent of the income tax that the state collects happens to come from Westchester, Nassau, Suffolk and New York City\"",
         "label": "True",
         "claim_id": "val_000538",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"seventy percent of the income tax that the state collects happens to come from Westchester, Nassau, Suffolk and New York City\"",
         "perturb_type2_True": "\"seventy-seven percent of the income tax that the state collects happens to come from Westchester, Nassau, Suffolk and New York City\""
     },
@@ -1100,7 +1100,7 @@
         "normalized_claim": "\"It costs $10,000 a year to keep a child in school; it costs $30,000 a year to keep someone in prison.\"",
         "label": "True",
         "claim_id": "val_000540",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"It costs ten thousand dollars a year to keep a child in school; it costs thirty thousand dollars a year to keep someone in prison.\"",
         "perturb_type2_True": "\"It costs eleven thousand dollars a year to keep a child in school; it costs thirty-three thousand dollars a year to keep someone in prison.\""
     },
@@ -1116,7 +1116,7 @@
         "normalized_claim": "Scunthorpe voted 68.68% to leave the EU.",
         "label": "True",
         "claim_id": "val_000541",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Scunthorpe voted sixty-eight point six eight percent to leave the EU.",
         "perturb_type2_True": "Scunthorpe voted seventy-six percent to leave the EU."
     },
@@ -1131,7 +1131,7 @@
         "normalized_claim": "\"Seven years later, (Scott Walker) has not hit his first campaign promise of creating 250,000 jobs.\"",
         "label": "True",
         "claim_id": "val_000558",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Seven years later, (Scott Walker) has not hit his first campaign promise of creating two hundred and fifty thousand jobs.\"",
         "perturb_type2_True": "\"Seven years later, (Scott Walker) has not hit his first campaign promise of creating two hundred and seventy-five thousand jobs.\""
     },
@@ -1147,7 +1147,7 @@
         "normalized_claim": "Comedian Bill Burr once said \"Sleeping on a futon when you're 30 is not the worst thing\" and \"There's a tremendous amount of risk to playing it safe.\"",
         "label": "True",
         "claim_id": "val_000566",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Comedian Bill Burr once said \"Sleeping on a futon when you're thirty is not the worst thing\" and \"There's a tremendous amount of risk to playing it safe.\"",
         "perturb_type2_True": "Comedian Bill Burr once said \"Sleeping on a futon when you're thirty-five is not the worst thing\" and \"There's a tremendous amount of risk to playing it safe.\""
     },
@@ -1162,7 +1162,7 @@
         "normalized_claim": "On immigration, \"the president said 22 times, 22 times, that he couldn't do what he eventually did.\"",
         "label": "True",
         "claim_id": "val_000610",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "On immigration, \"the president said twenty-two times, twenty-two times, that he couldn't do what he eventually did.\"",
         "perturb_type2_True": "On immigration, \"the president said twenty-four times, twenty-four times, that he couldn't do what he eventually did.\""
     },
@@ -1177,7 +1177,7 @@
         "normalized_claim": "A customer closed out his million-dollar account after his bank refused to validate a 50-cent parking ticket.",
         "label": "True",
         "claim_id": "val_000620",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "A customer closed out his million-dollar account after his bank refused to validate a fifty dollars-cent parking ticket.",
         "perturb_type2_True": "A customer closed out his million-dollar account after his bank refused to validate a fifty-five dollars-cent parking ticket."
     },
@@ -1192,7 +1192,7 @@
         "normalized_claim": "\"For every one mile of light-rail track that will be built, 16 miles of new road capacity will be built.\"",
         "label": "True",
         "claim_id": "val_000627",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"For every one mile of light-rail track that will be built, sixteen miles of new road capacity will be built.\"",
         "perturb_type2_True": "\"For every one mile of light-rail track that will be built, seventeen miles of new road capacity will be built.\""
     },
@@ -1208,7 +1208,7 @@
         "normalized_claim": "Says for every dollar the state spent on audits last year, it delivered $64 in cost savings.",
         "label": "True",
         "claim_id": "val_000631",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says for every dollar the state spent on audits last year, it delivered sixty-four dollars in cost savings.",
         "perturb_type2_True": "Says for every dollar the state spent on audits last year, it delivered seventy dollars in cost savings."
     },
@@ -1224,7 +1224,7 @@
         "normalized_claim": "\"91% of suspected terrorists who attempted to buy guns in America walked away with the weapon they wanted.\"",
         "label": "True",
         "claim_id": "val_000636",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"ninety-one percent of suspected terrorists who attempted to buy guns in America walked away with the weapon they wanted.\"",
         "perturb_type2_True": "\"one hundred percent of suspected terrorists who attempted to buy guns in America walked away with the weapon they wanted.\""
     },
@@ -1240,7 +1240,7 @@
         "normalized_claim": "\"With one stroke of his pen, President Bush has denied health insurance to 3,800,000 kids who were due to get it under this bipartisan expansion of the Children's Health Insurance Program.\"",
         "label": "True",
         "claim_id": "val_000664",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"With one stroke of his pen, President Bush has denied health insurance to three million, eight hundred thousand kids who were due to get it under this bipartisan expansion of the Children's Health Insurance Program.\"",
         "perturb_type2_True": "\"With one stroke of his pen, President Bush has denied health insurance to four million, one hundred and eighty thousand kids who were due to get it under this bipartisan expansion of the Children's Health Insurance Program.\""
     },
@@ -1255,7 +1255,7 @@
         "normalized_claim": "Says he \"fought against $3,000,000,000 in cuts to public education since 2003.\"",
         "label": "True",
         "claim_id": "val_000667",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says he \"fought against three billion dollars in cuts to public education since two thousand and three.\"",
         "perturb_type2_True": "Says he \"fought against three billion, three hundred million dollars in cuts to public education since two thousand and eight.\""
     },
@@ -1270,7 +1270,7 @@
         "normalized_claim": "Gov. Maggie Hassan’s budget proposal \"raises taxes on small businesses and increases taxes and fees by $100,000,000.\"",
         "label": "True",
         "claim_id": "val_000674",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Gov. Maggie Hassan’s budget proposal \"raises taxes on small businesses and increases taxes and fees by one hundred million dollars.\"",
         "perturb_type2_True": "Gov. Maggie Hassan’s budget proposal \"raises taxes on small businesses and increases taxes and fees by one hundred and ten million dollars.\""
     },
@@ -1286,7 +1286,7 @@
         "normalized_claim": "\"Since 2004, more than 2,000 suspected terrorists have legally purchased weapons in the United States.\"",
         "label": "True",
         "claim_id": "val_000676",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Since two thousand and four, more than two thousand suspected terrorists have legally purchased weapons in the United States.\"",
         "perturb_type2_True": "\"Since two thousand and nine, more than two thousand, two hundred suspected terrorists have legally purchased weapons in the United States.\""
     },
@@ -1301,7 +1301,7 @@
         "normalized_claim": "\"Already this calendar year, since January 1, we have had more than 20,000 people come across the border, apprehended, unauthorized.\"",
         "label": "True",
         "claim_id": "val_000689",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Already this calendar year, since January one, we have had more than twenty thousand people come across the border, apprehended, unauthorized.\"",
         "perturb_type2_True": "\"Already this calendar year, since January six, we have had more than twenty-two thousand people come across the border, apprehended, unauthorized.\""
     },
@@ -1316,7 +1316,7 @@
         "normalized_claim": "\"President Trump has lifted the prospect of voters across Vermont, overseeing a 11,742 decline of Vermont residents on food stamps.\"",
         "label": "True",
         "claim_id": "val_000692",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"President Trump has lifted the prospect of voters across Vermont, overseeing a eleven thousand, seven hundred and forty-two decline of Vermont residents on food stamps.\"",
         "perturb_type2_True": "\"President Trump has lifted the prospect of voters across Vermont, overseeing a twelve thousand, nine hundred and sixteen decline of Vermont residents on food stamps.\""
     },
@@ -1332,7 +1332,7 @@
         "normalized_claim": "Raising the minimum wage to $10.10 an hour \"will destroy between half a million and 1,000,000 jobs.\"",
         "label": "True",
         "claim_id": "val_000702",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Raising the minimum wage to ten point one dollars an hour \"will destroy between half a million and 1,000,000 jobs.\"",
         "perturb_type2_True": "Raising the minimum wage to eleven dollars an hour \"will destroy between half a million and 1,000,000 jobs.\""
     },
@@ -1348,7 +1348,7 @@
         "normalized_claim": "Colin Kaepernick made a $25,000 donation to an activist group named after Assata Shakur, who was convicted in the murder of a police officer.",
         "label": "True",
         "claim_id": "val_000704",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Colin Kaepernick made a twenty-five thousand dollars donation to an activist group named after Assata Shakur, who was convicted in the murder of a police officer.",
         "perturb_type2_True": "Colin Kaepernick made a twenty-seven thousand, five hundred dollars donation to an activist group named after Assata Shakur, who was convicted in the murder of a police officer."
     },
@@ -1363,7 +1363,7 @@
         "normalized_claim": "Long-term federal investment in U.S. airports is urgent because \"there was a recent survey of the top airports … in the world, and there was not a single U.S. airport that came in the top 25.\"",
         "label": "True",
         "claim_id": "val_000720",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Long-term federal investment in U.S. airports is urgent because \"there was a recent survey of the top airports … in the world, and there was not a single U.S. airport that came in the top twenty-five.\"",
         "perturb_type2_True": "Long-term federal investment in U.S. airports is urgent because \"there was a recent survey of the top airports … in the world, and there was not a single U.S. airport that came in the top twenty-eight.\""
     },
@@ -1379,7 +1379,7 @@
         "normalized_claim": "Says the Portland Children’s Levy holds its \"administrative expenses to less than 5 percent.\"",
         "label": "True",
         "claim_id": "val_000723",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says the Portland Children’s Levy holds its \"administrative expenses to less than five percent.\"",
         "perturb_type2_True": "Says the Portland Children’s Levy holds its \"administrative expenses to less than six percent.\""
     },
@@ -1394,7 +1394,7 @@
         "normalized_claim": "According to the U.S. Census Bureau, 71.2 percent of Hispanic registered voters in Texas and over 86 percent of African American registered voters participated in the 2012 elections.",
         "label": "True",
         "claim_id": "val_000735",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "According to the U.S. Census Bureau, seventy-one point two percent of Hispanic registered voters in Texas and over eighty-six percent of African American registered voters participated in the two thousand and twelve elections.",
         "perturb_type2_True": "According to the U.S. Census Bureau, seventy-eight percent of Hispanic registered voters in Texas and over ninety-five percent of African American registered voters participated in the two thousand and seventeen elections."
     },
@@ -1410,7 +1410,7 @@
         "normalized_claim": "Says America spends \"over 17 percent of its GDP on health care costs when our closest competitor nations are spending about 12.\"",
         "label": "True",
         "claim_id": "val_000748",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says America spends \"over seventeen percent of its GDP on health care costs when our closest competitor nations are spending about twelve.\"",
         "perturb_type2_True": "Says America spends \"over nineteen percent of its GDP on health care costs when our closest competitor nations are spending about thirteen.\""
     },
@@ -1425,7 +1425,7 @@
         "normalized_claim": "\"Over the past five years the federal government has paid out $601,000,000 in retirement and disability benefits to deceased former federal employees.\"",
         "label": "True",
         "claim_id": "val_000750",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Over the past five years the federal government has paid out six hundred and one million dollars in retirement and disability benefits to deceased former federal employees.\"",
         "perturb_type2_True": "\"Over the past five years the federal government has paid out six hundred and sixty-one million, one hundred thousand dollars in retirement and disability benefits to deceased former federal employees.\""
     },
@@ -1440,7 +1440,7 @@
         "normalized_claim": "\"More than 70 percent of American adults have committed a crime that could lead to imprisonment.\"",
         "label": "True",
         "claim_id": "val_000753",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"More than seventy percent of American adults have committed a crime that could lead to imprisonment.\"",
         "perturb_type2_True": "\"More than seventy-seven percent of American adults have committed a crime that could lead to imprisonment.\""
     },
@@ -1456,7 +1456,7 @@
         "normalized_claim": "3.8 crore poor women provided with free LPG connections, target raised to 8 crore.",
         "label": "True",
         "claim_id": "val_000755",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "three point eight crore poor women provided with free LPG connections, target raised to eight crore.",
         "perturb_type2_True": "five crore poor women provided with free LPG connections, target raised to nine crore."
     },
@@ -1471,7 +1471,7 @@
         "normalized_claim": "\"For every $10,000 invested in business incubators, up to nearly 70 local jobs are generated.\"",
         "label": "True",
         "claim_id": "val_000768",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"For every ten thousand dollars invested in business incubators, up to nearly seventy local jobs are generated.\"",
         "perturb_type2_True": "\"For every eleven thousand dollars invested in business incubators, up to nearly seventy-seven local jobs are generated.\""
     },
@@ -1486,7 +1486,7 @@
         "normalized_claim": "Even \"though men comprise 49% of the population, they hold 80% of the lawmaking power in the Legislature (144 of 181 seats).\"",
         "label": "True",
         "claim_id": "val_000769",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Even \"though men comprise forty-nine percent of the population, they hold eighty percent of the lawmaking power in the Legislature (one hundred and forty-four of one hundred and eighty-one seats).\"",
         "perturb_type2_True": "Even \"though men comprise fifty-four percent of the population, they hold eighty-eight percent of the lawmaking power in the Legislature (one hundred and fifty-eight of one hundred and ninety-nine seats).\""
     },
@@ -1501,7 +1501,7 @@
         "normalized_claim": "“Taxpayers spent $70,000,000 to develop this drug ( remdesivir).\"",
         "label": "True",
         "claim_id": "val_000782",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "“Taxpayers spent seventy million dollars to develop this drug ( remdesivir).\"",
         "perturb_type2_True": "“Taxpayers spent seventy-seven million dollars to develop this drug ( remdesivir).\""
     },
@@ -1516,7 +1516,7 @@
         "normalized_claim": "Roughly 500,000 Georgians -- or about 5 percent of the state’s residents -- have gone through a background check to legally obtain a Georgia weapons carry license.",
         "label": "True",
         "claim_id": "val_000786",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Roughly five hundred thousand Georgians -- or about five percent of the state’s residents -- have gone through a background check to legally obtain a Georgia weapons carry license.",
         "perturb_type2_True": "Roughly five hundred and fifty thousand Georgians -- or about six percent of the state’s residents -- have gone through a background check to legally obtain a Georgia weapons carry license."
     },
@@ -1532,7 +1532,7 @@
         "normalized_claim": "The only defendant in the Georgia 2020 election tampering case against Donald Trump to be held without bond after surrendering to authorities was the former director of \"Black Voices for Trump.\"",
         "label": "True",
         "claim_id": "val_000797",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "The only defendant in the Georgia two thousand and twenty election tampering case against Donald Trump to be held without bond after surrendering to authorities was the former director of \"Black Voices for Trump.\"",
         "perturb_type2_True": "The only defendant in the Georgia two thousand and twenty-five election tampering case against Donald Trump to be held without bond after surrendering to authorities was the former director of \"Black Voices for Trump.\""
     },
@@ -1548,7 +1548,7 @@
         "normalized_claim": "\"When the national debt reaches $15,000,000,000,000, it means that U.S. debt-to-GDP ratio will reach 99.7 percent of our debt and this is $47,900 for every living American.\"",
         "label": "True",
         "claim_id": "val_000801",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"When the national debt reaches fifteen trillion dollars, it means that U.S. debt-to-GDP ratio will reach ninety-nine point seven percent of our debt and this is forty-seven thousand, nine hundred dollars for every living American.\"",
         "perturb_type2_True": "\"When the national debt reaches sixteen trillion, five hundred billion dollars, it means that U.S. debt-to-GDP ratio will reach one hundred and ten percent of our debt and this is fifty-two thousand, six hundred and ninety dollars for every living American.\""
     },
@@ -1564,7 +1564,7 @@
         "normalized_claim": "$6,000,000,000 water bond program voters passed in 2011 \"has yet to be tapped.\"",
         "label": "True",
         "claim_id": "val_000815",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "six billion dollars water bond program voters passed in two thousand and eleven \"has yet to be tapped.\"",
         "perturb_type2_True": "six billion, six hundred million dollars water bond program voters passed in two thousand and sixteen \"has yet to be tapped.\""
     },
@@ -1579,7 +1579,7 @@
         "normalized_claim": "\"We've cut taxes 50 times and look what has happened to our revenues. They've grown.\"",
         "label": "True",
         "claim_id": "val_000861",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"We've cut taxes fifty times and look what has happened to our revenues. They've grown.\"",
         "perturb_type2_True": "\"We've cut taxes fifty-five times and look what has happened to our revenues. They've grown.\""
     },
@@ -1594,7 +1594,7 @@
         "normalized_claim": "\"A small business in my district\" needed \"31 different permits and fees just to be able to expand.\"",
         "label": "True",
         "claim_id": "val_000871",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"A small business in my district\" needed \"thirty-one different permits and fees just to be able to expand.\"",
         "perturb_type2_True": "\"A small business in my district\" needed \"thirty-four different permits and fees just to be able to expand.\""
     },
@@ -1609,7 +1609,7 @@
         "normalized_claim": "\"The Interior Department has only 30 days to review an exploration plan submitted by an oil company. That leaves no time for the appropriate environmental review. The result is, they are continually waived.\"",
         "label": "True",
         "claim_id": "val_000879",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"The Interior Department has only thirty days to review an exploration plan submitted by an oil company. That leaves no time for the appropriate environmental review. The result is, they are continually waived.\"",
         "perturb_type2_True": "\"The Interior Department has only thirty-five days to review an exploration plan submitted by an oil company. That leaves no time for the appropriate environmental review. The result is, they are continually waived.\""
     },
@@ -1624,7 +1624,7 @@
         "normalized_claim": "Says Tim Kaine \"actually tried to raise taxes by about $4,000,000,000.\"",
         "label": "True",
         "claim_id": "val_000880",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says Tim Kaine \"actually tried to raise taxes by about four billion dollars.\"",
         "perturb_type2_True": "Says Tim Kaine \"actually tried to raise taxes by about four billion, four hundred million dollars.\""
     },
@@ -1639,7 +1639,7 @@
         "normalized_claim": "\"When I became mayor of Los Angeles, we had a 44 percent (high school) graduation rate. I said that was unacceptable. I challenged that notion. I said the mayor needs to be involved with our schools. We need to partner together. As I left, after a number of reforms, we grew our graduation rate from 44 percent to 72.\"",
         "label": "True",
         "claim_id": "val_000896",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"When I became mayor of Los Angeles, we had a forty-four percent (high school) graduation rate. I said that was unacceptable. I challenged that notion. I said the mayor needs to be involved with our schools. We need to partner together. As I left, after a number of reforms, we grew our graduation rate from forty-four percent to seventy-two.\"",
         "perturb_type2_True": "\"When I became mayor of Los Angeles, we had a forty-eight percent (high school) graduation rate. I said that was unacceptable. I challenged that notion. I said the mayor needs to be involved with our schools. We need to partner together. As I left, after a number of reforms, we grew our graduation rate from forty-eight percent to seventy-nine.\""
     },
@@ -1654,7 +1654,7 @@
         "normalized_claim": "More than 1,000,000 Texans live without affordable health care because Rick Perry failed to \"partner with the Legislature to find a Texas solution to closing the coverage gap.\"",
         "label": "True",
         "claim_id": "val_000900",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "More than one million Texans live without affordable health care because Rick Perry failed to \"partner with the Legislature to find a Texas solution to closing the coverage gap.\"",
         "perturb_type2_True": "More than one million, one hundred thousand Texans live without affordable health care because Rick Perry failed to \"partner with the Legislature to find a Texas solution to closing the coverage gap.\""
     },
@@ -1670,7 +1670,7 @@
         "normalized_claim": "\"One in 10 babies born in this country is born in Texas.\"",
         "label": "True",
         "claim_id": "val_000906",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"One in ten babies born in this country is born in Texas.\"",
         "perturb_type2_True": "\"One in eleven babies born in this country is born in Texas.\""
     },
@@ -1685,7 +1685,7 @@
         "normalized_claim": "\"Almost 10 percent of Canadians came to visit Florida last year ... (Canadians) buy 7.4 percent of our homes in the state.\"",
         "label": "True",
         "claim_id": "val_000917",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Almost ten percent of Canadians came to visit Florida last year... (Canadians) buy seven point four percent of our homes in the state.\"",
         "perturb_type2_True": "\"Almost eleven percent of Canadians came to visit Florida last year... (Canadians) buy eight percent of our homes in the state.\""
     },
@@ -1701,7 +1701,7 @@
         "normalized_claim": "Says personal-injury trial lawyers \"have provided over 80 percent of the funding for the Texas Democratic Party for over a decade.\"",
         "label": "True",
         "claim_id": "val_000920",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says personal-injury trial lawyers \"have provided over eighty percent of the funding for the Texas Democratic Party for over a decade.\"",
         "perturb_type2_True": "Says personal-injury trial lawyers \"have provided over eighty-eight percent of the funding for the Texas Democratic Party for over a decade.\""
     },
@@ -1716,7 +1716,7 @@
         "normalized_claim": "Says Wisconsin measures have \"prevented the death of at least 300 Wisconsinites, and perhaps as many as 1,400 lives.\"",
         "label": "True",
         "claim_id": "val_000932",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says Wisconsin measures have \"prevented the death of at least three hundred Wisconsinites, and perhaps as many as one thousand, four hundred lives.\"",
         "perturb_type2_True": "Says Wisconsin measures have \"prevented the death of at least three hundred and thirty Wisconsinites, and perhaps as many as one thousand, five hundred and forty lives.\""
     },
@@ -1731,7 +1731,7 @@
         "normalized_claim": "\"When the Constitution was written, (only) 20 to 25 percent of the people in the country could vote.\"",
         "label": "True",
         "claim_id": "val_000955",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"When the Constitution was written, (only) twenty percent to twenty-five percent of the people in the country could vote.\"",
         "perturb_type2_True": "\"When the Constitution was written, (only) twenty-two percent to twenty-eight percent of the people in the country could vote.\""
     },
@@ -1747,7 +1747,7 @@
         "normalized_claim": "\"I saved the taxpayers $2-billion on a bogus Air Force Boeing tanker deal where people went to jail.\"",
         "label": "True",
         "claim_id": "val_000982",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"I saved the taxpayers two dollars-billion on a bogus Air Force Boeing tanker deal where people went to jail.\"",
         "perturb_type2_True": "\"I saved the taxpayers three dollars-billion on a bogus Air Force Boeing tanker deal where people went to jail.\""
     },
@@ -1762,7 +1762,7 @@
         "normalized_claim": "In COVID-19 crisis, “only 20% of African Americans had jobs where they could work from home.”",
         "label": "True",
         "claim_id": "val_000988",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "In COVID-19 crisis, “only twenty percent of African Americans had jobs where they could work from home.”",
         "perturb_type2_True": "In COVID-19 crisis, “only twenty-two percent of African Americans had jobs where they could work from home.”"
     },
@@ -1777,7 +1777,7 @@
         "normalized_claim": "There is \"a situation in this country where you're nearing 50 percent of people who don't even pay income taxes.\"",
         "label": "True",
         "claim_id": "val_000989",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "There is \"a situation in this country where you're nearing fifty percent of people who don't even pay income taxes.\"",
         "perturb_type2_True": "There is \"a situation in this country where you're nearing fifty-five percent of people who don't even pay income taxes.\""
     },
@@ -1792,7 +1792,7 @@
         "normalized_claim": "\"The chances of being killed by a refugee committing a terrorist act is 1 in 3,600,000,000.\"",
         "label": "True",
         "claim_id": "val_000992",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"The chances of being killed by a refugee committing a terrorist act is one in three billion, six hundred million.\"",
         "perturb_type2_True": "\"The chances of being killed by a refugee committing a terrorist act is two in three billion, nine hundred and sixty million.\""
     },
@@ -1807,7 +1807,7 @@
         "normalized_claim": "Says\n\"With nearly 75 percent of Americans supportive of the construction of the pipeline, Schrader needs to explain to Oregon families why he voted against this needed project.\"",
         "label": "True",
         "claim_id": "val_000996",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says \"With nearly seventy-five percent of Americans supportive of the construction of the pipeline, Schrader needs to explain to Oregon families why he voted against this needed project.\"",
         "perturb_type2_True": "Says \"With nearly eighty-two percent of Americans supportive of the construction of the pipeline, Schrader needs to explain to Oregon families why he voted against this needed project.\""
     },
@@ -1822,7 +1822,7 @@
         "normalized_claim": "\"55 percent of the people who cast a provisional ballot (in Florida) in the last presidential election -- their vote did not count.\"",
         "label": "True",
         "claim_id": "val_000997",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"fifty-five percent of the people who cast a provisional ballot (in Florida) in the last presidential election -- their vote did not count.\"",
         "perturb_type2_True": "\"sixty-one percent of the people who cast a provisional ballot (in Florida) in the last presidential election -- their vote did not count.\""
     },
@@ -1837,7 +1837,7 @@
         "normalized_claim": "Says Thom Tillis voted to support Trump’s emergency declaration to fund the border wall even though it would \"raid $80,000,000 from North Carolina.\"",
         "label": "True",
         "claim_id": "val_001019",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says Thom Tillis voted to support Trump’s emergency declaration to fund the border wall even though it would \"raid eighty million dollars from North Carolina.\"",
         "perturb_type2_True": "Says Thom Tillis voted to support Trump’s emergency declaration to fund the border wall even though it would \"raid eighty-eight million dollars from North Carolina.\""
     },
@@ -1853,7 +1853,7 @@
         "normalized_claim": "Congress has 11 percent approval ratings, yet 96.4 percent of incumbent lawmakers were re-elected in 2014.",
         "label": "True",
         "claim_id": "val_001039",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Congress has eleven percent approval ratings, yet ninety-six point four percent of incumbent lawmakers were re-elected in two thousand and fourteen.",
         "perturb_type2_True": "Congress has twelve percent approval ratings, yet one hundred and six percent of incumbent lawmakers were re-elected in two thousand and nineteen."
     },
@@ -1868,7 +1868,7 @@
         "normalized_claim": "\"Since I took office, over 319,000 new private sector jobs have been created in Georgia with nearly 93,000 of those coming in the past 12 months.\"",
         "label": "True",
         "claim_id": "val_001042",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Since I took office, over three hundred and nineteen thousand new private sector jobs have been created in Georgia with nearly ninety-three thousand of those coming in the past twelve months.\"",
         "perturb_type2_True": "\"Since I took office, over three hundred and fifty thousand, nine hundred new private sector jobs have been created in Georgia with nearly one hundred and two thousand, three hundred of those coming in the past seventeen months.\""
     },
@@ -1884,7 +1884,7 @@
         "normalized_claim": "House Speaker Dean Cannon says that freshmen lawmakers account for one-third of the 120-member House, and that two-thirds of the chamber have two years or less experience.",
         "label": "True",
         "claim_id": "val_001044",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "House Speaker Dean Cannon says that freshmen lawmakers account for one-third of the one hundred and twenty-member House, and that two-thirds of the chamber have two years or less experience.",
         "perturb_type2_True": "House Speaker Dean Cannon says that freshmen lawmakers account for one-third of the one hundred and thirty-two-member House, and that two-thirds of the chamber have two years or less experience."
     },
@@ -1899,7 +1899,7 @@
         "normalized_claim": "President Trump’s tariffs are \"taking $1,400,000,000 out of working people’s pockets every month.\"",
         "label": "True",
         "claim_id": "val_001046",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "President Trump’s tariffs are \"taking one billion, four hundred million dollars out of working people’s pockets every month.\"",
         "perturb_type2_True": "President Trump’s tariffs are \"taking one billion, five hundred and forty million dollars out of working people’s pockets every month.\""
     },
@@ -1915,7 +1915,7 @@
         "normalized_claim": "\"We now consume at the federal level 25 percent of the gross domestic product. Historically we were at 20 percent. So we've taken 5 percent away from the private sector.\"",
         "label": "True",
         "claim_id": "val_001075",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"We now consume at the federal level twenty-five percent of the gross domestic product. Historically we were at twenty percent. So we've taken five percent away from the private sector.\"",
         "perturb_type2_True": "\"We now consume at the federal level twenty-eight percent of the gross domestic product. Historically we were at twenty-two percent. So we've taken six percent away from the private sector.\""
     },
@@ -1931,7 +1931,7 @@
         "normalized_claim": "“Last year, the 4th South Africa Investment Conference raised R367,000,000,000 in investment commitments, bringing our five-year investment target firmly within sight.”",
         "label": "True",
         "claim_id": "val_001077",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "“Last year, the 4th South Africa Investment Conference raised Rthree hundred and sixty-seven billion dollars in investment commitments, bringing our five-year investment target firmly within sight.”",
         "perturb_type2_True": "“Last year, the 4th South Africa Investment Conference raised Rfour hundred and three billion, seven hundred million dollars in investment commitments, bringing our five-year investment target firmly within sight.”"
     },
@@ -1946,7 +1946,7 @@
         "normalized_claim": "Says that as a judge, she has \"presided over more than 10,000 cases.\"",
         "label": "True",
         "claim_id": "val_001079",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says that as a judge, she has \"presided over more than ten thousand cases.\"",
         "perturb_type2_True": "Says that as a judge, she has \"presided over more than eleven thousand cases.\""
     },
@@ -1961,7 +1961,7 @@
         "normalized_claim": "\"The legislature was never given the opportunity to debate or vote on loaning $75,000,000 to 38 Studios.\"",
         "label": "True",
         "claim_id": "val_001087",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"The legislature was never given the opportunity to debate or vote on loaning seventy-five million dollars to 38 Studios.\"",
         "perturb_type2_True": "\"The legislature was never given the opportunity to debate or vote on loaning eighty-two million, five hundred thousand dollars to 38 Studios.\""
     },
@@ -1976,7 +1976,7 @@
         "normalized_claim": "Says Romney called Russia our No. 1 enemy.",
         "label": "True",
         "claim_id": "val_001095",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says Romney called Russia our No. one enemy.",
         "perturb_type2_True": "Says Romney called Russia our No. two enemy."
     },
@@ -1992,7 +1992,7 @@
         "normalized_claim": "\"60 percent of all Americans do not want to see Planned Parenthood defunded.\"",
         "label": "True",
         "claim_id": "val_001097",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"sixty percent of all Americans do not want to see Planned Parenthood defunded.\"",
         "perturb_type2_True": "\"sixty-six percent of all Americans do not want to see Planned Parenthood defunded.\""
     },
@@ -2007,7 +2007,7 @@
         "normalized_claim": "\"When the City and the Fairmount Park Conservancy invested $5,000,000 in Hunting Park, crime went down 89 percent within a half mile radius of the park over the next three years.\"",
         "label": "True",
         "claim_id": "val_001102",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"When the City and the Fairmount Park Conservancy invested five million dollars in Hunting Park, crime went down eighty-nine percent within a half mile radius of the park over the next three years.\"",
         "perturb_type2_True": "\"When the City and the Fairmount Park Conservancy invested five million, five hundred thousand dollars in Hunting Park, crime went down ninety-eight percent within a half mile radius of the park over the next three years.\""
     },
@@ -2023,7 +2023,7 @@
         "normalized_claim": "Super Bowl-winning quarterback Tom Brady joked about election denial during a White House ceremony, saying: \"I think about 40 percent of people still don’t think we won .. You understand that, Mr. President?\"",
         "label": "True",
         "claim_id": "val_001103",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Super Bowl-winning quarterback Tom Brady joked about election denial during a White House ceremony, saying: \"I think about forty percent of people still don’t think we won.. You understand that, Mr. President?\"",
         "perturb_type2_True": "Super Bowl-winning quarterback Tom Brady joked about election denial during a White House ceremony, saying: \"I think about forty-four percent of people still don’t think we won.. You understand that, Mr. President?\""
     },
@@ -2038,7 +2038,7 @@
         "normalized_claim": "Says Texas has \"11 different felonies you can commit with an oyster.\"",
         "label": "True",
         "claim_id": "val_001117",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says Texas has \"eleven different felonies you can commit with an oyster.\"",
         "perturb_type2_True": "Says Texas has \"twelve different felonies you can commit with an oyster.\""
     },
@@ -2054,7 +2054,7 @@
         "normalized_claim": "\"They say teachers only make on averagein New Jersey 60,000 dollars a year.They only work 180 days.\"",
         "label": "True",
         "claim_id": "val_001121",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"They say teachers only make on averagein New Jersey sixty thousand dollars dollars a year.They only work one hundred and eighty days.\"",
         "perturb_type2_True": "\"They say teachers only make on averagein New Jersey sixty-six thousand dollars dollars a year.They only work one hundred and eighty-five days.\""
     },
@@ -2069,7 +2069,7 @@
         "normalized_claim": "Says Gov. Rick Scott returned \"$1,000,000 in federal funding that would have helped the state cover the cost of overseeing insurance rates under the new health care law.\"",
         "label": "True",
         "claim_id": "val_001130",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says Gov. Rick Scott returned \"one million dollars in federal funding that would have helped the state cover the cost of overseeing insurance rates under the new health care law.\"",
         "perturb_type2_True": "Says Gov. Rick Scott returned \"one million, one hundred thousand dollars in federal funding that would have helped the state cover the cost of overseeing insurance rates under the new health care law.\""
     },
@@ -2084,7 +2084,7 @@
         "normalized_claim": "\"Wisconsin lost over 600 farms last year & our farmers can't afford the #TrumpShutdown.\"",
         "label": "True",
         "claim_id": "val_001135",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Wisconsin lost over six hundred farms last year & our farmers can't afford the #TrumpShutdown.\"",
         "perturb_type2_True": "\"Wisconsin lost over six hundred and sixty farms last year & our farmers can't afford the #TrumpShutdown.\""
     },
@@ -2099,7 +2099,7 @@
         "normalized_claim": "All 28 members of NATO have \"pledged to spend at least 2 percent of their economy on defense. But only three countries do -- Britain, Greece and us.\"",
         "label": "True",
         "claim_id": "val_001158",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "All twenty-eight members of NATO have \"pledged to spend at least two percent of their economy on defense. But only three countries do -- Britain, Greece and us.\"",
         "perturb_type2_True": "All thirty-one members of NATO have \"pledged to spend at least three percent of their economy on defense. But only three countries do -- Britain, Greece and us.\""
     },
@@ -2114,7 +2114,7 @@
         "normalized_claim": "\"There are 4.7 percent of Virginians who are minimum wage earners who are over 25 years of age working full-time and trying to raise a family.\"",
         "label": "True",
         "claim_id": "val_001163",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"There are four point seven percent of Virginians who are minimum wage earners who are over twenty-five years of age working full-time and trying to raise a family.\"",
         "perturb_type2_True": "\"There are six percent of Virginians who are minimum wage earners who are over thirty years of age working full-time and trying to raise a family.\""
     },
@@ -2129,7 +2129,7 @@
         "normalized_claim": "Says that before health care reform, one of every three health care dollars spent -- more than $800,000,000,000 a year -- didn't go for health care.",
         "label": "True",
         "claim_id": "val_001167",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says that before health care reform, one of every three health care dollars spent -- more than eight hundred billion dollars a year -- didn't go for health care.",
         "perturb_type2_True": "Says that before health care reform, one of every three health care dollars spent -- more than eight hundred and eighty billion dollars a year -- didn't go for health care."
     },
@@ -2145,7 +2145,7 @@
         "normalized_claim": "“Teachers can only deduct up to $250 for school supplies on their taxes, but billionaires can write off the entire cost of a private jet.”",
         "label": "True",
         "claim_id": "val_001177",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "“Teachers can only deduct up to two hundred and fifty dollars for school supplies on their taxes, but billionaires can write off the entire cost of a private jet.”",
         "perturb_type2_True": "“Teachers can only deduct up to two hundred and seventy-five dollars for school supplies on their taxes, but billionaires can write off the entire cost of a private jet.”"
     },
@@ -2160,7 +2160,7 @@
         "normalized_claim": "Says Bill O’Reilly spoke 40 percent of the words in an interview with President Barack Obama.",
         "label": "True",
         "claim_id": "val_001199",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says Bill O’Reilly spoke forty percent of the words in an interview with President Barack Obama.",
         "perturb_type2_True": "Says Bill O’Reilly spoke forty-four percent of the words in an interview with President Barack Obama."
     },
@@ -2175,7 +2175,7 @@
         "normalized_claim": "Of six Rhode Island tax-credit programs worth about $35,000,000, \"three companies got 90 percent of that -- CVS and two companies not even located in the state of Rhode Island.\"",
         "label": "True",
         "claim_id": "val_001211",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Of six Rhode Island tax-credit programs worth about thirty-five million dollars, \"three companies got ninety percent of that -- CVS and two companies not even located in the state of Rhode Island.\"",
         "perturb_type2_True": "Of six Rhode Island tax-credit programs worth about thirty-eight million, five hundred thousand dollars, \"three companies got ninety-nine percent of that -- CVS and two companies not even located in the state of Rhode Island.\""
     },
@@ -2190,7 +2190,7 @@
         "normalized_claim": "Says in \"our region,\" 2011 was worst drought year ever recorded.",
         "label": "True",
         "claim_id": "val_001232",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says in \"our region,\" two thousand and eleven was worst drought year ever recorded.",
         "perturb_type2_True": "Says in \"our region,\" two thousand and sixteen was worst drought year ever recorded."
     },
@@ -2205,7 +2205,7 @@
         "normalized_claim": "\"During the George W. Bush period, there were 13 attacks on various embassies and consulates around the world. Sixty people died.\"",
         "label": "True",
         "claim_id": "val_001233",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"During the George W. Bush period, there were thirteen attacks on various embassies and consulates around the world. Sixty people died.\"",
         "perturb_type2_True": "\"During the George W. Bush period, there were fourteen attacks on various embassies and consulates around the world. Sixty people died.\""
     },
@@ -2220,7 +2220,7 @@
         "normalized_claim": "\"Pennsylvania has lost 35 percent of its manufacturing jobs since 2001\" and \"Harrisburg has lost 40 percent of its manufacturing jobs since 2001.\"",
         "label": "True",
         "claim_id": "val_001247",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Pennsylvania has lost thirty-five percent of its manufacturing jobs since two thousand and one\" and \"Harrisburg has lost forty percent of its manufacturing jobs since two thousand and one.\"",
         "perturb_type2_True": "\"Pennsylvania has lost thirty-eight percent of its manufacturing jobs since two thousand and six\" and \"Harrisburg has lost forty-four percent of its manufacturing jobs since two thousand and six.\""
     },
@@ -2235,7 +2235,7 @@
         "normalized_claim": "\"I have had the challenge during this administration to suspend no less than 37 public officials in about 36 months.\"",
         "label": "True",
         "claim_id": "val_001276",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"I have had the challenge during this administration to suspend no less than thirty-seven public officials in about thirty-six months.\"",
         "perturb_type2_True": "\"I have had the challenge during this administration to suspend no less than forty-one public officials in about forty-one months.\""
     },
@@ -2251,7 +2251,7 @@
         "normalized_claim": "Says Donald Trump's first 17 Cabinet appointments \"have a net worth of more than a third of America.\"",
         "label": "True",
         "claim_id": "val_001277",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says Donald Trump's first seventeen Cabinet appointments \"have a net worth of more than a third of America.\"",
         "perturb_type2_True": "Says Donald Trump's first nineteen Cabinet appointments \"have a net worth of more than a third of America.\""
     },
@@ -2267,7 +2267,7 @@
         "normalized_claim": "West Virginia is poised to “receive $25M for 160 orphaned well clean-up projects across the state.”",
         "label": "True",
         "claim_id": "val_001278",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "West Virginia is poised to “receive twenty-five dollarsM for one hundred and sixty orphaned well clean-up projects across the state.”",
         "perturb_type2_True": "West Virginia is poised to “receive twenty-eight dollarsM for one hundred and seventy-six orphaned well clean-up projects across the state.”"
     },
@@ -2282,7 +2282,7 @@
         "normalized_claim": "Says \"a pack-a-day smoker who quits because of the tax increase will save about $1,650 a year.\"",
         "label": "True",
         "claim_id": "val_001283",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says \"a pack-a-day smoker who quits because of the tax increase will save about one thousand, six hundred and fifty dollars a year.\"",
         "perturb_type2_True": "Says \"a pack-a-day smoker who quits because of the tax increase will save about one thousand, eight hundred and fifteen dollars a year.\""
     },
@@ -2297,7 +2297,7 @@
         "normalized_claim": "Says Jon Corzine \"gave away 14 percent raises over 4 years and he stood on the front steps of the Capitol at a public-sector union rally and said, 'I will fight to get you a great contract.’\"",
         "label": "True",
         "claim_id": "val_001287",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says Jon Corzine \"gave away fourteen percent raises over four years and he stood on the front steps of the Capitol at a public-sector union rally and said, 'I will fight to get you a great contract.’\"",
         "perturb_type2_True": "Says Jon Corzine \"gave away fifteen percent raises over nine years and he stood on the front steps of the Capitol at a public-sector union rally and said, 'I will fight to get you a great contract.’\""
     },
@@ -2313,7 +2313,7 @@
         "normalized_claim": "“To curb water wastage, the Department of Water and Sanitation has begun its programme of training 15,000 young people as artisans.”",
         "label": "True",
         "claim_id": "val_001290",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "“To curb water wastage, the Department of Water and Sanitation has begun its programme of training fifteen thousand young people as artisans.”",
         "perturb_type2_True": "“To curb water wastage, the Department of Water and Sanitation has begun its programme of training sixteen thousand, five hundred young people as artisans.”"
     },
@@ -2328,7 +2328,7 @@
         "normalized_claim": "\"When we say ‘one vote matters,’ it’s not just a saying – it has proven true 141 times in #Ohio over the last five years.\"",
         "label": "True",
         "claim_id": "val_001291",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"When we say ‘one vote matters,’ it’s not just a saying – it has proven true one hundred and forty-one times in #Ohio over the last five years.\"",
         "perturb_type2_True": "\"When we say ‘one vote matters,’ it’s not just a saying – it has proven true one hundred and fifty-five times in #Ohio over the last five years.\""
     },
@@ -2343,7 +2343,7 @@
         "normalized_claim": "About 40 percent of U.S. illegal immigrants \"came in on an airplane, with a legal visa, and just overstayed their visa and have never gone home.\"",
         "label": "True",
         "claim_id": "val_001302",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "About forty percent of U.S. illegal immigrants \"came in on an airplane, with a legal visa, and just overstayed their visa and have never gone home.\"",
         "perturb_type2_True": "About forty-four percent of U.S. illegal immigrants \"came in on an airplane, with a legal visa, and just overstayed their visa and have never gone home.\""
     },
@@ -2358,7 +2358,7 @@
         "normalized_claim": "\"By spring 2014, parents of 60,000 students in New York state had refused to let them take the Common Core Tests.\"",
         "label": "True",
         "claim_id": "val_001304",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"By spring two thousand and fourteen, parents of sixty thousand students in New York state had refused to let them take the Common Core Tests.\"",
         "perturb_type2_True": "\"By spring two thousand and nineteen, parents of sixty-six thousand students in New York state had refused to let them take the Common Core Tests.\""
     },
@@ -2374,7 +2374,7 @@
         "normalized_claim": "Joe Biden Claims U.S. Went From Producing 40% Of World’s Microchips To 10%",
         "label": "True",
         "claim_id": "val_001327",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Joe Biden Claims U.S. Went From Producing forty percent Of World’s Microchips To ten percent",
         "perturb_type2_True": "Joe Biden Claims U.S. Went From Producing forty-four percent Of World’s Microchips To eleven percent"
     },
@@ -2390,7 +2390,7 @@
         "normalized_claim": "558 people were killed by the police in 2018, while 201 people died in police custody",
         "label": "True",
         "claim_id": "val_001332",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "five hundred and fifty-eight people were killed by the police in two thousand and eighteen, while two hundred and one people died in police custody",
         "perturb_type2_True": "six hundred and fourteen people were killed by the police in two thousand and twenty-three, while two hundred and twenty-one people died in police custody"
     },
@@ -2406,7 +2406,7 @@
         "normalized_claim": "Slot machines in Miami-Dade and Broward counties have generated 20 percent of the promised $500,000,000 per year for schools.",
         "label": "True",
         "claim_id": "val_001349",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Slot machines in Miami-Dade and Broward counties have generated twenty percent of the promised five hundred million dollars per year for schools.",
         "perturb_type2_True": "Slot machines in Miami-Dade and Broward counties have generated twenty-two percent of the promised five hundred and fifty million dollars per year for schools."
     },
@@ -2421,7 +2421,7 @@
         "normalized_claim": "\"As bank president, Alex Sink eliminated thousands of Florida jobs while taking over $8,000,000 in salary and bonuses.\"",
         "label": "True",
         "claim_id": "val_001351",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"As bank president, Alex Sink eliminated thousands of Florida jobs while taking over eight million dollars in salary and bonuses.\"",
         "perturb_type2_True": "\"As bank president, Alex Sink eliminated thousands of Florida jobs while taking over eight million, eight hundred thousand dollars in salary and bonuses.\""
     },
@@ -2437,7 +2437,7 @@
         "normalized_claim": "Caravan migrants demanded $50,000 payments from the U.S. in order to go home.",
         "label": "True",
         "claim_id": "val_001355",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Caravan migrants demanded fifty thousand dollars payments from the U.S. in order to go home.",
         "perturb_type2_True": "Caravan migrants demanded fifty-five thousand dollars payments from the U.S. in order to go home."
     },
@@ -2452,7 +2452,7 @@
         "normalized_claim": "\"A couple retiring today will pay about $119,000 in lifetime Medicare taxes and receive about $357,000 in lifetime Medicare benefits. ... about 3 bucks in benefits for every dollar in taxes.\"",
         "label": "True",
         "claim_id": "val_001360",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"A couple retiring today will pay about one hundred and nineteen thousand dollars in lifetime Medicare taxes and receive about three hundred and fifty-seven thousand dollars in lifetime Medicare benefits.... about three dollars bucks in benefits for every dollar in taxes.\"",
         "perturb_type2_True": "\"A couple retiring today will pay about one hundred and thirty thousand, nine hundred dollars in lifetime Medicare taxes and receive about three hundred and ninety-two thousand, seven hundred dollars in lifetime Medicare benefits.... about four dollars bucks in benefits for every dollar in taxes.\""
     },
@@ -2468,7 +2468,7 @@
         "normalized_claim": "\"Nearly 800,000,000 opioid pills were shipped to WV, amounting to 433 pills for every man, woman, and child in the state.”",
         "label": "True",
         "claim_id": "val_001363",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Nearly eight hundred million opioid pills were shipped to WV, amounting to four hundred and thirty-three pills for every man, woman, and child in the state.”",
         "perturb_type2_True": "\"Nearly eight hundred and eighty million opioid pills were shipped to WV, amounting to four hundred and seventy-six pills for every man, woman, and child in the state.”"
     },
@@ -2483,7 +2483,7 @@
         "normalized_claim": "Says President Donald Trump as a candidate mentioned WikiLeaks \"over 160 times in speeches\" in the last month of the campaign.",
         "label": "True",
         "claim_id": "val_001368",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says President Donald Trump as a candidate mentioned WikiLeaks \"over one hundred and sixty times in speeches\" in the last month of the campaign.",
         "perturb_type2_True": "Says President Donald Trump as a candidate mentioned WikiLeaks \"over one hundred and seventy-six times in speeches\" in the last month of the campaign."
     },
@@ -2498,7 +2498,7 @@
         "normalized_claim": "\"While fat-cat bureaucrats at the Department of Education are getting paid an average salary of $102,000 a year, teachers in Georgia are getting paid half of that.\"",
         "label": "True",
         "claim_id": "val_001375",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"While fat-cat bureaucrats at the Department of Education are getting paid an average salary of one hundred and two thousand dollars a year, teachers in Georgia are getting paid half of that.\"",
         "perturb_type2_True": "\"While fat-cat bureaucrats at the Department of Education are getting paid an average salary of one hundred and twelve thousand, two hundred dollars a year, teachers in Georgia are getting paid half of that.\""
     },
@@ -2514,7 +2514,7 @@
         "normalized_claim": "Some 700-plus undocumented migrants, including sex offenders, were apprehended by the U.S. Border Patrol overnight.",
         "label": "True",
         "claim_id": "val_001388",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Some seven hundred-plus undocumented migrants, including sex offenders, were apprehended by the U.S. Border Patrol overnight.",
         "perturb_type2_True": "Some seven hundred and seventy-plus undocumented migrants, including sex offenders, were apprehended by the U.S. Border Patrol overnight."
     },
@@ -2529,7 +2529,7 @@
         "normalized_claim": "Says \"Every year air pollution protections are delayed, another 34,000 people will die prematurely.\"",
         "label": "True",
         "claim_id": "val_001395",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says \"Every year air pollution protections are delayed, another thirty-four thousand people will die prematurely.\"",
         "perturb_type2_True": "Says \"Every year air pollution protections are delayed, another thirty-seven thousand, four hundred people will die prematurely.\""
     },
@@ -2544,7 +2544,7 @@
         "normalized_claim": "\"There's never been a (U.S. Supreme Court) vacancy in the last, I think, 30 years, lasting longer than 237 days.\"",
         "label": "True",
         "claim_id": "val_001400",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"There's never been a (U.S. Supreme Court) vacancy in the last, I think, thirty years, lasting longer than two hundred and thirty-seven days.\"",
         "perturb_type2_True": "\"There's never been a (U.S. Supreme Court) vacancy in the last, I think, thirty-five years, lasting longer than two hundred and forty-two days.\""
     },
@@ -2559,7 +2559,7 @@
         "normalized_claim": "\"McCain lobbied for (a) $10-million pork project honoring conservative justice.\"",
         "label": "True",
         "claim_id": "val_001409",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"McCain lobbied for (a) ten dollars-million pork project honoring conservative justice.\"",
         "perturb_type2_True": "\"McCain lobbied for (a) eleven dollars-million pork project honoring conservative justice.\""
     },
@@ -2575,7 +2575,7 @@
         "normalized_claim": "Sen. Lindsey Graham called President Donald Trump a \"race-baiting xenophobic bigot\" in 2015 but in 2018 claimed that he had \"never heard him make a single racist statement.\"",
         "label": "True",
         "claim_id": "val_001411",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Sen. Lindsey Graham called President Donald Trump a \"race-baiting xenophobic bigot\" in two thousand and fifteen but in two thousand and eighteen claimed that he had \"never heard him make a single racist statement.\"",
         "perturb_type2_True": "Sen. Lindsey Graham called President Donald Trump a \"race-baiting xenophobic bigot\" in two thousand and twenty but in two thousand and twenty-three claimed that he had \"never heard him make a single racist statement.\""
     },
@@ -2590,7 +2590,7 @@
         "normalized_claim": "Says 21,000,000 people \"still suffer slavery today.\"",
         "label": "True",
         "claim_id": "val_001418",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says twenty-one million people \"still suffer slavery today.\"",
         "perturb_type2_True": "Says twenty-three million, one hundred thousand people \"still suffer slavery today.\""
     },
@@ -2605,7 +2605,7 @@
         "normalized_claim": "Says Wisconsin payday loans have a 574% average annual interest rate, \"exploitative lending that keeps Americans trapped in debt\"",
         "label": "True",
         "claim_id": "val_001420",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says Wisconsin payday loans have a five hundred and seventy-four percent average annual interest rate, \"exploitative lending that keeps Americans trapped in debt\"",
         "perturb_type2_True": "Says Wisconsin payday loans have a six hundred and thirty-one percent average annual interest rate, \"exploitative lending that keeps Americans trapped in debt\""
     },
@@ -2620,7 +2620,7 @@
         "normalized_claim": "When Rick Scott \"was deposed in lawsuits about his company, he took the Fifth 75 times.\"",
         "label": "True",
         "claim_id": "val_001429",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "When Rick Scott \"was deposed in lawsuits about his company, he took the Fifth seventy-five times.\"",
         "perturb_type2_True": "When Rick Scott \"was deposed in lawsuits about his company, he took the Fifth eighty-two times.\""
     },
@@ -2636,7 +2636,7 @@
         "normalized_claim": "Georgia is one of seven states to lose jobs in 2011 and has lost 8,200 jobs so far.",
         "label": "True",
         "claim_id": "val_001432",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Georgia is one of seven states to lose jobs in two thousand and eleven and has lost eight thousand, two hundred jobs so far.",
         "perturb_type2_True": "Georgia is one of seven states to lose jobs in two thousand and sixteen and has lost nine thousand and twenty jobs so far."
     },
@@ -2651,7 +2651,7 @@
         "normalized_claim": "\"It turns out that Texas has an $18,000,000,000 budget shortfall and can't afford its new science textbooks.\"",
         "label": "True",
         "claim_id": "val_001434",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"It turns out that Texas has an eighteen billion dollars budget shortfall and can't afford its new science textbooks.\"",
         "perturb_type2_True": "\"It turns out that Texas has an nineteen billion, eight hundred million dollars budget shortfall and can't afford its new science textbooks.\""
     },
@@ -2666,7 +2666,7 @@
         "normalized_claim": "\"215 members of Congress just voted to let your ISP spy on what type of underwear you buy and sell that data to advertisers.\"",
         "label": "True",
         "claim_id": "val_001447",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"two hundred and fifteen members of Congress just voted to let your ISP spy on what type of underwear you buy and sell that data to advertisers.\"",
         "perturb_type2_True": "\"two hundred and thirty-seven members of Congress just voted to let your ISP spy on what type of underwear you buy and sell that data to advertisers.\""
     },
@@ -2681,7 +2681,7 @@
         "normalized_claim": "The Seminole gambling compact offers \"$3,000,000,000 in guaranteed revenue, the largest share for any state in history.\"",
         "label": "True",
         "claim_id": "val_001448",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "The Seminole gambling compact offers \"three billion dollars in guaranteed revenue, the largest share for any state in history.\"",
         "perturb_type2_True": "The Seminole gambling compact offers \"three billion, three hundred million dollars in guaranteed revenue, the largest share for any state in history.\""
     },
@@ -2696,7 +2696,7 @@
         "normalized_claim": "Says \"over the last 48 years, every governor at the midterm of his first term or her first term has lost seats in the Legislature, with the exception of Jim McGreevey in 2003.\"",
         "label": "True",
         "claim_id": "val_001449",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says \"over the last forty-eight years, every governor at the midterm of his first term or her first term has lost seats in the Legislature, with the exception of Jim McGreevey in two thousand and three.\"",
         "perturb_type2_True": "Says \"over the last fifty-three years, every governor at the midterm of his first term or her first term has lost seats in the Legislature, with the exception of Jim McGreevey in two thousand and eight.\""
     },
@@ -2711,7 +2711,7 @@
         "normalized_claim": "$50,000. That's what every child owes today because Washington politicians have run up a huge spending tab and left our kids the bill.\"",
         "label": "True",
         "claim_id": "val_001456",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "fifty thousand dollars. That's what every child owes today because Washington politicians have run up a huge spending tab and left our kids the bill.\"",
         "perturb_type2_True": "fifty-five thousand dollars. That's what every child owes today because Washington politicians have run up a huge spending tab and left our kids the bill.\""
     },
@@ -2727,7 +2727,7 @@
         "normalized_claim": "A Florida car dealer quoted $30,000 to replace the battery on a Chevrolet Volt",
         "label": "True",
         "claim_id": "val_001466",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "A Florida car dealer quoted thirty thousand dollars to replace the battery on a Chevrolet Volt",
         "perturb_type2_True": "A Florida car dealer quoted thirty-three thousand dollars to replace the battery on a Chevrolet Volt"
     },
@@ -2743,7 +2743,7 @@
         "normalized_claim": "\"80 percent of the (individual mandate) tax falls on those who make $50,000 a year or less.\"",
         "label": "True",
         "claim_id": "val_001480",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"eighty percent of the (individual mandate) tax falls on those who make fifty thousand dollars a year or less.\"",
         "perturb_type2_True": "\"eighty-eight percent of the (individual mandate) tax falls on those who make fifty-five thousand dollars a year or less.\""
     },
@@ -2758,7 +2758,7 @@
         "normalized_claim": "\"Right now in Ohio 200,000 people are getting opioid treatment because they have insurance under the Affordable Care Act.\"",
         "label": "True",
         "claim_id": "val_001482",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Right now in Ohio two hundred thousand people are getting opioid treatment because they have insurance under the Affordable Care Act.\"",
         "perturb_type2_True": "\"Right now in Ohio two hundred and twenty thousand people are getting opioid treatment because they have insurance under the Affordable Care Act.\""
     },
@@ -2773,7 +2773,7 @@
         "normalized_claim": "\"According to Pew Research, 99 percent of the people in Afghanistan support oppressive Sharia law.\"",
         "label": "True",
         "claim_id": "val_001491",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"According to Pew Research, ninety-nine percent of the people in Afghanistan support oppressive Sharia law.\"",
         "perturb_type2_True": "\"According to Pew Research, one hundred and nine percent of the people in Afghanistan support oppressive Sharia law.\""
     },
@@ -2789,7 +2789,7 @@
         "normalized_claim": "Vaping company Dr. Dabbler offered track star Sha'Carri Richardson $250,000 to test its products.",
         "label": "True",
         "claim_id": "val_001507",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Vaping company Dr. Dabbler offered track star Sha'Carri Richardson two hundred and fifty thousand dollars to test its products.",
         "perturb_type2_True": "Vaping company Dr. Dabbler offered track star Sha'Carri Richardson two hundred and seventy-five thousand dollars to test its products."
     },
@@ -2804,7 +2804,7 @@
         "normalized_claim": "Says businesses pay roughly 60 percent of taxes in Texas.",
         "label": "True",
         "claim_id": "val_001534",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says businesses pay roughly sixty percent of taxes in Texas.",
         "perturb_type2_True": "Says businesses pay roughly sixty-six percent of taxes in Texas."
     },
@@ -2819,7 +2819,7 @@
         "normalized_claim": "Last year, Democrats won nearly 50% of the vote, yet they hold only 38% of the seats in the state House and 30% of the seats in the state Senate.",
         "label": "True",
         "claim_id": "val_001580",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Last year, Democrats won nearly fifty percent of the vote, yet they hold only thirty-eight percent of the seats in the state House and thirty percent of the seats in the state Senate.",
         "perturb_type2_True": "Last year, Democrats won nearly fifty-five percent of the vote, yet they hold only forty-two percent of the seats in the state House and thirty-three percent of the seats in the state Senate."
     },
@@ -2834,7 +2834,7 @@
         "normalized_claim": "\"Since Barack Obama became president of the United States, 95 percent of economic gains have been made by the richest 1 percent.\"",
         "label": "True",
         "claim_id": "val_001586",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Since Barack Obama became president of the United States, ninety-five percent of economic gains have been made by the richest one percent.\"",
         "perturb_type2_True": "\"Since Barack Obama became president of the United States, one hundred and five percent of economic gains have been made by the richest two percent.\""
     },
@@ -2849,7 +2849,7 @@
         "normalized_claim": "\"In 2008, tourism brought in $38,000,000,000 dollars and supported more than 300,000 jobs in the state of New Jersey.\"",
         "label": "True",
         "claim_id": "val_001589",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"In two thousand and eight, tourism brought in thirty-eight billion dollars dollars and supported more than three hundred thousand jobs in the state of New Jersey.\"",
         "perturb_type2_True": "\"In two thousand and thirteen, tourism brought in forty-one billion, eight hundred million dollars dollars and supported more than three hundred and thirty thousand jobs in the state of New Jersey.\""
     },
@@ -2865,7 +2865,7 @@
         "normalized_claim": "My 2018 election was the first time Speaker Robin Vos has lost a Republican-held seat",
         "label": "True",
         "claim_id": "val_001596",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "My two thousand and eighteen election was the first time Speaker Robin Vos has lost a Republican-held seat",
         "perturb_type2_True": "My two thousand and twenty-three election was the first time Speaker Robin Vos has lost a Republican-held seat"
     },
@@ -2880,7 +2880,7 @@
         "normalized_claim": "\"David Dewhurst currently owes more than $1,000,000 to vendors for services provided to his 2012 U.S. Senate campaign.\"",
         "label": "True",
         "claim_id": "val_001610",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"David Dewhurst currently owes more than one million dollars to vendors for services provided to his two thousand and twelve U.S. Senate campaign.\"",
         "perturb_type2_True": "\"David Dewhurst currently owes more than one million, one hundred thousand dollars to vendors for services provided to his two thousand and seventeen U.S. Senate campaign.\""
     },
@@ -2895,7 +2895,7 @@
         "normalized_claim": "AIG \"said they were giving $57,000,000 (in retention payments) to people who were being terminated.\"",
         "label": "True",
         "claim_id": "val_001611",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "AIG \"said they were giving fifty-seven million dollars (in retention payments) to people who were being terminated.\"",
         "perturb_type2_True": "AIG \"said they were giving sixty-two million, seven hundred thousand dollars (in retention payments) to people who were being terminated.\""
     },
@@ -2911,7 +2911,7 @@
         "normalized_claim": "There were 5 national waterways before 2014. There are 106 national waterways since 2014.",
         "label": "True",
         "claim_id": "val_001615",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "There were five national waterways before two thousand and fourteen. There are one hundred and six national waterways since two thousand and fourteen.",
         "perturb_type2_True": "There were six national waterways before two thousand and nineteen. There are one hundred and seventeen national waterways since two thousand and nineteen."
     },
@@ -2926,7 +2926,7 @@
         "normalized_claim": "\"Of the topfive cities for staged automobile accidents, three are in Florida. … We rank No. 1 in the country in staged auto accidents.\"",
         "label": "True",
         "claim_id": "val_001624",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Of the topfive cities for staged automobile accidents, three are in Florida. … We rank No. one in the country in staged auto accidents.\"",
         "perturb_type2_True": "\"Of the topfive cities for staged automobile accidents, three are in Florida. … We rank No. two in the country in staged auto accidents.\""
     },
@@ -2942,7 +2942,7 @@
         "normalized_claim": "For building innovative skills 2,400 Atal tinkering labs sanctioned in schools at 20 lakh rupees each.",
         "label": "True",
         "claim_id": "val_001630",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "For building innovative skills two thousand, four hundred Atal tinkering labs sanctioned in schools at twenty dollars lakh rupees each.",
         "perturb_type2_True": "For building innovative skills two thousand, six hundred and forty Atal tinkering labs sanctioned in schools at twenty-two dollars lakh rupees each."
     },
@@ -2957,7 +2957,7 @@
         "normalized_claim": "\"We are $20,000,000,000,000 in debt. The Congressional Budget Office projects an additional $129,000,000,000,000 of accumulated deficits over the next 30 years.\"",
         "label": "True",
         "claim_id": "val_001633",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"We are twenty trillion dollars in debt. The Congressional Budget Office projects an additional one hundred and twenty-nine trillion dollars of accumulated deficits over the next thirty years.\"",
         "perturb_type2_True": "\"We are twenty-two trillion dollars in debt. The Congressional Budget Office projects an additional one hundred and forty-one trillion, nine hundred billion dollars of accumulated deficits over the next thirty-five years.\""
     },
@@ -2973,7 +2973,7 @@
         "normalized_claim": "\"60 percent of the jobs lost in the 2008 recession were living-wage jobs. Of the jobs we’ve gotten back, only 40 percent are living-wage.\"",
         "label": "True",
         "claim_id": "val_001643",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"sixty percent of the jobs lost in the two thousand and eight recession were living-wage jobs. Of the jobs we’ve gotten back, only forty percent are living-wage.\"",
         "perturb_type2_True": "\"sixty-six percent of the jobs lost in the two thousand and thirteen recession were living-wage jobs. Of the jobs we’ve gotten back, only forty-four percent are living-wage.\""
     },
@@ -2988,7 +2988,7 @@
         "normalized_claim": "\"Twenty percent of our electricity currently comes from nuclear power plants. I think there are 104 in the United States, two of them around the coast in California.\"",
         "label": "True",
         "claim_id": "val_001651",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Twenty percent of our electricity currently comes from nuclear power plants. I think there are one hundred and four in the United States, two of them around the coast in California.\"",
         "perturb_type2_True": "\"Twenty percent of our electricity currently comes from nuclear power plants. I think there are one hundred and fourteen in the United States, two of them around the coast in California.\""
     },
@@ -3004,7 +3004,7 @@
         "normalized_claim": "The Paradise Adventist Academy in California received around $13,000 in donations as well as new uniforms and clothes from an opponent in a game played shortly after their hometown was destroyed by the Camp Fire.",
         "label": "True",
         "claim_id": "val_001652",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "The Paradise Adventist Academy in California received around thirteen thousand dollars in donations as well as new uniforms and clothes from an opponent in a game played shortly after their hometown was destroyed by the Camp Fire.",
         "perturb_type2_True": "The Paradise Adventist Academy in California received around fourteen thousand, three hundred dollars in donations as well as new uniforms and clothes from an opponent in a game played shortly after their hometown was destroyed by the Camp Fire."
     },
@@ -3020,7 +3020,7 @@
         "normalized_claim": "Says 18 states and the District of Columbia have voted Democratic in six consecutive presidential elections.",
         "label": "True",
         "claim_id": "val_001671",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says eighteen states and the District of Columbia have voted Democratic in six consecutive presidential elections.",
         "perturb_type2_True": "Says twenty states and the District of Columbia have voted Democratic in six consecutive presidential elections."
     },
@@ -3036,7 +3036,7 @@
         "normalized_claim": "We have an average of 400,000 cases being filed in our courts every year",
         "label": "True",
         "claim_id": "val_001690",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "We have an average of four hundred thousand cases being filed in our courts every year",
         "perturb_type2_True": "We have an average of four hundred and forty thousand cases being filed in our courts every year"
     },
@@ -3051,7 +3051,7 @@
         "normalized_claim": "Says under the Senate immigration bill, newly legalized immigrants will \"pay every tax possible, but you don’t get a single benefit\" for 10 years.",
         "label": "True",
         "claim_id": "val_001697",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says under the Senate immigration bill, newly legalized immigrants will \"pay every tax possible, but you don’t get a single benefit\" for ten years.",
         "perturb_type2_True": "Says under the Senate immigration bill, newly legalized immigrants will \"pay every tax possible, but you don’t get a single benefit\" for fifteen years."
     },
@@ -3067,7 +3067,7 @@
         "normalized_claim": "In 2018, White House Press Secretary Sarah Huckabee Sanders was listed as one of the 10 \"most admired\" women in the United States.",
         "label": "True",
         "claim_id": "val_001707",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "In two thousand and eighteen, White House Press Secretary Sarah Huckabee Sanders was listed as one of the ten \"most admired\" women in the United States.",
         "perturb_type2_True": "In two thousand and twenty-three, White House Press Secretary Sarah Huckabee Sanders was listed as one of the eleven \"most admired\" women in the United States."
     },
@@ -3082,7 +3082,7 @@
         "normalized_claim": "\"Our pension system is the only one in the country that’s 100 percent funded.\"",
         "label": "True",
         "claim_id": "val_001710",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Our pension system is the only one in the country that’s one hundred percent funded.\"",
         "perturb_type2_True": "\"Our pension system is the only one in the country that’s one hundred and ten percent funded.\""
     },
@@ -3098,7 +3098,7 @@
         "normalized_claim": "Says budget savings by reducing pay and benefits for federal employees total $103,000,000,000 over 10 years -- more than $50,000 per worker.",
         "label": "True",
         "claim_id": "val_001723",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says budget savings by reducing pay and benefits for federal employees total one hundred and three billion dollars over ten years -- more than fifty thousand dollars per worker.",
         "perturb_type2_True": "Says budget savings by reducing pay and benefits for federal employees total one hundred and thirteen billion, three hundred million dollars over fifteen years -- more than fifty-five thousand dollars per worker."
     },
@@ -3113,7 +3113,7 @@
         "normalized_claim": "Says U.S. Senate candidate Tammy Baldwin \"proposed a $3,900,000,000,000 tax increase -- a tax increase so extreme\" that \"even Nancy Pelosi voted against it.\"",
         "label": "True",
         "claim_id": "val_001741",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says U.S. Senate candidate Tammy Baldwin \"proposed a three trillion, nine hundred billion dollars tax increase -- a tax increase so extreme\" that \"even Nancy Pelosi voted against it.\"",
         "perturb_type2_True": "Says U.S. Senate candidate Tammy Baldwin \"proposed a four trillion, two hundred and ninety billion dollars tax increase -- a tax increase so extreme\" that \"even Nancy Pelosi voted against it.\""
     },
@@ -3128,7 +3128,7 @@
         "normalized_claim": "Says Rep. Bruce Braley, D-Iowa, missed \"79 percent of veterans affairs committee hearings.\"",
         "label": "True",
         "claim_id": "val_001762",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says Rep. Bruce Braley, D-Iowa, missed \"seventy-nine percent of veterans affairs committee hearings.\"",
         "perturb_type2_True": "Says Rep. Bruce Braley, D-Iowa, missed \"eighty-seven percent of veterans affairs committee hearings.\""
     },
@@ -3144,7 +3144,7 @@
         "normalized_claim": "\"[The DA] has brought down the rate of mother to child HIV transmission to just 1.8%, the lowest in the country.\"",
         "label": "True",
         "claim_id": "val_001763",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"[The DA] has brought down the rate of mother to child HIV transmission to just one point eight percent, the lowest in the country.\"",
         "perturb_type2_True": "\"[The DA] has brought down the rate of mother to child HIV transmission to just three percent, the lowest in the country.\""
     },
@@ -3160,7 +3160,7 @@
         "normalized_claim": "\"KSh4,000,000,000 was released from the national treasury to subsidise unga.\"",
         "label": "True",
         "claim_id": "val_001771",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"KShfour billion dollars was released from the national treasury to subsidise unga.\"",
         "perturb_type2_True": "\"KShfour billion, four hundred million dollars was released from the national treasury to subsidise unga.\""
     },
@@ -3176,7 +3176,7 @@
         "normalized_claim": "Says 1,000 people failed gun background checks in Wisconsin in 2018, but \"almost none of them were prosecuted for trying to do a background check and illegally buy a weapon.\"",
         "label": "True",
         "claim_id": "val_001774",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says one thousand people failed gun background checks in Wisconsin in two thousand and eighteen, but \"almost none of them were prosecuted for trying to do a background check and illegally buy a weapon.\"",
         "perturb_type2_True": "Says one thousand, one hundred people failed gun background checks in Wisconsin in two thousand and twenty-three, but \"almost none of them were prosecuted for trying to do a background check and illegally buy a weapon.\""
     },
@@ -3192,7 +3192,7 @@
         "normalized_claim": "\"The proudest accomplishment (of my tenure) was leaving the state with a $1,200,000,000 surplus, which was the largest we’d ever had, and getting spending under control and a balanced budget.\"",
         "label": "True",
         "claim_id": "val_001782",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"The proudest accomplishment (of my tenure) was leaving the state with a one billion, two hundred million dollars surplus, which was the largest we’d ever had, and getting spending under control and a balanced budget.\"",
         "perturb_type2_True": "\"The proudest accomplishment (of my tenure) was leaving the state with a one billion, three hundred and twenty million dollars surplus, which was the largest we’d ever had, and getting spending under control and a balanced budget.\""
     },
@@ -3207,7 +3207,7 @@
         "normalized_claim": "\"About 80 percent of (the manufacturing and agriculture) tax credit goes to claimants who are making $1,000,000 or more.\"",
         "label": "True",
         "claim_id": "val_001796",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"About eighty percent of (the manufacturing and agriculture) tax credit goes to claimants who are making one million dollars or more.\"",
         "perturb_type2_True": "\"About eighty-eight percent of (the manufacturing and agriculture) tax credit goes to claimants who are making one million, one hundred thousand dollars or more.\""
     },
@@ -3222,7 +3222,7 @@
         "normalized_claim": "\"When Deborah took office, the (Sellwood Bridge) project had languished for years, with only $11,000,000 in funds. With her leadership the remaining funding was secured that got the project moving forward.\"",
         "label": "True",
         "claim_id": "val_001800",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"When Deborah took office, the (Sellwood Bridge) project had languished for years, with only eleven million dollars in funds. With her leadership the remaining funding was secured that got the project moving forward.\"",
         "perturb_type2_True": "\"When Deborah took office, the (Sellwood Bridge) project had languished for years, with only twelve million, one hundred thousand dollars in funds. With her leadership the remaining funding was secured that got the project moving forward.\""
     },
@@ -3237,7 +3237,7 @@
         "normalized_claim": "\"I delivered to you a budget that ... cuts taxes by $2,000,000,000.\"",
         "label": "True",
         "claim_id": "val_001828",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"I delivered to you a budget that... cuts taxes by two billion dollars.\"",
         "perturb_type2_True": "\"I delivered to you a budget that... cuts taxes by two billion, two hundred million dollars.\""
     },
@@ -3253,7 +3253,7 @@
         "normalized_claim": "“30,000,000 South Africans have to make ends meet with less [than] R1,000 a month.”",
         "label": "True",
         "claim_id": "val_001839",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "“thirty million South Africans have to make ends meet with less [than] R1,000 a month.”",
         "perturb_type2_True": "“thirty-three million South Africans have to make ends meet with less [than] R1,000 a month.”"
     },
@@ -3269,7 +3269,7 @@
         "normalized_claim": "“At 29.1%, the Western Cape continues to have the lowest expanded unemployment rate in South Africa ...”",
         "label": "True",
         "claim_id": "val_001848",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "“At twenty-nine point one percent, the Western Cape continues to have the lowest expanded unemployment rate in South Africa...”",
         "perturb_type2_True": "“At thirty-two percent, the Western Cape continues to have the lowest expanded unemployment rate in South Africa...”"
     },
@@ -3285,7 +3285,7 @@
         "normalized_claim": "\"Over 80 percent of the people want the shot to vote\" on whether to approve same-sex marriage, according to polls.",
         "label": "True",
         "claim_id": "val_001857",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Over eighty percent of the people want the shot to vote\" on whether to approve same-sex marriage, according to polls.",
         "perturb_type2_True": "\"Over eighty-eight percent of the people want the shot to vote\" on whether to approve same-sex marriage, according to polls."
     },
@@ -3300,7 +3300,7 @@
         "normalized_claim": "Dave Brat \"worked on Democrat Gov. Tim Kaine’s Council of Economic Advisors while Kaine tried to raise our taxes by over $1,000,000,000.\"",
         "label": "True",
         "claim_id": "val_001859",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Dave Brat \"worked on Democrat Gov. Tim Kaine’s Council of Economic Advisors while Kaine tried to raise our taxes by over one billion dollars.\"",
         "perturb_type2_True": "Dave Brat \"worked on Democrat Gov. Tim Kaine’s Council of Economic Advisors while Kaine tried to raise our taxes by over one billion, one hundred million dollars.\""
     },
@@ -3316,7 +3316,7 @@
         "normalized_claim": "More than 50% of respondents to a survey from Civic Science said that Arabic numerals should not be taught in school.",
         "label": "True",
         "claim_id": "val_001867",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "More than fifty percent of respondents to a survey from Civic Science said that Arabic numerals should not be taught in school.",
         "perturb_type2_True": "More than fifty-five percent of respondents to a survey from Civic Science said that Arabic numerals should not be taught in school."
     },
@@ -3332,7 +3332,7 @@
         "normalized_claim": "Says Barack Obama \"is the first president in modern history not to have a single year of 3 percent growth.\"",
         "label": "True",
         "claim_id": "val_001869",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says Barack Obama \"is the first president in modern history not to have a single year of three percent growth.\"",
         "perturb_type2_True": "Says Barack Obama \"is the first president in modern history not to have a single year of four percent growth.\""
     },
@@ -3348,7 +3348,7 @@
         "normalized_claim": "Those earning under £34,000 are not affected by the National Insurance (NI) rise.",
         "label": "True",
         "claim_id": "val_001890",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Those earning under thirty-four thousand dollars are not affected by the National Insurance (NI) rise.",
         "perturb_type2_True": "Those earning under thirty-seven thousand, four hundred dollars are not affected by the National Insurance (NI) rise."
     },
@@ -3363,7 +3363,7 @@
         "normalized_claim": "Says Virginia House Republicans are sacrificing $5,000,000 a day in U.S. funds by refusing to expand Medicaid.",
         "label": "True",
         "claim_id": "val_001911",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says Virginia House Republicans are sacrificing five million dollars a day in U.S. funds by refusing to expand Medicaid.",
         "perturb_type2_True": "Says Virginia House Republicans are sacrificing five million, five hundred thousand dollars a day in U.S. funds by refusing to expand Medicaid."
     },
@@ -3379,7 +3379,7 @@
         "normalized_claim": "'We put it in our manifesto, to construct 57 mega dams…\"",
         "label": "True",
         "claim_id": "val_001928",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "'We put it in our manifesto, to construct fifty-seven mega dams…\"",
         "perturb_type2_True": "'We put it in our manifesto, to construct sixty-three mega dams…\""
     },
@@ -3394,7 +3394,7 @@
         "normalized_claim": "Women \"receive only 77 cents for every dollar a man earns.\"",
         "label": "True",
         "claim_id": "val_001931",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Women \"receive only seventy-seven dollars cents for every dollar a man earns.\"",
         "perturb_type2_True": "Women \"receive only eighty-five dollars cents for every dollar a man earns.\""
     },
@@ -3410,7 +3410,7 @@
         "normalized_claim": "\"Welcome 2 Pres Biden’s America where inflation is costing households an extra $175 a month.”",
         "label": "True",
         "claim_id": "val_001939",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Welcome 2 Pres Biden’s America where inflation is costing households an extra one hundred and seventy-five dollars a month.”",
         "perturb_type2_True": "\"Welcome 2 Pres Biden’s America where inflation is costing households an extra one hundred and ninety-three dollars a month.”"
     },
@@ -3425,7 +3425,7 @@
         "normalized_claim": "Says taking millionaires off food stamps and unemployment would save $20,000,000.",
         "label": "True",
         "claim_id": "val_001946",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says taking millionaires off food stamps and unemployment would save twenty million dollars.",
         "perturb_type2_True": "Says taking millionaires off food stamps and unemployment would save twenty-two million dollars."
     },
@@ -3440,7 +3440,7 @@
         "normalized_claim": "Says the unemployment rate for college graduates is 4.4 percent and over 10 percent for noncollege-educated.",
         "label": "True",
         "claim_id": "val_001951",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says the unemployment rate for college graduates is four point four percent and over ten percent for noncollege-educated.",
         "perturb_type2_True": "Says the unemployment rate for college graduates is five percent and over eleven percent for noncollege-educated."
     },
@@ -3455,7 +3455,7 @@
         "normalized_claim": "Postmaster General Louis DeJoy “gave $400,000 to Republicans just this year” and has “between $30 and $75,000,000 in assets of direct competitors to the United States Postal Service.”",
         "label": "True",
         "claim_id": "val_001964",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Postmaster General Louis DeJoy “gave four hundred thousand dollars to Republicans just this year” and has “between thirty dollars and seventy-five million dollars in assets of direct competitors to the United States Postal Service.”",
         "perturb_type2_True": "Postmaster General Louis DeJoy “gave four hundred and forty thousand dollars to Republicans just this year” and has “between thirty-three dollars and eighty-two million, five hundred thousand dollars in assets of direct competitors to the United States Postal Service.”"
     },
@@ -3470,7 +3470,7 @@
         "normalized_claim": "\"Nearly 180,000 illegal immigrants with criminal records, ordered deported from our country, are tonight roaming free to threaten peaceful citizens.\"",
         "label": "True",
         "claim_id": "val_001967",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Nearly one hundred and eighty thousand illegal immigrants with criminal records, ordered deported from our country, are tonight roaming free to threaten peaceful citizens.\"",
         "perturb_type2_True": "\"Nearly one hundred and ninety-eight thousand illegal immigrants with criminal records, ordered deported from our country, are tonight roaming free to threaten peaceful citizens.\""
     },
@@ -3485,7 +3485,7 @@
         "normalized_claim": "\"There’s actually 600 abortions done after the 20th week of pregnancy every year in Ohio.\"",
         "label": "True",
         "claim_id": "val_001976",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"There’s actually six hundred abortions done after the twentyth week of pregnancy every year in Ohio.\"",
         "perturb_type2_True": "\"There’s actually six hundred and sixty abortions done after the twenty-fiveth week of pregnancy every year in Ohio.\""
     },
@@ -3500,7 +3500,7 @@
         "normalized_claim": "\"We cut business taxes so today 70 percent of our businesses don't pay a business tax.\"",
         "label": "True",
         "claim_id": "val_001986",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"We cut business taxes so today seventy percent of our businesses don't pay a business tax.\"",
         "perturb_type2_True": "\"We cut business taxes so today seventy-seven percent of our businesses don't pay a business tax.\""
     },
@@ -3516,7 +3516,7 @@
         "normalized_claim": "Hugh Hefner paid $75,000 to be interred next to Marilyn Monroe in a Los Angeles cemetery.",
         "label": "True",
         "claim_id": "val_002009",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Hugh Hefner paid seventy-five thousand dollars to be interred next to Marilyn Monroe in a Los Angeles cemetery.",
         "perturb_type2_True": "Hugh Hefner paid eighty-two thousand, five hundred dollars to be interred next to Marilyn Monroe in a Los Angeles cemetery."
     },
@@ -3531,7 +3531,7 @@
         "normalized_claim": "In 2017, ICE \"arrested more than 127,000 illegal immigrants with criminal convictions or facing charges of breaking our nation's’ laws,\" and removed nearly 5,000 gang members.",
         "label": "True",
         "claim_id": "val_002022",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "In two thousand and seventeen, ICE \"arrested more than one hundred and twenty-seven thousand illegal immigrants with criminal convictions or facing charges of breaking our nation's’ laws,\" and removed nearly five thousand gang members.",
         "perturb_type2_True": "In two thousand and twenty-two, ICE \"arrested more than one hundred and thirty-nine thousand, seven hundred illegal immigrants with criminal convictions or facing charges of breaking our nation's’ laws,\" and removed nearly five thousand, five hundred gang members."
     },
@@ -3546,7 +3546,7 @@
         "normalized_claim": "\"Right now, only 11 percent of the 15,000 child care providers in Texas are certified as meeting quality standards.\"",
         "label": "True",
         "claim_id": "val_002027",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Right now, only eleven percent of the fifteen thousand child care providers in Texas are certified as meeting quality standards.\"",
         "perturb_type2_True": "\"Right now, only twelve percent of the sixteen thousand, five hundred child care providers in Texas are certified as meeting quality standards.\""
     },
@@ -3561,7 +3561,7 @@
         "normalized_claim": "\"Creating 25 jobs in Umatilla County has the same impact as 500 jobs in the metro region.\"",
         "label": "True",
         "claim_id": "val_002037",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Creating twenty-five jobs in Umatilla County has the same impact as five hundred jobs in the metro region.\"",
         "perturb_type2_True": "\"Creating twenty-eight jobs in Umatilla County has the same impact as five hundred and fifty jobs in the metro region.\""
     },
@@ -3577,7 +3577,7 @@
         "normalized_claim": "A bear died after consuming more than 70 pounds of cocaine that had been dumped in a forest during a botched drug smuggling attempt.",
         "label": "True",
         "claim_id": "val_002051",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "A bear died after consuming more than seventy pounds of cocaine that had been dumped in a forest during a botched drug smuggling attempt.",
         "perturb_type2_True": "A bear died after consuming more than seventy-one pounds of cocaine that had been dumped in a forest during a botched drug smuggling attempt."
     },
@@ -3592,7 +3592,7 @@
         "normalized_claim": "\"The current school psychologist to student ratio in this country is roughly 1,400 to 1, while experts say it should be at most 700 to 1.\"",
         "label": "True",
         "claim_id": "val_002074",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"The current school psychologist to student ratio in this country is roughly one thousand, four hundred to one, while experts say it should be at most seven hundred to one.\"",
         "perturb_type2_True": "\"The current school psychologist to student ratio in this country is roughly one thousand, five hundred and forty to two, while experts say it should be at most seven hundred and seventy to two.\""
     },
@@ -3607,7 +3607,7 @@
         "normalized_claim": "Says Donald\"Trump got, you know, $1,800,000,000 worth of free media. I got, like, none.\"",
         "label": "True",
         "claim_id": "val_002086",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says Donald\"Trump got, you know, one billion, eight hundred million dollars worth of free media. I got, like, none.\"",
         "perturb_type2_True": "Says Donald\"Trump got, you know, one billion, nine hundred and eighty million dollars worth of free media. I got, like, none.\""
     },
@@ -3623,7 +3623,7 @@
         "normalized_claim": "Hyderabad Police seized Rs 8 crore cash withdrawn from BJP’s bank account.",
         "label": "True",
         "claim_id": "val_002106",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Hyderabad Police seized Rs eight dollars crore cash withdrawn from BJP’s bank account.",
         "perturb_type2_True": "Hyderabad Police seized Rs nine dollars crore cash withdrawn from BJP’s bank account."
     },
@@ -3639,7 +3639,7 @@
         "normalized_claim": "\"[The DA] has brought down the rate of mother to child HIV transmission to just 1.8%, the lowest in the country.”",
         "label": "True",
         "claim_id": "val_002115",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"[The DA] has brought down the rate of mother to child HIV transmission to just one point eight percent, the lowest in the country.”",
         "perturb_type2_True": "\"[The DA] has brought down the rate of mother to child HIV transmission to just three percent, the lowest in the country.”"
     },
@@ -3655,7 +3655,7 @@
         "normalized_claim": "Some 91 minutes before stopping the shooter, one or more law enforcement officers went inside Robb Elementary School and rescued their own children.",
         "label": "True",
         "claim_id": "val_002122",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Some ninety-one minutes before stopping the shooter, one or more law enforcement officers went inside Robb Elementary School and rescued their own children.",
         "perturb_type2_True": "Some one hundred and fifty-one minutes before stopping the shooter, one or more law enforcement officers went inside Robb Elementary School and rescued their own children."
     },
@@ -3670,7 +3670,7 @@
         "normalized_claim": "\"There is $50,000,000,000 a year wasted in the Medicare program.\"",
         "label": "True",
         "claim_id": "val_002130",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"There is fifty billion dollars a year wasted in the Medicare program.\"",
         "perturb_type2_True": "\"There is fifty-five billion dollars a year wasted in the Medicare program.\""
     },
@@ -3685,7 +3685,7 @@
         "normalized_claim": "The federal government is spending $46,000 a year per family (or group of four) and could balance its budget by dropping that to $30,000.",
         "label": "True",
         "claim_id": "val_002132",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "The federal government is spending forty-six thousand dollars a year per family (or group of four) and could balance its budget by dropping that to thirty thousand dollars.",
         "perturb_type2_True": "The federal government is spending fifty thousand, six hundred dollars a year per family (or group of four) and could balance its budget by dropping that to thirty-three thousand dollars."
     },
@@ -3701,7 +3701,7 @@
         "normalized_claim": "When the New York State Senate voted to legalize abortion in 1970, 12 Republican senators voted in favor of it.",
         "label": "True",
         "claim_id": "val_002133",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "When the New York State Senate voted to legalize abortion in one thousand, nine hundred and seventy, twelve Republican senators voted in favor of it.",
         "perturb_type2_True": "When the New York State Senate voted to legalize abortion in one thousand, nine hundred and seventy-five, thirteen Republican senators voted in favor of it."
     },
@@ -3716,7 +3716,7 @@
         "normalized_claim": "\"If out-of-state drivers paid gas tax, they would contribute $73,000,000 to fix our roads\"",
         "label": "True",
         "claim_id": "val_002136",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"If out-of-state drivers paid gas tax, they would contribute seventy-three million dollars to fix our roads\"",
         "perturb_type2_True": "\"If out-of-state drivers paid gas tax, they would contribute eighty million, three hundred thousand dollars to fix our roads\""
     },
@@ -3731,7 +3731,7 @@
         "normalized_claim": "\"We're borrowing 40 cents of every dollar we spend.\"",
         "label": "True",
         "claim_id": "val_002162",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"We're borrowing forty dollars cents of every dollar we spend.\"",
         "perturb_type2_True": "\"We're borrowing forty-four dollars cents of every dollar we spend.\""
     },
@@ -3746,7 +3746,7 @@
         "normalized_claim": "\"It’s estimated that in 2018 alone, dead people received $1,000,000,000 in benefits from Medicare, Medicaid, social security payments, and federal pensions.\"",
         "label": "True",
         "claim_id": "val_002172",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"It’s estimated that in two thousand and eighteen alone, dead people received one billion dollars in benefits from Medicare, Medicaid, social security payments, and federal pensions.\"",
         "perturb_type2_True": "\"It’s estimated that in two thousand and twenty-three alone, dead people received one billion, one hundred million dollars in benefits from Medicare, Medicaid, social security payments, and federal pensions.\""
     },
@@ -3762,7 +3762,7 @@
         "normalized_claim": "The oil industry has \"9,000 permits to drill now. They could be drilling right now, yesterday, last week, last year.\"",
         "label": "True",
         "claim_id": "val_002173",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "The oil industry has \"nine thousand permits to drill now. They could be drilling right now, yesterday, last week, last year.\"",
         "perturb_type2_True": "The oil industry has \"nine thousand, nine hundred permits to drill now. They could be drilling right now, yesterday, last week, last year.\""
     },
@@ -3777,7 +3777,7 @@
         "normalized_claim": "With only 67 bills or so passed into law, \"2013 was the least productive year in congressional history since we’ve been keeping record.\"",
         "label": "True",
         "claim_id": "val_002176",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "With only sixty-seven bills or so passed into law, \"two thousand and thirteen was the least productive year in congressional history since we’ve been keeping record.\"",
         "perturb_type2_True": "With only seventy-four bills or so passed into law, \"two thousand and eighteen was the least productive year in congressional history since we’ve been keeping record.\""
     },
@@ -3793,7 +3793,7 @@
         "normalized_claim": "Says 3,000 Americans \"died of gunfire\" between the time of the Ebola scare in Dallas and the midterm elections.",
         "label": "True",
         "claim_id": "val_002183",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says three thousand Americans \"died of gunfire\" between the time of the Ebola scare in Dallas and the midterm elections.",
         "perturb_type2_True": "Says three thousand, three hundred Americans \"died of gunfire\" between the time of the Ebola scare in Dallas and the midterm elections."
     },
@@ -3808,7 +3808,7 @@
         "normalized_claim": "\"West Virginia’s exports increased for the second year in a row in 2018, reaching $8,100,000,000. Additionally, West Virginia’s export growth rate was 14.2%, nearly double the national average of 7.6%.\"",
         "label": "True",
         "claim_id": "val_002185",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"West Virginia’s exports increased for the second year in a row in two thousand and eighteen, reaching eight billion, one hundred million dollars. Additionally, West Virginia’s export growth rate was fourteen point two percent, nearly double the national average of seven point six percent.\"",
         "perturb_type2_True": "\"West Virginia’s exports increased for the second year in a row in two thousand and twenty-three, reaching eight billion, nine hundred and ten million dollars. Additionally, West Virginia’s export growth rate was sixteen percent, nearly double the national average of nine percent.\""
     },
@@ -3824,7 +3824,7 @@
         "normalized_claim": "Lizbeth Benacquisto \"broke election law 105 times, hiding special interest contributors.\"",
         "label": "True",
         "claim_id": "val_002187",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Lizbeth Benacquisto \"broke election law one hundred and five times, hiding special interest contributors.\"",
         "perturb_type2_True": "Lizbeth Benacquisto \"broke election law one hundred and sixteen times, hiding special interest contributors.\""
     },
@@ -3839,7 +3839,7 @@
         "normalized_claim": "Says enrolling a student in a subsidized lunch program triggers an \"at risk\" designation, resulting in an extra $6,000 to $7,000 of state school aid per student.",
         "label": "True",
         "claim_id": "val_002190",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says enrolling a student in a subsidized lunch program triggers an \"at risk\" designation, resulting in an extra six thousand dollars to seven thousand dollars of state school aid per student.",
         "perturb_type2_True": "Says enrolling a student in a subsidized lunch program triggers an \"at risk\" designation, resulting in an extra six thousand, six hundred dollars to seven thousand, seven hundred dollars of state school aid per student."
     },
@@ -3855,7 +3855,7 @@
         "normalized_claim": "Says over 90 percent of Travis County’s eligible residents have registered to vote.",
         "label": "True",
         "claim_id": "val_002197",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says over ninety percent of Travis County’s eligible residents have registered to vote.",
         "perturb_type2_True": "Says over ninety-nine percent of Travis County’s eligible residents have registered to vote."
     },
@@ -3871,7 +3871,7 @@
         "normalized_claim": "Says fewer than 30 percent of Texas college students graduate in four years and only 58 percent graduate within six years.",
         "label": "True",
         "claim_id": "val_002207",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says fewer than thirty percent of Texas college students graduate in four years and only fifty-eight percent graduate within six years.",
         "perturb_type2_True": "Says fewer than thirty-three percent of Texas college students graduate in four years and only sixty-four percent graduate within six years."
     },
@@ -3886,7 +3886,7 @@
         "normalized_claim": "\"Right now, 50 percent of Florida students leaving high school cannot read at grade level.\"",
         "label": "True",
         "claim_id": "val_002210",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Right now, fifty percent of Florida students leaving high school cannot read at grade level.\"",
         "perturb_type2_True": "\"Right now, fifty-five percent of Florida students leaving high school cannot read at grade level.\""
     },
@@ -3901,7 +3901,7 @@
         "normalized_claim": "Since 1938 the minimum wage has been increased \"23 times\" and was raised \"21 times during Democratic congresses, and only twice during Republican ones.\"",
         "label": "True",
         "claim_id": "val_002213",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Since one thousand, nine hundred and thirty-eight the minimum wage has been increased \"twenty-three times\" and was raised \"twenty-one times during Democratic congresses, and only twice during Republican ones.\"",
         "perturb_type2_True": "Since one thousand, nine hundred and forty-three the minimum wage has been increased \"twenty-five times\" and was raised \"twenty-three times during Democratic congresses, and only twice during Republican ones.\""
     },
@@ -3916,7 +3916,7 @@
         "normalized_claim": "\"When you have 8,000 veterans a year committing suicide, then you have a serious problem.\"",
         "label": "True",
         "claim_id": "val_002226",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"When you have eight thousand veterans a year committing suicide, then you have a serious problem.\"",
         "perturb_type2_True": "\"When you have eight thousand, eight hundred veterans a year committing suicide, then you have a serious problem.\""
     },
@@ -3931,7 +3931,7 @@
         "normalized_claim": "Sen. Joe Lieberman's \"home state has a public option which covers about 10,000 of its citizens that was introduced by its Republican governor.\"",
         "label": "True",
         "claim_id": "val_002229",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Sen. Joe Lieberman's \"home state has a public option which covers about ten thousand of its citizens that was introduced by its Republican governor.\"",
         "perturb_type2_True": "Sen. Joe Lieberman's \"home state has a public option which covers about eleven thousand of its citizens that was introduced by its Republican governor.\""
     },
@@ -3946,7 +3946,7 @@
         "normalized_claim": "Says Dan Patrick \"supported giving a $5,000 taxpayer-funded voucher to every family to buy a car.\"",
         "label": "True",
         "claim_id": "val_002232",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says Dan Patrick \"supported giving a five thousand dollars taxpayer-funded voucher to every family to buy a car.\"",
         "perturb_type2_True": "Says Dan Patrick \"supported giving a five thousand, five hundred dollars taxpayer-funded voucher to every family to buy a car.\""
     },
@@ -3961,7 +3961,7 @@
         "normalized_claim": "\"[When I was mayor] Providence was one of the five renaissance cities of America, according to USA Today in those days. Money magazine said it was the fifth best city to live in in America. In addition to that, All Cities Almanac said in 1994, I believe, that it was the safest city in America.\"",
         "label": "True",
         "claim_id": "val_002236",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"[When I was mayor] Providence was one of the five renaissance cities of America, according to USA Today in those days. Money magazine said it was the fifth best city to live in in America. In addition to that, All Cities Almanac said in one thousand, nine hundred and ninety-four, I believe, that it was the safest city in America.\"",
         "perturb_type2_True": "\"[When I was mayor] Providence was one of the five renaissance cities of America, according to USA Today in those days. Money magazine said it was the fifth best city to live in in America. In addition to that, All Cities Almanac said in one thousand, nine hundred and ninety-nine, I believe, that it was the safest city in America.\""
     },
@@ -3976,7 +3976,7 @@
         "normalized_claim": "Says he was the only statewide elected official to speak in favor of a federal guest worker plan at the 2012 Republican Party of Texas convention.",
         "label": "True",
         "claim_id": "val_002245",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says he was the only statewide elected official to speak in favor of a federal guest worker plan at the two thousand and twelve Republican Party of Texas convention.",
         "perturb_type2_True": "Says he was the only statewide elected official to speak in favor of a federal guest worker plan at the two thousand and seventeen Republican Party of Texas convention."
     },
@@ -3992,7 +3992,7 @@
         "normalized_claim": "“Abigail Spanberger still votes with and shares Joe Biden’s positions 100% of the time.”",
         "label": "True",
         "claim_id": "val_002246",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "“Abigail Spanberger still votes with and shares Joe Biden’s positions one hundred percent of the time.”",
         "perturb_type2_True": "“Abigail Spanberger still votes with and shares Joe Biden’s positions one hundred and ten percent of the time.”"
     },
@@ -4007,7 +4007,7 @@
         "normalized_claim": "\"We've had 11,000 attempts to amend the Constitution since 1789.\"",
         "label": "True",
         "claim_id": "val_002249",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"We've had eleven thousand attempts to amend the Constitution since one thousand, seven hundred and eighty-nine.\"",
         "perturb_type2_True": "\"We've had twelve thousand, one hundred attempts to amend the Constitution since one thousand, seven hundred and ninety-four.\""
     },
@@ -4022,7 +4022,7 @@
         "normalized_claim": "\"Giving the facts: 73,000 jobs created ... since '11. Do you know how many direct jobs in the auto industry? 1,800.\"",
         "label": "True",
         "claim_id": "val_002298",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Giving the facts: seventy-three thousand jobs created... since 'eleven. Do you know how many direct jobs in the auto industry? one thousand, eight hundred.\"",
         "perturb_type2_True": "\"Giving the facts: eighty thousand, three hundred jobs created... since 'sixteen. Do you know how many direct jobs in the auto industry? one thousand, nine hundred and eighty.\""
     },
@@ -4037,7 +4037,7 @@
         "normalized_claim": "\"40% of Americans know someone who has been killed by a gun.\"",
         "label": "True",
         "claim_id": "val_002300",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"forty percent of Americans know someone who has been killed by a gun.\"",
         "perturb_type2_True": "\"forty-four percent of Americans know someone who has been killed by a gun.\""
     },
@@ -4052,7 +4052,7 @@
         "normalized_claim": "Says Chris Abele, opponent in Milwaukee County executive race, \"failed to finish 3 separate colleges, dropping out all 3 times.\"",
         "label": "True",
         "claim_id": "val_002304",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says Chris Abele, opponent in Milwaukee County executive race, \"failed to finish three separate colleges, dropping out all three times.\"",
         "perturb_type2_True": "Says Chris Abele, opponent in Milwaukee County executive race, \"failed to finish four separate colleges, dropping out all four times.\""
     },
@@ -4067,7 +4067,7 @@
         "normalized_claim": "\"Eleven individuals who make over $30,000,000 each got $22,000,000 credit\" from Wisconsin's manufacturing and agriculture tax credit.",
         "label": "True",
         "claim_id": "val_002305",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Eleven individuals who make over thirty million dollars each got twenty-two million dollars credit\" from Wisconsin's manufacturing and agriculture tax credit.",
         "perturb_type2_True": "\"Eleven individuals who make over thirty-three million dollars each got twenty-four million, two hundred thousand dollars credit\" from Wisconsin's manufacturing and agriculture tax credit."
     },
@@ -4082,7 +4082,7 @@
         "normalized_claim": "Says Rick Scott’s proposal for election reform \"only mandates 48 hours of early voting.\"",
         "label": "True",
         "claim_id": "val_002315",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Says Rick Scott’s proposal for election reform \"only mandates forty-eight hours of early voting.\"",
         "perturb_type2_True": "Says Rick Scott’s proposal for election reform \"only mandates one hundred and eight hours of early voting.\""
     },
@@ -4098,7 +4098,7 @@
         "normalized_claim": "Some 8,100,000 of the estimated 11,000,000 to 12,000,000 people \"in this country illegally are working.\"",
         "label": "True",
         "claim_id": "val_002355",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Some eight million, one hundred thousand of the estimated eleven million to twelve million people \"in this country illegally are working.\"",
         "perturb_type2_True": "Some eight million, nine hundred and ten thousand of the estimated twelve million, one hundred thousand to thirteen million, two hundred thousand people \"in this country illegally are working.\""
     },
@@ -4113,7 +4113,7 @@
         "normalized_claim": "\"Donna Shalala left me with 12,000,000 doses\" of smallpox vaccine and \"I created enough\" to vaccinate \"every man, woman and child against smallpox in America.\"",
         "label": "True",
         "claim_id": "val_002358",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Donna Shalala left me with twelve million doses\" of smallpox vaccine and \"I created enough\" to vaccinate \"every man, woman and child against smallpox in America.\"",
         "perturb_type2_True": "\"Donna Shalala left me with thirteen million, two hundred thousand doses\" of smallpox vaccine and \"I created enough\" to vaccinate \"every man, woman and child against smallpox in America.\""
     },
@@ -4128,7 +4128,7 @@
         "normalized_claim": "Based on the August 2012 national jobs numbers, \"for every person who got a job, nearly four people stopped looking for a job.\"",
         "label": "True",
         "claim_id": "val_002359",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Based on the August two thousand and twelve national jobs numbers, \"for every person who got a job, nearly four people stopped looking for a job.\"",
         "perturb_type2_True": "Based on the August two thousand and seventeen national jobs numbers, \"for every person who got a job, nearly four people stopped looking for a job.\""
     },
@@ -4143,7 +4143,7 @@
         "normalized_claim": "\"There were slaves in 1845 who helped construct and build the Old Capitol.\"",
         "label": "True",
         "claim_id": "val_002373",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"There were slaves in one thousand, eight hundred and forty-five who helped construct and build the Old Capitol.\"",
         "perturb_type2_True": "\"There were slaves in one thousand, eight hundred and fifty who helped construct and build the Old Capitol.\""
     },
@@ -4159,7 +4159,7 @@
         "normalized_claim": "Ohio is giving away $1,000,000 to five residents who have received their COVID-19 vaccination in a \"Vax-a-Million\" lottery.",
         "label": "True",
         "claim_id": "val_002382",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "Ohio is giving away one million dollars to five residents who have received their COVID-19 vaccination in a \"Vax-a-Million\" lottery.",
         "perturb_type2_True": "Ohio is giving away one million, one hundred thousand dollars to five residents who have received their COVID-19 vaccination in a \"Vax-a-Million\" lottery."
     },
@@ -4174,7 +4174,7 @@
         "normalized_claim": "\"Our state transportation department already has a heavy debt load and has paid more than $700,000,000 in debt payments in just the last two years.\"",
         "label": "True",
         "claim_id": "val_002392",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "\"Our state transportation department already has a heavy debt load and has paid more than seven hundred million dollars in debt payments in just the last two years.\"",
         "perturb_type2_True": "\"Our state transportation department already has a heavy debt load and has paid more than seven hundred and seventy million dollars in debt payments in just the last two years.\""
     },
@@ -4190,7 +4190,7 @@
         "normalized_claim": "The Biden administration \"published a study concluding 4 (of) 5 new cars on the road by 2050 will still require liquid fuels.\"",
         "label": "True",
         "claim_id": "val_002412",
-        "pertubation_method": "numeration",
+        "perturbation_method": "numeration",
         "perturb_type1_True": "The Biden administration \"published a study concluding four (of) five new cars on the road by two thousand and fifty will still require liquid fuels.\"",
         "perturb_type2_True": "The Biden administration \"published a study concluding five (of) six new cars on the road by two thousand and fifty-five will still require liquid fuels.\""
     }

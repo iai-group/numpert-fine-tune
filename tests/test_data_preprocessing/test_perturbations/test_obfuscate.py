@@ -260,7 +260,7 @@ def patch_included_keys():
 class TestProcessJson:
     @staticmethod
     def _entries_by_perturbation(result, label):
-        return {entry["pertubation_method"]: entry for entry in result[label]}
+        return {entry["perturbation_method"]: entry for entry in result[label]}
 
     def test_returns_dict(self, sample_input_data, patch_included_keys):
         result = process_json(sample_input_data)
@@ -322,7 +322,7 @@ class TestProcessJson:
             for key in MOCK_INCLUDED_KEYS:
                 if key in sample_input_data[0]:
                     assert key in entry
-            assert entry["pertubation_method"] in {
+            assert entry["perturbation_method"] in {
                 "random",
                 "masked",
                 "removed",
@@ -373,7 +373,7 @@ class TestProcessJson:
                 key for key in entry if key.startswith("perturb_type3_")
             ]
             assert len(perturbation_keys) == 1
-            assert entry["pertubation_method"] in {
+            assert entry["perturbation_method"] in {
                 "random",
                 "masked",
                 "removed",

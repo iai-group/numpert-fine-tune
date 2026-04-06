@@ -4,18 +4,11 @@ from typing import Dict
 from collections import Counter, defaultdict
 from datasets import Dataset
 
-from src.llm_finetune.utils.data_loading.hf_dataset_instructions import (
-    load_json_files,
-    expand_perturbations,
-    convert_to_conversations,
-    load_fact_checking_data,
-    load_train_and_validation,
-    PerturbationType,
+from src.llm_finetune.utils.data_loading.pipeline import load_split
+from src.llm_finetune.utils.data_loading.perturbation_types import (
     FileLoadConfig,
+    PerturbationType,
     parse_file_config,
-    _detect_perturb_key,
-    _normalize_label,
-    _determine_perturbed_label,
 )
 
 
@@ -195,98 +188,6 @@ def print_example(example: Dict, index: int = None):  # type: ignore[assignment]
 
 
 # ---------------------------------------------------------------------------
-# Tests — internal helpers
-# ---------------------------------------------------------------------------
-
-
-class TestDetectPerturbKey:
-    """Test the regex-based perturbation key detection."""
-
-    def test_type1_keys(self):
-        assert _detect_perturb_key("perturb_type1_True") == "perturb_type1"
-        assert _detect_perturb_key("perturb_type1_False") == "perturb_type1"
-
-    def test_type2_keys(self):
-        assert _detect_perturb_key("perturb_type2_True") == "perturb_type2"
-        assert _detect_perturb_key("perturb_type2_False") == "perturb_type2"
-
-    def test_type3_keys_with_label_suffix(self):
-        assert (
-            _detect_perturb_key("perturb_type3_random_False")
-            == "perturb_type3_random"
-        )
-        assert (
-            _detect_perturb_key("perturb_type3_masked_True")
-            == "perturb_type3_masked"
-        )
-        assert (
-            _detect_perturb_key("perturb_type3_removed_False")
-            == "perturb_type3_removed"
-        )
-
-    def test_type3_keys_without_label_suffix(self):
-        assert (
-            _detect_perturb_key("perturb_type3_random")
-            == "perturb_type3_random"
-        )
-        assert (
-            _detect_perturb_key("perturb_type3_masked")
-            == "perturb_type3_masked"
-        )
-        assert (
-            _detect_perturb_key("perturb_type3_removed")
-            == "perturb_type3_removed"
-        )
-
-    def test_non_perturb_keys_return_none(self):
-        assert _detect_perturb_key("claim_id") is None
-        assert _detect_perturb_key("label") is None
-        assert _detect_perturb_key("normalized_claim") is None
-        assert _detect_perturb_key("doc") is None
-
-
-class TestNormalizeLabel:
-    """Test label normalization (bool/string → 'True'/'False')."""
-
-    def test_bool_labels(self):
-        assert _normalize_label(True) == "True"
-        assert _normalize_label(False) == "False"
-
-    def test_string_labels(self):
-        assert _normalize_label("True") == "True"
-        assert _normalize_label("False") == "False"
-        assert _normalize_label("true") == "True"
-        assert _normalize_label("false") == "False"
-
-    def test_invalid_label_raises(self):
-        with pytest.raises(ValueError):
-            _normalize_label("maybe")
-        with pytest.raises(ValueError):
-            _normalize_label(42)
-
-
-class TestDetermineLabel:
-    """Test perturbation label determination logic."""
-
-    def test_type1_preserves_label(self):
-        assert _determine_perturbed_label("perturb_type1", True) == "True"
-        assert _determine_perturbed_label("perturb_type1", False) == "False"
-
-    def test_type2_always_false(self):
-        assert _determine_perturbed_label("perturb_type2", True) == "False"
-        assert _determine_perturbed_label("perturb_type2", False) == "False"
-
-    def test_type3_always_false(self):
-        for t3 in [
-            "perturb_type3_random",
-            "perturb_type3_masked",
-            "perturb_type3_removed",
-        ]:
-            assert _determine_perturbed_label(t3, True) == "False"
-            assert _determine_perturbed_label(t3, False) == "False"
-
-
-# ---------------------------------------------------------------------------
 # Tests — FileLoadConfig & parse_file_config
 # ---------------------------------------------------------------------------
 
@@ -328,324 +229,20 @@ class TestParseFileConfig:
 
 
 # ---------------------------------------------------------------------------
-# Tests — load_json_files
+# Tests — load_split (end-to-end pipeline)
 # ---------------------------------------------------------------------------
 
 
-class TestLoadJsonFiles:
-    """Test JSON file loading functionality."""
-
-    def test_load_single_json_file(self, temp_json_files):
-        print_separator("TEST: Load Single JSON File")
-        examples = load_json_files(temp_json_files["train_1"])
-
-        assert len(examples) == 1
-        assert examples[0]["claim_id"] == "train_000001"
-        print("✓ Single file loading successful")
-
-    def test_load_multiple_json_files(self, temp_json_files):
-        print_separator("TEST: Load Multiple JSON Files")
-        examples = load_json_files(
-            [temp_json_files["train_1"], temp_json_files["train_2"]]
-        )
-
-        assert len(examples) == 2
-        assert examples[0]["claim_id"] == "train_000001"
-        assert examples[1]["claim_id"] == "train_000002"
-        print("✓ Multiple file loading successful")
-
-
-# ---------------------------------------------------------------------------
-# Tests — expand_perturbations
-# ---------------------------------------------------------------------------
-
-
-class TestExpandPerturbations:
-    """Test perturbation expansion with the new key format."""
-
-    def test_expand_numeration_true(self, numeration_true_example):
-        """numeration_True.json: original True + type1 (True) + type2
-        (False)."""
-        print_separator("TEST: Expand numeration True example")
-
-        expanded = expand_perturbations([numeration_true_example])
-
-        print(f"Expanded {len(expanded)} examples:")
-        for ex in expanded:
-            print(f"  {ex['perturbation_type']:25s} label={ex['label']}")
-
-        assert len(expanded) == 3  # original + type1 + type2
-
-        orig = [
-            e
-            for e in expanded
-            if e["perturbation_type"] == "original_normalized"
-        ]
-        assert len(orig) == 1
-        assert orig[0]["label"] == "True"
-
-        t1 = [e for e in expanded if e["perturbation_type"] == "perturb_type1"]
-        assert len(t1) == 1
-        assert t1[0]["label"] == "True"  # structure-preserving
-
-        t2 = [e for e in expanded if e["perturbation_type"] == "perturb_type2"]
-        assert len(t2) == 1
-        assert t2[0]["label"] == "False"  # value-modifying → always False
-
-    def test_expand_approximation_false(self, approximation_false_example):
-        """approximation_False.json: original False + type1 (False) + type2
-        (False)."""
-        print_separator("TEST: Expand approximation False example")
-
-        expanded = expand_perturbations([approximation_false_example])
-
-        print(f"Expanded {len(expanded)} examples:")
-        for ex in expanded:
-            print(f"  {ex['perturbation_type']:25s} label={ex['label']}")
-
-        assert len(expanded) == 3
-
-        orig = [
-            e
-            for e in expanded
-            if e["perturbation_type"] == "original_normalized"
-        ]
-        assert orig[0]["label"] == "False"
-
-        t1 = [e for e in expanded if e["perturbation_type"] == "perturb_type1"]
-        assert t1[0]["label"] == "False"  # structure-preserving
-
-        t2 = [e for e in expanded if e["perturbation_type"] == "perturb_type2"]
-        assert t2[0]["label"] == "False"  # value-modifying → always False
-
-    def test_expand_obfuscation_true(self, obfuscation_true_example):
-        """obfuscation_True.json: original True + 3 type3 variants (all
-        False)."""
-        print_separator("TEST: Expand obfuscation True example")
-
-        expanded = expand_perturbations([obfuscation_true_example])
-
-        print(f"Expanded {len(expanded)} examples:")
-        for ex in expanded:
-            print(f"  {ex['perturbation_type']:25s} label={ex['label']}")
-
-        assert len(expanded) == 4  # original + 3 type3 variants
-
-        # All type3 perturbations should be False
-        type3 = [
-            e
-            for e in expanded
-            if e["perturbation_type"].startswith("perturb_type3")
-        ]
-        assert len(type3) == 3
-        assert all(e["label"] == "False" for e in type3)
-
-    def test_expand_negative_only_type2(self, negative_true_example):
-        """negative_True.json: only has type2 (no type1)."""
-        expanded = expand_perturbations([negative_true_example])
-
-        assert len(expanded) == 2  # original + type2
-        t2 = [e for e in expanded if e["perturbation_type"] == "perturb_type2"]
-        assert len(t2) == 1
-        assert t2[0]["label"] == "False"  # value-modifying always False
-
-    def test_allowed_types_filter(self, numeration_true_example):
-        """Only load type1, skip type2."""
-        print_separator("TEST: allowed_types filter")
-
-        expanded = expand_perturbations(
-            [numeration_true_example],
-            allowed_types=[PerturbationType.PERTURB_TYPE1],
-        )
-
-        print(f"Expanded {len(expanded)} examples (type1 only):")
-        for ex in expanded:
-            print(f"  {ex['perturbation_type']:25s} label={ex['label']}")
-
-        assert len(expanded) == 2  # original + type1 only
-        types = {e["perturbation_type"] for e in expanded}
-        assert "perturb_type2" not in types
-        assert "original_normalized" in types
-        assert "perturb_type1" in types
-
-    def test_allowed_types_filter_type2_only(self, approximation_false_example):
-        """Only load type2 from a False example."""
-        expanded = expand_perturbations(
-            [approximation_false_example],
-            allowed_types=[PerturbationType.PERTURB_TYPE2],
-        )
-
-        assert len(expanded) == 2  # original + type2
-        types = {e["perturbation_type"] for e in expanded}
-        assert "perturb_type1" not in types
-        assert "perturb_type2" in types
-
-    def test_selective_type1_only_from_false_excludes_type2(
-        self, approximation_false_example
-    ):
-        """Load only type1 from a False-label example; type2 must be excluded.
-
-        For a False dataset:
-        - type1 (structure-preserving) keeps the False label
-        - type2 (value-modifying) is always False (excluded here anyway)
-        Selecting only type1 should therefore produce *only* False labels.
-        """
-        print_separator("TEST: Selective type1 from False dataset (no type2)")
-
-        expanded = expand_perturbations(
-            [approximation_false_example],
-            allowed_types=[PerturbationType.PERTURB_TYPE1],
-        )
-
-        print(f"Expanded {len(expanded)} examples (type1 only from False):")
-        for ex in expanded:
-            print(f"  {ex['perturbation_type']:25s} label={ex['label']}")
-
-        # Should contain original_normalized + type1, NOT type2
-        assert len(expanded) == 2
-        types = {e["perturbation_type"] for e in expanded}
-        assert types == {"original_normalized", "perturb_type1"}
-        assert "perturb_type2" not in types
-
-        # All labels must be False (type2 is always False regardless)
-        assert all(
-            e["label"] == "False" for e in expanded
-        ), "Excluding type2 from a False file should yield only False labels"
-
-        # Verify claim content is from the False example
-        for ex in expanded:
-            assert ex["claim_id"] == "train_000002"
-
-        print("✓ type1-only from False dataset produces only False labels")
-
-    def test_selective_type1_from_false_vs_all_types(
-        self, approximation_false_example
-    ):
-        """Compare type1-only vs all-types from a False-label example.
-
-        Loading all types introduces a True-labeled entry (type2); filtering to
-        type1-only must eliminate it.
-        """
-        all_expanded = expand_perturbations([approximation_false_example])
-        type1_only = expand_perturbations(
-            [approximation_false_example],
-            allowed_types=[PerturbationType.PERTURB_TYPE1],
-        )
-
-        # All types: original(False) + type1(False) + type2(False) = 3
-        assert len(all_expanded) == 3
-        all_labels = {e["label"] for e in all_expanded}
-        assert all_labels == {"False"}  # all False (type2 always False)
-
-        # Type1 only: original(False) + type1(False) = 2
-        assert len(type1_only) == 2
-        type1_labels = {e["label"] for e in type1_only}
-        assert type1_labels == {"False"}  # only False labels
-
-    def test_allowed_types_none_loads_all(self, numeration_true_example):
-        """allowed_types=None should load all available perturbations."""
-        expanded = expand_perturbations(
-            [numeration_true_example], allowed_types=None
-        )
-        assert len(expanded) == 3  # original + type1 + type2
-
-    def test_empty_perturbation_value_skipped(self):
-        """Perturbation keys with empty/null values should be skipped."""
-        example = {
-            "claim_id": "test_001",
-            "label": True,
-            "normalized_claim": "Test claim.",
-            "claim": "Test claim.",
-            "doc": "Test doc.",
-            "perturb_type1_True": "",
-            "perturb_type2_True": None,
-        }
-        expanded = expand_perturbations([example])
-        assert len(expanded) == 1  # only original
-
-
-# ---------------------------------------------------------------------------
-# Tests — convert_to_conversations
-# ---------------------------------------------------------------------------
-
-
-class TestConvertToConversations:
-    """Test conversation format conversion."""
-
-    def test_train_conversation_format(self, numeration_true_example):
-        print_separator("TEST: Train Conversation Format")
-
-        expanded = expand_perturbations([numeration_true_example])
-        conversations = convert_to_conversations(expanded, split="train")
-
-        assert len(conversations) == len(expanded)
-
-        first = conversations[0]
-        assert "conversations" in first
-        assert "claim_id" in first
-        assert "perturbation_type" in first
-        assert "label" in first
-
-        conv = first["conversations"]
-        assert len(conv) == 3  # system, user, assistant
-        assert conv[0]["role"] == "system"
-        assert conv[1]["role"] == "user"
-        assert conv[2]["role"] == "assistant"
-        assert conv[2]["content"] in ['{"label": true}', '{"label": false}']
-
-        print("✓ Train conversation format correct")
-
-    def test_conversation_includes_evidence(self, numeration_true_example):
-        expanded = expand_perturbations([numeration_true_example])
-        conversations = convert_to_conversations(
-            expanded, split="train", include_doc=True
-        )
-        user_msg = conversations[0]["conversations"][1]["content"]
-        assert numeration_true_example["doc"] in user_msg
-
-    def test_conversation_excludes_evidence(self, numeration_true_example):
-        expanded = expand_perturbations([numeration_true_example])
-        conversations = convert_to_conversations(
-            expanded, split="train", include_doc=False
-        )
-        user_msg = conversations[0]["conversations"][1]["content"]
-        assert numeration_true_example["doc"] not in user_msg
-
-    def test_label_json_format(self, numeration_true_example):
-        """Label should be JSON-formatted."""
-        expanded = expand_perturbations([numeration_true_example])
-        conversations = convert_to_conversations(expanded, split="train")
-
-        orig = [
-            c
-            for c in conversations
-            if c["perturbation_type"] == "original_normalized"
-        ][0]
-        assert orig["label"] == '{"label": true}'
-
-        t2 = [
-            c
-            for c in conversations
-            if c["perturbation_type"] == "perturb_type2"
-        ][0]
-        assert t2["label"] == '{"label": false}'
-
-
-# ---------------------------------------------------------------------------
-# Tests — load_fact_checking_data (end-to-end)
-# ---------------------------------------------------------------------------
-
-
-class TestLoadFactCheckingData:
-    """Test end-to-end data loading."""
+class TestLoadSplit:
+    """Test end-to-end data loading via load_split."""
 
     def test_load_with_expansion(self, temp_json_files):
         print_separator("TEST: Load Dataset With Expansion")
 
-        dataset = load_fact_checking_data(
+        dataset = load_split(
             json_paths=temp_json_files["train_1"],
             split="train",
-            expand_perturbations_flag=True,
+            expand_perturbations=True,
         )
 
         assert isinstance(dataset, Dataset)
@@ -656,10 +253,10 @@ class TestLoadFactCheckingData:
         print("✓ Dataset loaded and expanded successfully")
 
     def test_load_without_expansion(self, temp_json_files):
-        dataset = load_fact_checking_data(
+        dataset = load_split(
             json_paths=temp_json_files["train_1"],
             split="train",
-            expand_perturbations_flag=False,
+            expand_perturbations=False,
         )
 
         assert len(dataset) == 1
@@ -668,10 +265,10 @@ class TestLoadFactCheckingData:
         )
 
     def test_load_multiple_files(self, temp_json_files):
-        dataset = load_fact_checking_data(
+        dataset = load_split(
             json_paths=[temp_json_files["train_1"], temp_json_files["train_2"]],
             split="train",
-            expand_perturbations_flag=True,
+            expand_perturbations=True,
         )
 
         claim_ids = set(dataset["claim_id"])
@@ -697,10 +294,10 @@ class TestLoadFactCheckingData:
             ),
         ]
 
-        dataset = load_fact_checking_data(
+        dataset = load_split(
             file_configs=configs,
             split="train",
-            expand_perturbations_flag=True,
+            expand_perturbations=True,
         )
 
         print(f"Dataset size: {len(dataset)}")
@@ -728,10 +325,10 @@ class TestLoadFactCheckingData:
             ),
         ]
 
-        dataset = load_fact_checking_data(
+        dataset = load_split(
             file_configs=configs,
             split="train",
-            expand_perturbations_flag=True,
+            expand_perturbations=True,
         )
 
         print(f"Dataset size: {len(dataset)}")
@@ -757,11 +354,7 @@ class TestLoadFactCheckingData:
         print("✓ type1-only from False file yields only False labels")
 
     def test_file_configs_mixed_selective_loading(self, temp_json_files):
-        """Load all types from True file but only type1 from False file.
-
-        Verifies per-file control: True file contributes type1+type2,
-        False file contributes only type1 (not the label-flipping type2).
-        """
+        """Load all types from True file but only type1 from False file."""
         print_separator("TEST: Mixed selective loading across files")
 
         configs = [
@@ -775,10 +368,10 @@ class TestLoadFactCheckingData:
             ),
         ]
 
-        dataset = load_fact_checking_data(
+        dataset = load_split(
             file_configs=configs,
             split="train",
-            expand_perturbations_flag=True,
+            expand_perturbations=True,
         )
 
         print(f"Dataset size: {len(dataset)}")
@@ -815,48 +408,43 @@ class TestLoadFactCheckingData:
     def test_file_configs_load_all_when_none(self, temp_json_files):
         """FileLoadConfig with perturb_types=None loads everything."""
         configs = [FileLoadConfig(path=temp_json_files["train_1"])]
-        dataset = load_fact_checking_data(
+        dataset = load_split(
             file_configs=configs,
             split="train",
-            expand_perturbations_flag=True,
+            expand_perturbations=True,
         )
         assert len(dataset) == 3  # original + type1 + type2
 
     def test_no_paths_or_configs_raises(self):
         with pytest.raises(
-            ValueError, match="Either json_paths or file_configs"
+            ValueError, match="at least one file path must be provided"
         ):
-            load_fact_checking_data()
+            load_split()
 
+    def test_load_train_and_val(self, temp_json_files):
+        """Load train and validation splits separately."""
+        print_separator("TEST: Load Train and Validation")
 
-# ---------------------------------------------------------------------------
-# Tests — load_train_and_validation
-# ---------------------------------------------------------------------------
-
-
-class TestLoadTrainAndValidation:
-    """Test train/validation split loading."""
-
-    def test_load_train_and_val_simple(self, temp_json_files):
-        print_separator("TEST: Load Train and Validation (simple paths)")
-
-        datasets = load_train_and_validation(
-            train_json_paths=[
+        train_ds = load_split(
+            json_paths=[
                 temp_json_files["train_1"],
                 temp_json_files["train_2"],
             ],
-            val_json_paths=temp_json_files["val"],
-            expand_perturbations_flag=True,
+            split="train",
+            expand_perturbations=True,
+        )
+        val_ds = load_split(
+            json_paths=temp_json_files["val"],
+            split="validation",
+            expand_perturbations=True,
         )
 
-        assert "train" in datasets
-        assert "validation" in datasets
-        assert len(datasets["train"]) == 6  # 2 files × 3 expanded each
-        assert len(datasets["validation"]) == 3
+        assert len(train_ds) == 6  # 2 files × 3 expanded each
+        assert len(val_ds) == 3
 
         print("✓ Train and validation loaded correctly")
 
-    def test_load_train_and_val_with_configs(self, temp_json_files):
+    def test_load_train_with_configs_val_with_path(self, temp_json_files):
         """Use file_configs for train, simple path for val."""
         print_separator("TEST: Load Train/Val with FileLoadConfig")
 
@@ -867,16 +455,112 @@ class TestLoadTrainAndValidation:
             ),
         ]
 
-        datasets = load_train_and_validation(
-            train_file_configs=train_configs,
-            val_json_paths=temp_json_files["val"],
-            expand_perturbations_flag=True,
+        train_ds = load_split(
+            file_configs=train_configs,
+            split="train",
+            expand_perturbations=True,
+        )
+        val_ds = load_split(
+            json_paths=temp_json_files["val"],
+            split="validation",
+            expand_perturbations=True,
         )
 
-        assert len(datasets["train"]) == 2  # original + type1 only
-        assert len(datasets["validation"]) == 3  # all types
+        assert len(train_ds) == 2  # original + type1 only
+        assert len(val_ds) == 3  # all types
 
         print("✓ Mixed config/path loading works")
+
+    def test_empty_perturbation_value_skipped(self, tmp_path):
+        """Perturbation keys with empty/null values should be skipped."""
+        example = {
+            "claim_id": "test_001",
+            "label": True,
+            "normalized_claim": "Test claim.",
+            "claim": "Test claim.",
+            "doc": "Test doc.",
+            "perturb_type1_True": "",
+            "perturb_type2_True": None,
+        }
+        f = tmp_path / "empty_perturb.json"
+        f.write_text(json.dumps([example]))
+
+        dataset = load_split(json_paths=str(f), split="train")
+        assert len(dataset) == 1  # only original
+
+
+# ---------------------------------------------------------------------------
+# Tests — conversation format
+# ---------------------------------------------------------------------------
+
+
+class TestConversationFormat:
+    """Test conversation format produced by load_split."""
+
+    def test_train_conversation_format(self, temp_json_files):
+        print_separator("TEST: Train Conversation Format")
+
+        dataset = load_split(
+            json_paths=temp_json_files["train_1"],
+            split="train",
+            expand_perturbations=True,
+        )
+
+        first = dataset[0]
+        assert "conversations" in first
+        assert "claim_id" in first
+        assert "perturbation_type" in first
+        assert "label" in first
+
+        conv = first["conversations"]
+        assert len(conv) == 3  # system, user, assistant
+        assert conv[0]["role"] == "system"
+        assert conv[1]["role"] == "user"
+        assert conv[2]["role"] == "assistant"
+        assert conv[2]["content"] in ['{"label": true}', '{"label": false}']
+
+        print("✓ Train conversation format correct")
+
+    def test_conversation_includes_evidence(self, temp_json_files):
+        dataset = load_split(
+            json_paths=temp_json_files["train_1"],
+            split="train",
+            expand_perturbations=True,
+            include_doc=True,
+        )
+        user_msg = dataset[0]["conversations"][1]["content"]
+        assert "35,000 LED bulbs" in user_msg or "LED bulbs" in user_msg
+
+    def test_conversation_excludes_evidence(self, temp_json_files):
+        dataset = load_split(
+            json_paths=temp_json_files["train_1"],
+            split="train",
+            expand_perturbations=True,
+            include_doc=False,
+        )
+        user_msg = dataset[0]["conversations"][1]["content"]
+        # Evidence text should not appear when include_doc=False
+        assert "Official report shows" not in user_msg
+
+    def test_label_json_format(self, temp_json_files):
+        """Label should be JSON-formatted."""
+        dataset = load_split(
+            json_paths=temp_json_files["train_1"],
+            split="train",
+            expand_perturbations=True,
+        )
+
+        orig = [
+            ex
+            for ex in dataset
+            if ex["perturbation_type"] == "original_normalized"
+        ][0]
+        assert orig["label"] == '{"label": true}'
+
+        t2 = [
+            ex for ex in dataset if ex["perturbation_type"] == "perturb_type2"
+        ][0]
+        assert t2["label"] == '{"label": false}'
 
 
 # ---------------------------------------------------------------------------
@@ -890,10 +574,10 @@ class TestPerturbationTypeDistribution:
     def test_perturbation_distribution(self, temp_json_files):
         print_separator("TEST: Perturbation Type Distribution")
 
-        dataset = load_fact_checking_data(
+        dataset = load_split(
             json_paths=[temp_json_files["train_1"], temp_json_files["train_2"]],
             split="train",
-            expand_perturbations_flag=True,
+            expand_perturbations=True,
         )
 
         perturb_counts = Counter(dataset["perturbation_type"])
@@ -918,10 +602,10 @@ class TestClaimIdTracking:
     """Test claim_id tracking across perturbations."""
 
     def test_claim_id_consistency(self, temp_json_files):
-        dataset = load_fact_checking_data(
+        dataset = load_split(
             json_paths=temp_json_files["train_1"],
             split="train",
-            expand_perturbations_flag=True,
+            expand_perturbations=True,
         )
 
         by_claim_id = defaultdict(list)
@@ -947,24 +631,34 @@ class TestClaimIdTracking:
 class TestBooleanLabelHandling:
     """Verify that bool labels from JSON (True/False) are handled correctly."""
 
-    def test_bool_true_label_becomes_string(self, numeration_true_example):
-        expanded = expand_perturbations([numeration_true_example])
+    def test_bool_true_label_becomes_json(self, temp_json_files):
+        """Bool True label in JSON should become '{"label": true}' string."""
+        dataset = load_split(
+            json_paths=temp_json_files["train_1"],
+            split="train",
+            expand_perturbations=True,
+        )
         orig = [
-            e
-            for e in expanded
-            if e["perturbation_type"] == "original_normalized"
+            ex
+            for ex in dataset
+            if ex["perturbation_type"] == "original_normalized"
         ][0]
-        assert orig["label"] == "True"
+        assert orig["label"] == '{"label": true}'
         assert isinstance(orig["label"], str)
 
-    def test_bool_false_label_becomes_string(self, approximation_false_example):
-        expanded = expand_perturbations([approximation_false_example])
+    def test_bool_false_label_becomes_json(self, temp_json_files):
+        """Bool False label in JSON should become '{"label": false}' string."""
+        dataset = load_split(
+            json_paths=temp_json_files["train_2"],
+            split="train",
+            expand_perturbations=True,
+        )
         orig = [
-            e
-            for e in expanded
-            if e["perturbation_type"] == "original_normalized"
+            ex
+            for ex in dataset
+            if ex["perturbation_type"] == "original_normalized"
         ][0]
-        assert orig["label"] == "False"
+        assert orig["label"] == '{"label": false}'
         assert isinstance(orig["label"], str)
 
 

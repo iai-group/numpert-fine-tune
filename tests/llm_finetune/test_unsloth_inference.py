@@ -306,7 +306,7 @@ def _make_mock_inference_context(tmp_path, **extra_patches):
 
     patches = {
         "FastLanguageModel": mock_flm,
-        "load_fact_checking_data": MagicMock(return_value=test_ds),
+        "load_split": MagicMock(return_value=test_ds),
         "build_inference_config": MagicMock(return_value={}),
         "save_inference_config": MagicMock(
             return_value=str(tmp_path / "config.json")
@@ -495,7 +495,7 @@ class TestInference:
         assert isinstance(data, list)
         assert len(data) > 0
 
-    def test_load_fact_checking_data_called(self, tmp_path):
+    def test_load_split_called(self, tmp_path):
         """Test data loading function is called with correct args."""
         from src.llm_finetune.unsloth_inference import inference
 
@@ -507,8 +507,8 @@ class TestInference:
                 expand_perturbations=False,
                 output_dir=str(tmp_path / "output"),
             )
-            load_call = m["refs"]["load_fact_checking_data"].call_args
-            assert load_call[1]["expand_perturbations_flag"] is False
+            load_call = m["refs"]["load_split"].call_args
+            assert load_call[1]["expand_perturbations"] is False
 
 
 class TestInferenceModelResolution:
@@ -630,7 +630,7 @@ class TestUnperturbedClaimsInference:
 
     def test_unperturbed_forces_expand_false(self, tmp_path):
         """inference_unperturbed_claims=True forces
-        expand_perturbations_flag=False."""
+        expand_perturbations=False."""
         from src.llm_finetune.unsloth_inference import inference
 
         with _make_mock_inference_context(tmp_path) as m:
@@ -641,8 +641,8 @@ class TestUnperturbedClaimsInference:
                 output_dir=str(tmp_path / "output"),
                 inference_unperturbed_claims=True,
             )
-            load_call = m["refs"]["load_fact_checking_data"].call_args
-            assert load_call[1]["expand_perturbations_flag"] is False
+            load_call = m["refs"]["load_split"].call_args
+            assert load_call[1]["expand_perturbations"] is False
 
     def test_unperturbed_output_files_prefixed(self, tmp_path):
         """inference_unperturbed_claims=True produces unperturbed_ prefixed
@@ -874,7 +874,7 @@ class TestInferenceDeduplication:
         # 8 rows total, 2 duplicate original_normalized → 6 unique evals
         with _make_mock_inference_context(
             tmp_path,
-            load_fact_checking_data=MagicMock(return_value=ds),
+            load_split=MagicMock(return_value=ds),
         ) as m:
             inference(
                 test_json_paths=["test.json"],
@@ -893,7 +893,7 @@ class TestInferenceDeduplication:
         out = tmp_path / "output"
         with _make_mock_inference_context(
             tmp_path,
-            load_fact_checking_data=MagicMock(return_value=ds),
+            load_split=MagicMock(return_value=ds),
         ):
             inference(
                 test_json_paths=["test.json"],
@@ -916,7 +916,7 @@ class TestInferenceDeduplication:
         out = tmp_path / "output"
         with _make_mock_inference_context(
             tmp_path,
-            load_fact_checking_data=MagicMock(return_value=ds),
+            load_split=MagicMock(return_value=ds),
         ):
             inference(
                 test_json_paths=["test.json"],
@@ -945,7 +945,7 @@ class TestInferenceDeduplication:
         out = tmp_path / "output"
         with _make_mock_inference_context(
             tmp_path,
-            load_fact_checking_data=MagicMock(return_value=ds),
+            load_split=MagicMock(return_value=ds),
         ):
             inference(
                 test_json_paths=["test.json"],
@@ -971,7 +971,7 @@ class TestInferenceDeduplication:
         ds = create_mock_test_dataset(n_claims=3, perturbations_per_claim=1)
         with _make_mock_inference_context(
             tmp_path,
-            load_fact_checking_data=MagicMock(return_value=ds),
+            load_split=MagicMock(return_value=ds),
         ) as m:
             inference(
                 test_json_paths=["test.json"],
@@ -1007,7 +1007,7 @@ class TestInferenceDeduplication:
 
         with _make_mock_inference_context(
             tmp_path,
-            load_fact_checking_data=MagicMock(return_value=ds),
+            load_split=MagicMock(return_value=ds),
         ) as m:
             inference(
                 test_json_paths=["test.json"],
@@ -1032,7 +1032,7 @@ class TestInferenceDeduplication:
         out = tmp_path / "output"
         with _make_mock_inference_context(
             tmp_path,
-            load_fact_checking_data=MagicMock(return_value=ds),
+            load_split=MagicMock(return_value=ds),
         ):
             inference(
                 test_json_paths=["test.json"],

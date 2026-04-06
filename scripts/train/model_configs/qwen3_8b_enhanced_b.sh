@@ -56,7 +56,7 @@ MAX_SEQ_LENGTH=8192             # Maximum sequence length in tokens
 # ==============================================================================
 BALANCE_LABELS=true             # Balance True/False label distribution
 PERTURB_RATIO=1.0               # Ratio of perturbed to original examples (1.0 = 1:1)
-FALSE_T_TO_F_RATIO=0.67         # Among False perturbed examples, % that are T→F
+FALSE_T_TO_F_RATIO=0.67         # Share of False perturbations that are T→F
                                 # 0.67 = 67% T→F, 33% F→F
 
 # ==============================================================================

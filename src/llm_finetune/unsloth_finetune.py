@@ -1,10 +1,11 @@
 """Fine-tuning for fact-checking models with numerical perturbations."""
 
 import argparse
+import math
 import os
 from collections import Counter
 from datetime import datetime
-from typing import Optional, List
+from typing import Optional, List, Union
 
 import wandb
 from torch import torch
@@ -18,12 +19,12 @@ from unsloth import FastLanguageModel, is_bfloat16_supported
 from unsloth.chat_templates import get_chat_template
 
 from src.llm_finetune.config import prefix
-from src.llm_finetune.utils.data_loading.hf_dataset_instructions import (
-    load_train_and_validation,
+
+from src.llm_finetune.utils.data_loading.pipeline import load_split
+from src.llm_finetune.utils.data_loading.perturbation_types import (
     FileLoadConfig,
     parse_file_config,
 )
-from src.llm_finetune.utils.data_loading.class_balancer import DatasetBalancer
 from src.llm_finetune.batch_sampler import EnhancedPerturbationBatchSampler
 from src.llm_finetune.utils.naming import generate_run_name
 from src.llm_finetune.utils.training.convert_to_gguf import (
@@ -143,13 +144,14 @@ def finetune(  # noqa: C901
     max_seq_length: int = 16384,
     expand_perturbations: bool = True,
     balance_labels: bool = False,
-    perturb_ratio: float = 1.0,
-    false_perturb_t_to_f_ratio: float = 0.67,
+    perturb_ratio: Optional[float] = None,
+    false_perturb_t_to_f_ratio: Optional[float] = None,
+    equal_perturbation_methods: bool = False,
     batch_match_claim_id: bool = False,
     split_large_claims: bool = True,
     ensure_original_in_batch: bool = True,
     ensure_perturbed_in_batch: bool = True,
-    eval_steps: int = 500,
+    eval_steps: Union[int, float] = 500,
     save_steps: int = 500,
     save_gguf: bool = False,
     gguf_quantization_method: str = DEFAULT_QUANT_METHOD,
@@ -173,12 +175,23 @@ def finetune(  # noqa: C901
     print(f"Expand perturbations: {expand_perturbations}")
     print(f"Balance labels: {balance_labels}")
     print(f"Perturb ratio: {perturb_ratio}")
-    print(f"False perturb T→F ratio: {false_perturb_t_to_f_ratio}")
+    print(f"False perturb T→F share: {false_perturb_t_to_f_ratio}")
+    print(f"Equal perturbation methods: {equal_perturbation_methods}")
     print(f"Batch match claim_id: {batch_match_claim_id}")
     if batch_match_claim_id:
         print(f"  - Split large claims: {split_large_claims}")
         print(f"  - Ensure original in batch: {ensure_original_in_batch}")
         print(f"  - Ensure perturbed in batch: {ensure_perturbed_in_batch}")
+    if isinstance(eval_steps, float) and 0.0 < eval_steps <= 1.0:
+        print(
+            f"Eval steps: {eval_steps * 100:.1f}%"
+            " of total steps (resolved later)"
+        )
+    else:
+        resolved = (
+            int(eval_steps) if isinstance(eval_steps, float) else eval_steps
+        )
+        print(f"Eval steps: {resolved}")
     print("=" * 80 + "\n")
 
     # Model configuration
@@ -319,33 +332,33 @@ def finetune(  # noqa: C901
         }
 
     print("Loading datasets...")
-    datasets = load_train_and_validation(
-        train_json_paths=train_json_paths,
-        val_json_paths=val_json_paths,
-        train_file_configs=train_file_configs,
-        val_file_configs=val_file_configs,
-        expand_perturbations_flag=expand_perturbations,
+    train_data = load_split(
+        file_configs=train_file_configs,
+        json_paths=train_json_paths,
+        split="train",
+        expand_perturbations=expand_perturbations,
         include_doc=True,
+        balance_labels=balance_labels,
+        perturb_ratio=perturb_ratio,
+        false_perturb_t_to_f_ratio=false_perturb_t_to_f_ratio,
+        equal_perturbation_methods=equal_perturbation_methods,
+        seed=3407 + start_epoch,
     )
-
-    train_data = datasets["train"]
-    val_data = datasets["validation"]
+    val_data = load_split(
+        file_configs=val_file_configs,
+        json_paths=val_json_paths,
+        split="validation",
+        expand_perturbations=expand_perturbations,
+        include_doc=True,
+        balance_labels=False,
+        perturb_ratio=None,
+        false_perturb_t_to_f_ratio=None,
+        equal_perturbation_methods=False,
+        seed=3407 + start_epoch,
+    )
 
     print(f"Loaded train dataset size: {len(train_data)}")
     print(f"Loaded validation dataset size: {len(val_data)}")
-
-    # Apply balancing to training data
-    if balance_labels or perturb_ratio != 1.0:
-        balancer = DatasetBalancer(
-            dataset=train_data,
-            balance_labels=balance_labels,
-            perturb_ratio=perturb_ratio,
-            false_perturb_t_to_f_ratio=false_perturb_t_to_f_ratio,
-            seed=3407 + start_epoch,
-        )
-        train_data = balancer.balance()
-
-    print(f"\nFinal train dataset size: {len(train_data)}")
 
     # Show perturbation distribution
     train_perturb_dist = Counter(train_data["perturbation_type"])
@@ -655,6 +668,7 @@ def finetune(  # noqa: C901
         balance_labels=balance_labels,
         perturb_ratio=perturb_ratio,
         false_perturb_t_to_f_ratio=false_perturb_t_to_f_ratio,
+        equal_perturbation_methods=equal_perturbation_methods,
         batch_match_claim_id=batch_match_claim_id,
         split_large_claims=split_large_claims,
         ensure_original_in_batch=ensure_original_in_batch,
@@ -691,6 +705,7 @@ def finetune(  # noqa: C901
             "balance_labels": balance_labels,
             "perturb_ratio": perturb_ratio,
             "false_perturb_t_to_f_ratio": false_perturb_t_to_f_ratio,
+            "equal_perturbation_methods": equal_perturbation_methods,
             "batch_match_claim_id": batch_match_claim_id,
             "split_large_claims": split_large_claims,
             "ensure_original_in_batch": ensure_original_in_batch,
@@ -701,6 +716,26 @@ def finetune(  # noqa: C901
             ),
         },
     )
+
+    # Resolve eval_steps:
+    #   - float in (0, 1]  → percentage of total training steps
+    #   - int or float >= 1 → absolute step count
+    if isinstance(eval_steps, float) and 0.0 < eval_steps <= 1.0:
+        steps_per_epoch = math.ceil(
+            len(train_data) / (batch_size * gradient_accumulation_steps)
+        )
+        total_steps = steps_per_epoch * num_train_epochs
+        resolved_eval_steps = max(1, round(total_steps * eval_steps))
+        print(
+            f"Resolved eval_steps: {eval_steps * 100:.1f}% of"
+            f" {total_steps} total steps → {resolved_eval_steps} steps"
+        )
+        eval_steps = resolved_eval_steps
+    elif isinstance(eval_steps, float):
+        if eval_steps <= 0:
+            raise ValueError(f"eval_steps must be positive, got {eval_steps}")
+        # Float >= 1: treat as absolute step count
+        eval_steps = int(eval_steps)
 
     training_config = SFTConfig(
         per_device_train_batch_size=batch_size,
@@ -901,14 +936,27 @@ if __name__ == "__main__":
     parser.add_argument(
         "--perturb_ratio",
         type=float,
-        default=1.0,
-        help="Ratio of perturbed to non-perturbed examples (1.0 = 1:1)",
+        default=None,
+        help="Ratio of perturbed to non-perturbed examples "
+        "(default: None = keep all)",
     )
     parser.add_argument(
         "--false_perturb_t_to_f_ratio",
         type=float,
-        default=0.67,
-        help="Among False perturbed examples, ratio that should be T→F",
+        default=None,
+        help=(
+            "Among False perturbed examples, the fraction that are T→F flips "
+            "(e.g. 0.67 → 67%% T→F, 0.5 → equal T→F/F→F). "
+            "Omit to keep the natural distribution (no ratio constraint)."
+        ),
+    )
+    parser.add_argument(
+        "--equal_perturbation_methods",
+        action="store_true",
+        help=(
+            "Stratify balancing so each perturbation method "
+            "(numeration, range, …) gets an equal share of the budget"
+        ),
     )
 
     # Batch matching
@@ -938,7 +986,14 @@ if __name__ == "__main__":
 
     # Evaluation
     parser.add_argument(
-        "--eval_steps", type=int, default=100, help="Evaluation frequency"
+        "--eval_steps",
+        type=float,
+        default=100,
+        help=(
+            "Evaluation frequency. An integer sets an absolute step count;"
+            " a float in (0, 1] sets a fraction of total training steps"
+            " (e.g. 0.25 evaluates every 25%% of an epoch)."
+        ),
     )
     parser.add_argument(
         "--save_steps", type=int, default=500, help="Checkpoint save frequency"
@@ -990,6 +1045,7 @@ if __name__ == "__main__":
         balance_labels=args.balance_labels,
         perturb_ratio=args.perturb_ratio,
         false_perturb_t_to_f_ratio=args.false_perturb_t_to_f_ratio,
+        equal_perturbation_methods=args.equal_perturbation_methods,
         batch_match_claim_id=args.batch_match_claim_id,
         split_large_claims=args.split_large_claims,
         ensure_original_in_batch=args.ensure_original_in_batch,

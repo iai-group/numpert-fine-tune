@@ -10,7 +10,7 @@
         "normalized_claim": "\"More than 50 percent of immigrants from (El Salvador, Guatemala and Honduras) use at least one major welfare program once they get here.\"",
         "label": "True",
         "claim_id": "test_000001",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"More than -50 percent of immigrants from (El Salvador, Guatemala and Honduras) use at least one major welfare program once they get here.\""
     },
     {
@@ -24,7 +24,7 @@
         "normalized_claim": "Says Sherrod Brown \"votes 97 percent with Chuck Schumer, almost 95 plus percent with Elizabeth Warren.\"",
         "label": "True",
         "claim_id": "test_000075",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says Sherrod Brown \"votes -97 percent with Chuck Schumer, almost -95 plus percent with Elizabeth Warren.\""
     },
     {
@@ -38,7 +38,7 @@
         "normalized_claim": "Israel cut its illegal immigration rate by \"99 percent\" by constructing a 143-mile fence along its southern border.",
         "label": "True",
         "claim_id": "test_000182",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Israel cut its illegal immigration rate by \"-99 percent\" by constructing a 143-mile fence along its southern border."
     },
     {
@@ -53,7 +53,7 @@
         "normalized_claim": "Says 55 percent of council members have come from area where only 10 percent of Austinites live.",
         "label": "True",
         "claim_id": "test_000348",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says -55 percent of council members have come from area where only -10 percent of Austinites live."
     },
     {
@@ -68,7 +68,7 @@
         "normalized_claim": "“Compliance levels with parole and probation conditions have improved to reach a historic mark of 98%.”",
         "label": "True",
         "claim_id": "test_000376",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "“Compliance levels with parole and probation conditions have improved to reach a historic mark of -98%.”"
     },
     {
@@ -82,7 +82,7 @@
         "normalized_claim": "Obama's tax plan cuts taxes \"for 95 percent of all working families.\"",
         "label": "True",
         "claim_id": "test_000379",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Obama's tax plan cuts taxes \"for -95 percent of all working families.\""
     },
     {
@@ -97,7 +97,7 @@
         "normalized_claim": "“84% of all new electric capacity planned to come onto the electric grid this year is clean energy.”",
         "label": "True",
         "claim_id": "test_000382",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "“-84% of all new electric capacity planned to come onto the electric grid this year is clean energy.”"
     },
     {
@@ -112,7 +112,7 @@
         "normalized_claim": "Has Ukraine Taken Back 50% Of Territory It Lost Since February 2022?",
         "label": "True",
         "claim_id": "test_000414",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Has Ukraine Taken Back -50% Of Territory It Lost Since February 2022?"
     },
     {
@@ -126,7 +126,7 @@
         "normalized_claim": "\"Only 3 percent of voters 18 to 34 don't believe that climate change is really happening.\"",
         "label": "True",
         "claim_id": "test_000421",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"Only -3 percent of voters 18 to 34 don't believe that climate change is really happening.\""
     },
     {
@@ -140,7 +140,7 @@
         "normalized_claim": "Before 2005, \"the percentage of\" Texas high school \"students meeting the college readiness standards of the Texas Higher Education Coordinating Board stood at 28% in English and 42% in math. Those figures stood at 65% and 66% in 2013.\"",
         "label": "True",
         "claim_id": "test_000426",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Before 2005, \"the percentage of\" Texas high school \"students meeting the college readiness standards of the Texas Higher Education Coordinating Board stood at -28% in English and -42% in math. Those figures stood at -65% and -66% in 2013.\""
     },
     {
@@ -154,7 +154,7 @@
         "normalized_claim": "Says \"80 percent of the health care dollars are spent by 20 percent of the population.\"",
         "label": "True",
         "claim_id": "test_000459",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says \"-80 percent of the health care dollars are spent by -20 percent of the population.\""
     },
     {
@@ -168,7 +168,7 @@
         "normalized_claim": "Small businesses in West Virginia make up \"99 percent of the total number of businesses in the state\" and employ \"nearly 50 percent of the state’s workforce.\"",
         "label": "True",
         "claim_id": "test_000473",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Small businesses in West Virginia make up \"-99 percent of the total number of businesses in the state\" and employ \"nearly -50 percent of the state’s workforce.\""
     },
     {
@@ -182,7 +182,7 @@
         "normalized_claim": "Under Donald Trump's tax plan, \"51 percent of single parents would see their taxes go up.\"",
         "label": "True",
         "claim_id": "test_000554",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Under Donald Trump's tax plan, \"-51 percent of single parents would see their taxes go up.\""
     },
     {
@@ -196,7 +196,7 @@
         "normalized_claim": "\"Only 12% of legal immigrants are selected based on skill or based on merit. In countries like Canada, Australia and New Zealand, and others, that number is closer to 60, and even 70 and 75% in some cases.\"",
         "label": "True",
         "claim_id": "test_000596",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"Only -12% of legal immigrants are selected based on skill or based on merit. In countries like Canada, Australia and New Zealand, and others, that number is closer to 60, and even -70 and 75% in some cases.\""
     },
     {
@@ -210,7 +210,7 @@
         "normalized_claim": "\"Radio Marti and TV Marti have spent more than $500,000,000 to reach less than 1 percent of the Cuban population.\"",
         "label": "True",
         "claim_id": "test_000600",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"Radio Marti and TV Marti have spent more than $500,000,000 to reach less than -1 percent of the Cuban population.\""
     },
     {
@@ -224,7 +224,7 @@
         "normalized_claim": "Says 97 percent of food stamp benefits \"are paid in the proper amounts to people who are really eligible.\"",
         "label": "True",
         "claim_id": "test_000708",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says -97 percent of food stamp benefits \"are paid in the proper amounts to people who are really eligible.\""
     },
     {
@@ -238,7 +238,7 @@
         "normalized_claim": "\"In last week’s debate, Bernie questioned Hillary’s commitment to fighting climate change because a whopping 0.2 percent of the money given to our campaign has come from employees of oil and gas companies. Not even 2 percent, mind you: 0.2 percent.\"",
         "label": "True",
         "claim_id": "test_000739",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"In last week’s debate, Bernie questioned Hillary’s commitment to fighting climate change because a whopping -0.2 percent of the money given to our campaign has come from employees of oil and gas companies. Not even -2 percent, mind you: -0.2 percent.\""
     },
     {
@@ -252,7 +252,7 @@
         "normalized_claim": "Says \"MAX carries 30 percent of evening rush-hour commuters traveling from Downtown on the Sunset and Banfield freeways.\"",
         "label": "True",
         "claim_id": "test_000748",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says \"MAX carries -30 percent of evening rush-hour commuters traveling from Downtown on the Sunset and Banfield freeways.\""
     },
     {
@@ -266,7 +266,7 @@
         "normalized_claim": "A poll conducted in Egypt revealed that 80 percent of Egyptians oppose receiving foreign aid from the United States.",
         "label": "True",
         "claim_id": "test_000760",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "A poll conducted in Egypt revealed that -80 percent of Egyptians oppose receiving foreign aid from the United States."
     },
     {
@@ -280,7 +280,7 @@
         "normalized_claim": "“VA Democrats authorized for early release over 4,000 inmates, 60% of which are incarcerated for violent offenses.”",
         "label": "True",
         "claim_id": "test_000775",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "“VA Democrats authorized for early release over 4,000 inmates, -60% of which are incarcerated for violent offenses.”"
     },
     {
@@ -295,7 +295,7 @@
         "normalized_claim": "\"The unemployment rate in Nigeria rose to 9.9 per cent in 2015 as the administration came on board.\"",
         "label": "True",
         "claim_id": "test_000792",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"The unemployment rate in Nigeria rose to -9.9 per cent in 2015 as the administration came on board.\""
     },
     {
@@ -309,7 +309,7 @@
         "normalized_claim": "\"We saw the prison population expand and vacancy rates for correctional officers go from 2.9% to 15.2%\" over the last eight years.",
         "label": "True",
         "claim_id": "test_000837",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"We saw the prison population expand and vacancy rates for correctional officers go from -2.9% to -15.2%\" over the last eight years."
     },
     {
@@ -324,7 +324,7 @@
         "normalized_claim": "\"80% of the R2,000,000,000 spent by the Western Cape Government on tenders during 2012/2013 was paid to #BEEbusinesses. #DAdelivers\"",
         "label": "True",
         "claim_id": "test_000847",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"-80% of the R2,000,000,000 spent by the Western Cape Government on tenders during 2012/2013 was paid to #BEEbusinesses. #DAdelivers\""
     },
     {
@@ -338,7 +338,7 @@
         "normalized_claim": "\"Over 39% of violent criminals return to prison following their release.\"",
         "label": "True",
         "claim_id": "test_000889",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"Over -39% of violent criminals return to prison following their release.\""
     },
     {
@@ -352,7 +352,7 @@
         "normalized_claim": "\"If you take into account all the people who are struggling for work, or have just stopped looking, the real unemployment rate is over 15 percent.\"",
         "label": "True",
         "claim_id": "test_000992",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"If you take into account all the people who are struggling for work, or have just stopped looking, the real unemployment rate is over -15 percent.\""
     },
     {
@@ -367,7 +367,7 @@
         "normalized_claim": "“Only 5% of the money sent to counties went to Nairobi.” ",
         "label": "True",
         "claim_id": "test_000997",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "“Only -5% of the money sent to counties went to Nairobi.” "
     },
     {
@@ -381,7 +381,7 @@
         "normalized_claim": "\"Charlie Crist allowed college tuition to increase up to 15 percent every year.\"",
         "label": "True",
         "claim_id": "test_001019",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"Charlie Crist allowed college tuition to increase up to -15 percent every year.\""
     },
     {
@@ -395,7 +395,7 @@
         "normalized_claim": "\"If you have a job in this country, (there's a) 97 percent chance that you're not going to be in poverty.\"",
         "label": "True",
         "claim_id": "test_001025",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"If you have a job in this country, (there's a) -97 percent chance that you're not going to be in poverty.\""
     },
     {
@@ -409,7 +409,7 @@
         "normalized_claim": "Says 70 percent of benefits in Donald Trump’s proposal for child care \"go to the people making over $100,000 a year.\"",
         "label": "True",
         "claim_id": "test_001083",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says -70 percent of benefits in Donald Trump’s proposal for child care \"go to the people making over $100,000 a year.\""
     },
     {
@@ -423,7 +423,7 @@
         "normalized_claim": "\"I think with the exception of the last year or maybe the last two years, we were at 100 percent\" when it came to contributing to the Providence pension fund.",
         "label": "True",
         "claim_id": "test_001092",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"I think with the exception of the last year or maybe the last two years, we were at -100 percent\" when it came to contributing to the Providence pension fund."
     },
     {
@@ -437,7 +437,7 @@
         "normalized_claim": "Says if labor force participation rate were the same as when Barack Obama became president, unemployment would be 11 percent.",
         "label": "True",
         "claim_id": "test_001119",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says if labor force participation rate were the same as when Barack Obama became president, unemployment would be -11 percent."
     },
     {
@@ -451,7 +451,7 @@
         "normalized_claim": "\"Over 97 percent of the scientific community … believe that humans are contributing to climate change.\"",
         "label": "True",
         "claim_id": "test_001179",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"Over -97 percent of the scientific community … believe that humans are contributing to climate change.\""
     },
     {
@@ -465,7 +465,7 @@
         "normalized_claim": "\"America owns 3 percent of the world’s oil but consumes 25 percent of its global reserves.\"",
         "label": "True",
         "claim_id": "test_001243",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"America owns -3 percent of the world’s oil but consumes -25 percent of its global reserves.\""
     },
     {
@@ -479,7 +479,7 @@
         "normalized_claim": "France \"wouldn’t buy Texas beef for some reason, yet 76 percent of their energy comes from nuclear power.\"",
         "label": "True",
         "claim_id": "test_001251",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "France \"wouldn’t buy Texas beef for some reason, yet -76 percent of their energy comes from nuclear power.\""
     },
     {
@@ -493,7 +493,7 @@
         "normalized_claim": "Says \"by 4th grade, 86 percent of African-American boys and 82 percent (of) Hispanic boys are reading below proficiency levels.\"",
         "label": "True",
         "claim_id": "test_001290",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says \"by 4th grade, -86 percent of African-American boys and -82 percent (of) Hispanic boys are reading below proficiency levels.\""
     },
     {
@@ -508,7 +508,7 @@
         "normalized_claim": "Says the Affordable Care Act has already reduced the number of uninsured in Oregon by 10 percent.",
         "label": "True",
         "claim_id": "test_001327",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says the Affordable Care Act has already reduced the number of uninsured in Oregon by -10 percent."
     },
     {
@@ -522,7 +522,7 @@
         "normalized_claim": "If Rhode Island applied a 1-percent sales tax on all items exempt from sales tax, ''the state would receive an additional $89,376,857.''",
         "label": "True",
         "claim_id": "test_001357",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "If Rhode Island applied a -1-percent sales tax on all items exempt from sales tax, ''the state would receive an additional $89,376,857.''"
     },
     {
@@ -536,7 +536,7 @@
         "normalized_claim": "Says Amanda Fritz \"manages less than 5 percent of city operations.\"",
         "label": "True",
         "claim_id": "test_001359",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says Amanda Fritz \"manages less than -5 percent of city operations.\""
     },
     {
@@ -551,7 +551,7 @@
         "normalized_claim": "Rhode Island spends less than 10 percent of what the average state spends promoting tourism.",
         "label": "True",
         "claim_id": "test_001529",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Rhode Island spends less than -10 percent of what the average state spends promoting tourism."
     },
     {
@@ -565,7 +565,7 @@
         "normalized_claim": "\"57% of the jobs created\" in Austin \"from 2009 to 2013 do not pay families a living wage.\"",
         "label": "True",
         "claim_id": "test_001534",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"-57% of the jobs created\" in Austin \"from 2009 to 2013 do not pay families a living wage.\""
     },
     {
@@ -580,7 +580,7 @@
         "normalized_claim": "Anheuser-Busch will give away free beer when 70% of the nation's adults have had at least one COVID-19 vaccine shot.",
         "label": "True",
         "claim_id": "test_001547",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Anheuser-Busch will give away free beer when -70% of the nation's adults have had at least one COVID-19 vaccine shot."
     },
     {
@@ -594,7 +594,7 @@
         "normalized_claim": "\"About 70 percentof Republicans nationwide ...don't think Donald Trump is the right guy\" to take on Hillary Clinton in November.",
         "label": "True",
         "claim_id": "test_001568",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"About -70 percentof Republicans nationwide ...don't think Donald Trump is the right guy\" to take on Hillary Clinton in November."
     },
     {
@@ -608,7 +608,7 @@
         "normalized_claim": "Says \"72% of refugees admitted into U.S. (2/3 -2/11) during COURT BREAKDOWN are from 7 countries: SYRIA, IRAQ, SOMALIA, IRAN, SUDAN, LIBYA & YEMEN.\"",
         "label": "True",
         "claim_id": "test_001594",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says \"-72% of refugees admitted into U.S. (2/3 -2/11) during COURT BREAKDOWN are from 7 countries: SYRIA, IRAQ, SOMALIA, IRAN, SUDAN, LIBYA & YEMEN.\""
     },
     {
@@ -622,7 +622,7 @@
         "normalized_claim": "Says New Hampshire’s second congressional district includes two counties where \"almost 5 percent if not more\" of residents are enrolled in the state’s expanded Medicaid program.",
         "label": "True",
         "claim_id": "test_001604",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says New Hampshire’s second congressional district includes two counties where \"almost -5 percent if not more\" of residents are enrolled in the state’s expanded Medicaid program."
     },
     {
@@ -636,7 +636,7 @@
         "normalized_claim": "The Republican Party has \"21 percent party ID and shrinking.\"",
         "label": "True",
         "claim_id": "test_001621",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "The Republican Party has \"-21 percent party ID and shrinking.\""
     },
     {
@@ -651,7 +651,7 @@
         "normalized_claim": "\"The president of the United States came in the Tuesday before the election in a ward that went 99% for him in the last election and they couldn't even (increase) the vote there.\"",
         "label": "True",
         "claim_id": "test_001638",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"The president of the United States came in the Tuesday before the election in a ward that went -99% for him in the last election and they couldn't even (increase) the vote there.\""
     },
     {
@@ -665,7 +665,7 @@
         "normalized_claim": "\"Fifteen years ago, the assets of the six largest banks in this country totaled 17 percent of GDP ... The assets of the six largest banks in the United States today total 63 percent of GDP.\"",
         "label": "True",
         "claim_id": "test_001648",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "\"Fifteen years ago, the assets of the six largest banks in this country totaled -17 percent of GDP ... The assets of the six largest banks in the United States today total -63 percent of GDP.\""
     },
     {
@@ -679,7 +679,7 @@
         "normalized_claim": "Says under his utility rate plan, \"An estimated 50 percent of our residential households will see a decrease in their water and wastewater bills.\"",
         "label": "True",
         "claim_id": "test_001666",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says under his utility rate plan, \"An estimated -50 percent of our residential households will see a decrease in their water and wastewater bills.\""
     },
     {
@@ -694,7 +694,7 @@
         "normalized_claim": "“In simple terms, 50% of all the money collected as revenues in Kenya goes into the pockets of less than 2% of the country's total population.\"",
         "label": "True",
         "claim_id": "test_001758",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "“In simple terms, -50% of all the money collected as revenues in Kenya goes into the pockets of less than -2% of the country's total population.\""
     },
     {
@@ -709,7 +709,7 @@
         "normalized_claim": "The World Health Organization reports that in 2018, 4% of deaths in Nigeria were caused by cancer.",
         "label": "True",
         "claim_id": "test_001809",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "The World Health Organization reports that in 2018, -4% of deaths in Nigeria were caused by cancer."
     },
     {
@@ -723,7 +723,7 @@
         "normalized_claim": "Says a portfolio managed by the Texas General Land Office earned 22 percent last year while the state’s emergency reserve account experienced a 1 percent gain.",
         "label": "True",
         "claim_id": "test_001829",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Says a portfolio managed by the Texas General Land Office earned -22 percent last year while the state’s emergency reserve account experienced a -1 percent gain."
     },
     {
@@ -737,7 +737,7 @@
         "normalized_claim": "Say Portland Public Schools' central administration makes up less than 4 percent of the staff.",
         "label": "True",
         "claim_id": "test_001874",
-        "pertubation_method": "negative",
+        "perturbation_method": "negative",
         "perturb_type2_True": "Say Portland Public Schools' central administration makes up less than -4 percent of the staff."
     }
 ]

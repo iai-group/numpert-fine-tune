@@ -10,7 +10,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000001",
         "normalized_claim": "\"More than 50 percent of immigrants from (El Salvador, Guatemala and Honduras) use at least one major welfare program once they get here.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"More than between 45 percent and 55 percent of immigrants from (El Salvador, Guatemala and Honduras) use at least one major welfare program once they get here.\"",
         "perturb_type2_True": "\"More than between 75 percent and 80 percent of immigrants from (El Salvador, Guatemala and Honduras) use at least one major welfare program once they get here.\""
     },
@@ -26,7 +26,7 @@
         "label_original": "true",
         "claim_id": "test_000011",
         "normalized_claim": "\"Senator Clinton tried to spend $1,000,000 on the Woodstock Concert Museum.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Senator Clinton tried to spend between $900,000 and $1,100,000 on the Woodstock Concert Museum.\"",
         "perturb_type2_True": "\"Senator Clinton tried to spend between $1,150,000 and $1,250,000 on the Woodstock Concert Museum.\""
     },
@@ -41,7 +41,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000012",
         "normalized_claim": "\"When you throw 23,000,000 people off of health insurance -- people with cancer, people with heart disease, people with diabetes -- thousands of people will die. … This is study after study making this point.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"When you throw between 20,700,000 and 25,300,000 people off of health insurance -- people with cancer, people with heart disease, people with diabetes -- thousands of people will die. … This is study after study making this point.\"",
         "perturb_type2_True": "\"When you throw between 33,350,000 and 37,950,000 people off of health insurance -- people with cancer, people with heart disease, people with diabetes -- thousands of people will die. … This is study after study making this point.\""
     },
@@ -57,7 +57,7 @@
         "label_original": "correct",
         "claim_id": "test_000019",
         "normalized_claim": "So far, each of the 47 counties has met the two-thirds threshold on the appointment of the county executive committee members, with three counties of Kilifi, Nyeri and Kericho attaining a 50-50 representation.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "So far, each of the between 42 and 52 counties has met the two-thirds threshold on the appointment of the county executive committee members, with three counties of Kilifi, Nyeri and Kericho attaining a between 45 and 55-50 representation.\"",
         "perturb_type2_True": "So far, each of the between 68 and 78 counties has met the two-thirds threshold on the appointment of the county executive committee members, with three counties of Kilifi, Nyeri and Kericho attaining a between 72 and 83-50 representation.\""
     },
@@ -72,7 +72,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000020",
         "normalized_claim": "Said, \"The Seven Years’ Warled to near bankruptcy for many countries; Britain’s need to raise taxes fueled the American desire for independence.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Said, \"The Seven Years’ Warled to near bankruptcy for many countries; Britain’s need to raise taxes fueled the American desire for independence.\"",
         "perturb_type2_True": "Said, \"The Seven Years’ Warled to near bankruptcy for many countries; Britain’s need to raise taxes fueled the American desire for independence.\""
     },
@@ -88,7 +88,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000024",
         "normalized_claim": "“One in six local election officials have received threats of violence” and threats against judges have doubled over four years and threats against members of Congress have increased by 10 times over five years.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "“One in six local election officials have received threats of violence” and threats against judges have doubled over four years and threats against members of Congress have increased by between 9 and 11 times over five years.",
         "perturb_type2_True": "“One in six local election officials have received threats of violence” and threats against judges have doubled over four years and threats against members of Congress have increased by between 14 and 17 times over five years."
     },
@@ -103,7 +103,7 @@
         "label_original": "true",
         "claim_id": "test_000025",
         "normalized_claim": "Says there have been 50,000,000 abortions since Roe v. Wade was decided.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says there have been between 45,000,000 and 55,000,000 abortions since Roe v. Wade was decided.",
         "perturb_type2_True": "Says there have been between 72,500,000 and 82,500,000 abortions since Roe v. Wade was decided."
     },
@@ -119,7 +119,7 @@
         "label_original": "correct",
         "claim_id": "test_000033",
         "normalized_claim": "\"When George Weah took the oath of office, there were 2,000,000 Liberians in extreme poverty.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"When George Weah took the oath of office, there were between 1,800,000 and 2,200,000 Liberians in extreme poverty.\"",
         "perturb_type2_True": "\"When George Weah took the oath of office, there were between 2,900,000 and 3,300,000 Liberians in extreme poverty.\""
     },
@@ -134,7 +134,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000035",
         "normalized_claim": "Says \"43 of Joe’s legislative proposals have become law, including 21 since President Trump took office.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says \"between 38 and 48 of Joe’s legislative proposals have become law, including between 18 and 24 since President Trump took office.\"",
         "perturb_type2_True": "Says \"between 62 and 71 of Joe’s legislative proposals have become law, including between 30 and 35 since President Trump took office.\""
     },
@@ -150,7 +150,7 @@
         "label_original": "correct",
         "claim_id": "test_000036",
         "normalized_claim": "“The expanded public works program has since 2014 created more than 2,000,000 work opportunities towards the attainment of the target of 6,000,000 work opportunities by the end of March 2019.”",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "“The expanded public works program has since 2014 created more than between 1,800,000 and 2,200,000 work opportunities towards the attainment of the target of between 5,400,000 and 6,600,000 work opportunities by the end of March 2019.”",
         "perturb_type2_True": "“The expanded public works program has since 2014 created more than between 2,900,000 and 3,300,000 work opportunities towards the attainment of the target of between 8,700,000 and 9,900,000 work opportunities by the end of March 2019.”"
     },
@@ -166,7 +166,7 @@
         "label_original": "Mostly True",
         "claim_id": "test_000041",
         "normalized_claim": "A girl named Laura Buxton released a balloon that ended up in the hands of another girl named Laura Buxton who lived 140 miles away.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "A girl named Laura Buxton released a balloon that ended up in the hands of another girl named Laura Buxton who lived 140 miles away.",
         "perturb_type2_True": "A girl named Laura Buxton released a balloon that ended up in the hands of another girl named Laura Buxton who lived 140 miles away."
     },
@@ -181,7 +181,7 @@
         "label_original": "true",
         "claim_id": "test_000056",
         "normalized_claim": "Says of El Paso that some years, \"in a city of almost 700,000, we had five murders the entire year. Our average over the last 10 years is 18 (murders per year). We exceeded that average just on one day\" after a gunman opened fire at a Walmart in the city.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says of El Paso that some years, \"in a city of almost between 630,000 and 770,000, we had five murders the entire year. Our average over the last 10 years is between 16 and 20 (murders per year). We exceeded that average just on one day\" after a gunman opened fire at a Walmart in the city.",
         "perturb_type2_True": "Says of El Paso that some years, \"in a city of almost between 1,015,000 and 1,155,000, we had five murders the entire year. Our average over the last 10 years is between 26 and 30 (murders per year). We exceeded that average just on one day\" after a gunman opened fire at a Walmart in the city."
     },
@@ -196,7 +196,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000058",
         "normalized_claim": "In Libya, \"America spent $2,000,000,000 total and didn’t lose a single life.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "In Libya, \"America spent between $1,800,000,000 and $2,200,000,000 total and didn’t lose a single life.\"",
         "perturb_type2_True": "In Libya, \"America spent between $2,300,000,000 and $2,500,000,000 total and didn’t lose a single life.\""
     },
@@ -211,7 +211,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000060",
         "normalized_claim": "Says \"TriMet now spends $1.63 in benefits for every $1.00 spent on wages.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says \"TriMet now spends between $1 and $2 in benefits for every between $0 and $2 spent on wages.\"",
         "perturb_type2_True": "Says \"TriMet now spends between $1 and $3 in benefits for every between $1 and $2 spent on wages.\""
     },
@@ -226,7 +226,7 @@
         "label_original": "true",
         "claim_id": "test_000069",
         "normalized_claim": "Says Donald Trump'sfoundation \"took money other people gave to his charity and then bought a six-foot-tall painting of himself.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says Donald Trump'sfoundation \"took money other people gave to his charity and then bought a six-foot-tall painting of himself.\"",
         "perturb_type2_True": "Says Donald Trump'sfoundation \"took money other people gave to his charity and then bought a six-foot-tall painting of himself.\""
     },
@@ -241,7 +241,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000075",
         "normalized_claim": "Says Sherrod Brown \"votes 97 percent with Chuck Schumer, almost 95 plus percent with Elizabeth Warren.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says Sherrod Brown \"votes between 87 percent and 107 percent with Chuck Schumer, almost 95 plus percent with Elizabeth Warren.\"",
         "perturb_type2_True": "Says Sherrod Brown \"votes between 145 percent and 156 percent with Chuck Schumer, almost 95 plus percent with Elizabeth Warren.\""
     },
@@ -257,7 +257,7 @@
         "label_original": "True",
         "claim_id": "test_000100",
         "normalized_claim": "MIT offers a \"pirate certificate\" to students who complete four physical education courses.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "MIT offers a \"pirate certificate\" to students who complete four physical education courses.",
         "perturb_type2_True": "MIT offers a \"pirate certificate\" to students who complete four physical education courses."
     },
@@ -272,7 +272,7 @@
         "label_original": "true",
         "claim_id": "test_000119",
         "normalized_claim": "Says \"zero\" African Americans have presented to the House Budget Committee in 2019.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says \"zero\" African Americans have presented to the House Budget Committee in 2019.",
         "perturb_type2_True": "Says \"zero\" African Americans have presented to the House Budget Committee in 2019."
     },
@@ -288,7 +288,7 @@
         "label_original": "Accurate.",
         "claim_id": "test_000124",
         "normalized_claim": "“There were 144,305 newly reported COVID-19 cases in the United States today. This beats the previous record of 133,819 cases reported on Monday, November 9. This is the 8th day in a row with over 100,000 cases reported.”",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "“There were between 129,874 and 158,736 newly reported COVID-19 cases in the United States today. This beats the previous record of between 120,437 and 147,201 cases reported on Monday, November 9. This is the 8th day in a row with over between 90,000 and 110,000 cases reported.”",
         "perturb_type2_True": "“There were between 209,242 and 238,104 newly reported COVID-19 cases in the United States today. This beats the previous record of between 194,037 and 220,802 cases reported on Monday, November 9. This is the 8th day in a row with over between 145,000 and 165,000 cases reported.”"
     },
@@ -303,7 +303,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000167",
         "normalized_claim": "\"The Providence Economic Development Partnership . . .which you [Cicilline] chaired, loaned $103,000 in taxpayer funds to one of your campaign workers. The worker never paid back the loan.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"The Providence Economic Development Partnership . . .which you [Cicilline] chaired, loaned between $92,700 and $113,300 in taxpayer funds to one of your campaign workers. The worker never paid back the loan.\"",
         "perturb_type2_True": "\"The Providence Economic Development Partnership . . .which you [Cicilline] chaired, loaned between $118,450 and $128,750 in taxpayer funds to one of your campaign workers. The worker never paid back the loan.\""
     },
@@ -318,7 +318,7 @@
         "label_original": "true",
         "claim_id": "test_000177",
         "normalized_claim": "\"Ohio is losing over 700 family farms a year, some of them just to pay the inheritance tax.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Ohio is losing over between 630 and 770 family farms a year, some of them just to pay the inheritance tax.\"",
         "perturb_type2_True": "\"Ohio is losing over between 1,015 and 1,155 family farms a year, some of them just to pay the inheritance tax.\""
     },
@@ -333,7 +333,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000179",
         "normalized_claim": "\"We have at least 200,000 to 300,000 hate crimes in a given year.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"We have at least between 180,000 and 220,000 to between 270,000 and 330,000 hate crimes in a given year.\"",
         "perturb_type2_True": "\"We have at least between 290,000 and 330,000 to between 435,000 and 495,000 hate crimes in a given year.\""
     },
@@ -348,7 +348,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000182",
         "normalized_claim": "Israel cut its illegal immigration rate by \"99 percent\" by constructing a 143-mile fence along its southern border.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Israel cut its illegal immigration rate by \"between 89 percent and 109 percent\" by constructing a 143-mile fence along its southern border.",
         "perturb_type2_True": "Israel cut its illegal immigration rate by \"between 148 percent and 159 percent\" by constructing a 143-mile fence along its southern border."
     },
@@ -363,7 +363,7 @@
         "label_original": "true",
         "claim_id": "test_000185",
         "normalized_claim": "Says most of Austin’s biggest parks have recycling though as \"many as 293 out of 300\" Austin city \"parks have no recycling, including almost every neighborhood park.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says most of Austin’s biggest parks have recycling though as \"many as between 263 and 323 out of between 270 and 330\" Austin city \"parks have no recycling, including almost every neighborhood park.\"",
         "perturb_type2_True": "Says most of Austin’s biggest parks have recycling though as \"many as between 424 and 484 out of between 435 and 495\" Austin city \"parks have no recycling, including almost every neighborhood park.\""
     },
@@ -378,7 +378,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000190",
         "normalized_claim": "Says one year later, \"the coalition to defeat ISIS has liberated very close to100 percent of the territory just recentlyheld by these killers in Iraq and Syria.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says one year later, \"the coalition to defeat ISIS has liberated very close to100 percent of the territory just recentlyheld by these killers in Iraq and Syria.\"",
         "perturb_type2_True": "Says one year later, \"the coalition to defeat ISIS has liberated very close to100 percent of the territory just recentlyheld by these killers in Iraq and Syria.\""
     },
@@ -393,7 +393,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000196",
         "normalized_claim": "Chinese tire imports threatened 1,000 American jobs, so President Obama \"stood up to China and protected American workers. Mitt Romney attacked Obama's decision.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Chinese tire imports threatened between 900 and 1,100 American jobs, so President Obama \"stood up to China and protected American workers. Mitt Romney attacked Obama's decision.\"",
         "perturb_type2_True": "Chinese tire imports threatened between 1,450 and 1,650 American jobs, so President Obama \"stood up to China and protected American workers. Mitt Romney attacked Obama's decision.\""
     },
@@ -409,7 +409,7 @@
         "label_original": "true",
         "claim_id": "test_000198",
         "normalized_claim": "Says New Jersey has gained \"143,000 new private-sector jobs.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says New Jersey has gained \"between 128,700 and 157,300 new private-sector jobs.\"",
         "perturb_type2_True": "Says New Jersey has gained \"between 207,350 and 235,950 new private-sector jobs.\""
     },
@@ -425,7 +425,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000217",
         "normalized_claim": "\"You have literally 140 people dying every day of opioid-related overdoses.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"You have literally between 126 and 154 people dying every day of opioid-related overdoses.\"",
         "perturb_type2_True": "\"You have literally between 203 and 231 people dying every day of opioid-related overdoses.\""
     },
@@ -441,7 +441,7 @@
         "label_original": "true",
         "claim_id": "test_000220",
         "normalized_claim": "\"Over the course of one four-year term, it costs taxpayers more than $1,000,000 simply to operate\" the governor’s mansion.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Over the course of one four-year term, it costs taxpayers more than between $900,000 and $1,100,000 simply to operate\" the governor’s mansion.",
         "perturb_type2_True": "\"Over the course of one four-year term, it costs taxpayers more than between $1,150,000 and $1,250,000 simply to operate\" the governor’s mansion."
     },
@@ -457,7 +457,7 @@
         "label_original": "correct",
         "claim_id": "test_000222",
         "normalized_claim": "\"Eskom has launched a programme to buy excess power from private generators and has already secured 300 MW from our neighbouring countries.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Eskom has launched a programme to buy excess power from private generators and has already secured 300 MW from our neighbouring countries.\"",
         "perturb_type2_True": "\"Eskom has launched a programme to buy excess power from private generators and has already secured 300 MW from our neighbouring countries.\""
     },
@@ -472,7 +472,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000254",
         "normalized_claim": "\"Twenty-3,000,000 Americans suffer from addiction, but only 1 in 10 get treatment.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Twenty-3,000,000 Americans suffer from addiction, but only between 0 and 2 in between 9 and 11 get treatment.\"",
         "perturb_type2_True": "\"Twenty-3,000,000 Americans suffer from addiction, but only between 1 and 2 in between 14 and 17 get treatment.\""
     },
@@ -488,7 +488,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000256",
         "normalized_claim": "“There's 100,000,000 people that have preexisting conditions.”",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "“There's between 90,000,000 and 110,000,000 people that have preexisting conditions.”",
         "perturb_type2_True": "“There's between 145,000,000 and 165,000,000 people that have preexisting conditions.”"
     },
@@ -503,7 +503,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000259",
         "normalized_claim": "Says federal regulations adopted in 2011 increased the cost of each vehicle for his business by $10,000.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says federal regulations adopted in 2011 increased the cost of each vehicle for his business by between $9,000 and $11,000.",
         "perturb_type2_True": "Says federal regulations adopted in 2011 increased the cost of each vehicle for his business by between $11,500 and $12,500."
     },
@@ -518,7 +518,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000266",
         "normalized_claim": "\"In Austin, I’ve got half-a-dozen or more schools on a list to be closed — one of which I presented a federal blue-ribbon award to for excellence. And several hundred school personnel on the list for possible terminations.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"In Austin, I’ve got half-a-dozen or more schools on a list to be closed — one of which I presented a federal blue-ribbon award to for excellence. And several hundred school personnel on the list for possible terminations.\"",
         "perturb_type2_True": "\"In Austin, I’ve got half-a-dozen or more schools on a list to be closed — one of which I presented a federal blue-ribbon award to for excellence. And several hundred school personnel on the list for possible terminations.\""
     },
@@ -533,7 +533,7 @@
         "label_original": "true",
         "claim_id": "test_000268",
         "normalized_claim": "In the Illinois Legislature, Barack Obama \"voted 'present,' instead of yes or no\" on seven votes involving abortion rights.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "In the Illinois Legislature, Barack Obama \"voted 'present,' instead of yes or no\" on seven votes involving abortion rights.",
         "perturb_type2_True": "In the Illinois Legislature, Barack Obama \"voted 'present,' instead of yes or no\" on seven votes involving abortion rights."
     },
@@ -549,7 +549,7 @@
         "label_original": "correct",
         "claim_id": "test_000282",
         "normalized_claim": "So far, each of the 47 counties has met the two-thirds threshold on the appointment of the county executive committee members, with three counties of Kilifi, Nyeri and Kericho attaining a 50-50 representation.”",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "So far, each of the between 42 and 52 counties has met the two-thirds threshold on the appointment of the county executive committee members, with three counties of Kilifi, Nyeri and Kericho attaining a between 45 and 55-50 representation.”",
         "perturb_type2_True": "So far, each of the between 68 and 78 counties has met the two-thirds threshold on the appointment of the county executive committee members, with three counties of Kilifi, Nyeri and Kericho attaining a between 72 and 83-50 representation.”"
     },
@@ -565,7 +565,7 @@
         "label_original": "True",
         "claim_id": "test_000284",
         "normalized_claim": "In 2021, a petition to rename Reagan National Airport after dancer and TikTok personality Jojo Siwa garnered tens of thousands of signatures.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "In 2021, a petition to rename Reagan National Airport after dancer and TikTok personality Jojo Siwa garnered tens of thousands of signatures.",
         "perturb_type2_True": "In 2021, a petition to rename Reagan National Airport after dancer and TikTok personality Jojo Siwa garnered tens of thousands of signatures."
     },
@@ -580,7 +580,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000291",
         "normalized_claim": "\"Sue Lowden gave Harry Reid's campaigns a thousand dollars in five different elections, helping his Senate dreams come true.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Sue Lowden gave Harry Reid's campaigns a thousand dollars in five different elections, helping his Senate dreams come true.\"",
         "perturb_type2_True": "\"Sue Lowden gave Harry Reid's campaigns a thousand dollars in five different elections, helping his Senate dreams come true.\""
     },
@@ -596,7 +596,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000292",
         "normalized_claim": "Says a proposed $1,050,000,000 Austin school district bond proposition \"will require no tax rate increase.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says a proposed between $945,000,000 and $1,155,000,000 Austin school district bond proposition \"will require no tax rate increase.\"",
         "perturb_type2_True": "Says a proposed between $1,207,500,000 and $1,312,500,000 Austin school district bond proposition \"will require no tax rate increase.\""
     },
@@ -611,7 +611,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000303",
         "normalized_claim": "SaysRuben Kihuen \"only managed in the minority to get one bill passed out of the eight to 10 he introduced\" during the 2015 legislative session.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "SaysRuben Kihuen \"only managed in the minority to get one bill passed out of the eight to between 9 and 11 he introduced\" during the 2015 legislative session.",
         "perturb_type2_True": "SaysRuben Kihuen \"only managed in the minority to get one bill passed out of the eight to between 14 and 17 he introduced\" during the 2015 legislative session."
     },
@@ -626,7 +626,7 @@
         "label_original": "true",
         "claim_id": "test_000324",
         "normalized_claim": "\"One-third of the counties — think of it, one-third — only have one insurer left\" on the Affordable Care Act exchanges.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"One-third of the counties — think of it, one-third — only have one insurer left\" on the Affordable Care Act exchanges.",
         "perturb_type2_True": "\"One-third of the counties — think of it, one-third — only have one insurer left\" on the Affordable Care Act exchanges."
     },
@@ -641,7 +641,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000327",
         "normalized_claim": "Starting in December 2007, \"1,400,000 jobs were created in Texas. In that same period, the rest of the country lost 400,000 jobs.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Starting in December 2007, \"between 1,260,000 and 1,540,000 jobs were created in Texas. In that same period, the rest of the country lost between 360,000 and 440,000 jobs.\"",
         "perturb_type2_True": "Starting in December 2007, \"between 2,030,000 and 2,310,000 jobs were created in Texas. In that same period, the rest of the country lost between 580,000 and 660,000 jobs.\""
     },
@@ -656,7 +656,7 @@
         "label_original": "true",
         "claim_id": "test_000328",
         "normalized_claim": "The National Science Foundation awarded $700,000 to fund a climate change musical.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "The National Science Foundation awarded between $630,000 and $770,000 to fund a climate change musical.",
         "perturb_type2_True": "The National Science Foundation awarded between $805,000 and $875,000 to fund a climate change musical."
     },
@@ -671,7 +671,7 @@
         "label_original": "true",
         "claim_id": "test_000330",
         "normalized_claim": "\"You’ve got each day 10,000 new seniors, baby boomers, becoming eligible for the entitlement programs.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"You’ve got each day between 9,000 and 11,000 new seniors, baby boomers, becoming eligible for the entitlement programs.\"",
         "perturb_type2_True": "\"You’ve got each day between 14,500 and 16,500 new seniors, baby boomers, becoming eligible for the entitlement programs.\""
     },
@@ -686,7 +686,7 @@
         "label_original": "true",
         "claim_id": "test_000339",
         "normalized_claim": "\"If someone is in a room that has measles and leaves and you walk in two hours later, you could get measles from that person.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"If someone is in a room that has measles and leaves and you walk in two hours later, you could get measles from that person.\"",
         "perturb_type2_True": "\"If someone is in a room that has measles and leaves and you walk in two hours later, you could get measles from that person.\""
     },
@@ -702,7 +702,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000348",
         "normalized_claim": "Says 55 percent of council members have come from area where only 10 percent of Austinites live.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says between 49 percent and 61 percent of council members have come from area where only between 9 percent and 11 percent of Austinites live.",
         "perturb_type2_True": "Says between 82 percent and 88 percent of council members have come from area where only between 15 percent and 16 percent of Austinites live."
     },
@@ -717,7 +717,7 @@
         "label_original": "true",
         "claim_id": "test_000363",
         "normalized_claim": "The health care bill will subsidize families of four that make more than $80,000 a year.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "The health care bill will subsidize families of four that make more than between $72,000 and $88,000 a year.",
         "perturb_type2_True": "The health care bill will subsidize families of four that make more than between $92,000 and $100,000 a year."
     },
@@ -733,7 +733,7 @@
         "label_original": "correct",
         "claim_id": "test_000376",
         "normalized_claim": "“Compliance levels with parole and probation conditions have improved to reach a historic mark of 98%.”",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "“Compliance levels with parole and probation conditions have improved to reach a historic mark of between 88% and 108%.”",
         "perturb_type2_True": "“Compliance levels with parole and probation conditions have improved to reach a historic mark of between 147% and 157%.”"
     },
@@ -748,7 +748,7 @@
         "label_original": "true",
         "claim_id": "test_000379",
         "normalized_claim": "Obama's tax plan cuts taxes \"for 95 percent of all working families.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Obama's tax plan cuts taxes \"for between 85 percent and 105 percent of all working families.\"",
         "perturb_type2_True": "Obama's tax plan cuts taxes \"for between 142 percent and 152 percent of all working families.\""
     },
@@ -764,7 +764,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000382",
         "normalized_claim": "“84% of all new electric capacity planned to come onto the electric grid this year is clean energy.”",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "“between 75% and 93% of all new electric capacity planned to come onto the electric grid this year is clean energy.”",
         "perturb_type2_True": "“between 126% and 135% of all new electric capacity planned to come onto the electric grid this year is clean energy.”"
     },
@@ -780,7 +780,7 @@
         "label_original": "true",
         "claim_id": "test_000388",
         "normalized_claim": "“Just last year,” Miami-Dade Public Schools “had over 14,000 new children, 10,000 of which came from four countries of Cuba, Nicaragua, Venezuela and Haiti.”",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "“Just last year,” Miami-Dade Public Schools “had over between 12,600 and 15,400 new children, between 9,000 and 11,000 of which came from four countries of Cuba, Nicaragua, Venezuela and Haiti.”",
         "perturb_type2_True": "“Just last year,” Miami-Dade Public Schools “had over between 20,300 and 23,100 new children, between 14,500 and 16,500 of which came from four countries of Cuba, Nicaragua, Venezuela and Haiti.”"
     },
@@ -796,7 +796,7 @@
         "label_original": "correct",
         "claim_id": "test_000390",
         "normalized_claim": "\"To curb water wastage, the Department of Water and Sanitation has begun its programme of training 15,000 young people as artisans.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"To curb water wastage, the Department of Water and Sanitation has begun its programme of training between 13,500 and 16,500 young people as artisans.\"",
         "perturb_type2_True": "\"To curb water wastage, the Department of Water and Sanitation has begun its programme of training between 21,750 and 24,750 young people as artisans.\""
     },
@@ -812,7 +812,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000396",
         "normalized_claim": "Barack Obama said \"people making less than $250,000 would benefit from his plan\" then said \"if you're a family making less than $200,000, you'll benefit.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Barack Obama said \"people making less than between $225,000 and $275,000 would benefit from his plan\" then said \"if you're a family making less than between $180,000 and $220,000, you'll benefit.\"",
         "perturb_type2_True": "Barack Obama said \"people making less than between $287,500 and $312,500 would benefit from his plan\" then said \"if you're a family making less than between $230,000 and $250,000, you'll benefit.\""
     },
@@ -827,7 +827,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000399",
         "normalized_claim": "Rick Scott \"invested $38,000,000 in the Port of Jacksonville's vital Mile Point Project,\" which \"covered missing federal funds for the project.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Rick Scott \"invested between $34,200,000 and $41,800,000 in the Port of Jacksonville's vital Mile Point Project,\" which \"covered missing federal funds for the project.\"",
         "perturb_type2_True": "Rick Scott \"invested between $43,700,000 and $47,500,000 in the Port of Jacksonville's vital Mile Point Project,\" which \"covered missing federal funds for the project.\""
     },
@@ -843,7 +843,7 @@
         "label_original": "True",
         "claim_id": "test_000414",
         "normalized_claim": "Has Ukraine Taken Back 50% Of Territory It Lost Since February 2022?",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Has Ukraine Taken Back between 45% and 55% Of Territory It Lost Since February 2022?",
         "perturb_type2_True": "Has Ukraine Taken Back between 75% and 80% Of Territory It Lost Since February 2022?"
     },
@@ -859,7 +859,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000416",
         "normalized_claim": "“The average hospital stay for a case of COVID-19 costs about $17,064. The vaccine is free.”",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "“The average hospital stay for a case of COVID-19 costs about between $15,357 and $18,771. The vaccine is free.”",
         "perturb_type2_True": "“The average hospital stay for a case of COVID-19 costs about between $19,623 and $21,330. The vaccine is free.”"
     },
@@ -874,7 +874,7 @@
         "label_original": "true",
         "claim_id": "test_000421",
         "normalized_claim": "\"Only 3 percent of voters 18 to 34 don't believe that climate change is really happening.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Only between 2 percent and 4 percent of voters 18 to 34 don't believe that climate change is really happening.\"",
         "perturb_type2_True": "\"Only between 4 percent and 5 percent of voters 18 to 34 don't believe that climate change is really happening.\""
     },
@@ -889,7 +889,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000425",
         "normalized_claim": "\"There’s not one public study, and by public study I mean a study available to the public, that has looked at using the product Kaput to poison feral hogs.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"There’s not one public study, and by public study I mean a study available to the public, that has looked at using the product Kaput to poison feral hogs.\"",
         "perturb_type2_True": "\"There’s not one public study, and by public study I mean a study available to the public, that has looked at using the product Kaput to poison feral hogs.\""
     },
@@ -904,7 +904,7 @@
         "label_original": "true",
         "claim_id": "test_000426",
         "normalized_claim": "Before 2005, \"the percentage of\" Texas high school \"students meeting the college readiness standards of the Texas Higher Education Coordinating Board stood at 28% in English and 42% in math. Those figures stood at 65% and 66% in 2013.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Before 2005, \"the percentage of\" Texas high school \"students meeting the college readiness standards of the Texas Higher Education Coordinating Board stood at between 25% and 31% in English and between 37% and 47% in math. Those figures stood at between 58% and 72% and between 59% and 73% in 2013.\"",
         "perturb_type2_True": "Before 2005, \"the percentage of\" Texas high school \"students meeting the college readiness standards of the Texas Higher Education Coordinating Board stood at between 42% and 45% in English and between 63% and 68% in math. Those figures stood at between 97% and 104% and between 99% and 106% in 2013.\""
     },
@@ -920,7 +920,7 @@
         "label_original": "True",
         "claim_id": "test_000427",
         "normalized_claim": "Nearly 1,000 people were shot and killed by police in the U.S. between April 2020 and April 2021.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Nearly between 900 and 1,100 people were shot and killed by police in the U.S. between April 2020 and April 2021.",
         "perturb_type2_True": "Nearly between 1,450 and 1,650 people were shot and killed by police in the U.S. between April 2020 and April 2021."
     },
@@ -936,7 +936,7 @@
         "label_original": "true",
         "claim_id": "test_000428",
         "normalized_claim": "The Trump administration worked to free 5,000 Taliban prisoners.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "The Trump administration worked to free between 4,500 and 5,500 Taliban prisoners.",
         "perturb_type2_True": "The Trump administration worked to free between 7,250 and 8,250 Taliban prisoners."
     },
@@ -951,7 +951,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000436",
         "normalized_claim": "Says the 2010-11 New Hampshire budget ended with an $18,000,000 surplus, while the Republican-led 2012-13 budget has a $40,000,000 deficit.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says the 2010-11 New Hampshire budget ended with an between $16,200,000 and $19,800,000 surplus, while the Republican-led 2012-13 budget has a between $36,000,000 and $44,000,000 deficit.",
         "perturb_type2_True": "Says the 2010-11 New Hampshire budget ended with an between $20,700,000 and $22,500,000 surplus, while the Republican-led 2012-13 budget has a between $46,000,000 and $50,000,000 deficit."
     },
@@ -966,7 +966,7 @@
         "label_original": "true",
         "claim_id": "test_000438",
         "normalized_claim": "\"I helped win one of the biggest private lawsuits against Medicare fraud in history. The government declined to pursue the case, so my firm did, and we recovered $324,000,000 for taxpayers.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"I helped win one of the biggest private lawsuits against Medicare fraud in history. The government declined to pursue the case, so my firm did, and we recovered between $291,600,000 and $356,400,000 for taxpayers.\"",
         "perturb_type2_True": "\"I helped win one of the biggest private lawsuits against Medicare fraud in history. The government declined to pursue the case, so my firm did, and we recovered between $372,600,000 and $405,000,000 for taxpayers.\""
     },
@@ -981,7 +981,7 @@
         "label_original": "true",
         "claim_id": "test_000459",
         "normalized_claim": "Says \"80 percent of the health care dollars are spent by 20 percent of the population.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says \"between 72 percent and 88 percent of the health care dollars are spent by between 18 percent and 22 percent of the population.\"",
         "perturb_type2_True": "Says \"between 120 percent and 128 percent of the health care dollars are spent by between 30 percent and 32 percent of the population.\""
     },
@@ -996,7 +996,7 @@
         "label_original": "true",
         "claim_id": "test_000460",
         "normalized_claim": "Says if elected, he would be the first Mayor who lives east of 82nd.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says if elected, he would be the first Mayor who lives east of 82nd.",
         "perturb_type2_True": "Says if elected, he would be the first Mayor who lives east of 82nd."
     },
@@ -1011,7 +1011,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000463",
         "normalized_claim": "Says he vetoed $250,000 from the budget for a program to learn how to catch rainwater.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says he vetoed between $225,000 and $275,000 from the budget for a program to learn how to catch rainwater.",
         "perturb_type2_True": "Says he vetoed between $287,500 and $312,500 from the budget for a program to learn how to catch rainwater."
     },
@@ -1026,7 +1026,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000467",
         "normalized_claim": "\"In the three months before the act took effect, America lost 750,000 jobs a month. In the last three months, we've lost about 35,000 jobs a month.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"In the three months before the act took effect, America lost between 675,000 and 825,000 jobs a month. In the last three months, we've lost about between 31,500 and 38,500 jobs a month.\"",
         "perturb_type2_True": "\"In the three months before the act took effect, America lost between 1,087,500 and 1,237,500 jobs a month. In the last three months, we've lost about between 50,750 and 57,750 jobs a month.\""
     },
@@ -1041,7 +1041,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000473",
         "normalized_claim": "Small businesses in West Virginia make up \"99 percent of the total number of businesses in the state\" and employ \"nearly 50 percent of the state’s workforce.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Small businesses in West Virginia make up \"between 89 percent and 109 percent of the total number of businesses in the state\" and employ \"nearly between 45 percent and 55 percent of the state’s workforce.\"",
         "perturb_type2_True": "Small businesses in West Virginia make up \"between 148 percent and 159 percent of the total number of businesses in the state\" and employ \"nearly between 75 percent and 80 percent of the state’s workforce.\""
     },
@@ -1057,7 +1057,7 @@
         "label_original": "correct",
         "claim_id": "test_000474",
         "normalized_claim": "“South Africa was the first African country to legalise same-sex marriages back in 2006. It was the fifth country in the world to take this bold step.”",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "“South Africa was the first African country to legalise same-sex marriages back in 2006. It was the fifth country in the world to take this bold step.”",
         "perturb_type2_True": "“South Africa was the first African country to legalise same-sex marriages back in 2006. It was the fifth country in the world to take this bold step.”"
     },
@@ -1073,7 +1073,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000479",
         "normalized_claim": "By the end of 2015, more than 1,300 people will have died on Georgia roads. One of out evey four fatalities resulted from drunken driving.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "By the end of 2015, more than between 1,170 and 1,430 people will have died on Georgia roads. One of out evey four fatalities resulted from drunken driving.",
         "perturb_type2_True": "By the end of 2015, more than between 1,885 and 2,145 people will have died on Georgia roads. One of out evey four fatalities resulted from drunken driving."
     },
@@ -1088,7 +1088,7 @@
         "label_original": "true",
         "claim_id": "test_000488",
         "normalized_claim": "Reauthorizing the Children’s Health Insurance Program \"for six years saves $1,000,000,000\" and doing it for 10 years saves $6,000,000,000.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Reauthorizing the Children’s Health Insurance Program \"for six years saves between $900,000,000 and $1,100,000,000\" and doing it for 10 years saves between $5,400,000,000 and $6,600,000,000.",
         "perturb_type2_True": "Reauthorizing the Children’s Health Insurance Program \"for six years saves between $1,150,000,000 and $1,250,000,000\" and doing it for 10 years saves between $6,900,000,000 and $7,500,000,000."
     },
@@ -1104,7 +1104,7 @@
         "label_original": "true",
         "claim_id": "test_000491",
         "normalized_claim": "\"We were one of the first states in the U.S. to build sewers, to bring the treatment plant on line.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"We were one of the first states in the U.S. to build sewers, to bring the treatment plant on line.\"",
         "perturb_type2_True": "\"We were one of the first states in the U.S. to build sewers, to bring the treatment plant on line.\""
     },
@@ -1120,7 +1120,7 @@
         "label_original": "correct",
         "claim_id": "test_000494",
         "normalized_claim": "”To date, 385 public entities have been registered in the portal, and 5,236 contracts published valued at Ksh 146,500,000,000.”",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "”To date, between 346 and 424 public entities have been registered in the portal, and between 4,712 and 5,760 contracts published valued at Ksh between 131,850,000,000 and 161,150,000,000.”",
         "perturb_type2_True": "”To date, between 558 and 636 public entities have been registered in the portal, and between 7,592 and 8,640 contracts published valued at Ksh between 168,475,000,000 and 183,125,000,000.”"
     },
@@ -1136,7 +1136,7 @@
         "label_original": "TRUE",
         "claim_id": "test_000506",
         "normalized_claim": "Inactivated polio vaccine (IPV) introduced in Nov 2015. Around 4 crore doses administered to children.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Inactivated polio vaccine (IPV) introduced in Nov 2015. Around between 3 and 5 crore doses administered to children.",
         "perturb_type2_True": "Inactivated polio vaccine (IPV) introduced in Nov 2015. Around between 5 and 7 crore doses administered to children."
     },
@@ -1152,7 +1152,7 @@
         "label_original": "true",
         "claim_id": "test_000513",
         "normalized_claim": "Says Sen. Rand Paul’s 2011 budget \"included a big cut in the CDC.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says Sen. Rand Paul’s 2011 budget \"included a big cut in the CDC.\"",
         "perturb_type2_True": "Says Sen. Rand Paul’s 2011 budget \"included a big cut in the CDC.\""
     },
@@ -1168,7 +1168,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000524",
         "normalized_claim": "Says David Perdue “hasn't held a single public town hall meeting in six years” and “sells four meetings a year and a retreat on a private island for a $7,500 corporate PAC check.”",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says David Perdue “hasn't held a single public town hall meeting in six years” and “sells four meetings a year and a retreat on a private island for a between $6,750 and $8,250 corporate PAC check.”",
         "perturb_type2_True": "Says David Perdue “hasn't held a single public town hall meeting in six years” and “sells four meetings a year and a retreat on a private island for a between $8,625 and $9,375 corporate PAC check.”"
     },
@@ -1183,7 +1183,7 @@
         "label_original": "true",
         "claim_id": "test_000538",
         "normalized_claim": "An audit shows \"there are 6,500,000 people who have active Social Security numbers who are 112 years of age or older,\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "An audit shows \"there are between 5,850,000 and 7,150,000 people who have active Social Security numbers who are 112 years of age or older,\"",
         "perturb_type2_True": "An audit shows \"there are between 9,425,000 and 10,725,000 people who have active Social Security numbers who are 112 years of age or older,\""
     },
@@ -1199,7 +1199,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000542",
         "normalized_claim": "The proposed excise tax on \"Cadillac\" health plans will hit \"those making less than $200,000\" the hardest.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "The proposed excise tax on \"Cadillac\" health plans will hit \"those making less than between $180,000 and $220,000\" the hardest.",
         "perturb_type2_True": "The proposed excise tax on \"Cadillac\" health plans will hit \"those making less than between $230,000 and $250,000\" the hardest."
     },
@@ -1214,7 +1214,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000546",
         "normalized_claim": "\"A high school dropout makes on average $19,000 a year, a high school graduate makes $28,000 a year, a college graduate makes $51,000 a year.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"A high school dropout makes on average between $17,100 and $20,900 a year, a high school graduate makes between $25,200 and $30,800 a year, a college graduate makes between $45,900 and $56,100 a year.\"",
         "perturb_type2_True": "\"A high school dropout makes on average between $21,850 and $23,750 a year, a high school graduate makes between $32,200 and $35,000 a year, a college graduate makes between $58,650 and $63,750 a year.\""
     },
@@ -1229,7 +1229,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000548",
         "normalized_claim": "\"The various offices of state government have purchased more than $11,000,000 in vehicles, not counting leases, for use from the Governor on down during the last two years.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"The various offices of state government have purchased more than between $9,900,000 and $12,100,000 in vehicles, not counting leases, for use from the Governor on down during the last two years.\"",
         "perturb_type2_True": "\"The various offices of state government have purchased more than between $12,650,000 and $13,750,000 in vehicles, not counting leases, for use from the Governor on down during the last two years.\""
     },
@@ -1244,7 +1244,7 @@
         "label_original": "true",
         "claim_id": "test_000554",
         "normalized_claim": "Under Donald Trump's tax plan, \"51 percent of single parents would see their taxes go up.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Under Donald Trump's tax plan, \"between 45 percent and 57 percent of single parents would see their taxes go up.\"",
         "perturb_type2_True": "Under Donald Trump's tax plan, \"between 76 percent and 82 percent of single parents would see their taxes go up.\""
     },
@@ -1260,7 +1260,7 @@
         "label_original": "true",
         "claim_id": "test_000566",
         "normalized_claim": "Says the Senate will have a record number of female senators in 2013.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says the Senate will have a record number of female senators in 2013.",
         "perturb_type2_True": "Says the Senate will have a record number of female senators in 2013."
     },
@@ -1275,7 +1275,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000570",
         "normalized_claim": "Says Walmart employees represent the largest group of Medicaid and food stamp recipients in many states, costing the taxpayer $1,000 per worker.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says Walmart employees represent the largest group of Medicaid and food stamp recipients in many states, costing the taxpayer between $900 and $1,100 per worker.",
         "perturb_type2_True": "Says Walmart employees represent the largest group of Medicaid and food stamp recipients in many states, costing the taxpayer between $1,150 and $1,250 per worker."
     },
@@ -1291,7 +1291,7 @@
         "label_original": "True",
         "claim_id": "test_000580",
         "normalized_claim": "A Texas homeowner grabbed his AK-47 and shot five armed men, killing three of them, after they broke into his house to rob him.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "A Texas homeowner grabbed his AK-47 and shot five armed men, killing three of them, after they broke into his house to rob him.",
         "perturb_type2_True": "A Texas homeowner grabbed his AK-47 and shot five armed men, killing three of them, after they broke into his house to rob him."
     },
@@ -1306,7 +1306,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000596",
         "normalized_claim": "\"Only 12% of legal immigrants are selected based on skill or based on merit. In countries like Canada, Australia and New Zealand, and others, that number is closer to 60, and even 70 and 75% in some cases.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Only between 10% and 14% of legal immigrants are selected based on skill or based on merit. In countries like Canada, Australia and New Zealand, and others, that number is closer to between 54 and 66, and even 70 and between 67% and 83% in some cases.\"",
         "perturb_type2_True": "\"Only between 18% and 20% of legal immigrants are selected based on skill or based on merit. In countries like Canada, Australia and New Zealand, and others, that number is closer to between 87 and 99, and even 70 and between 112% and 120% in some cases.\""
     },
@@ -1321,7 +1321,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000600",
         "normalized_claim": "\"Radio Marti and TV Marti have spent more than $500,000,000 to reach less than 1 percent of the Cuban population.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Radio Marti and TV Marti have spent more than between $450,000,000 and $550,000,000 to reach less than between 0 percent and 2 percent of the Cuban population.\"",
         "perturb_type2_True": "\"Radio Marti and TV Marti have spent more than between $575,000,000 and $625,000,000 to reach less than between 1 percent and 2 percent of the Cuban population.\""
     },
@@ -1337,7 +1337,7 @@
         "label_original": "true",
         "claim_id": "test_000609",
         "normalized_claim": "What Republicans call the \"death tax\" is the estate tax \"on the ultra wealthy\" which, in 2016, was paid by only \"two out of every 1,000 people.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "What Republicans call the \"death tax\" is the estate tax \"on the ultra wealthy\" which, in 2016, was paid by only \"two out of every between 900 and 1,100 people.\"",
         "perturb_type2_True": "What Republicans call the \"death tax\" is the estate tax \"on the ultra wealthy\" which, in 2016, was paid by only \"two out of every between 1,450 and 1,650 people.\""
     },
@@ -1352,7 +1352,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000610",
         "normalized_claim": "Says Bernie Sanders “voted against the Brady Bill five times for background checks on people.”",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says Bernie Sanders “voted against the Brady Bill five times for background checks on people.”",
         "perturb_type2_True": "Says Bernie Sanders “voted against the Brady Bill five times for background checks on people.”"
     },
@@ -1368,7 +1368,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000620",
         "normalized_claim": "Says the 1956 Republican Party platform supported equal pay, the minimum wage, asylum for refugees, protections for unions and more.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says the 1956 Republican Party platform supported equal pay, the minimum wage, asylum for refugees, protections for unions and more.",
         "perturb_type2_True": "Says the 1956 Republican Party platform supported equal pay, the minimum wage, asylum for refugees, protections for unions and more."
     },
@@ -1383,7 +1383,7 @@
         "label_original": "true",
         "claim_id": "test_000627",
         "normalized_claim": "\"She stood by ground zero workers who sacrificed their health after so many sacrificed their lives and kept standing till this administration took action.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"She stood by ground zero workers who sacrificed their health after so many sacrificed their lives and kept standing till this administration took action.\"",
         "perturb_type2_True": "\"She stood by ground zero workers who sacrificed their health after so many sacrificed their lives and kept standing till this administration took action.\""
     },
@@ -1399,7 +1399,7 @@
         "label_original": "correct",
         "claim_id": "test_000631",
         "normalized_claim": "\"Over the past five years... more than R1,300,000,000,000 has been invested to build [infrastructure including electrifying] more than a million homes.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Over the past five years... more than between R1,170,000,000,000 and R1,430,000,000,000 has been invested to build [infrastructure including electrifying] more than a million homes.\"",
         "perturb_type2_True": "\"Over the past five years... more than between R1,495,000,000,000 and R1,625,000,000,000 has been invested to build [infrastructure including electrifying] more than a million homes.\""
     },
@@ -1415,7 +1415,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000642",
         "normalized_claim": "Raising the minimum wage to $10.10 an hour, \"would help lift over a million Americans out of poverty.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Raising the minimum wage to between $9 and $12 an hour, \"would help lift over a million Americans out of poverty.\"",
         "perturb_type2_True": "Raising the minimum wage to between $11 and $13 an hour, \"would help lift over a million Americans out of poverty.\""
     },
@@ -1431,7 +1431,7 @@
         "label_original": "true",
         "claim_id": "test_000644",
         "normalized_claim": "\"Texas families have kept more than $10,000,000,000 in their family budgets since we successfully fought to restore Texas' sales tax deduction a decade ago.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Texas families have kept more than between $9,000,000,000 and $11,000,000,000 in their family budgets since we successfully fought to restore Texas' sales tax deduction a decade ago.\"",
         "perturb_type2_True": "\"Texas families have kept more than between $11,500,000,000 and $12,500,000,000 in their family budgets since we successfully fought to restore Texas' sales tax deduction a decade ago.\""
     },
@@ -1446,7 +1446,7 @@
         "label_original": "true",
         "claim_id": "test_000645",
         "normalized_claim": "\"To give a sense of how families are struggling, a record four out of every 10 school kids in Ohio now qualifies for subsidized lunch.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"To give a sense of how families are struggling, a record four out of every between 9 and 11 school kids in Ohio now qualifies for subsidized lunch.\"",
         "perturb_type2_True": "\"To give a sense of how families are struggling, a record four out of every between 14 and 17 school kids in Ohio now qualifies for subsidized lunch.\""
     },
@@ -1462,7 +1462,7 @@
         "label_original": "correct",
         "claim_id": "test_000656",
         "normalized_claim": "“The Accelerated Schools Infrastructure Delivery Initiative programme continues to deliver modern facilities to our schools... with at least 187 schools being completed to date.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "“The Accelerated Schools Infrastructure Delivery Initiative programme continues to deliver modern facilities to our schools... with at least between 168 and 206 schools being completed to date.\"",
         "perturb_type2_True": "“The Accelerated Schools Infrastructure Delivery Initiative programme continues to deliver modern facilities to our schools... with at least between 271 and 309 schools being completed to date.\""
     },
@@ -1477,7 +1477,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000657",
         "normalized_claim": "In the past year, DeKalb has \"attracted and retained more than 2,300 jobs.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "In the past year, DeKalb has \"attracted and retained more than between 2,070 and 2,530 jobs.\"",
         "perturb_type2_True": "In the past year, DeKalb has \"attracted and retained more than between 3,335 and 3,795 jobs.\""
     },
@@ -1492,7 +1492,7 @@
         "label_original": "true",
         "claim_id": "test_000667",
         "normalized_claim": "Lawmakers were paid for their off-season efforts to, for the first time, take the lead in drawing borders for two would-be cities.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Lawmakers were paid for their off-season efforts to, for the first time, take the lead in drawing borders for two would-be cities.",
         "perturb_type2_True": "Lawmakers were paid for their off-season efforts to, for the first time, take the lead in drawing borders for two would-be cities."
     },
@@ -1507,7 +1507,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000678",
         "normalized_claim": "Two-thirds of Wisconsinites receiving unemployment checks \"are not required to search for work due to current work search exemptions.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Two-thirds of Wisconsinites receiving unemployment checks \"are not required to search for work due to current work search exemptions.\"",
         "perturb_type2_True": "Two-thirds of Wisconsinites receiving unemployment checks \"are not required to search for work due to current work search exemptions.\""
     },
@@ -1522,7 +1522,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000680",
         "normalized_claim": "“Some states, like Montana and Nebraska, are getting more than $300,000 in federal stimulus money per reported COVID-19 case. New York is the hardest-hit state and yet we are getting only about $12,000 per case.”",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "“Some states, like Montana and Nebraska, are getting more than between $270,000 and $330,000 in federal stimulus money per reported COVID-19 case. New York is the hardest-hit state and yet we are getting only about between $10,800 and $13,200 per case.”",
         "perturb_type2_True": "“Some states, like Montana and Nebraska, are getting more than between $345,000 and $375,000 in federal stimulus money per reported COVID-19 case. New York is the hardest-hit state and yet we are getting only about between $13,800 and $15,000 per case.”"
     },
@@ -1538,7 +1538,7 @@
         "label_original": "True",
         "claim_id": "test_000685",
         "normalized_claim": "In December 2020, California police responded to a reported burglary in progress only to find approximately one dozen raccoons involved in a fight.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "In December 2020, California police responded to a reported burglary in progress only to find approximately one dozen raccoons involved in a fight.",
         "perturb_type2_True": "In December 2020, California police responded to a reported burglary in progress only to find approximately one dozen raccoons involved in a fight."
     },
@@ -1553,7 +1553,7 @@
         "label_original": "true",
         "claim_id": "test_000689",
         "normalized_claim": "\"Since 1900, six (U.S. Supreme Court) justices have been confirmed during election years, including Justice Anthony Kennedy, who was confirmed in the final year of the Reagan Administration.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Since 1900, six (U.S. Supreme Court) justices have been confirmed during election years, including Justice Anthony Kennedy, who was confirmed in the final year of the Reagan Administration.\"",
         "perturb_type2_True": "\"Since 1900, six (U.S. Supreme Court) justices have been confirmed during election years, including Justice Anthony Kennedy, who was confirmed in the final year of the Reagan Administration.\""
     },
@@ -1569,7 +1569,7 @@
         "label_original": "True",
         "claim_id": "test_000695",
         "normalized_claim": "Actor George Clooney once gifted each of his 14 closest friends a suitcase filled with $1,000,000 in cash.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Actor George Clooney once gifted each of his between 12 and 16 closest friends a suitcase filled with between $900,000 and $1,100,000 in cash.",
         "perturb_type2_True": "Actor George Clooney once gifted each of his between 20 and 24 closest friends a suitcase filled with between $1,150,000 and $1,250,000 in cash."
     },
@@ -1584,7 +1584,7 @@
         "label_original": "true",
         "claim_id": "test_000707",
         "normalized_claim": "\"Of the 13 (Bill) Clinton speeches that fetched $500,000 or more, only two occurred during the years his wife was not secretary of state.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Of the between 11 and 15 (Bill) Clinton speeches that fetched between $450,000 and $550,000 or more, only two occurred during the years his wife was not secretary of state.\"",
         "perturb_type2_True": "\"Of the between 18 and 22 (Bill) Clinton speeches that fetched between $575,000 and $625,000 or more, only two occurred during the years his wife was not secretary of state.\""
     },
@@ -1599,7 +1599,7 @@
         "label_original": "true",
         "claim_id": "test_000708",
         "normalized_claim": "Says 97 percent of food stamp benefits \"are paid in the proper amounts to people who are really eligible.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says between 87 percent and 107 percent of food stamp benefits \"are paid in the proper amounts to people who are really eligible.\"",
         "perturb_type2_True": "Says between 145 percent and 156 percent of food stamp benefits \"are paid in the proper amounts to people who are really eligible.\""
     },
@@ -1615,7 +1615,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000714",
         "normalized_claim": "Says U.S. Rep. Ann Wagner “voted five times against protecting pre-existing conditions.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says U.S. Rep. Ann Wagner “voted five times against protecting pre-existing conditions.\"",
         "perturb_type2_True": "Says U.S. Rep. Ann Wagner “voted five times against protecting pre-existing conditions.\""
     },
@@ -1630,7 +1630,7 @@
         "label_original": "true",
         "claim_id": "test_000723",
         "normalized_claim": "Georgia has recovered more than $60,000,000 that was lost to Medicaid fraud",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Georgia has recovered more than between $54,000,000 and $66,000,000 that was lost to Medicaid fraud",
         "perturb_type2_True": "Georgia has recovered more than between $69,000,000 and $75,000,000 that was lost to Medicaid fraud"
     },
@@ -1645,7 +1645,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000739",
         "normalized_claim": "\"In last week’s debate, Bernie questioned Hillary’s commitment to fighting climate change because a whopping 0.2 percent of the money given to our campaign has come from employees of oil and gas companies. Not even 2 percent, mind you: 0.2 percent.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"In last week’s debate, Bernie questioned Hillary’s commitment to fighting climate change because a whopping between 0 percent and 1 percent of the money given to our campaign has come from employees of oil and gas companies. Not even between 1 percent and 3 percent, mind you: between 0 percent and 1 percent.\"",
         "perturb_type2_True": "\"In last week’s debate, Bernie questioned Hillary’s commitment to fighting climate change because a whopping between 0 percent and 1 percent of the money given to our campaign has come from employees of oil and gas companies. Not even between 3 percent and 4 percent, mind you: between 0 percent and 1 percent.\""
     },
@@ -1660,7 +1660,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000741",
         "normalized_claim": "\"The IRS filed an $11,000 lien against (Allen) West for back taxes. Three liens were placed on\nhis home for unpaid bills, and a judge ordered West to pay over $5,000 for past due\ncredit card bills.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"The IRS filed an between $9,900 and $12,100 lien against (Allen) West for back taxes. Three liens were placed on\nhis home for unpaid bills, and a judge ordered West to pay over between $4,500 and $5,500 for past due\ncredit card bills.\"",
         "perturb_type2_True": "\"The IRS filed an between $12,650 and $13,750 lien against (Allen) West for back taxes. Three liens were placed on\nhis home for unpaid bills, and a judge ordered West to pay over between $5,750 and $6,250 for past due\ncredit card bills.\""
     },
@@ -1675,7 +1675,7 @@
         "label_original": "true",
         "claim_id": "test_000748",
         "normalized_claim": "Says \"MAX carries 30 percent of evening rush-hour commuters traveling from Downtown on the Sunset and Banfield freeways.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says \"MAX carries between 27 percent and 33 percent of evening rush-hour commuters traveling from Downtown on the Sunset and Banfield freeways.\"",
         "perturb_type2_True": "Says \"MAX carries between 45 percent and 48 percent of evening rush-hour commuters traveling from Downtown on the Sunset and Banfield freeways.\""
     },
@@ -1690,7 +1690,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000758",
         "normalized_claim": "For 21 countries in Sub-Saharan Africa, \"we simply do not have data to say anything about trends in poverty.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "For between 18 and 24 countries in Sub-Saharan Africa, \"we simply do not have data to say anything about trends in poverty.\"",
         "perturb_type2_True": "For between 30 and 35 countries in Sub-Saharan Africa, \"we simply do not have data to say anything about trends in poverty.\""
     },
@@ -1705,7 +1705,7 @@
         "label_original": "true",
         "claim_id": "test_000760",
         "normalized_claim": "A poll conducted in Egypt revealed that 80 percent of Egyptians oppose receiving foreign aid from the United States.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "A poll conducted in Egypt revealed that between 72 percent and 88 percent of Egyptians oppose receiving foreign aid from the United States.",
         "perturb_type2_True": "A poll conducted in Egypt revealed that between 120 percent and 128 percent of Egyptians oppose receiving foreign aid from the United States."
     },
@@ -1720,7 +1720,7 @@
         "label_original": "true",
         "claim_id": "test_000770",
         "normalized_claim": "Thirty-eight states -- Georgia not included -- have appointed, rather than elected, state school superintendents.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Thirty-eight states -- Georgia not included -- have appointed, rather than elected, state school superintendents.",
         "perturb_type2_True": "Thirty-eight states -- Georgia not included -- have appointed, rather than elected, state school superintendents."
     },
@@ -1736,7 +1736,7 @@
         "label_original": "correct",
         "claim_id": "test_000771",
         "normalized_claim": "\"In the ANC's last year in government, not one department received a clean audit. In the DA's first year, seven departments received clean audits.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"In the ANC's last year in government, not one department received a clean audit. In the DA's first year, seven departments received clean audits.\"",
         "perturb_type2_True": "\"In the ANC's last year in government, not one department received a clean audit. In the DA's first year, seven departments received clean audits.\""
     },
@@ -1751,7 +1751,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000775",
         "normalized_claim": "“VA Democrats authorized for early release over 4,000 inmates, 60% of which are incarcerated for violent offenses.”",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "“VA Democrats authorized for early release over between 3,600 and 4,400 inmates, between 54% and 66% of which are incarcerated for violent offenses.”",
         "perturb_type2_True": "“VA Democrats authorized for early release over between 5,800 and 6,600 inmates, between 90% and 96% of which are incarcerated for violent offenses.”"
     },
@@ -1767,7 +1767,7 @@
         "label_original": "correct",
         "claim_id": "test_000792",
         "normalized_claim": "\"The unemployment rate in Nigeria rose to 9.9 per cent in 2015 as the administration came on board.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"The unemployment rate in Nigeria rose to 9.9 per cent in 2015 as the administration came on board.\"",
         "perturb_type2_True": "\"The unemployment rate in Nigeria rose to 9.9 per cent in 2015 as the administration came on board.\""
     },
@@ -1783,7 +1783,7 @@
         "label_original": "correct",
         "claim_id": "test_000810",
         "normalized_claim": "‘Today, we grapple with multiple challenges with a population exceeding 200,000,000.’",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "‘Today, we grapple with multiple challenges with a population exceeding between 180,000,000 and 220,000,000.’",
         "perturb_type2_True": "‘Today, we grapple with multiple challenges with a population exceeding between 290,000,000 and 330,000,000.’"
     },
@@ -1799,7 +1799,7 @@
         "label_original": "True",
         "claim_id": "test_000813",
         "normalized_claim": "In 2021, Guinness World Records named paint developed by researchers at Purdue University the world's whitest.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "In 2021, Guinness World Records named paint developed by researchers at Purdue University the world's whitest.",
         "perturb_type2_True": "In 2021, Guinness World Records named paint developed by researchers at Purdue University the world's whitest."
     },
@@ -1814,7 +1814,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000814",
         "normalized_claim": "Says Dontre Hamilton \"was shot 14 times by police for resting on a park bench in Milwaukee.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says Dontre Hamilton \"was shot between 12 and 16 times by police for resting on a park bench in Milwaukee.\"",
         "perturb_type2_True": "Says Dontre Hamilton \"was shot between 20 and 24 times by police for resting on a park bench in Milwaukee.\""
     },
@@ -1830,7 +1830,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000824",
         "normalized_claim": "“WV families making less than $400K & small businesses will NOT be targeted by the IRS.”",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "“WV families making less than between $360 and $440K & small businesses will NOT be targeted by the IRS.”",
         "perturb_type2_True": "“WV families making less than between $460 and $500K & small businesses will NOT be targeted by the IRS.”"
     },
@@ -1846,7 +1846,7 @@
         "label_original": "correct",
         "claim_id": "test_000828",
         "normalized_claim": "\"South Africa was the first African country to legalise same-sex marriages back in 2006. It was the fifth country in the world to take this bold step.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"South Africa was the first African country to legalise same-sex marriages back in 2006. It was the fifth country in the world to take this bold step.\"",
         "perturb_type2_True": "\"South Africa was the first African country to legalise same-sex marriages back in 2006. It was the fifth country in the world to take this bold step.\""
     },
@@ -1861,7 +1861,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000836",
         "normalized_claim": "Says that 500,000 federal workers -- one-fourth of the federal workforce -- make more than $100,000 a year.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says that between 450,000 and 550,000 federal workers -- one-fourth of the federal workforce -- make more than between $90,000 and $110,000 a year.",
         "perturb_type2_True": "Says that between 725,000 and 825,000 federal workers -- one-fourth of the federal workforce -- make more than between $115,000 and $125,000 a year."
     },
@@ -1876,7 +1876,7 @@
         "label_original": "true",
         "claim_id": "test_000837",
         "normalized_claim": "\"We saw the prison population expand and vacancy rates for correctional officers go from 2.9% to 15.2%\" over the last eight years.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"We saw the prison population expand and vacancy rates for correctional officers go from between 2% and 4% to between 13% and 17%\" over the last eight years.",
         "perturb_type2_True": "\"We saw the prison population expand and vacancy rates for correctional officers go from between 4% and 5% to between 22% and 25%\" over the last eight years."
     },
@@ -1892,7 +1892,7 @@
         "label_original": "correct",
         "claim_id": "test_000847",
         "normalized_claim": "\"80% of the R2,000,000,000 spent by the Western Cape Government on tenders during 2012/2013 was paid to #BEEbusinesses. #DAdelivers\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"between 72% and 88% of the between R1,800,000,000 and R2,200,000,000 spent by the Western Cape Government on tenders during 2012/2013 was paid to #BEEbusinesses. #DAdelivers\"",
         "perturb_type2_True": "\"between 120% and 128% of the between R2,300,000,000 and R2,500,000,000 spent by the Western Cape Government on tenders during 2012/2013 was paid to #BEEbusinesses. #DAdelivers\""
     },
@@ -1907,7 +1907,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000854",
         "normalized_claim": "\"One in six Texans don’t have health care. We’re the most uninsured state in the U.S.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"One in six Texans don’t have health care. We’re the most uninsured state in the U.S.\"",
         "perturb_type2_True": "\"One in six Texans don’t have health care. We’re the most uninsured state in the U.S.\""
     },
@@ -1922,7 +1922,7 @@
         "label_original": "true",
         "claim_id": "test_000865",
         "normalized_claim": "\"There are 3,000,000 jobs that go vacant each month in this country.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"There are between 2,700,000 and 3,300,000 jobs that go vacant each month in this country.\"",
         "perturb_type2_True": "\"There are between 4,350,000 and 4,950,000 jobs that go vacant each month in this country.\""
     },
@@ -1938,7 +1938,7 @@
         "label_original": "correct",
         "claim_id": "test_000887",
         "normalized_claim": "\"...figures show that 2,048,052 households benefited from indigent support systems for electricity in 2014.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"...figures show that between 1,843,246 and 2,252,858 households benefited from indigent support systems for electricity in 2014.\"",
         "perturb_type2_True": "\"...figures show that between 2,969,675 and 3,379,286 households benefited from indigent support systems for electricity in 2014.\""
     },
@@ -1953,7 +1953,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000889",
         "normalized_claim": "\"Over 39% of violent criminals return to prison following their release.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Over between 35% and 43% of violent criminals return to prison following their release.\"",
         "perturb_type2_True": "\"Over between 58% and 63% of violent criminals return to prison following their release.\""
     },
@@ -1968,7 +1968,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000902",
         "normalized_claim": "\"We’ve lost 70,000 factories since China joined the World Trade Organization.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"We’ve lost between 63,000 and 77,000 factories since China joined the World Trade Organization.\"",
         "perturb_type2_True": "\"We’ve lost between 101,500 and 115,500 factories since China joined the World Trade Organization.\""
     },
@@ -1984,7 +1984,7 @@
         "label_original": "true",
         "claim_id": "test_000908",
         "normalized_claim": "Sherrod Brown \"failed to pay his own taxes three separate times.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Sherrod Brown \"failed to pay his own taxes three separate times.\"",
         "perturb_type2_True": "Sherrod Brown \"failed to pay his own taxes three separate times.\""
     },
@@ -2000,7 +2000,7 @@
         "label_original": "correct",
         "claim_id": "test_000914",
         "normalized_claim": "“The World Bank's annual Doing Business Report currently puts South Africa number 82 out of 190 countries that they have tracked with regard to being able to do business in an efficient way.”",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "“The World Bank's annual Doing Business Report currently puts South Africa number between 73 and 91 out of between 171 and 209 countries that they have tracked with regard to being able to do business in an efficient way.”",
         "perturb_type2_True": "“The World Bank's annual Doing Business Report currently puts South Africa number between 118 and 136 out of between 275 and 314 countries that they have tracked with regard to being able to do business in an efficient way.”"
     },
@@ -2016,7 +2016,7 @@
         "label_original": "true",
         "claim_id": "test_000920",
         "normalized_claim": "\"Even hunters are restricted from using large capacity magazines: there is a five cartridge limit for large game hunting, and three for bird hunting.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Even hunters are restricted from using large capacity magazines: there is a five cartridge limit for large game hunting, and three for bird hunting.\"",
         "perturb_type2_True": "\"Even hunters are restricted from using large capacity magazines: there is a five cartridge limit for large game hunting, and three for bird hunting.\""
     },
@@ -2032,7 +2032,7 @@
         "label_original": "Legit",
         "claim_id": "test_000961",
         "normalized_claim": "The New York Times gave Hillary Clinton very high odds of winning in 2016",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "The New York Times gave Hillary Clinton very high odds of winning in 2016",
         "perturb_type2_True": "The New York Times gave Hillary Clinton very high odds of winning in 2016"
     },
@@ -2048,7 +2048,7 @@
         "label_original": "ACCURATE",
         "claim_id": "test_000966",
         "normalized_claim": "More than 700,000 people born in Northern Ireland have an Irish passport.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "More than between 630,000 and 770,000 people born in Northern Ireland have an Irish passport.",
         "perturb_type2_True": "More than between 1,015,000 and 1,155,000 people born in Northern Ireland have an Irish passport."
     },
@@ -2063,7 +2063,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000969",
         "normalized_claim": "The transportation sales tax would cost the average consumer an estimated $112 a year.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "The transportation sales tax would cost the average consumer an estimated between $100 and $124 a year.",
         "perturb_type2_True": "The transportation sales tax would cost the average consumer an estimated between $128 and $140 a year."
     },
@@ -2078,7 +2078,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000973",
         "normalized_claim": "Says U.S. Treasury Secretary Steven Mnuchin \"wants to use a government jet that costs $25,000 per hour for his honeymoon.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says U.S. Treasury Secretary Steven Mnuchin \"wants to use a government jet that costs between $22,500 and $27,500 per hour for his honeymoon.\"",
         "perturb_type2_True": "Says U.S. Treasury Secretary Steven Mnuchin \"wants to use a government jet that costs between $28,750 and $31,250 per hour for his honeymoon.\""
     },
@@ -2094,7 +2094,7 @@
         "label_original": "Mostly True",
         "claim_id": "test_000978",
         "normalized_claim": "Thousands of U.S. Postal Service mailboxes were removed during the last Obama administration term, according to a 2016 report.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Thousands of U.S. Postal Service mailboxes were removed during the last Obama administration term, according to a 2016 report.",
         "perturb_type2_True": "Thousands of U.S. Postal Service mailboxes were removed during the last Obama administration term, according to a 2016 report."
     },
@@ -2110,7 +2110,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_000980",
         "normalized_claim": "In 2017, Joe Biden paid $3,742,974 in federal income taxes and Kamala Harris paid $516,469 while Donald Trump paid $750.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "In 2017, Joe Biden paid between $3,368,676 and $4,117,272 in federal income taxes and Kamala Harris paid between $464,822 and $568,116 while Donald Trump paid between $675 and $825.",
         "perturb_type2_True": "In 2017, Joe Biden paid between $4,304,420 and $4,678,718 in federal income taxes and Kamala Harris paid between $593,939 and $645,587 while Donald Trump paid between $862 and $938."
     },
@@ -2126,7 +2126,7 @@
         "label_original": "True",
         "claim_id": "test_000991",
         "normalized_claim": "Juliane Koepcke survived 10 days alone in the Amazon rainforest after falling nearly two miles during a plane crash.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Juliane Koepcke survived 10 days alone in the Amazon rainforest after falling nearly two miles during a plane crash.",
         "perturb_type2_True": "Juliane Koepcke survived 10 days alone in the Amazon rainforest after falling nearly two miles during a plane crash."
     },
@@ -2141,7 +2141,7 @@
         "label_original": "true",
         "claim_id": "test_000992",
         "normalized_claim": "\"If you take into account all the people who are struggling for work, or have just stopped looking, the real unemployment rate is over 15 percent.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"If you take into account all the people who are struggling for work, or have just stopped looking, the real unemployment rate is over between 13 percent and 17 percent.\"",
         "perturb_type2_True": "\"If you take into account all the people who are struggling for work, or have just stopped looking, the real unemployment rate is over between 22 percent and 24 percent.\""
     },
@@ -2157,7 +2157,7 @@
         "label_original": "correct",
         "claim_id": "test_000997",
         "normalized_claim": "“Only 5% of the money sent to counties went to Nairobi.” ",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "“Only between 4% and 6% of the money sent to counties went to Nairobi.” ",
         "perturb_type2_True": "“Only between 7% and 8% of the money sent to counties went to Nairobi.” "
     },
@@ -2173,7 +2173,7 @@
         "label_original": "correct",
         "claim_id": "test_001016",
         "normalized_claim": "Diaspora remittances “now stand at an all-time high of over KSh400,000,000,000 in 2021”.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Diaspora remittances “now stand at an all-time high of over KSh400,000,000,000 in 2021”.",
         "perturb_type2_True": "Diaspora remittances “now stand at an all-time high of over KSh400,000,000,000 in 2021”."
     },
@@ -2188,7 +2188,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001019",
         "normalized_claim": "\"Charlie Crist allowed college tuition to increase up to 15 percent every year.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Charlie Crist allowed college tuition to increase up to between 13 percent and 17 percent every year.\"",
         "perturb_type2_True": "\"Charlie Crist allowed college tuition to increase up to between 22 percent and 24 percent every year.\""
     },
@@ -2203,7 +2203,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001025",
         "normalized_claim": "\"If you have a job in this country, (there's a) 97 percent chance that you're not going to be in poverty.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"If you have a job in this country, (there's a) between 87 percent and 107 percent chance that you're not going to be in poverty.\"",
         "perturb_type2_True": "\"If you have a job in this country, (there's a) between 145 percent and 156 percent chance that you're not going to be in poverty.\""
     },
@@ -2218,7 +2218,7 @@
         "label_original": "true",
         "claim_id": "test_001042",
         "normalized_claim": "Says Charlie Crist rode on a jet that \"belongs to a serial polluter with a history of environmental violations fined nearly $2,000,000 for polluting water.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says Charlie Crist rode on a jet that \"belongs to a serial polluter with a history of environmental violations fined nearly between $1,800,000 and $2,200,000 for polluting water.\"",
         "perturb_type2_True": "Says Charlie Crist rode on a jet that \"belongs to a serial polluter with a history of environmental violations fined nearly between $2,300,000 and $2,500,000 for polluting water.\""
     },
@@ -2234,7 +2234,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001057",
         "normalized_claim": "\"Every American now is $51,000 in debt. That’s money I owe, that’s money my children owe before they even go to kindergarten, that’s their check to the federal government right now.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Every American now is between $45,900 and $56,100 in debt. That’s money I owe, that’s money my children owe before they even go to kindergarten, that’s their check to the federal government right now.\"",
         "perturb_type2_True": "\"Every American now is between $58,650 and $63,750 in debt. That’s money I owe, that’s money my children owe before they even go to kindergarten, that’s their check to the federal government right now.\""
     },
@@ -2249,7 +2249,7 @@
         "label_original": "true",
         "claim_id": "test_001083",
         "normalized_claim": "Says 70 percent of benefits in Donald Trump’s proposal for child care \"go to the people making over $100,000 a year.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says between 63 percent and 77 percent of benefits in Donald Trump’s proposal for child care \"go to the people making over between $90,000 and $110,000 a year.\"",
         "perturb_type2_True": "Says between 105 percent and 112 percent of benefits in Donald Trump’s proposal for child care \"go to the people making over between $115,000 and $125,000 a year.\""
     },
@@ -2264,7 +2264,7 @@
         "label_original": "true",
         "claim_id": "test_001091",
         "normalized_claim": "\"Granite Staters who hold individual policies from Anthem...can indeed renew their policies and keep their current doctors and hospitals\" in 2014.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Granite Staters who hold individual policies from Anthem...can indeed renew their policies and keep their current doctors and hospitals\" in 2014.",
         "perturb_type2_True": "\"Granite Staters who hold individual policies from Anthem...can indeed renew their policies and keep their current doctors and hospitals\" in 2014."
     },
@@ -2279,7 +2279,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001092",
         "normalized_claim": "\"I think with the exception of the last year or maybe the last two years, we were at 100 percent\" when it came to contributing to the Providence pension fund.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"I think with the exception of the last year or maybe the last two years, we were at between 90 percent and 110 percent\" when it came to contributing to the Providence pension fund.",
         "perturb_type2_True": "\"I think with the exception of the last year or maybe the last two years, we were at between 150 percent and 160 percent\" when it came to contributing to the Providence pension fund."
     },
@@ -2294,7 +2294,7 @@
         "label_original": "true",
         "claim_id": "test_001093",
         "normalized_claim": "\"Since taking office, we have enacted more than $8,000,000,000 in cumulative tax relief.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Since taking office, we have enacted more than between $7,200,000,000 and $8,800,000,000 in cumulative tax relief.\"",
         "perturb_type2_True": "\"Since taking office, we have enacted more than between $9,200,000,000 and $10,000,000,000 in cumulative tax relief.\""
     },
@@ -2310,7 +2310,7 @@
         "label_original": "true",
         "claim_id": "test_001094",
         "normalized_claim": "The GOP-controlled Legislature has \"refused to act on at least 150\" appointees of Gov. Tony Evers.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "The GOP-controlled Legislature has \"refused to act on at least between 135 and 165\" appointees of Gov. Tony Evers.",
         "perturb_type2_True": "The GOP-controlled Legislature has \"refused to act on at least between 217 and 248\" appointees of Gov. Tony Evers."
     },
@@ -2325,7 +2325,7 @@
         "label_original": "true",
         "claim_id": "test_001104",
         "normalized_claim": "Says 1 in 5 Texans did not have health insurance coverage before the pandemic, and now “nearly 1 in 3 Texans under the age of 65 don’t have access to health care insurance.”",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says between 0 and 2 in between 4 and 6 Texans did not have health insurance coverage before the pandemic, and now “nearly between 0 and 2 in between 2 and 4 Texans under the age of 65 don’t have access to health care insurance.”",
         "perturb_type2_True": "Says between 1 and 2 in between 7 and 9 Texans did not have health insurance coverage before the pandemic, and now “nearly between 1 and 2 in between 4 and 5 Texans under the age of 65 don’t have access to health care insurance.”"
     },
@@ -2341,7 +2341,7 @@
         "label_original": "True",
         "claim_id": "test_001106",
         "normalized_claim": "The “wind turbine graveyard” in Casper, Wyoming, is home to more than 1,100 wind turbine blades that have been disposed of and buried in a local landfill since 2019.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "The “wind turbine graveyard” in Casper, Wyoming, is home to more than between 990 and 1,210 wind turbine blades that have been disposed of and buried in a local landfill since 2019.",
         "perturb_type2_True": "The “wind turbine graveyard” in Casper, Wyoming, is home to more than between 1,595 and 1,815 wind turbine blades that have been disposed of and buried in a local landfill since 2019."
     },
@@ -2357,7 +2357,7 @@
         "label_original": "true",
         "claim_id": "test_001107",
         "normalized_claim": "406 constituencies voted to leave, 242 voted to remain in the EU referendum.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Between 365 and 447 constituencies voted to leave, between 217 and 267 voted to remain in the EU referendum.",
         "perturb_type2_True": "Between 588 and 670 constituencies voted to leave, between 350 and 400 voted to remain in the EU referendum."
     },
@@ -2372,7 +2372,7 @@
         "label_original": "true",
         "claim_id": "test_001119",
         "normalized_claim": "Says if labor force participation rate were the same as when Barack Obama became president, unemployment would be 11 percent.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says if labor force participation rate were the same as when Barack Obama became president, unemployment would be between 9 percent and 13 percent.",
         "perturb_type2_True": "Says if labor force participation rate were the same as when Barack Obama became president, unemployment would be between 16 percent and 18 percent."
     },
@@ -2387,7 +2387,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001133",
         "normalized_claim": "The proposed education changes \"will not cut one teacher's pay.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "The proposed education changes \"will not cut one teacher's pay.\"",
         "perturb_type2_True": "The proposed education changes \"will not cut one teacher's pay.\""
     },
@@ -2402,7 +2402,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001147",
         "normalized_claim": "\"There are 321,092 public school teachers in Texas. And there are 313,850 non-teachers in our public schools.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"There are between 288,982 and 353,202 public school teachers in Texas. And there are between 282,465 and 345,235 non-teachers in our public schools.\"",
         "perturb_type2_True": "\"There are between 465,583 and 529,802 public school teachers in Texas. And there are between 455,082 and 517,853 non-teachers in our public schools.\""
     },
@@ -2418,7 +2418,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001149",
         "normalized_claim": "The shutdown of the Keystone Pipeline project will mean “nearly 2,000 (union jobs lost) with Wisconsin companies”",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "The shutdown of the Keystone Pipeline project will mean “nearly between 1,800 and 2,200 (union jobs lost) with Wisconsin companies”",
         "perturb_type2_True": "The shutdown of the Keystone Pipeline project will mean “nearly between 2,900 and 3,300 (union jobs lost) with Wisconsin companies”"
     },
@@ -2434,7 +2434,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001159",
         "normalized_claim": "Says \"David Schweikert took over $120,000 from the drug industry and voted against legislation to lower prescription drug prices.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says \"David Schweikert took over between $108,000 and $132,000 from the drug industry and voted against legislation to lower prescription drug prices.\"",
         "perturb_type2_True": "Says \"David Schweikert took over between $138,000 and $150,000 from the drug industry and voted against legislation to lower prescription drug prices.\""
     },
@@ -2450,7 +2450,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001163",
         "normalized_claim": "\"I spent 18 months putting together the sanctions against Iran so that we could force them to the negotiating table.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"I spent 18 months putting together the sanctions against Iran so that we could force them to the negotiating table.\"",
         "perturb_type2_True": "\"I spent 18 months putting together the sanctions against Iran so that we could force them to the negotiating table.\""
     },
@@ -2465,7 +2465,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001179",
         "normalized_claim": "\"Over 97 percent of the scientific community … believe that humans are contributing to climate change.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Over between 87 percent and 107 percent of the scientific community … believe that humans are contributing to climate change.\"",
         "perturb_type2_True": "\"Over between 145 percent and 156 percent of the scientific community … believe that humans are contributing to climate change.\""
     },
@@ -2481,7 +2481,7 @@
         "label_original": "correct",
         "claim_id": "test_001180",
         "normalized_claim": "\"The City of Cape Town runs six facilities dedicated to providing treatment for alcohol and drug addiction.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"The City of Cape Town runs six facilities dedicated to providing treatment for alcohol and drug addiction.\"",
         "perturb_type2_True": "\"The City of Cape Town runs six facilities dedicated to providing treatment for alcohol and drug addiction.\""
     },
@@ -2496,7 +2496,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001181",
         "normalized_claim": "\"Trump's campaign manager, Paul Manafort, commits bank and tax fraud and gets 47 months. A homeless man, Fate Winslow, helped sell $20 of pot and got life in prison.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Trump's campaign manager, Paul Manafort, commits bank and tax fraud and gets 47 months. A homeless man, Fate Winslow, helped sell between $18 and $22 of pot and got life in prison.\"",
         "perturb_type2_True": "\"Trump's campaign manager, Paul Manafort, commits bank and tax fraud and gets 47 months. A homeless man, Fate Winslow, helped sell between $23 and $25 of pot and got life in prison.\""
     },
@@ -2512,7 +2512,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001195",
         "normalized_claim": "“10,000 people have recently died. 9,950 of them, thereabouts, are people who hadn’t been vaccinated.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "“between 9,000 and 11,000 people have recently died. between 8,955 and 10,945 of them, thereabouts, are people who hadn’t been vaccinated.\"",
         "perturb_type2_True": "“between 14,500 and 16,500 people have recently died. between 14,427 and 16,418 of them, thereabouts, are people who hadn’t been vaccinated.\""
     },
@@ -2527,7 +2527,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001196",
         "normalized_claim": "\"Fifty seats have already changed hands from the Republicans to the Democrats since Donald Trump was elected.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Fifty seats have already changed hands from the Republicans to the Democrats since Donald Trump was elected.\"",
         "perturb_type2_True": "\"Fifty seats have already changed hands from the Republicans to the Democrats since Donald Trump was elected.\""
     },
@@ -2542,7 +2542,7 @@
         "label_original": "true",
         "claim_id": "test_001199",
         "normalized_claim": "John McCain wants to \"give oil companies another $4-billion\" in tax breaks.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "John McCain wants to \"give oil companies another between $3 and $5-billion\" in tax breaks.",
         "perturb_type2_True": "John McCain wants to \"give oil companies another between $4 and $5-billion\" in tax breaks."
     },
@@ -2557,7 +2557,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001205",
         "normalized_claim": "Says Joe Biden has said 150,000,000 Americans died from guns and another 120,000,000 from COVID-19",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says Joe Biden has said between 135,000,000 and 165,000,000 Americans died from guns and another between 108,000,000 and 132,000,000 from COVID-19",
         "perturb_type2_True": "Says Joe Biden has said between 217,500,000 and 247,500,000 Americans died from guns and another between 174,000,000 and 198,000,000 from COVID-19"
     },
@@ -2572,7 +2572,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001223",
         "normalized_claim": "\"According to 2009 estimates, an agreement with Panama could result in almost 1,900 Florida jobs in thefirst year – and about 15,000 jobs afterfive years.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"According to 2009 estimates, an agreement with Panama could result in almost between 1,710 and 2,090 Florida jobs in thefirst year – and about between 13,500 and 16,500 jobs afterfive years.\"",
         "perturb_type2_True": "\"According to 2009 estimates, an agreement with Panama could result in almost between 2,755 and 3,135 Florida jobs in thefirst year – and about between 21,750 and 24,750 jobs afterfive years.\""
     },
@@ -2587,7 +2587,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001226",
         "normalized_claim": "\"It is estimated that more than 20 veterans die by suicide every day.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"It is estimated that more than between 18 and 22 veterans die by suicide every day.\"",
         "perturb_type2_True": "\"It is estimated that more than between 29 and 33 veterans die by suicide every day.\""
     },
@@ -2602,7 +2602,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001234",
         "normalized_claim": "Says she heard more than 2,400 cases as a Wisconsin appeals court judge",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says she heard more than between 2,160 and 2,640 cases as a Wisconsin appeals court judge",
         "perturb_type2_True": "Says she heard more than between 3,480 and 3,960 cases as a Wisconsin appeals court judge"
     },
@@ -2618,7 +2618,7 @@
         "label_original": "correct attribution",
         "claim_id": "test_001239",
         "normalized_claim": "U.S. Rep. Lauren Boebert tweeted the \"easiest way\" to make the COVID-19 Delta variant go away is to \"turn off CNN\" and \"vote Republican.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "U.S. Rep. Lauren Boebert tweeted the \"easiest way\" to make the COVID-19 Delta variant go away is to \"turn off CNN\" and \"vote Republican.\"",
         "perturb_type2_True": "U.S. Rep. Lauren Boebert tweeted the \"easiest way\" to make the COVID-19 Delta variant go away is to \"turn off CNN\" and \"vote Republican.\""
     },
@@ -2634,7 +2634,7 @@
         "label_original": "True",
         "claim_id": "test_001240",
         "normalized_claim": "“I’m going to ask the wealthiest Americans and the biggest corporations of the Fortune 500 companies, 91 making a collective billions of dollars, didn’t pay a single solitary penny in federal tax.”",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "“I’m going to ask the wealthiest Americans and the biggest corporations of the Fortune 500 companies, between 81 and 101 making a collective billions of dollars, didn’t pay a single solitary penny in federal tax.”",
         "perturb_type2_True": "“I’m going to ask the wealthiest Americans and the biggest corporations of the Fortune 500 companies, between 131 and 151 making a collective billions of dollars, didn’t pay a single solitary penny in federal tax.”"
     },
@@ -2649,7 +2649,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001243",
         "normalized_claim": "\"America owns 3 percent of the world’s oil but consumes 25 percent of its global reserves.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"America owns between 2 percent and 4 percent of the world’s oil but consumes between 22 percent and 28 percent of its global reserves.\"",
         "perturb_type2_True": "\"America owns between 4 percent and 5 percent of the world’s oil but consumes between 37 percent and 40 percent of its global reserves.\""
     },
@@ -2665,7 +2665,7 @@
         "label_original": "correct",
         "claim_id": "test_001250",
         "normalized_claim": "\"Of the [more than 2,000,000] work opportunities created, more than 1,000,000 have been taken up by the youth.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Of the [more than between 1,800,000 and 2,200,000] work opportunities created, more than between 900,000 and 1,100,000 have been taken up by the youth.\"",
         "perturb_type2_True": "\"Of the [more than between 2,900,000 and 3,300,000] work opportunities created, more than between 1,450,000 and 1,650,000 have been taken up by the youth.\""
     },
@@ -2680,7 +2680,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001251",
         "normalized_claim": "France \"wouldn’t buy Texas beef for some reason, yet 76 percent of their energy comes from nuclear power.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "France \"wouldn’t buy Texas beef for some reason, yet between 68 percent and 84 percent of their energy comes from nuclear power.\"",
         "perturb_type2_True": "France \"wouldn’t buy Texas beef for some reason, yet between 114 percent and 122 percent of their energy comes from nuclear power.\""
     },
@@ -2695,7 +2695,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001261",
         "normalized_claim": "\"Rick Scott tried to slash school funding by $3,300,000,000.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Rick Scott tried to slash school funding by between $2,970,000,000 and $3,630,000,000.\"",
         "perturb_type2_True": "\"Rick Scott tried to slash school funding by between $3,795,000,000 and $4,125,000,000.\""
     },
@@ -2710,7 +2710,7 @@
         "label_original": "true",
         "claim_id": "test_001265",
         "normalized_claim": "Says he has sued the Obama administration 25 times.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says he has sued the Obama administration between 22 and 28 times.",
         "perturb_type2_True": "Says he has sued the Obama administration between 36 and 42 times."
     },
@@ -2725,7 +2725,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001267",
         "normalized_claim": "A \"working woman\" will earn $7.70 on $10.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "A \"working woman\" will earn between $6 and $9 on between $9 and $11.",
         "perturb_type2_True": "A \"working woman\" will earn between $8 and $10 on between $11 and $13."
     },
@@ -2741,7 +2741,7 @@
         "label_original": "Mostly True",
         "claim_id": "test_001276",
         "normalized_claim": "A temporary memorial at the U.S. Capitol displays a pair of empty shoes to illustrate the 7,000 children killed by guns since the December 2012 Sandy Hook Elementary School shooting.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "A temporary memorial at the U.S. Capitol displays a pair of empty shoes to illustrate the between 6,300 and 7,700 children killed by guns since the December 2012 Sandy Hook Elementary School shooting.",
         "perturb_type2_True": "A temporary memorial at the U.S. Capitol displays a pair of empty shoes to illustrate the between 10,150 and 11,550 children killed by guns since the December 2012 Sandy Hook Elementary School shooting."
     },
@@ -2756,7 +2756,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001287",
         "normalized_claim": "Says Mary Burke’s Madison school district \"will be the only school district left in the state\" to \"ignore the (Act 10) law\" in the 2015-16 school year.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says Mary Burke’s Madison school district \"will be the only school district left in the state\" to \"ignore the (Act 10) law\" in the 2015-16 school year.",
         "perturb_type2_True": "Says Mary Burke’s Madison school district \"will be the only school district left in the state\" to \"ignore the (Act 10) law\" in the 2015-16 school year."
     },
@@ -2771,7 +2771,7 @@
         "label_original": "true",
         "claim_id": "test_001290",
         "normalized_claim": "Says \"by 4th grade, 86 percent of African-American boys and 82 percent (of) Hispanic boys are reading below proficiency levels.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says \"by between 3rd and 5thth grade, between 77 percent and 95 percent of African-American boys and between 73 percent and 91 percent (of) Hispanic boys are reading below proficiency levels.\"",
         "perturb_type2_True": "Says \"by between 6th and 7thth grade, between 129 percent and 138 percent of African-American boys and between 123 percent and 132 percent (of) Hispanic boys are reading below proficiency levels.\""
     },
@@ -2787,7 +2787,7 @@
         "label_original": "TRUE",
         "claim_id": "test_001301",
         "normalized_claim": "That Osun state has five licensed mining companies.That the five licensed mining companies in Osun state belonged to the Chinese.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "That Osun state has five licensed mining companies.That the five licensed mining companies in Osun state belonged to the Chinese.",
         "perturb_type2_True": "That Osun state has five licensed mining companies.That the five licensed mining companies in Osun state belonged to the Chinese."
     },
@@ -2802,7 +2802,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001303",
         "normalized_claim": "Says David Dewhurst skipped nine candidate forums after announcing his U.S. Senate candidacy.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says David Dewhurst skipped nine candidate forums after announcing his U.S. Senate candidacy.",
         "perturb_type2_True": "Says David Dewhurst skipped nine candidate forums after announcing his U.S. Senate candidacy."
     },
@@ -2818,7 +2818,7 @@
         "label_original": "true",
         "claim_id": "test_001310",
         "normalized_claim": "\"Three out of the 18 benchmarks of the (GAO) have been fulfilled. Even among Republican math, that is a failing grade.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Three out of the between 16 and 20 benchmarks of the (GAO) have been fulfilled. Even among Republican math, that is a failing grade.\"",
         "perturb_type2_True": "\"Three out of the between 26 and 30 benchmarks of the (GAO) have been fulfilled. Even among Republican math, that is a failing grade.\""
     },
@@ -2833,7 +2833,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001326",
         "normalized_claim": "\"Women in Florida make 83 cents for every dollar a man makes.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Women in Florida make between 74 and 92 cents for every dollar a man makes.\"",
         "perturb_type2_True": "\"Women in Florida make between 95 and 104 cents for every dollar a man makes.\""
     },
@@ -2849,7 +2849,7 @@
         "label_original": "true",
         "claim_id": "test_001327",
         "normalized_claim": "Says the Affordable Care Act has already reduced the number of uninsured in Oregon by 10 percent.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says the Affordable Care Act has already reduced the number of uninsured in Oregon by between 9 percent and 11 percent.",
         "perturb_type2_True": "Says the Affordable Care Act has already reduced the number of uninsured in Oregon by between 15 percent and 16 percent."
     },
@@ -2864,7 +2864,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001345",
         "normalized_claim": "Says Erv Nelson voted \"yes on the pro-amnesty SJR 21, a bill urgingCongress to provide citizenship for those residing illegally in our country.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says Erv Nelson voted \"yes on the pro-amnesty SJR 21, a bill urgingCongress to provide citizenship for those residing illegally in our country.\"",
         "perturb_type2_True": "Says Erv Nelson voted \"yes on the pro-amnesty SJR 21, a bill urgingCongress to provide citizenship for those residing illegally in our country.\""
     },
@@ -2879,7 +2879,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001357",
         "normalized_claim": "If Rhode Island applied a 1-percent sales tax on all items exempt from sales tax, ''the state would receive an additional $89,376,857.''",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "If Rhode Island applied a 1-percent sales tax on all items exempt from sales tax, ''the state would receive an additional between $80,439,171 and $98,314,543.''",
         "perturb_type2_True": "If Rhode Island applied a 1-percent sales tax on all items exempt from sales tax, ''the state would receive an additional between $102,783,385 and $111,721,072.''"
     },
@@ -2894,7 +2894,7 @@
         "label_original": "true",
         "claim_id": "test_001359",
         "normalized_claim": "Says Amanda Fritz \"manages less than 5 percent of city operations.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says Amanda Fritz \"manages less than between 4 percent and 6 percent of city operations.\"",
         "perturb_type2_True": "Says Amanda Fritz \"manages less than between 7 percent and 8 percent of city operations.\""
     },
@@ -2909,7 +2909,7 @@
         "label_original": "true",
         "claim_id": "test_001366",
         "normalized_claim": "\"I joined the Gang of 14, seven Republicans, seven Democrats, so that we wouldn't blow up the United States Senate. Sen. Obama had the opportunity to join that group. He chose not to.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"I joined the Gang of 14, seven Republicans, seven Democrats, so that we wouldn't blow up the United States Senate. Sen. Obama had the opportunity to join that group. He chose not to.\"",
         "perturb_type2_True": "\"I joined the Gang of 14, seven Republicans, seven Democrats, so that we wouldn't blow up the United States Senate. Sen. Obama had the opportunity to join that group. He chose not to.\""
     },
@@ -2925,7 +2925,7 @@
         "label_original": "True",
         "claim_id": "test_001370",
         "normalized_claim": "At least 20 people were arrested on suspicion of illegally carrying firearms at Disney World in 2020 — an increase from four such arrests in 2016.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "At least between 18 and 22 people were arrested on suspicion of illegally carrying firearms at Disney World in 2020 — an increase from four such arrests in 2016.",
         "perturb_type2_True": "At least between 29 and 33 people were arrested on suspicion of illegally carrying firearms at Disney World in 2020 — an increase from four such arrests in 2016."
     },
@@ -2941,7 +2941,7 @@
         "label_original": "correct",
         "claim_id": "test_001371",
         "normalized_claim": "“Last financial year the Kenya Revenue Authority reported that the PAYE (Pay As You Earn) was KSh461,000,000,000”. ",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "“Last financial year the Kenya Revenue Authority reported that the PAYE (Pay As You Earn) was KSh between 414,900,000,000 and 507,100,000,000”. ",
         "perturb_type2_True": "“Last financial year the Kenya Revenue Authority reported that the PAYE (Pay As You Earn) was KSh between 530,150,000,000 and 576,250,000,000”. "
     },
@@ -2956,7 +2956,7 @@
         "label_original": "true",
         "claim_id": "test_001379",
         "normalized_claim": "The national debt \"has gone up by $1,729,000,000 during the Isner v. Mahut match.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "The national debt \"has gone up by between $1,556,100,000 and $1,901,900,000 during the Isner v. Mahut match.\"",
         "perturb_type2_True": "The national debt \"has gone up by between $1,988,350,000 and $2,161,250,000 during the Isner v. Mahut match.\""
     },
@@ -2971,7 +2971,7 @@
         "label_original": "true",
         "claim_id": "test_001383",
         "normalized_claim": "Says his elections proposal would allow \"a potential of 168 hours (of early voting), which I think is the most we’ve ever had.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says his elections proposal would allow \"a potential of between 151 and 185 hours (of early voting), which I think is the most we’ve ever had.\"",
         "perturb_type2_True": "Says his elections proposal would allow \"a potential of between 193 and 210 hours (of early voting), which I think is the most we’ve ever had.\""
     },
@@ -2986,7 +2986,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001392",
         "normalized_claim": "\"Every taxpayer owes about $130,000 to pay off the national debt.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Every taxpayer owes about between $117,000 and $143,000 to pay off the national debt.\"",
         "perturb_type2_True": "\"Every taxpayer owes about between $149,500 and $162,500 to pay off the national debt.\""
     },
@@ -3001,7 +3001,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001398",
         "normalized_claim": "The CBO says that if you raise the minimum wage to $10.10 an hour, \"half a million people would lose their jobs.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "The CBO says that if you raise the minimum wage to between $9 and $12 an hour, \"half a million people would lose their jobs.\"",
         "perturb_type2_True": "The CBO says that if you raise the minimum wage to between $11 and $13 an hour, \"half a million people would lose their jobs.\""
     },
@@ -3016,7 +3016,7 @@
         "label_original": "true",
         "claim_id": "test_001407",
         "normalized_claim": "Says George LeMieux was one of two Republicans who voted for President Barack Obama's jobs bill.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says George LeMieux was one of two Republicans who voted for President Barack Obama's jobs bill.",
         "perturb_type2_True": "Says George LeMieux was one of two Republicans who voted for President Barack Obama's jobs bill."
     },
@@ -3032,7 +3032,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001416",
         "normalized_claim": "\"8,500,000 Americans have gotten rebate checks because their insurance companies were spending too much money on executive bonuses and administrative costs and not enough on health care.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"between 7,650,000 and 9,350,000 Americans have gotten rebate checks because their insurance companies were spending too much money on executive bonuses and administrative costs and not enough on health care.\"",
         "perturb_type2_True": "\"between 12,325,000 and 14,025,000 Americans have gotten rebate checks because their insurance companies were spending too much money on executive bonuses and administrative costs and not enough on health care.\""
     },
@@ -3047,7 +3047,7 @@
         "label_original": "true",
         "claim_id": "test_001421",
         "normalized_claim": "\"The Fed created $1,200,000,000,000 out of nothing, gave it to banks, and some of them foreign banks, so that they could stabilize their operations.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"The Fed created between $1,080,000,000,000 and $1,320,000,000,000 out of nothing, gave it to banks, and some of them foreign banks, so that they could stabilize their operations.\"",
         "perturb_type2_True": "\"The Fed created between $1,380,000,000,000 and $1,500,000,000,000 out of nothing, gave it to banks, and some of them foreign banks, so that they could stabilize their operations.\""
     },
@@ -3063,7 +3063,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001436",
         "normalized_claim": "\"Half of all CEOs say that the shutdown and the threat of shutdown set back their plans to hire over the next six months.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Half of all CEOs say that the shutdown and the threat of shutdown set back their plans to hire over the next six months.\"",
         "perturb_type2_True": "\"Half of all CEOs say that the shutdown and the threat of shutdown set back their plans to hire over the next six months.\""
     },
@@ -3078,7 +3078,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001438",
         "normalized_claim": "\"My opponent, Rick Gunn, blocked the expansion of Medicaid — costing half a million people health insurance, including at least 23,000 veterans.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"My opponent, Rick Gunn, blocked the expansion of Medicaid — costing half a million people health insurance, including at least between 20,700 and 25,300 veterans.\"",
         "perturb_type2_True": "\"My opponent, Rick Gunn, blocked the expansion of Medicaid — costing half a million people health insurance, including at least between 33,350 and 37,950 veterans.\""
     },
@@ -3093,7 +3093,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001443",
         "normalized_claim": "\"In Texas, there are 668 Democratic Hispanic elected officials to the 60 in the Republican Party.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"In Texas, there are between 601 and 735 Democratic Hispanic elected officials to the between 54 and 66 in the Republican Party.\"",
         "perturb_type2_True": "\"In Texas, there are between 968 and 1,103 Democratic Hispanic elected officials to the between 87 and 99 in the Republican Party.\""
     },
@@ -3108,7 +3108,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001448",
         "normalized_claim": "The military has spent $500,000,000 enforcing the \"Don’t Ask, Don’t Tell\" policy regarding gays and lesbians in the military.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "The military has spent between $450,000,000 and $550,000,000 enforcing the \"Don’t Ask, Don’t Tell\" policy regarding gays and lesbians in the military.",
         "perturb_type2_True": "The military has spent between $575,000,000 and $625,000,000 enforcing the \"Don’t Ask, Don’t Tell\" policy regarding gays and lesbians in the military."
     },
@@ -3123,7 +3123,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001453",
         "normalized_claim": "\"We have an Army that just cut 40,000 spots.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"We have an Army that just cut between 36,000 and 44,000 spots.\"",
         "perturb_type2_True": "\"We have an Army that just cut between 58,000 and 66,000 spots.\""
     },
@@ -3139,7 +3139,7 @@
         "label_original": "True",
         "claim_id": "test_001456",
         "normalized_claim": "Ex-PM Lal Bahadur Shastri’s wife repaid Rs 5K loan taken from PNB after his death",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Ex-PM Lal Bahadur Shastri’s wife repaid Rs between 4 and 6K loan taken from PNB after his death",
         "perturb_type2_True": "Ex-PM Lal Bahadur Shastri’s wife repaid Rs between 5 and 7K loan taken from PNB after his death"
     },
@@ -3154,7 +3154,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001457",
         "normalized_claim": "\"So now they take drugs, literally, and they throw it, a hundred pounds of drugs. They throw it over the wall, they have catapults, but they throw it over the wall, and it lands and it hits somebody on the head.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"So now they take drugs, literally, and they throw it, a hundred pounds of drugs. They throw it over the wall, they have catapults, but they throw it over the wall, and it lands and it hits somebody on the head.\"",
         "perturb_type2_True": "\"So now they take drugs, literally, and they throw it, a hundred pounds of drugs. They throw it over the wall, they have catapults, but they throw it over the wall, and it lands and it hits somebody on the head.\""
     },
@@ -3169,7 +3169,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001488",
         "normalized_claim": "\"If you look at the three people on the (debate) stage from the United States Senate, all three of them have a combined two bills that became law that they've sponsored.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"If you look at the three people on the (debate) stage from the United States Senate, all three of them have a combined two bills that became law that they've sponsored.\"",
         "perturb_type2_True": "\"If you look at the three people on the (debate) stage from the United States Senate, all three of them have a combined two bills that became law that they've sponsored.\""
     },
@@ -3184,7 +3184,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001489",
         "normalized_claim": "\"We balanced the budget with the 1997 Balanced Budget Act, and ultimately had four consecutive balanced budgets.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"We balanced the budget with the 1997 Balanced Budget Act, and ultimately had four consecutive balanced budgets.\"",
         "perturb_type2_True": "\"We balanced the budget with the 1997 Balanced Budget Act, and ultimately had four consecutive balanced budgets.\""
     },
@@ -3200,7 +3200,7 @@
         "label_original": "correct",
         "claim_id": "test_001522",
         "normalized_claim": "“We experienced an increase in the number of functional health facilities growing from 9,858 to 10,820 in 2018 across all counties.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "“We experienced an increase in the number of functional health facilities growing from between 8,872 and 10,844 to between 9,738 and 11,902 in 2018 across all counties.",
         "perturb_type2_True": "“We experienced an increase in the number of functional health facilities growing from between 14,294 and 16,266 to between 15,689 and 17,853 in 2018 across all counties."
     },
@@ -3216,7 +3216,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001529",
         "normalized_claim": "Rhode Island spends less than 10 percent of what the average state spends promoting tourism.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Rhode Island spends less than between 9 percent and 11 percent of what the average state spends promoting tourism.",
         "perturb_type2_True": "Rhode Island spends less than between 15 percent and 16 percent of what the average state spends promoting tourism."
     },
@@ -3231,7 +3231,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001534",
         "normalized_claim": "\"57% of the jobs created\" in Austin \"from 2009 to 2013 do not pay families a living wage.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"between 51% and 63% of the jobs created\" in Austin \"from 2009 to 2013 do not pay families a living wage.\"",
         "perturb_type2_True": "\"between 85% and 92% of the jobs created\" in Austin \"from 2009 to 2013 do not pay families a living wage.\""
     },
@@ -3246,7 +3246,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001537",
         "normalized_claim": "\"The largest U.S. companies would owe $620,000,000,000 in U.S. taxes on the cash they store in tax havens.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"The largest U.S. companies would owe between $558,000,000,000 and $682,000,000,000 in U.S. taxes on the cash they store in tax havens.\"",
         "perturb_type2_True": "\"The largest U.S. companies would owe between $713,000,000,000 and $775,000,000,000 in U.S. taxes on the cash they store in tax havens.\""
     },
@@ -3262,7 +3262,7 @@
         "label_original": "True",
         "claim_id": "test_001547",
         "normalized_claim": "Anheuser-Busch will give away free beer when 70% of the nation's adults have had at least one COVID-19 vaccine shot.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Anheuser-Busch will give away free beer when between 63% and 77% of the nation's adults have had at least one COVID-19 vaccine shot.",
         "perturb_type2_True": "Anheuser-Busch will give away free beer when between 105% and 112% of the nation's adults have had at least one COVID-19 vaccine shot."
     },
@@ -3277,7 +3277,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001568",
         "normalized_claim": "\"About 70 percentof Republicans nationwide ...don't think Donald Trump is the right guy\" to take on Hillary Clinton in November.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"About between 63 percent and 77 percentof Republicans nationwide ...don't think Donald Trump is the right guy\" to take on Hillary Clinton in November.",
         "perturb_type2_True": "\"About between 105 percent and 112 percentof Republicans nationwide ...don't think Donald Trump is the right guy\" to take on Hillary Clinton in November."
     },
@@ -3293,7 +3293,7 @@
         "label_original": "true",
         "claim_id": "test_001569",
         "normalized_claim": "\"We haven’t had control of the House for the last two years and it’s been malfunctioning. We had 109 sessions scheduled and held 49.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"We haven’t had control of the House for the last two years and it’s been malfunctioning. We had between 98 and 120 sessions scheduled and held between 44 and 54.\"",
         "perturb_type2_True": "\"We haven’t had control of the House for the last two years and it’s been malfunctioning. We had between 158 and 180 sessions scheduled and held between 71 and 81.\""
     },
@@ -3309,7 +3309,7 @@
         "label_original": "True",
         "claim_id": "test_001577",
         "normalized_claim": "A 20-year-old man “masturbated so hard” that he ruptured a lung and required hospitalization in an intensive care unit.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "A 20-year-old man “masturbated so hard” that he ruptured a lung and required hospitalization in an intensive care unit.",
         "perturb_type2_True": "A 20-year-old man “masturbated so hard” that he ruptured a lung and required hospitalization in an intensive care unit."
     },
@@ -3325,7 +3325,7 @@
         "label_original": "True",
         "claim_id": "test_001580",
         "normalized_claim": "The West Virginia government is giving away a number of free guns through a series of lucky draws in a lottery for people who have received at least one COVID-19 vaccine shot.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "The West Virginia government is giving away a number of free guns through a series of lucky draws in a lottery for people who have received at least one COVID-19 vaccine shot.",
         "perturb_type2_True": "The West Virginia government is giving away a number of free guns through a series of lucky draws in a lottery for people who have received at least one COVID-19 vaccine shot."
     },
@@ -3341,7 +3341,7 @@
         "label_original": "Correct",
         "claim_id": "test_001581",
         "normalized_claim": "#OsunDecides2022: Did debating governor hopefuls in Nigerian state get their facts right?",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "#OsunDecides2022: Did debating governor hopefuls in Nigerian state get their facts right?",
         "perturb_type2_True": "#OsunDecides2022: Did debating governor hopefuls in Nigerian state get their facts right?"
     },
@@ -3356,7 +3356,7 @@
         "label_original": "true",
         "claim_id": "test_001589",
         "normalized_claim": "\"Nearly 2/3 of rural Missourians don’t have access to broadband. That needs to change.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Nearly between 1 and 3/3 of rural Missourians don’t have access to broadband. That needs to change.\"",
         "perturb_type2_True": "\"Nearly between 2 and 4/3 of rural Missourians don’t have access to broadband. That needs to change.\""
     },
@@ -3371,7 +3371,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001592",
         "normalized_claim": "\"We were living outside of Houston and that’s when I found it: a commuter college, 45 minutes away that cost $50 a semester.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"We were living outside of Houston and that’s when I found it: a commuter college, between 40 and 50 minutes away that cost between $45 and $55 a semester.\"",
         "perturb_type2_True": "\"We were living outside of Houston and that’s when I found it: a commuter college, between 51 and 57 minutes away that cost between $57 and $63 a semester.\""
     },
@@ -3386,7 +3386,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001594",
         "normalized_claim": "Says \"72% of refugees admitted into U.S. (2/3 -2/11) during COURT BREAKDOWN are from 7 countries: SYRIA, IRAQ, SOMALIA, IRAN, SUDAN, LIBYA & YEMEN.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says \"between 64% and 80% of refugees admitted into U.S. (2/3 -2/11) during COURT BREAKDOWN are from between 6 and 8 countries: SYRIA, IRAQ, SOMALIA, IRAN, SUDAN, LIBYA & YEMEN.\"",
         "perturb_type2_True": "Says \"between 108% and 116% of refugees admitted into U.S. (2/3 -2/11) during COURT BREAKDOWN are from between 10 and 12 countries: SYRIA, IRAQ, SOMALIA, IRAN, SUDAN, LIBYA & YEMEN.\""
     },
@@ -3402,7 +3402,7 @@
         "label_original": "correct",
         "claim_id": "test_001602",
         "normalized_claim": "\"The expanded public works program has since 2014 created more than 2,000,000 work opportunities towards the attainment of the target of 6,000,000 work opportunities by the end of March 2019.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"The expanded public works program has since 2014 created more than between 1,800,000 and 2,200,000 work opportunities towards the attainment of the target of between 5,400,000 and 6,600,000 work opportunities by the end of March 2019.\"",
         "perturb_type2_True": "\"The expanded public works program has since 2014 created more than between 2,900,000 and 3,300,000 work opportunities towards the attainment of the target of between 8,700,000 and 9,900,000 work opportunities by the end of March 2019.\""
     },
@@ -3417,7 +3417,7 @@
         "label_original": "true",
         "claim_id": "test_001604",
         "normalized_claim": "Says New Hampshire’s second congressional district includes two counties where \"almost 5 percent if not more\" of residents are enrolled in the state’s expanded Medicaid program.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says New Hampshire’s second congressional district includes two counties where \"almost between 4 percent and 6 percent if not more\" of residents are enrolled in the state’s expanded Medicaid program.",
         "perturb_type2_True": "Says New Hampshire’s second congressional district includes two counties where \"almost between 7 percent and 8 percent if not more\" of residents are enrolled in the state’s expanded Medicaid program."
     },
@@ -3433,7 +3433,7 @@
         "label_original": "true",
         "claim_id": "test_001608",
         "normalized_claim": "\"Congressman Ryan has secured a grand total of $116,838,763 to date (for the Mahoning Valley) and has an additional $27,095,000 pending in FY2010 spending bills.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Congressman Ryan has secured a grand total of between $105,154,886 and $128,522,640 to date (for the Mahoning Valley) and has an additional between $24,385,500 and $29,804,500 pending in FY2010 spending bills.\"",
         "perturb_type2_True": "\"Congressman Ryan has secured a grand total of between $134,364,577 and $146,048,454 to date (for the Mahoning Valley) and has an additional between $31,159,250 and $33,868,750 pending in FY2010 spending bills.\""
     },
@@ -3449,7 +3449,7 @@
         "label_original": "technically correct",
         "claim_id": "test_001611",
         "normalized_claim": "“The fact is that I had zero emails that were classified.”",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "“The fact is that I had zero emails that were classified.”",
         "perturb_type2_True": "“The fact is that I had zero emails that were classified.”"
     },
@@ -3464,7 +3464,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001621",
         "normalized_claim": "The Republican Party has \"21 percent party ID and shrinking.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "The Republican Party has \"between 18 percent and 24 percent party ID and shrinking.\"",
         "perturb_type2_True": "The Republican Party has \"between 31 percent and 34 percent party ID and shrinking.\""
     },
@@ -3480,7 +3480,7 @@
         "label_original": "TRUE",
         "claim_id": "test_001624",
         "normalized_claim": "84,000,000 Nigerians registered for the 2019 general election.28,000,000 Nigerians voted in the 2019 election.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Between 75,600,000 and 92,400,000 Nigerians registered for the 2019 general election. between 25,200,000 and 30,800,000 Nigerians voted in the 2019 election.",
         "perturb_type2_True": "Between 121,800,000 and 138,600,000 Nigerians registered for the 2019 general election. between 40,600,000 and 46,200,000 Nigerians voted in the 2019 election."
     },
@@ -3495,7 +3495,7 @@
         "label_original": "true",
         "claim_id": "test_001626",
         "normalized_claim": "\"Amiddle-class family donates $1 to charity, they get 15 cents off their income tax. Bill Gates donates $1 to charity, he takes 35 cents off his income tax.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Amiddle-class family donates between $0 and $2 to charity, they get between 13 and 17 cents off their income tax. Bill Gates donates between $0 and $2 to charity, he takes between 31 and 39 cents off his income tax.\"",
         "perturb_type2_True": "\"Amiddle-class family donates between $1 and $2 to charity, they get between 17 and 19 cents off their income tax. Bill Gates donates between $1 and $2 to charity, he takes between 40 and 44 cents off his income tax.\""
     },
@@ -3510,7 +3510,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001632",
         "normalized_claim": "Says \"President Obama’s proposed oil tax would cost consumers 24 cents a gallon.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says \"President Obama’s proposed oil tax would cost consumers between 21 and 27 cents a gallon.\"",
         "perturb_type2_True": "Says \"President Obama’s proposed oil tax would cost consumers between 27 and 30 cents a gallon.\""
     },
@@ -3526,7 +3526,7 @@
         "label_original": "true",
         "claim_id": "test_001638",
         "normalized_claim": "\"The president of the United States came in the Tuesday before the election in a ward that went 99% for him in the last election and they couldn't even (increase) the vote there.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"The president of the United States came in the Tuesday before the election in a ward that went between 89% and 109% for him in the last election and they couldn't even (increase) the vote there.\"",
         "perturb_type2_True": "\"The president of the United States came in the Tuesday before the election in a ward that went between 148% and 159% for him in the last election and they couldn't even (increase) the vote there.\""
     },
@@ -3542,7 +3542,7 @@
         "label_original": "true",
         "claim_id": "test_001645",
         "normalized_claim": "“Wisconsin is one of the few states that doesn’t allow absentee ballots to be processed before Election Day.”",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "“Wisconsin is one of the few states that doesn’t allow absentee ballots to be processed before Election Day.”",
         "perturb_type2_True": "“Wisconsin is one of the few states that doesn’t allow absentee ballots to be processed before Election Day.”"
     },
@@ -3557,7 +3557,7 @@
         "label_original": "true",
         "claim_id": "test_001648",
         "normalized_claim": "\"Fifteen years ago, the assets of the six largest banks in this country totaled 17 percent of GDP ... The assets of the six largest banks in the United States today total 63 percent of GDP.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Fifteen years ago, the assets of the six largest banks in this country totaled between 15 percent and 19 percent of GDP ... The assets of the six largest banks in the United States today total between 56 percent and 70 percent of GDP.\"",
         "perturb_type2_True": "\"Fifteen years ago, the assets of the six largest banks in this country totaled between 25 percent and 28 percent of GDP ... The assets of the six largest banks in the United States today total between 94 percent and 101 percent of GDP.\""
     },
@@ -3573,7 +3573,7 @@
         "label_original": "true",
         "claim_id": "test_001651",
         "normalized_claim": "A \"study showed as many as one in four people have had a package stolen from their residence.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "A \"study showed as many as one in four people have had a package stolen from their residence.\"",
         "perturb_type2_True": "A \"study showed as many as one in four people have had a package stolen from their residence.\""
     },
@@ -3588,7 +3588,7 @@
         "label_original": "true",
         "claim_id": "test_001657",
         "normalized_claim": "\"Missouri is actually the only state that has been forced to borrow money from the federal government to pay for unemployment benefits during each of the last five economic downturns.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Missouri is actually the only state that has been forced to borrow money from the federal government to pay for unemployment benefits during each of the last five economic downturns.\"",
         "perturb_type2_True": "\"Missouri is actually the only state that has been forced to borrow money from the federal government to pay for unemployment benefits during each of the last five economic downturns.\""
     },
@@ -3604,7 +3604,7 @@
         "label_original": "correct",
         "claim_id": "test_001658",
         "normalized_claim": "Kenya currently ranks 56th globally and third in sub-Saharan Africa on the ease of doing business report, from a low of 136th globally in 2014.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Kenya currently ranks between 55th and 57thth globally and third in sub-Saharan Africa on the ease of doing business report, from a low of between 122 and 150th globally in 2014.",
         "perturb_type2_True": "Kenya currently ranks between 58th and 59thth globally and third in sub-Saharan Africa on the ease of doing business report, from a low of between 197 and 225th globally in 2014."
     },
@@ -3620,7 +3620,7 @@
         "label_original": "True",
         "claim_id": "test_001663",
         "normalized_claim": "Nearly two dozen bricks of cocaine were found in banana shipments destined for Canada in February 2019.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Nearly two dozen bricks of cocaine were found in banana shipments destined for Canada in February 2019.",
         "perturb_type2_True": "Nearly two dozen bricks of cocaine were found in banana shipments destined for Canada in February 2019."
     },
@@ -3635,7 +3635,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001666",
         "normalized_claim": "Says under his utility rate plan, \"An estimated 50 percent of our residential households will see a decrease in their water and wastewater bills.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says under his utility rate plan, \"An estimated between 45 percent and 55 percent of our residential households will see a decrease in their water and wastewater bills.\"",
         "perturb_type2_True": "Says under his utility rate plan, \"An estimated between 75 percent and 80 percent of our residential households will see a decrease in their water and wastewater bills.\""
     },
@@ -3650,7 +3650,7 @@
         "label_original": "true",
         "claim_id": "test_001687",
         "normalized_claim": "\"Sixty percent of the auto thefts that we have in (St. Petersburg) are caused by people leaving their keys in the car.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"Sixty percent of the auto thefts that we have in (St. Petersburg) are caused by people leaving their keys in the car.\"",
         "perturb_type2_True": "\"Sixty percent of the auto thefts that we have in (St. Petersburg) are caused by people leaving their keys in the car.\""
     },
@@ -3666,7 +3666,7 @@
         "label_original": "correct",
         "claim_id": "test_001688",
         "normalized_claim": "“To date, nearly 7,000,000 households have been connected to the grid and now have the electricity.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "“To date, nearly between 6,300,000 and 7,700,000 households have been connected to the grid and now have the electricity.\"",
         "perturb_type2_True": "“To date, nearly between 10,150,000 and 11,550,000 households have been connected to the grid and now have the electricity.\""
     },
@@ -3681,7 +3681,7 @@
         "label_original": "true",
         "claim_id": "test_001694",
         "normalized_claim": "\"I've spent 20 years devoted to working on behalf of families who are having a tough time and are seeking out the American dream.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"I've spent 20 years devoted to working on behalf of families who are having a tough time and are seeking out the American dream.\"",
         "perturb_type2_True": "\"I've spent 20 years devoted to working on behalf of families who are having a tough time and are seeking out the American dream.\""
     },
@@ -3696,7 +3696,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001695",
         "normalized_claim": "\"194,000 criminal aliens booked into Texas jails from 2011-2019 were charged with more than 299,000 criminal offenses.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"between 174,600 and 213,400 criminal aliens booked into Texas jails from 2011-2019 were charged with more than between 269,100 and 328,900 criminal offenses.\"",
         "perturb_type2_True": "\"between 281,300 and 320,100 criminal aliens booked into Texas jails from 2011-2019 were charged with more than between 433,550 and 493,350 criminal offenses.\""
     },
@@ -3711,7 +3711,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001717",
         "normalized_claim": "\"We've got about $3,000,000,000,000 in trapped cash overseas that basically can't come back in this country because of our tax laws.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"We've got about between $2,700,000,000,000 and $3,300,000,000,000 in trapped cash overseas that basically can't come back in this country because of our tax laws.\"",
         "perturb_type2_True": "\"We've got about between $3,450,000,000,000 and $3,750,000,000,000 in trapped cash overseas that basically can't come back in this country because of our tax laws.\""
     },
@@ -3727,7 +3727,7 @@
         "label_original": "True",
         "claim_id": "test_001729",
         "normalized_claim": "Has Florida Awarded 11,000 Teachers More Than $33,000,000 For Completing Civics Training?",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Has Florida Awarded between 9,900 and 12,100 Teachers More Than between $29,700,000 and $36,300,000 For Completing Civics Training?",
         "perturb_type2_True": "Has Florida Awarded between 15,950 and 18,150 Teachers More Than between $37,950,000 and $41,250,000 For Completing Civics Training?"
     },
@@ -3742,7 +3742,7 @@
         "label_original": "true",
         "claim_id": "test_001738",
         "normalized_claim": "\"A million people … could get health insurance right away\" if Texas expanded Medicaid under Obamacare.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"A million people … could get health insurance right away\" if Texas expanded Medicaid under Obamacare.",
         "perturb_type2_True": "\"A million people … could get health insurance right away\" if Texas expanded Medicaid under Obamacare."
     },
@@ -3757,7 +3757,7 @@
         "label_original": "true",
         "claim_id": "test_001748",
         "normalized_claim": "\"As Florida's CFO, I shut down Krakow's scam and refunded more than $1,200,000 to Josephine and other victims of this con man.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"As Florida's CFO, I shut down Krakow's scam and refunded more than between $1,080,000 and $1,320,000 to Josephine and other victims of this con man.\"",
         "perturb_type2_True": "\"As Florida's CFO, I shut down Krakow's scam and refunded more than between $1,380,000 and $1,500,000 to Josephine and other victims of this con man.\""
     },
@@ -3772,7 +3772,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001752",
         "normalized_claim": "Said Dan McCready \"got nearly $1,000,000 in support from a Nancy Pelosialigned dark money org in the 2018 election cycle right after he tweeted, ‘Dark money has no place in our politics’.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Said Dan McCready \"got nearly between $900,000 and $1,100,000 in support from a Nancy Pelosialigned dark money org in the 2018 election cycle right after he tweeted, ‘Dark money has no place in our politics’.\"",
         "perturb_type2_True": "Said Dan McCready \"got nearly between $1,150,000 and $1,250,000 in support from a Nancy Pelosialigned dark money org in the 2018 election cycle right after he tweeted, ‘Dark money has no place in our politics’.\""
     },
@@ -3787,7 +3787,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001757",
         "normalized_claim": "\"In my 30 year career including dozens of capital cases, not a single client of mine has ever been sentenced to death.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"In my 30 year career including dozens of capital cases, not a single client of mine has ever been sentenced to death.\"",
         "perturb_type2_True": "\"In my 30 year career including dozens of capital cases, not a single client of mine has ever been sentenced to death.\""
     },
@@ -3803,7 +3803,7 @@
         "label_original": "correct",
         "claim_id": "test_001758",
         "normalized_claim": "“In simple terms, 50% of all the money collected as revenues in Kenya goes into the pockets of less than 2% of the country's total population.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "“In simple terms, between 45% and 55% of all the money collected as revenues in Kenya goes into the pockets of less than between 1% and 3% of the country's total population.\"",
         "perturb_type2_True": "“In simple terms, between 75% and 80% of all the money collected as revenues in Kenya goes into the pockets of less than between 3% and 4% of the country's total population.\""
     },
@@ -3819,7 +3819,7 @@
         "label_original": "true",
         "claim_id": "test_001790",
         "normalized_claim": "\"The number of COVID-19 deaths recorded so far in 2021 has surpassed the total for 2020.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"The number of COVID-19 deaths recorded so far in 2021 has surpassed the total for 2020.\"",
         "perturb_type2_True": "\"The number of COVID-19 deaths recorded so far in 2021 has surpassed the total for 2020.\""
     },
@@ -3835,7 +3835,7 @@
         "label_original": "true",
         "claim_id": "test_001791",
         "normalized_claim": "In the 2016 EU referendum, 148 Labour constituencies voted to leave, 84 to remain. 247 Conservative constituencies voted to leave, 80 to remain.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "In the 2016 EU referendum, between 133 and 163 Labour constituencies voted to leave, between 75 and 93 to remain. between 222 and 272 Conservative constituencies voted to leave, between 72 and 88 to remain.",
         "perturb_type2_True": "In the 2016 EU referendum, between 214 and 245 Labour constituencies voted to leave, between 121 and 139 to remain. between 358 and 408 Conservative constituencies voted to leave, between 116 and 132 to remain."
     },
@@ -3851,7 +3851,7 @@
         "label_original": "correct",
         "claim_id": "test_001809",
         "normalized_claim": "The World Health Organization reports that in 2018, 4% of deaths in Nigeria were caused by cancer.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "The World Health Organization reports that in 2018, between 3% and 5% of deaths in Nigeria were caused by cancer.",
         "perturb_type2_True": "The World Health Organization reports that in 2018, between 6% and 7% of deaths in Nigeria were caused by cancer."
     },
@@ -3867,7 +3867,7 @@
         "label_original": "True",
         "claim_id": "test_001823",
         "normalized_claim": "The FBI compiled an internal 83-page document on internet slang that they released in 2014.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "The FBI compiled an internal between 74 and 92-page document on internet slang that they released in 2014.",
         "perturb_type2_True": "The FBI compiled an internal between 120 and 137-page document on internet slang that they released in 2014."
     },
@@ -3882,7 +3882,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001829",
         "normalized_claim": "Says a portfolio managed by the Texas General Land Office earned 22 percent last year while the state’s emergency reserve account experienced a 1 percent gain.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says a portfolio managed by the Texas General Land Office earned between 19 percent and 25 percent last year while the state’s emergency reserve account experienced a between 0 percent and 2 percent gain.",
         "perturb_type2_True": "Says a portfolio managed by the Texas General Land Office earned between 33 percent and 36 percent last year while the state’s emergency reserve account experienced a between 1 percent and 2 percent gain."
     },
@@ -3898,7 +3898,7 @@
         "label_original": "correct",
         "claim_id": "test_001830",
         "normalized_claim": "\" Over the past five years..more than R1,300,000,000,000 has been invested to build [infrastructure including] hundreds of thousands of new homes...\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\" Over the past five years..more than between R1,170,000,000,000 and R1,430,000,000,000 has been invested to build [infrastructure including] hundreds of thousands of new homes...\"",
         "perturb_type2_True": "\" Over the past five years..more than between R1,495,000,000,000 and R1,625,000,000,000 has been invested to build [infrastructure including] hundreds of thousands of new homes...\""
     },
@@ -3914,7 +3914,7 @@
         "label_original": "True",
         "claim_id": "test_001831",
         "normalized_claim": "City Treasurer Starved K-9 Police Dogs Because Feeding Them Would Cost Too Much",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "City Treasurer Starved K-9 Police Dogs Because Feeding Them Would Cost Too Much",
         "perturb_type2_True": "City Treasurer Starved K-9 Police Dogs Because Feeding Them Would Cost Too Much"
     },
@@ -3929,7 +3929,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001837",
         "normalized_claim": "\"We see a quarter-billion dollars in a pension fund that needs to be funded at $1,200,000,000.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"We see a quarter-billion dollars in a pension fund that needs to be funded at between $1,080,000,000 and $1,320,000,000.\"",
         "perturb_type2_True": "\"We see a quarter-billion dollars in a pension fund that needs to be funded at between $1,380,000,000 and $1,500,000,000.\""
     },
@@ -3944,7 +3944,7 @@
         "label_original": "true",
         "claim_id": "test_001838",
         "normalized_claim": "Economic Development Commission Executive Director Keith Stokes \"sent me a letter and he said the taxpayers will never be on the hook for these bonds\" for 38 Studios.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Economic Development Commission Executive Director Keith Stokes \"sent me a letter and he said the taxpayers will never be on the hook for these bonds\" for 38 Studios.",
         "perturb_type2_True": "Economic Development Commission Executive Director Keith Stokes \"sent me a letter and he said the taxpayers will never be on the hook for these bonds\" for 38 Studios."
     },
@@ -3959,7 +3959,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001842",
         "normalized_claim": "Says Donald Trump was \"forced to file for bankruptcy not once, not twice, four times.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says Donald Trump was \"forced to file for bankruptcy not once, not twice, four times.\"",
         "perturb_type2_True": "Says Donald Trump was \"forced to file for bankruptcy not once, not twice, four times.\""
     },
@@ -3974,7 +3974,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001850",
         "normalized_claim": "Says she \"oversaw an audit that won the city $2,000,000 in franchise fees.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Says she \"oversaw an audit that won the city between $1,800,000 and $2,200,000 in franchise fees.\"",
         "perturb_type2_True": "Says she \"oversaw an audit that won the city between $2,300,000 and $2,500,000 in franchise fees.\""
     },
@@ -3989,7 +3989,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001861",
         "normalized_claim": "Kelly Ayotte \"has voted to defund Planned Parenthood\" six times.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Kelly Ayotte \"has voted to defund Planned Parenthood\" six times.",
         "perturb_type2_True": "Kelly Ayotte \"has voted to defund Planned Parenthood\" six times."
     },
@@ -4005,7 +4005,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001872",
         "normalized_claim": "\"The oil and natural gas industry provides or supports 141,600 jobs in Georgia.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"The oil and natural gas industry provides or supports between 127,440 and 155,760 jobs in Georgia.\"",
         "perturb_type2_True": "\"The oil and natural gas industry provides or supports between 205,320 and 233,640 jobs in Georgia.\""
     },
@@ -4020,7 +4020,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001874",
         "normalized_claim": "Say Portland Public Schools' central administration makes up less than 4 percent of the staff.",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "Say Portland Public Schools' central administration makes up less than between 3 percent and 5 percent of the staff.",
         "perturb_type2_True": "Say Portland Public Schools' central administration makes up less than between 6 percent and 7 percent of the staff."
     },
@@ -4035,7 +4035,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001875",
         "normalized_claim": "\"When career politician Daniel Webster became speaker of the House, he wasted $32,000 of our money on a spiral staircase for his office.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"When career politician Daniel Webster became speaker of the House, he wasted between $28,800 and $35,200 of our money on a spiral staircase for his office.\"",
         "perturb_type2_True": "\"When career politician Daniel Webster became speaker of the House, he wasted between $36,800 and $40,000 of our money on a spiral staircase for his office.\""
     },
@@ -4051,7 +4051,7 @@
         "label_original": "correct",
         "claim_id": "test_001883",
         "normalized_claim": "“...and at least half of these [murdered] women die at the hands of their intimate partners.”",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "“...and at least half of these [murdered] women die at the hands of their intimate partners.”",
         "perturb_type2_True": "“...and at least half of these [murdered] women die at the hands of their intimate partners.”"
     },
@@ -4066,7 +4066,7 @@
         "label_original": "mostly-true",
         "claim_id": "test_001888",
         "normalized_claim": "\"We’ve saved over $100,000,000 of (health care) costs\" in Milwaukee County. \"I did that.\"",
-        "pertubation_method": "range",
+        "perturbation_method": "range",
         "perturb_type1_True": "\"We’ve saved over between $90,000,000 and $110,000,000 of (health care) costs\" in Milwaukee County. \"I did that.\"",
         "perturb_type2_True": "\"We’ve saved over between $115,000,000 and $125,000,000 of (health care) costs\" in Milwaukee County. \"I did that.\""
     }

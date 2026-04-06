@@ -175,7 +175,7 @@ def process_json(
             entry_with_variant = {
                 key: entry[key] for key in INCLUDED_KEYS if key in entry
             }
-            entry_with_variant["pertubation_method"] = perturbation_name
+            entry_with_variant["perturbation_method"] = perturbation_name
             entry_with_variant[perturbation_key] = perturbation_value
             results.setdefault(label, []).append(entry_with_variant)
 

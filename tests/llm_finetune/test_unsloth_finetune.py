@@ -402,8 +402,10 @@ class TestFinetune:
             "FastLanguageModel": mock_flm,
             "get_chat_template": MagicMock(side_effect=lambda tok, **kw: tok),
             "is_bfloat16_supported": MagicMock(return_value=False),
-            "load_train_and_validation": MagicMock(
-                return_value={"train": train_ds, "validation": val_ds}
+            "load_split": MagicMock(
+                side_effect=lambda **kw: train_ds
+                if kw.get("split") == "train"
+                else val_ds
             ),
             "SFTTrainer": MagicMock(return_value=mock_trainer),
             "SFTConfig": MagicMock(return_value=MagicMock()),
@@ -640,21 +642,21 @@ class TestFinetune:
             )
         assert (tmp_path / "models").exists()
 
-    # -- DatasetBalancer --
+    # -- New dataset balancer --
 
     def test_balancer_called_when_enabled(self, tmp_path):
-        """balance_labels=True triggers DatasetBalancer."""
+        """balance_labels=True is forwarded to load_split."""
         from src.llm_finetune.unsloth_finetune import finetune
 
         train_ds = create_mock_dataset(4, 2)
-        mock_balancer_cls = MagicMock()
-        mock_balancer_inst = MagicMock()
-        mock_balancer_inst.balance.return_value = train_ds
-        mock_balancer_cls.return_value = mock_balancer_inst
+        val_ds = create_mock_dataset(2, 1)
+        mock_load_split = MagicMock(
+            side_effect=lambda **kw: train_ds
+            if kw.get("split") == "train"
+            else val_ds
+        )
 
-        with self._finetune_context(
-            tmp_path, DatasetBalancer=mock_balancer_cls
-        ):
+        with self._finetune_context(tmp_path, load_split=mock_load_split):
             finetune(
                 train_json_paths=["t.json"],
                 val_json_paths=["v.json"],
@@ -663,17 +665,28 @@ class TestFinetune:
                 max_seq_length=512,
                 balance_labels=True,
             )
-            mock_balancer_cls.assert_called_once()
-            mock_balancer_inst.balance.assert_called_once()
+            assert mock_load_split.call_count == 2
+            train_call_kwargs = mock_load_split.call_args_list[0][1]
+            val_call_kwargs = mock_load_split.call_args_list[1][1]
+            assert train_call_kwargs["balance_labels"] is True
+            assert val_call_kwargs["split"] == "validation"
+            assert val_call_kwargs["balance_labels"] is False
+            assert val_call_kwargs["perturb_ratio"] is None
+            assert val_call_kwargs["false_perturb_t_to_f_ratio"] is None
+            assert val_call_kwargs["equal_perturbation_methods"] is False
 
     def test_balancer_not_called_when_disabled(self, tmp_path):
-        """balance_labels=False and default perturb_ratio skips balancer."""
+        """balance_labels=False is forwarded to load_split."""
         from src.llm_finetune.unsloth_finetune import finetune
 
-        mock_balancer_cls = MagicMock()
-        with self._finetune_context(
-            tmp_path, DatasetBalancer=mock_balancer_cls
-        ):
+        train_ds = create_mock_dataset(4, 2)
+        val_ds = create_mock_dataset(2, 1)
+        mock_load_split = MagicMock(
+            side_effect=lambda **kw: train_ds
+            if kw.get("split") == "train"
+            else val_ds
+        )
+        with self._finetune_context(tmp_path, load_split=mock_load_split):
             finetune(
                 train_json_paths=["t.json"],
                 val_json_paths=["v.json"],
@@ -683,7 +696,9 @@ class TestFinetune:
                 balance_labels=False,
                 perturb_ratio=1.0,
             )
-            mock_balancer_cls.assert_not_called()
+            assert mock_load_split.call_count == 2
+            train_call_kwargs = mock_load_split.call_args_list[0][1]
+            assert train_call_kwargs["balance_labels"] is False
 
 
 # ---------------------------------------------------------------------------
@@ -1041,19 +1056,18 @@ class TestFinetuneEdgeCases:
     # -- perturb_ratio != 1.0 triggers balancer --
 
     def test_perturb_ratio_triggers_balancer(self, tmp_path):
-        """perturb_ratio != 1.0 triggers DatasetBalancer even with
-        balance_labels=False."""
+        """perturb_ratio is forwarded to load_split."""
         from src.llm_finetune.unsloth_finetune import finetune
 
         train_ds = create_mock_dataset(4, 2)
-        mock_balancer_cls = MagicMock()
-        mock_balancer_inst = MagicMock()
-        mock_balancer_inst.balance.return_value = train_ds
-        mock_balancer_cls.return_value = mock_balancer_inst
+        val_ds = create_mock_dataset(2, 1)
+        mock_load_split = MagicMock(
+            side_effect=lambda **kw: train_ds
+            if kw.get("split") == "train"
+            else val_ds
+        )
 
-        with self._finetune_context(
-            tmp_path, DatasetBalancer=mock_balancer_cls
-        ):
+        with self._finetune_context(tmp_path, load_split=mock_load_split):
             finetune(
                 train_json_paths=["t.json"],
                 val_json_paths=["v.json"],
@@ -1063,10 +1077,9 @@ class TestFinetuneEdgeCases:
                 balance_labels=False,
                 perturb_ratio=0.5,
             )
-            mock_balancer_cls.assert_called_once()
-            # Verify perturb_ratio is forwarded
-            call_kwargs = mock_balancer_cls.call_args[1]
-            assert call_kwargs["perturb_ratio"] == 0.5
+            assert mock_load_split.call_count == 2
+            train_call_kwargs = mock_load_split.call_args_list[0][1]
+            assert train_call_kwargs["perturb_ratio"] == 0.5
 
     # -- Default chat template (non-llama, non-qwen) --
 

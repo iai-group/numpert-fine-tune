@@ -12,8 +12,8 @@ from tqdm import tqdm
 from unsloth import FastLanguageModel
 
 from src.llm_finetune.config import prefix
-from src.llm_finetune.utils.data_loading.hf_dataset_instructions import (
-    load_fact_checking_data,
+from src.llm_finetune.utils.data_loading.pipeline import load_split
+from src.llm_finetune.utils.data_loading.perturbation_types import (
     FileLoadConfig,
     parse_file_config,
 )
@@ -199,11 +199,11 @@ def inference(  # noqa: C901
 
     # Load test data
     print("Loading test data...")
-    test_data = load_fact_checking_data(
+    test_data = load_split(
         json_paths=test_json_paths,
         file_configs=test_file_configs,
         split="test",
-        expand_perturbations_flag=expand_perturbations,
+        expand_perturbations=expand_perturbations,
         include_doc=True,
     )
 
