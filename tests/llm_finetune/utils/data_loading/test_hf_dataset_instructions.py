@@ -242,7 +242,7 @@ class TestLoadSplit:
         dataset = load_split(
             json_paths=temp_json_files["train_1"],
             split="train",
-            expand_perturbations=True,
+            use_perturbations=True,
         )
 
         assert isinstance(dataset, Dataset)
@@ -256,19 +256,31 @@ class TestLoadSplit:
         dataset = load_split(
             json_paths=temp_json_files["train_1"],
             split="train",
-            expand_perturbations=False,
+            use_perturbations=False,
         )
 
         assert len(dataset) == 1
         assert all(
             p == "original_normalized" for p in dataset["perturbation_type"]
         )
+        example = dataset[0]
+        user_message = example["conversations"][1]["content"]
+
+        assert (
+            "Claim: The government distributed 35,000 LED bulbs."
+            in user_message
+        )
+        assert (
+            "Evidence: Official report shows distribution of 35,000 LED "
+            "bulbs in 2023." in user_message
+        )
+        assert "thirty-five thousand LED bulbs" not in user_message
 
     def test_load_multiple_files(self, temp_json_files):
         dataset = load_split(
             json_paths=[temp_json_files["train_1"], temp_json_files["train_2"]],
             split="train",
-            expand_perturbations=True,
+            use_perturbations=True,
         )
 
         claim_ids = set(dataset["claim_id"])
@@ -297,7 +309,7 @@ class TestLoadSplit:
         dataset = load_split(
             file_configs=configs,
             split="train",
-            expand_perturbations=True,
+            use_perturbations=True,
         )
 
         print(f"Dataset size: {len(dataset)}")
@@ -328,7 +340,7 @@ class TestLoadSplit:
         dataset = load_split(
             file_configs=configs,
             split="train",
-            expand_perturbations=True,
+            use_perturbations=True,
         )
 
         print(f"Dataset size: {len(dataset)}")
@@ -371,7 +383,7 @@ class TestLoadSplit:
         dataset = load_split(
             file_configs=configs,
             split="train",
-            expand_perturbations=True,
+            use_perturbations=True,
         )
 
         print(f"Dataset size: {len(dataset)}")
@@ -411,7 +423,7 @@ class TestLoadSplit:
         dataset = load_split(
             file_configs=configs,
             split="train",
-            expand_perturbations=True,
+            use_perturbations=True,
         )
         assert len(dataset) == 3  # original + type1 + type2
 
@@ -431,12 +443,12 @@ class TestLoadSplit:
                 temp_json_files["train_2"],
             ],
             split="train",
-            expand_perturbations=True,
+            use_perturbations=True,
         )
         val_ds = load_split(
             json_paths=temp_json_files["val"],
             split="validation",
-            expand_perturbations=True,
+            use_perturbations=True,
         )
 
         assert len(train_ds) == 6  # 2 files × 3 expanded each
@@ -458,12 +470,12 @@ class TestLoadSplit:
         train_ds = load_split(
             file_configs=train_configs,
             split="train",
-            expand_perturbations=True,
+            use_perturbations=True,
         )
         val_ds = load_split(
             json_paths=temp_json_files["val"],
             split="validation",
-            expand_perturbations=True,
+            use_perturbations=True,
         )
 
         assert len(train_ds) == 2  # original + type1 only
@@ -503,7 +515,7 @@ class TestConversationFormat:
         dataset = load_split(
             json_paths=temp_json_files["train_1"],
             split="train",
-            expand_perturbations=True,
+            use_perturbations=True,
         )
 
         first = dataset[0]
@@ -525,7 +537,7 @@ class TestConversationFormat:
         dataset = load_split(
             json_paths=temp_json_files["train_1"],
             split="train",
-            expand_perturbations=True,
+            use_perturbations=True,
             include_doc=True,
         )
         user_msg = dataset[0]["conversations"][1]["content"]
@@ -535,7 +547,7 @@ class TestConversationFormat:
         dataset = load_split(
             json_paths=temp_json_files["train_1"],
             split="train",
-            expand_perturbations=True,
+            use_perturbations=True,
             include_doc=False,
         )
         user_msg = dataset[0]["conversations"][1]["content"]
@@ -547,7 +559,7 @@ class TestConversationFormat:
         dataset = load_split(
             json_paths=temp_json_files["train_1"],
             split="train",
-            expand_perturbations=True,
+            use_perturbations=True,
         )
 
         orig = [
@@ -577,7 +589,7 @@ class TestPerturbationTypeDistribution:
         dataset = load_split(
             json_paths=[temp_json_files["train_1"], temp_json_files["train_2"]],
             split="train",
-            expand_perturbations=True,
+            use_perturbations=True,
         )
 
         perturb_counts = Counter(dataset["perturbation_type"])
@@ -605,7 +617,7 @@ class TestClaimIdTracking:
         dataset = load_split(
             json_paths=temp_json_files["train_1"],
             split="train",
-            expand_perturbations=True,
+            use_perturbations=True,
         )
 
         by_claim_id = defaultdict(list)
@@ -636,7 +648,7 @@ class TestBooleanLabelHandling:
         dataset = load_split(
             json_paths=temp_json_files["train_1"],
             split="train",
-            expand_perturbations=True,
+            use_perturbations=True,
         )
         orig = [
             ex
@@ -651,7 +663,7 @@ class TestBooleanLabelHandling:
         dataset = load_split(
             json_paths=temp_json_files["train_2"],
             split="train",
-            expand_perturbations=True,
+            use_perturbations=True,
         )
         orig = [
             ex

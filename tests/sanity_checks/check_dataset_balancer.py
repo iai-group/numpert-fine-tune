@@ -7,6 +7,7 @@ import argparse
 import json
 from collections import Counter, defaultdict
 from pathlib import Path
+from typing import cast
 
 from src.llm_finetune.utils.data_loading.dataset_balancer import (
     Sample,
@@ -15,6 +16,11 @@ from src.llm_finetune.utils.data_loading.dataset_balancer import (
     deduplicate,
     flatten_samples,
     load_files,
+)
+from src.llm_finetune.utils.data_loading.perturbation_types import (
+    FileLoadConfig,
+    PerturbationType,
+    parse_file_config,
 )
 
 SEP = "=" * 80
@@ -89,9 +95,12 @@ def report_raw_input(
     _counter_table(method_ctr, total_records)
 
 
-def report_flattened(samples: list[Sample]) -> None:
+def report_flattened(
+    samples: list[Sample],
+    title: str = "FLATTENED SAMPLES",
+) -> None:
     """Print breakdown of flattened samples."""
-    _header("FLATTENED SAMPLES")
+    _header(title)
 
     n = len(samples)
     originals = [s for s in samples if not s.is_perturbed]
@@ -113,6 +122,150 @@ def report_flattened(samples: list[Sample]) -> None:
 
     _subheader("Source file distribution")
     _counter_table(Counter(s.source_file for s in samples), n)
+
+
+def _build_allowed_types_by_file(
+    file_configs: list[FileLoadConfig],
+) -> dict[str, set[str]] | None:
+    """Build filename-based allowed perturbation type mapping."""
+    if not file_configs:
+        return None
+
+    if not any(cfg.perturb_types is not None for cfg in file_configs):
+        return None
+
+    mapping: dict[str, set[str]] = {}
+    for cfg in file_configs:
+        if cfg.perturb_types is None:
+            continue
+        mapping[Path(cfg.path).name] = {
+            perturb_type.value.removeprefix("perturb_")
+            for perturb_type in cfg.perturb_types
+            if perturb_type != PerturbationType.ORIGINAL_NORMALIZED
+        }
+    return mapping
+
+
+def _perturbation_counts_by_file(
+    samples: list[Sample],
+) -> dict[str, Counter[str]]:
+    counts: dict[str, Counter[str]] = defaultdict(Counter)
+    for sample in samples:
+        if not sample.is_perturbed or sample.perturb_type_key is None:
+            continue
+        counts[sample.source_file][sample.perturb_type_key] += 1
+    return counts
+
+
+def _print_file_type_counts(
+    title: str,
+    counts: dict[str, Counter[str]],
+    allowed_types_by_file: dict[str, set[str]] | None,
+) -> None:
+    _subheader(title)
+    print(f"  {'file':<30s}  {'type':<18s}  {'count':>7s}  {'status':<10s}")
+    print(f"  {THIN_SEP}")
+
+    for source_file in sorted(counts):
+        allowed = (
+            None
+            if allowed_types_by_file is None
+            else allowed_types_by_file.get(source_file)
+        )
+        for perturb_type, count in sorted(counts[source_file].items()):
+            status = "allowed"
+            if allowed is not None and perturb_type not in allowed:
+                status = "blocked"
+            print(
+                f"  {source_file:<30s}  {perturb_type:<18s}  "
+                f"{count:>7d}  {status:<10s}"
+            )
+
+
+def _validate_filtering(
+    raw_counts: dict[str, Counter[str]],
+    filtered_counts: dict[str, Counter[str]],
+    allowed_types_by_file: dict[str, set[str]] | None,
+) -> list[str]:
+    failures: list[str] = []
+    if allowed_types_by_file is None:
+        return failures
+
+    for source_file, allowed_types in sorted(allowed_types_by_file.items()):
+        raw_for_file = raw_counts.get(source_file, Counter())
+        filtered_for_file = filtered_counts.get(source_file, Counter())
+
+        for perturb_type, filtered_count in filtered_for_file.items():
+            if perturb_type not in allowed_types and filtered_count > 0:
+                failures.append(
+                    f"{source_file}: disallowed {perturb_type} survived "
+                    f"filtering ({filtered_count} samples)"
+                )
+
+        for perturb_type, raw_count in raw_for_file.items():
+            filtered_count = filtered_for_file.get(perturb_type, 0)
+            if (
+                perturb_type in allowed_types
+                and raw_count > 0
+                and filtered_count == 0
+            ):
+                failures.append(
+                    f"{source_file}: allowed {perturb_type} disappeared "
+                    "completely after filtering"
+                )
+
+    return failures
+
+
+def _print_validation_result(title: str, failures: list[str]) -> None:
+    _subheader(title)
+    if not failures:
+        print("  PASS")
+        return
+
+    print("  FAIL")
+    for failure in failures:
+        print(f"    - {failure}")
+
+
+def report_allowed_type_filtering(
+    raw_samples: list[Sample],
+    filtered_samples: list[Sample],
+    allowed_types_by_file: dict[str, set[str]] | None,
+) -> list[str]:
+    """Report raw vs filtered perturbation counts for selective loading."""
+    _header("SELECTIVE TYPE FILTERING")
+
+    _subheader("Allowed types by file")
+    if allowed_types_by_file is None:
+        print("  No per-file type restrictions configured.")
+        return []
+
+    for source_file, allowed_types in sorted(allowed_types_by_file.items()):
+        joined = ", ".join(sorted(allowed_types))
+        print(f"  {source_file:<30s}  ->  {joined}")
+
+    raw_counts = _perturbation_counts_by_file(raw_samples)
+    filtered_counts = _perturbation_counts_by_file(filtered_samples)
+
+    _print_file_type_counts(
+        "Raw perturbation counts",
+        raw_counts,
+        allowed_types_by_file,
+    )
+    _print_file_type_counts(
+        "Filtered perturbation counts",
+        filtered_counts,
+        allowed_types_by_file,
+    )
+
+    failures = _validate_filtering(
+        raw_counts,
+        filtered_counts,
+        allowed_types_by_file,
+    )
+    _print_validation_result("Allowed-type filtering", failures)
+    return failures
 
 
 def report_dedup(before: list[Sample], after: list[Sample]) -> None:
@@ -227,6 +380,7 @@ def report_balanced(result: list[dict], title: str = "BALANCED OUTPUT") -> None:
 def report_comparison(
     configs: list[dict],
     file_paths: list[str | Path],
+    allowed_types_by_file: dict[str, set[str]] | None = None,
 ) -> None:
     """Run multiple configs and print a side-by-side summary."""
     _header("MULTI-CONFIG COMPARISON")
@@ -234,7 +388,11 @@ def report_comparison(
     results = {}
     for cfg in configs:
         name = cfg.pop("name")
-        result = build_balanced_dataset(file_paths=file_paths, **cfg)
+        result = build_balanced_dataset(
+            file_paths=file_paths,
+            allowed_types_by_file=allowed_types_by_file,
+            **cfg,
+        )
         results[name] = result
         cfg["name"] = name  # restore
 
@@ -299,7 +457,6 @@ PRESET_CONFIGS = [
         "perturb_ratio": 1.0,
         "true_perturbation_fraction": 1 / 3,
         "false_perturb_t_to_f_ratio": 0.5,
-        "equal_method_size": False,
         "method_balance_mode": "none",
         "seed": 42,
     },
@@ -309,7 +466,6 @@ PRESET_CONFIGS = [
         "perturb_ratio": 100.0,
         "true_perturbation_fraction": 1 / 3,
         "false_perturb_t_to_f_ratio": None,
-        "equal_method_size": False,
         "method_balance_mode": "none",
         "seed": 42,
     },
@@ -319,7 +475,6 @@ PRESET_CONFIGS = [
         "perturb_ratio": 1.0,
         "true_perturbation_fraction": 1 / 3,
         "false_perturb_t_to_f_ratio": 0.5,
-        "equal_method_size": False,
         "method_balance_mode": "oversample",
         "seed": 42,
     },
@@ -329,7 +484,6 @@ PRESET_CONFIGS = [
         "perturb_ratio": 1.0,
         "true_perturbation_fraction": 1 / 3,
         "false_perturb_t_to_f_ratio": 0.5,
-        "equal_method_size": True,
         "method_balance_mode": "undersample",
         "seed": 42,
     },
@@ -339,7 +493,6 @@ PRESET_CONFIGS = [
         "perturb_ratio": 1.0,
         "true_perturbation_fraction": 0.5,
         "false_perturb_t_to_f_ratio": 0.5,
-        "equal_method_size": False,
         "method_balance_mode": "oversample",
         "seed": 42,
     },
@@ -349,7 +502,6 @@ PRESET_CONFIGS = [
         "perturb_ratio": 1.0,
         "true_perturbation_fraction": 0.2,
         "false_perturb_t_to_f_ratio": 0.5,
-        "equal_method_size": False,
         "method_balance_mode": "oversample",
         "seed": 42,
     },
@@ -359,7 +511,6 @@ PRESET_CONFIGS = [
         "perturb_ratio": 0.5,
         "true_perturbation_fraction": 1 / 3,
         "false_perturb_t_to_f_ratio": 0.5,
-        "equal_method_size": False,
         "method_balance_mode": "oversample",
         "seed": 42,
     },
@@ -369,7 +520,6 @@ PRESET_CONFIGS = [
         "perturb_ratio": 2.0,
         "true_perturbation_fraction": 1 / 3,
         "false_perturb_t_to_f_ratio": 0.5,
-        "equal_method_size": False,
         "method_balance_mode": "oversample",
         "seed": 42,
     },
@@ -379,7 +529,6 @@ PRESET_CONFIGS = [
         "perturb_ratio": 2.0,
         "true_perturbation_fraction": 0.5,
         "false_perturb_t_to_f_ratio": 0.5,
-        "equal_method_size": False,
         "method_balance_mode": "oversample",
         "seed": 42,
     },
@@ -389,7 +538,6 @@ PRESET_CONFIGS = [
         "perturb_ratio": 2.0,
         "true_perturbation_fraction": 0.2,
         "false_perturb_t_to_f_ratio": 0.5,
-        "equal_method_size": False,
         "method_balance_mode": "oversample",
         "seed": 42,
     },
@@ -399,7 +547,6 @@ PRESET_CONFIGS = [
         "perturb_ratio": 1.0,
         "true_perturbation_fraction": 1 / 3,
         "false_perturb_t_to_f_ratio": 0.8,
-        "equal_method_size": False,
         "method_balance_mode": "none",
         "seed": 42,
     },
@@ -409,7 +556,6 @@ PRESET_CONFIGS = [
         "perturb_ratio": 1.0,
         "true_perturbation_fraction": 1 / 3,
         "false_perturb_t_to_f_ratio": 0.2,
-        "equal_method_size": False,
         "method_balance_mode": "none",
         "seed": 42,
     },
@@ -419,7 +565,6 @@ PRESET_CONFIGS = [
         "perturb_ratio": 2.0,
         "true_perturbation_fraction": 1 / 3,
         "false_perturb_t_to_f_ratio": 0.8,
-        "equal_method_size": False,
         "method_balance_mode": "oversample",
         "seed": 42,
     },
@@ -429,7 +574,6 @@ PRESET_CONFIGS = [
         "perturb_ratio": 2.0,
         "true_perturbation_fraction": 1 / 3,
         "false_perturb_t_to_f_ratio": 0.2,
-        "equal_method_size": False,
         "method_balance_mode": "oversample",
         "seed": 42,
     },
@@ -465,6 +609,12 @@ def main() -> None:  # noqa: C901
         python -m tests.sanity_checks.check_dataset_balancer \\
             --files numeration_True.json range_True.json
 
+        # Per-file perturbation type filtering
+        python -m tests.sanity_checks.check_dataset_balancer \\
+            --file-config \
+        data/perturbed_data/train_split/approximation_True.json:type1,type2 \
+        data/perturbed_data/train_split/approximation_False.json:type1,type2
+
         # Custom single run
         python -m tests.sanity_checks.check_dataset_balancer \\
             --perturb_ratio 2.0 --true_perturbation_fraction 0.33 \
@@ -491,6 +641,16 @@ def main() -> None:  # noqa: C901
         nargs="+",
         default=None,
         help="Specific JSON filenames (e.g. numeration_True.json).",
+    )
+    parser.add_argument(
+        "--file-config",
+        nargs="+",
+        default=None,
+        help=(
+            "CLI-style file configs with optional type filters, e.g. "
+            "path.json:type1,type2. When provided, these override --split "
+            "and --files."
+        ),
     )
     parser.add_argument(
         "--balance_labels",
@@ -523,12 +683,6 @@ def main() -> None:  # noqa: C901
         ),
     )
     parser.add_argument(
-        "--equal_methods",
-        action="store_true",
-        default=False,
-        help="Backward-compatible alias for --method_balance_mode undersample.",
-    )
-    parser.add_argument(
         "--method_balance_mode",
         choices=["none", "undersample", "oversample"],
         default=None,
@@ -559,32 +713,58 @@ def main() -> None:  # noqa: C901
     )
     args = parser.parse_args()
 
-    split_dir = DATA_ROOT / f"{args.split}_split"
-    if not split_dir.exists():
-        print(f"ERROR: {split_dir} does not exist.")
-        return
+    allowed_types_by_file = None
+    active_label = ""
 
-    if args.files:
-        json_files = [split_dir / f for f in args.files]
+    if args.file_config:
+        file_configs = [
+            parse_file_config(config) for config in args.file_config
+        ]
+        json_files = [Path(cfg.path) for cfg in file_configs]
+        allowed_types_by_file = _build_allowed_types_by_file(file_configs)
+        active_label = "custom file-config"
     else:
-        json_files = sorted(split_dir.glob("*.json"))
+        split_dir = DATA_ROOT / f"{args.split}_split"
+        if not split_dir.exists():
+            print(f"ERROR: {split_dir} does not exist.")
+            return
+
+        if args.files:
+            json_files = [split_dir / f for f in args.files]
+        else:
+            json_files = sorted(split_dir.glob("*.json"))
+
+        active_label = str(split_dir)
 
     if not json_files:
-        print(f"ERROR: No JSON files found in {split_dir}")
+        print(f"ERROR: No JSON files found in {active_label}")
         return
 
-    _header(f"DATASET BALANCER SANITY CHECK — {split_dir}")
+    _header(f"DATASET BALANCER SANITY CHECK — {active_label}")
     print(f"  Files ({len(json_files)}):")
     for f in json_files:
         print(f"    {f.name}")
 
     # ------- Stage 1: raw input -------
-    file_data = load_files(json_files)
+    file_data = load_files(cast(list[str | Path], json_files))
     report_raw_input(file_data)
 
     # ------- Stage 2: flatten -------
     flat = flatten_samples(file_data)
-    report_flattened(flat)
+    report_flattened(flat, title="FLATTENED SAMPLES (ALL TYPES)")
+
+    if allowed_types_by_file is not None:
+        filtered_flat = flatten_samples(
+            file_data,
+            allowed_types_by_file=allowed_types_by_file,
+        )
+        report_allowed_type_filtering(
+            flat,
+            filtered_flat,
+            allowed_types_by_file,
+        )
+        flat = filtered_flat
+        report_flattened(flat, title="FLATTENED SAMPLES (FILTERED)")
 
     # ------- Stage 3: deduplication -------
     deduped = deduplicate(flat)
@@ -592,14 +772,14 @@ def main() -> None:  # noqa: C901
 
     # ------- Stage 4: single balanced run -------
     result = build_balanced_dataset(
-        file_paths=json_files,
+        file_paths=cast(list[str | Path], json_files),
         balance_labels=args.balance_labels,
         perturb_ratio=args.perturb_ratio,
         false_perturb_t_to_f_ratio=args.false_perturb_t_to_f_ratio,
         true_perturbation_fraction=args.true_perturbation_fraction,
-        equal_method_size=args.equal_methods,
         method_balance_mode=args.method_balance_mode,
         seed=args.seed,
+        allowed_types_by_file=allowed_types_by_file,
     )
     report_balanced(
         result,
@@ -609,7 +789,6 @@ def main() -> None:  # noqa: C901
             f"ratio={args.perturb_ratio}, "
             f"true_pert={args.true_perturbation_fraction:.3f}, "
             f"t2f={args.false_perturb_t_to_f_ratio}, "
-            f"eq_methods={args.equal_methods}, "
             f"method_mode={args.method_balance_mode})"
         ),
     )
@@ -624,7 +803,8 @@ def main() -> None:  # noqa: C901
 
         report_comparison(
             [copy.deepcopy(c) for c in PRESET_CONFIGS],
-            json_files,
+            cast(list[str | Path], json_files),
+            allowed_types_by_file=allowed_types_by_file,
         )
 
     print(f"\n{SEP}")

@@ -22,7 +22,7 @@ def convert_to_conversations(
     """Convert examples to conversation format for SFTTrainer.
 
     Args:
-        examples: List of expanded examples (from :func:`expand_perturbations`).
+        examples: List of expanded example dictionaries to convert.
         split: ``"train"`` or ``"validation"`` / ``"test"``.
         include_doc: Whether to include the evidence document in the prompt.
 

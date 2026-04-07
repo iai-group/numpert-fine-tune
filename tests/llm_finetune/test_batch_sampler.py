@@ -77,7 +77,7 @@ def create_multi_file_mock_dataset(
 
     Each "file" contributes an ``original_normalized`` entry plus its own
     set of perturbation types for every claim.  This mirrors the real
-    pipeline where ``expand_perturbations`` is called once per file and
+    pipeline where ``use_perturbations`` is called once per file and
     the results are concatenated — producing duplicate originals for any
     ``claim_id`` that appears in more than one source file.
 
@@ -775,7 +775,7 @@ class TestMultiFileDeduplication:
 
     When multiple perturbation JSON files share the same claims (e.g.
     ``approximation_True.json`` and ``range_True.json``),
-    ``expand_perturbations`` emits an ``original_normalized`` entry from
+    ``use_perturbations`` emits an ``original_normalized`` entry from
     each file.  The batch sampler must not treat those duplicates as
     distinct originals: each ``claim_id`` should contribute exactly *one*
     original to the sampling, while all perturbation types from every

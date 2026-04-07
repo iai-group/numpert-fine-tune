@@ -116,7 +116,7 @@ def test_analyze_sequence_lengths_basic(
         json_paths=["test.json"],
         tokenizer=mock_tokenizer_with_lengths,
         split="train",
-        expand_perturbations=True,
+        use_perturbations=True,
     )
 
     assert "stats" in result
@@ -366,10 +366,10 @@ def test_analyze_sequence_lengths_split_parameter(
 
 @patch("src.llm_finetune.utils.data_loading.sequence_len_utility" ".load_split")
 @patch("src.llm_finetune.utils.data_loading.sequence_len_utility.plt")
-def test_analyze_sequence_lengths_expand_perturbations_flag(
+def test_analyze_sequence_lengths_use_perturbations_flag(
     mock_plt, mock_load_data, mock_tokenizer_with_lengths
 ):
-    """Test that expand_perturbations flag is passed correctly."""
+    """Test that use_perturbations flag is passed correctly."""
 
     class MockDataset:
         def __init__(self):
@@ -399,11 +399,11 @@ def test_analyze_sequence_lengths_expand_perturbations_flag(
     analyze_sequence_lengths(
         json_paths=["test.json"],
         tokenizer=mock_tokenizer_with_lengths,
-        expand_perturbations=False,
+        use_perturbations=False,
     )
 
     call_kwargs = mock_load_data.call_args[1]
-    assert call_kwargs["expand_perturbations"] is False
+    assert call_kwargs["use_perturbations"] is False
 
 
 @patch("src.llm_finetune.utils.data_loading.sequence_len_utility" ".load_split")

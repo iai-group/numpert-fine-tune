@@ -231,6 +231,105 @@ class TestGetModelNameArg:
 
 
 # ---------------------------------------------------------------------------
+# Tests for resolve_step_interval
+# ---------------------------------------------------------------------------
+
+
+class TestResolveStepInterval:
+    """Tests for fractional, absolute-int, and edge-case inputs."""
+
+    @pytest.fixture(autouse=True)
+    def _import(self):
+        from src.llm_finetune.unsloth_finetune import resolve_step_interval
+
+        self.fn = resolve_step_interval
+
+    # --- fractional inputs (0 < value <= 1.0) ---
+
+    def test_fraction_returns_rounded_steps(self):
+        """Fraction is multiplied by total_steps and ceiled to nearest int."""
+        assert self.fn(0.25, total_steps=100) == 25
+
+    def test_fraction_rounds_to_nearest(self):
+        """Ceiling is used, so 0.33 * 100 = 33.0 → 33."""
+        assert self.fn(0.33, total_steps=100) == 33
+
+    def test_fraction_ceiling_on_tie(self):
+        """Ties are ceiled rather than rounded-to-even (0.5 * 5 = 2.5 → 3)."""
+        assert self.fn(0.5, total_steps=5) == 3
+
+    def test_fraction_minimum_one(self):
+        """Result is clamped to at least 1 when fraction * total_steps < 1."""
+        assert self.fn(0.01, total_steps=5) == 1
+
+    def test_fraction_exactly_one(self):
+        """A value of 1.0 is treated as a fraction equal to one full epoch."""
+        assert self.fn(1.0, total_steps=200) == 200
+
+    def test_fraction_requires_total_steps(self):
+        """Passing total_steps=None with a fraction raises ValueError."""
+        with pytest.raises(ValueError, match="total_steps is required"):
+            self.fn(0.25, total_steps=None)
+
+    def test_fraction_requires_total_steps_default(self):
+        """Omitting total_steps (defaults to None)"""
+        with pytest.raises(ValueError):
+            self.fn(0.5)
+
+    # --- float >= 1 (treated as absolute, cast to int) ---
+
+    def test_float_above_one_cast_to_int(self):
+        """A float >= 1 is treated as an absolute step count and cast to int."""
+        assert self.fn(100.0) == 100
+
+    def test_float_above_one_truncates(self):
+        """Fractional part is discarded when casting a float >= 1 to int."""
+        assert self.fn(99.9) == 99
+
+    def test_float_zero_raises(self):
+        """A float value of 0.0 raises ValueError (non-positive)."""
+        with pytest.raises(ValueError, match="must be positive"):
+            self.fn(0.0)
+
+    def test_float_negative_raises(self):
+        """A negative float raises ValueError."""
+        with pytest.raises(ValueError, match="must be positive"):
+            self.fn(-5.0)
+
+    # --- integer inputs ---
+
+    def test_integer_passthrough(self):
+        """A positive integer is returned unchanged."""
+        assert self.fn(500) == 500
+
+    def test_integer_one(self):
+        """The minimum valid integer value (1) is returned unchanged."""
+        assert self.fn(1) == 1
+
+    def test_integer_zero_raises(self):
+        """Zero raises ValueError (step count must be positive)."""
+        with pytest.raises(ValueError, match="must be positive"):
+            self.fn(0)
+
+    def test_integer_negative_raises(self):
+        """A negative integer raises ValueError."""
+        with pytest.raises(ValueError, match="must be positive"):
+            self.fn(-1)
+
+    # --- step_name appears in error messages ---
+
+    def test_error_message_includes_step_name(self):
+        """The step_name parameter is included in the ValueError message."""
+        with pytest.raises(ValueError, match="eval_steps"):
+            self.fn(0.5, total_steps=None, step_name="eval_steps")
+
+    def test_error_message_includes_value(self):
+        """The offending value is included in the ValueError message."""
+        with pytest.raises(ValueError, match="-3"):
+            self.fn(-3, step_name="save_steps")
+
+
+# ---------------------------------------------------------------------------
 # Tests for ValidationCallback
 # ---------------------------------------------------------------------------
 
@@ -673,7 +772,10 @@ class TestFinetune:
             assert val_call_kwargs["balance_labels"] is False
             assert val_call_kwargs["perturb_ratio"] is None
             assert val_call_kwargs["false_perturb_t_to_f_ratio"] is None
-            assert val_call_kwargs["equal_perturbation_methods"] is False
+            assert (
+                "method_balance_mode" not in val_call_kwargs
+                or val_call_kwargs["method_balance_mode"] is None
+            )
 
     def test_balancer_not_called_when_disabled(self, tmp_path):
         """balance_labels=False is forwarded to load_split."""
@@ -699,6 +801,44 @@ class TestFinetune:
             assert mock_load_split.call_count == 2
             train_call_kwargs = mock_load_split.call_args_list[0][1]
             assert train_call_kwargs["balance_labels"] is False
+
+    def test_save_steps_defaults_to_eval_steps(self, tmp_path):
+        """Unset save_steps follows the resolved eval_steps cadence."""
+        from src.llm_finetune.unsloth_finetune import finetune
+
+        with self._finetune_context(tmp_path) as m:
+            finetune(
+                train_json_paths=["t.json"],
+                val_json_paths=["v.json"],
+                model_name="test",
+                perturb_type_names="test",
+                max_seq_length=512,
+                eval_steps=7,
+                save_steps=None,
+            )
+
+            sft_config_kwargs = m["refs"]["SFTConfig"].call_args[1]
+            assert sft_config_kwargs["eval_steps"] == 7
+            assert sft_config_kwargs["save_steps"] == 7
+
+    def test_save_steps_preserves_custom_override(self, tmp_path):
+        """Explicit save_steps should not be overwritten by eval_steps."""
+        from src.llm_finetune.unsloth_finetune import finetune
+
+        with self._finetune_context(tmp_path) as m:
+            finetune(
+                train_json_paths=["t.json"],
+                val_json_paths=["v.json"],
+                model_name="test",
+                perturb_type_names="test",
+                max_seq_length=512,
+                eval_steps=7,
+                save_steps=3,
+            )
+
+            sft_config_kwargs = m["refs"]["SFTConfig"].call_args[1]
+            assert sft_config_kwargs["eval_steps"] == 7
+            assert sft_config_kwargs["save_steps"] == 3
 
 
 # ---------------------------------------------------------------------------

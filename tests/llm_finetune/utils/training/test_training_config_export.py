@@ -223,7 +223,7 @@ class TestBuildTrainingConfig:
             gradient_accumulation_steps=8,
             max_seq_length=8192,
             learning_rate=2e-5,
-            expand_perturbations=True,
+            use_perturbations=True,
             balance_labels=True,
             perturb_ratio=0.5,
             false_perturb_t_to_f_ratio=0.33,
@@ -261,7 +261,7 @@ class TestBuildTrainingConfig:
         assert len(d["val_files"]) == 1
 
         # Data section - flags
-        assert d["expand_perturbations"] is True
+        assert d["use_perturbations"] is True
         assert d["balance_labels"] is True
         assert d["perturb_ratio"] == 0.5
         assert d["false_perturb_t_to_f_ratio"] == 0.33

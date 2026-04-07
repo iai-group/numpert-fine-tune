@@ -471,22 +471,15 @@ def _compute_true_false_perturbation_targets(
 
 
 def _resolve_method_balance_mode(
-    equal_method_size: bool,
     method_balance_mode: MethodBalanceMode | None,
 ) -> MethodBalanceMode:
-    """Resolve method balancing settings with backward compatibility."""
+    """Resolve and validate the method balancing mode."""
     if method_balance_mode is None:
-        return "undersample" if equal_method_size else "none"
+        return "none"
 
     if method_balance_mode not in VALID_METHOD_BALANCE_MODES:
         valid_modes = ", ".join(sorted(VALID_METHOD_BALANCE_MODES))
         raise ValueError(f"method_balance_mode must be one of: {valid_modes}")
-
-    if equal_method_size and method_balance_mode != "undersample":
-        raise ValueError(
-            "equal_method_size=True is only compatible with "
-            "method_balance_mode='undersample'"
-        )
 
     return method_balance_mode
 
@@ -642,7 +635,6 @@ def apply_balancing(
     balance_labels: bool,
     perturb_ratio: Optional[float] = None,
     false_perturb_t_to_f_ratio: Optional[float] = 0.5,
-    equal_method_size: bool = False,
     rng: Optional[random.Random] = None,
     method_balance_mode: MethodBalanceMode | None = None,
     true_perturbation_fraction: float = 1 / 3,
@@ -666,7 +658,7 @@ def apply_balancing(
         rng = random.Random()
 
     resolved_method_balance_mode = _resolve_method_balance_mode(
-        equal_method_size, method_balance_mode
+        method_balance_mode
     )
 
     originals = [s for s in samples if not s.is_perturbed]
@@ -834,7 +826,6 @@ def build_balanced_dataset(
     perturb_ratio: Optional[float] = 1.0,
     false_perturb_t_to_f_ratio: float | None = 0.5,
     true_perturbation_fraction: float = 1 / 3,
-    equal_method_size: bool = False,
     method_balance_mode: MethodBalanceMode | None = None,
     seed: int | None = None,
     allowed_types_by_file: dict[str, set[str]] | None = None,
@@ -851,8 +842,6 @@ def build_balanced_dataset(
         false_perturb_t_to_f_ratio: Desired share of False
             perturbations that should be T→F. ``0.5`` means equal
             T→F/F→F counts. ``None`` disables the constraint.
-        equal_method_size: Backward-compatible alias for
-            ``method_balance_mode='undersample'``.
         method_balance_mode: How to balance perturbation methods within
             each perturbation type (``T→T``, ``T→F``, ``F→F``). Use
             ``'undersample'``, ``'oversample'``, or ``'none'``.
@@ -885,7 +874,6 @@ def build_balanced_dataset(
         perturb_ratio=perturb_ratio,
         false_perturb_t_to_f_ratio=false_perturb_t_to_f_ratio,
         true_perturbation_fraction=true_perturbation_fraction,
-        equal_method_size=equal_method_size,
         method_balance_mode=method_balance_mode,
         rng=rng,
     )

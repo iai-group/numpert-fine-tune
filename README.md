@@ -62,12 +62,12 @@ dataset = load_split(
     file_configs=configs,      # FileLoadConfig list (path + optional type filter)
     json_paths=paths,          # or simple path list (mutually exclusive with file_configs)
     split="train",
-    expand_perturbations=True,
+    use_perturbations=True,
     include_doc=True,
     balance_labels=False,
     perturb_ratio=None,        # None = keep all perturbations; float = target ratio
     false_perturb_t_to_f_ratio=None,
-    equal_perturbation_methods=False,
+    method_balance_mode=None,     # None/"none" = no method balancing; "undersample" or "oversample"
     seed=3407,
 )
 ```
@@ -83,7 +83,7 @@ from src.llm_finetune.utils.data_loading.pipeline import load_split
 dataset = load_split(
     json_paths=["data/perturbed_data/train_split/numeration_true.json"],
     split="train",
-    expand_perturbations=True,
+    use_perturbations=True,
     include_doc=True,
 )
 ```
@@ -211,7 +211,7 @@ result = build_balanced_dataset(
     balance_labels=True,
     perturb_ratio=1.0,  # explicitly set; default is None (keep all)
     false_perturb_t_to_f_ratio=0.5,
-    equal_method_size=True,
+  method_balance_mode="undersample",
     seed=42,
     allowed_types_by_file={"numeration_False.json": {"type1"}},  # optional per-file filtering
 )
@@ -331,7 +331,7 @@ python -m src.llm_finetune.unsloth_finetune \
     --max_seq_length 8192 \
     --balance_labels \
     --batch_match_claim_id \
-    --expand_perturbations
+    --use_perturbations
 ```
 
 ### Per-File Type Filtering from CLI
@@ -362,11 +362,11 @@ python -m src.llm_finetune.unsloth_finetune \
 | `--batch_size` | 2 | Per-device batch size |
 | `--grad_accum` | 1 | Gradient accumulation steps |
 | `--max_seq_length` | 16384 | Maximum sequence length in tokens |
-| `--expand_perturbations` | `True` | Expand perturbation keys into separate examples |
+| `--use_perturbations` | `True` | Loads perturbation into separate examples |
 | `--balance_labels` | `False` | Balance True/False label distribution |
 | `--perturb_ratio` | `None` | Ratio of perturbed to original examples; `None` disables the constraint (keep all) |
 | `--false_perturb_t_to_f_ratio` | `None` | Among False perturbed examples, fraction that are T→F flips (e.g. `0.67`); `None` disables the constraint |
-| `--equal_perturbation_methods` | `False` | Undersample so each perturbation method (numeration, range, …) contributes equally |
+| `--method_balance_mode` | `None` | Balance perturbation methods: `undersample`, `oversample`, or `none` (omit to disable) |
 | `--batch_match_claim_id` | `False` | Enable claim-aware batch grouping |
 | `--split_large_claims` | `True` | Split claims with more examples than the batch size across multiple batches (requires `--batch_match_claim_id`) |
 | `--ensure_original_in_batch` | `True` | Guarantee each batch contains at least one original example (requires `--batch_match_claim_id`) |
@@ -410,7 +410,7 @@ A machine-readable JSON file written to the model output directory at the start 
     "learning_rate": 0.0001
   },
   "data": {
-    "expand_perturbations": true,
+    "use_perturbations": true,
     "balance_labels": true,
     "perturb_ratio": null,
     "false_perturb_t_to_f_ratio": 0.67,
@@ -561,7 +561,7 @@ python -m src.llm_finetune.unsloth_inference \
     --rank 32 \
     --start_epoch 3 \
     --max_seq_length 8192 \
-    --expand_perturbations \
+    --use_perturbations \
     --output_dir predictions/numpert
 ```
 

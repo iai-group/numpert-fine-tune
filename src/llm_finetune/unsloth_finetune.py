@@ -21,6 +21,9 @@ from unsloth.chat_templates import get_chat_template
 from src.llm_finetune.config import prefix
 
 from src.llm_finetune.utils.data_loading.pipeline import load_split
+from src.llm_finetune.utils.data_loading.dataset_balancer import (
+    MethodBalanceMode,
+)
 from src.llm_finetune.utils.data_loading.perturbation_types import (
     FileLoadConfig,
     parse_file_config,
@@ -36,6 +39,35 @@ from src.llm_finetune.utils.training.training_config_export import (
     build_training_config,
     save_training_config,
 )
+
+
+def resolve_step_interval(
+    step_value: Union[int, float],
+    total_steps: Optional[int] = None,
+    step_name: str = "steps",
+) -> int:
+    """Resolve a step interval from absolute or fractional CLI input.
+
+    Fractional values in ``(0, 1]`` are multiplied by ``total_steps`` and
+    ceiled so that the result is always **at least** the intended fraction of
+    training (i.e. the interval is monotonic and never under-shoots).
+    """
+    if isinstance(step_value, float) and 0.0 < step_value <= 1.0:
+        if total_steps is None:
+            raise ValueError(
+                f"total_steps is required when {step_name} is a fraction"
+            )
+        return max(1, math.ceil(total_steps * step_value))
+
+    if isinstance(step_value, float):
+        if step_value <= 0:
+            raise ValueError(f"{step_name} must be positive, got {step_value}")
+        return int(step_value)
+
+    if step_value <= 0:
+        raise ValueError(f"{step_name} must be positive, got {step_value}")
+
+    return step_value
 
 
 class PerturbationAwareSFTTrainer(SFTTrainer):
@@ -142,17 +174,17 @@ def finetune(  # noqa: C901
     batch_size: int = 2,
     gradient_accumulation_steps: int = 1,
     max_seq_length: int = 16384,
-    expand_perturbations: bool = True,
+    use_perturbations: bool = True,
     balance_labels: bool = False,
     perturb_ratio: Optional[float] = None,
     false_perturb_t_to_f_ratio: Optional[float] = None,
-    equal_perturbation_methods: bool = False,
+    method_balance_mode: Optional[MethodBalanceMode] = None,
     batch_match_claim_id: bool = False,
-    split_large_claims: bool = True,
-    ensure_original_in_batch: bool = True,
-    ensure_perturbed_in_batch: bool = True,
+    split_large_claims: bool = False,
+    ensure_original_in_batch: bool = False,
+    ensure_perturbed_in_batch: bool = False,
     eval_steps: Union[int, float] = 500,
-    save_steps: int = 500,
+    save_steps: Optional[int] = None,
     save_gguf: bool = False,
     gguf_quantization_method: str = DEFAULT_QUANT_METHOD,
     debug: bool = False,
@@ -172,11 +204,11 @@ def finetune(  # noqa: C901
     print(f"Gradient accumulation: {gradient_accumulation_steps}")
     print(f"Effective batch size: {batch_size * gradient_accumulation_steps}")
     print(f"Max sequence length: {max_seq_length:,} tokens")
-    print(f"Expand perturbations: {expand_perturbations}")
+    print(f"Use perturbations: {use_perturbations}")
     print(f"Balance labels: {balance_labels}")
     print(f"Perturb ratio: {perturb_ratio}")
     print(f"False perturb T→F share: {false_perturb_t_to_f_ratio}")
-    print(f"Equal perturbation methods: {equal_perturbation_methods}")
+    print(f"Method balance mode: {method_balance_mode}")
     print(f"Batch match claim_id: {batch_match_claim_id}")
     if batch_match_claim_id:
         print(f"  - Split large claims: {split_large_claims}")
@@ -192,6 +224,10 @@ def finetune(  # noqa: C901
             int(eval_steps) if isinstance(eval_steps, float) else eval_steps
         )
         print(f"Eval steps: {resolved}")
+    if save_steps is None:
+        print("Save steps: follow eval_steps")
+    else:
+        print(f"Save steps: {save_steps}")
     print("=" * 80 + "\n")
 
     # Model configuration
@@ -336,24 +372,23 @@ def finetune(  # noqa: C901
         file_configs=train_file_configs,
         json_paths=train_json_paths,
         split="train",
-        expand_perturbations=expand_perturbations,
+        use_perturbations=use_perturbations,
         include_doc=True,
         balance_labels=balance_labels,
         perturb_ratio=perturb_ratio,
         false_perturb_t_to_f_ratio=false_perturb_t_to_f_ratio,
-        equal_perturbation_methods=equal_perturbation_methods,
+        method_balance_mode=method_balance_mode,
         seed=3407 + start_epoch,
     )
     val_data = load_split(
         file_configs=val_file_configs,
         json_paths=val_json_paths,
         split="validation",
-        expand_perturbations=expand_perturbations,
+        use_perturbations=use_perturbations,
         include_doc=True,
         balance_labels=False,
         perturb_ratio=None,
         false_perturb_t_to_f_ratio=None,
-        equal_perturbation_methods=False,
         seed=3407 + start_epoch,
     )
 
@@ -664,11 +699,11 @@ def finetune(  # noqa: C901
         batch_size=batch_size,
         gradient_accumulation_steps=gradient_accumulation_steps,
         max_seq_length=max_seq_length,
-        expand_perturbations=expand_perturbations,
+        use_perturbations=use_perturbations,
         balance_labels=balance_labels,
         perturb_ratio=perturb_ratio,
         false_perturb_t_to_f_ratio=false_perturb_t_to_f_ratio,
-        equal_perturbation_methods=equal_perturbation_methods,
+        method_balance_mode=method_balance_mode,
         batch_match_claim_id=batch_match_claim_id,
         split_large_claims=split_large_claims,
         ensure_original_in_batch=ensure_original_in_batch,
@@ -701,11 +736,11 @@ def finetune(  # noqa: C901
             "gradient_accumulation": gradient_accumulation_steps,
             "effective_batch_size": batch_size * gradient_accumulation_steps,
             "max_seq_length": max_seq_length,
-            "expand_perturbations": expand_perturbations,
+            "use_perturbations": use_perturbations,
             "balance_labels": balance_labels,
             "perturb_ratio": perturb_ratio,
             "false_perturb_t_to_f_ratio": false_perturb_t_to_f_ratio,
-            "equal_perturbation_methods": equal_perturbation_methods,
+            "method_balance_mode": method_balance_mode,
             "batch_match_claim_id": batch_match_claim_id,
             "split_large_claims": split_large_claims,
             "ensure_original_in_batch": ensure_original_in_batch,
@@ -717,25 +752,34 @@ def finetune(  # noqa: C901
         },
     )
 
-    # Resolve eval_steps:
-    #   - float in (0, 1]  → percentage of total training steps
-    #   - int or float >= 1 → absolute step count
+    total_steps = None
     if isinstance(eval_steps, float) and 0.0 < eval_steps <= 1.0:
         steps_per_epoch = math.ceil(
             len(train_data) / (batch_size * gradient_accumulation_steps)
         )
         total_steps = steps_per_epoch * num_train_epochs
-        resolved_eval_steps = max(1, round(total_steps * eval_steps))
+        resolved_eval_steps = resolve_step_interval(
+            eval_steps,
+            total_steps=total_steps,
+            step_name="eval_steps",
+        )
         print(
             f"Resolved eval_steps: {eval_steps * 100:.1f}% of"
             f" {total_steps} total steps → {resolved_eval_steps} steps"
         )
         eval_steps = resolved_eval_steps
-    elif isinstance(eval_steps, float):
-        if eval_steps <= 0:
-            raise ValueError(f"eval_steps must be positive, got {eval_steps}")
-        # Float >= 1: treat as absolute step count
-        eval_steps = int(eval_steps)
+    else:
+        eval_steps = resolve_step_interval(eval_steps, step_name="eval_steps")
+
+    if save_steps is None:
+        save_steps = eval_steps
+        print(f"Resolved save_steps: following eval_steps → {save_steps}")
+    else:
+        save_steps = resolve_step_interval(
+            save_steps,
+            total_steps=total_steps,
+            step_name="save_steps",
+        )
 
     training_config = SFTConfig(
         per_device_train_batch_size=batch_size,
@@ -923,10 +967,14 @@ if __name__ == "__main__":
 
     # Dataset configuration
     parser.add_argument(
-        "--expand_perturbations",
+        "--use_perturbations",
         action=argparse.BooleanOptionalAction,
         default=True,
-        help="Expand perturbations in dataset",
+        help=(
+            "Include perturbed examples in the dataset. "
+            "Pass --no-use_perturbations to train on original "
+            "(normalised) claims only."
+        ),
     )
     parser.add_argument(
         "--balance_labels",
@@ -951,11 +999,15 @@ if __name__ == "__main__":
         ),
     )
     parser.add_argument(
-        "--equal_perturbation_methods",
-        action="store_true",
+        "--method_balance_mode",
+        type=str.lower,
+        default=None,
+        choices=["none", "undersample", "oversample"],
         help=(
-            "Stratify balancing so each perturbation method "
-            "(numeration, range, …) gets an equal share of the budget"
+            "How to balance perturbation methods: "
+            "'undersample' (equal count per method), "
+            "'oversample' (upsample minority methods), "
+            "'none' or omit for no method balancing"
         ),
     )
 
@@ -967,20 +1019,17 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--split_large_claims",
-        action=argparse.BooleanOptionalAction,
-        default=True,
+        action="store_true",
         help="Split claims with many perturbations across batches",
     )
     parser.add_argument(
         "--ensure_original_in_batch",
-        action=argparse.BooleanOptionalAction,
-        default=True,
+        action="store_true",
         help="Ensure each batch has at least one original example",
     )
     parser.add_argument(
         "--ensure_perturbed_in_batch",
-        action=argparse.BooleanOptionalAction,
-        default=True,
+        action="store_true",
         help="Ensure each batch has at least one perturbed example",
     )
 
@@ -996,7 +1045,13 @@ if __name__ == "__main__":
         ),
     )
     parser.add_argument(
-        "--save_steps", type=int, default=500, help="Checkpoint save frequency"
+        "--save_steps",
+        type=int,
+        default=None,
+        help=(
+            "Checkpoint save frequency. Defaults to the resolved eval_steps "
+            "cadence unless explicitly set."
+        ),
     )
 
     # GGUF quantization
@@ -1041,11 +1096,11 @@ if __name__ == "__main__":
         batch_size=args.batch_size,
         gradient_accumulation_steps=args.grad_accum,
         max_seq_length=args.max_seq_length,
-        expand_perturbations=args.expand_perturbations,
+        use_perturbations=args.use_perturbations,
         balance_labels=args.balance_labels,
         perturb_ratio=args.perturb_ratio,
         false_perturb_t_to_f_ratio=args.false_perturb_t_to_f_ratio,
-        equal_perturbation_methods=args.equal_perturbation_methods,
+        method_balance_mode=args.method_balance_mode,
         batch_match_claim_id=args.batch_match_claim_id,
         split_large_claims=args.split_large_claims,
         ensure_original_in_batch=args.ensure_original_in_batch,

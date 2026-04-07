@@ -504,11 +504,11 @@ class TestInference:
                 test_json_paths=["test.json"],
                 model_name="test",
                 max_seq_length=512,
-                expand_perturbations=False,
+                use_perturbations=False,
                 output_dir=str(tmp_path / "output"),
             )
             load_call = m["refs"]["load_split"].call_args
-            assert load_call[1]["expand_perturbations"] is False
+            assert load_call[1]["use_perturbations"] is False
 
 
 class TestInferenceModelResolution:
@@ -629,8 +629,7 @@ class TestUnperturbedClaimsInference:
     """Test --inference_unperturbed_claims flag behaviour in inference()."""
 
     def test_unperturbed_forces_expand_false(self, tmp_path):
-        """inference_unperturbed_claims=True forces
-        expand_perturbations=False."""
+        """inference_unperturbed_claims=True forces use_perturbations=False."""
         from src.llm_finetune.unsloth_inference import inference
 
         with _make_mock_inference_context(tmp_path) as m:
@@ -642,7 +641,7 @@ class TestUnperturbedClaimsInference:
                 inference_unperturbed_claims=True,
             )
             load_call = m["refs"]["load_split"].call_args
-            assert load_call[1]["expand_perturbations"] is False
+            assert load_call[1]["use_perturbations"] is False
 
     def test_unperturbed_output_files_prefixed(self, tmp_path):
         """inference_unperturbed_claims=True produces unperturbed_ prefixed

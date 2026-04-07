@@ -202,7 +202,7 @@ class TestBuildInferenceConfig:
             test_dataset=test_ds,
             rank=64,
             start_epoch=3,
-            expand_perturbations=True,
+            use_perturbations=True,
             max_seq_length=8192,
             timestamp=FIXED_TIMESTAMP,
         )
@@ -223,7 +223,7 @@ class TestBuildInferenceConfig:
             "perturb_type2",
         ]
         assert d["test_files"][1]["perturb_types"] is None
-        assert d["expand_perturbations"] is True
+        assert d["use_perturbations"] is True
         assert d["test_stats"]["size"] == 15
 
     def test_includes_training_provenance(self, training_config_dir):

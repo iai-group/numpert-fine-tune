@@ -10,7 +10,7 @@ def analyze_sequence_lengths(
     json_paths: List[str],
     tokenizer,
     split: str = "train",
-    expand_perturbations: bool = True,
+    use_perturbations: bool = True,
     max_examples: Optional[int] = None,
 ) -> Dict:
     """Analyze the distribution of sequence lengths in your dataset.
@@ -25,7 +25,7 @@ def analyze_sequence_lengths(
     dataset = load_split(
         json_paths=json_paths,
         split=split,
-        expand_perturbations=expand_perturbations,
+        use_perturbations=use_perturbations,
         include_doc=True,
     )
 
@@ -225,7 +225,7 @@ if __name__ == "__main__":
         ],
         tokenizer=tokenizer,
         split="train",
-        expand_perturbations=True,
+        use_perturbations=True,
         max_examples=None,  # Analyze subset for speed, or None for all
     )
 
@@ -234,5 +234,5 @@ if __name__ == "__main__":
     #     json_paths=["data/val.json"],
     #     tokenizer=tokenizer,
     #     split="validation",
-    #     expand_perturbations=True
+    #     use_perturbations=True
     # )
