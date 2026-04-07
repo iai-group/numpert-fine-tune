@@ -89,9 +89,10 @@ show_experiment() {
     echo "  Max Seq Length:   $MAX_SEQ_LENGTH tokens"
     echo ""
     echo "Dataset Balancing:"
+    echo "  Method:           $METHOD_BALANCE_MODE"
     echo "  Balance Labels:   $BALANCE_LABELS"
     echo "  Perturb Ratio:    $PERTURB_RATIO"
-    echo "  False T→F Ratio:  $FALSE_T_TO_F_RATIO"
+    echo "  False T→F Ratio:  $FALSE_PERTURB_T_TO_F_RATIO"
     echo ""
     echo "Batch Matching:"
     echo "  Match Claim ID:   $BATCH_MATCH_CLAIM_ID"
@@ -103,7 +104,7 @@ show_experiment() {
     echo ""
     echo "Eval & Checkpointing:"
     echo "  Eval Steps:       $EVAL_STEPS"
-    echo "  Save Steps:       $SAVE_STEPS"
+    echo "  Save Steps:       After every eval"
     echo ""
     echo "Training Data:"
     for entry in "${TRAIN_JSON[@]}"; do
@@ -182,10 +183,10 @@ run_experiment() {
         --grad_accum $GRAD_ACCUM \
         --max_seq_length $MAX_SEQ_LENGTH \
         --expand_perturbations \
+        --method_balance_mode $METHOD_BALANCE_MODE \
         --perturb_ratio $PERTURB_RATIO \
         --false_perturb_t_to_f_ratio $FALSE_T_TO_F_RATIO \
         --eval_steps $EVAL_STEPS \
-        --save_steps $SAVE_STEPS \
         --perturb_type_names ${PERTURB_TYPE_NAMES}"
 
     # Add optional flags
