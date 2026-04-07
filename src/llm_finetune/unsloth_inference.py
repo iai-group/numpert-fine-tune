@@ -134,7 +134,7 @@ def inference(  # noqa: C901
     print(f"Model: {model_name}")
     print(f"Model from Epoch: {start_epoch}")
     print(f"Max sequence length: {max_seq_length:,} tokens")
-    print(f"Expand perturbations: {use_perturbations}")
+    print(f"Using perturbations: {use_perturbations}")
     if inference_unperturbed_claims:
         print(
             "Unperturbed mode: using only normalized_claim (no perturbations)"

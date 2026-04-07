@@ -231,6 +231,101 @@ class TestGetModelNameArg:
 
 
 # ---------------------------------------------------------------------------
+# Tests for resolve_step_interval
+# ---------------------------------------------------------------------------
+
+
+class TestResolveStepInterval:
+    """Tests for fractional, absolute-int, and edge-case inputs."""
+
+    @pytest.fixture(autouse=True)
+    def _import(self):
+        from src.llm_finetune.unsloth_finetune import resolve_step_interval
+
+        self.fn = resolve_step_interval
+
+    # --- fractional inputs (0 < value <= 1.0) ---
+
+    def test_fraction_returns_rounded_steps(self):
+        """Fraction is multiplied by total_steps and rounded to nearest int."""
+        assert self.fn(0.25, total_steps=100) == 25
+
+    def test_fraction_rounds_to_nearest(self):
+        """Rounding follows standard half-up convention (0.33 * 100 = 33)."""
+        assert self.fn(0.33, total_steps=100) == 33
+
+    def test_fraction_minimum_one(self):
+        """Result is clamped to at least 1 when fraction * total_steps < 1."""
+        assert self.fn(0.01, total_steps=5) == 1
+
+    def test_fraction_exactly_one(self):
+        """A value of 1.0 is treated as a fraction equal to one full epoch."""
+        assert self.fn(1.0, total_steps=200) == 200
+
+    def test_fraction_requires_total_steps(self):
+        """Passing total_steps=None with a fraction raises ValueError."""
+        with pytest.raises(ValueError, match="total_steps is required"):
+            self.fn(0.25, total_steps=None)
+
+    def test_fraction_requires_total_steps_default(self):
+        """Omitting total_steps (defaults to None)"""
+        with pytest.raises(ValueError):
+            self.fn(0.5)
+
+    # --- float >= 1 (treated as absolute, cast to int) ---
+
+    def test_float_above_one_cast_to_int(self):
+        """A float >= 1 is treated as an absolute step count and cast to int."""
+        assert self.fn(100.0) == 100
+
+    def test_float_above_one_truncates(self):
+        """Fractional part is discarded when casting a float >= 1 to int."""
+        assert self.fn(99.9) == 99
+
+    def test_float_zero_raises(self):
+        """A float value of 0.0 raises ValueError (non-positive)."""
+        with pytest.raises(ValueError, match="must be positive"):
+            self.fn(0.0)
+
+    def test_float_negative_raises(self):
+        """A negative float raises ValueError."""
+        with pytest.raises(ValueError, match="must be positive"):
+            self.fn(-5.0)
+
+    # --- integer inputs ---
+
+    def test_integer_passthrough(self):
+        """A positive integer is returned unchanged."""
+        assert self.fn(500) == 500
+
+    def test_integer_one(self):
+        """The minimum valid integer value (1) is returned unchanged."""
+        assert self.fn(1) == 1
+
+    def test_integer_zero_raises(self):
+        """Zero raises ValueError (step count must be positive)."""
+        with pytest.raises(ValueError, match="must be positive"):
+            self.fn(0)
+
+    def test_integer_negative_raises(self):
+        """A negative integer raises ValueError."""
+        with pytest.raises(ValueError, match="must be positive"):
+            self.fn(-1)
+
+    # --- step_name appears in error messages ---
+
+    def test_error_message_includes_step_name(self):
+        """The step_name parameter is included in the ValueError message."""
+        with pytest.raises(ValueError, match="eval_steps"):
+            self.fn(0.5, total_steps=None, step_name="eval_steps")
+
+    def test_error_message_includes_value(self):
+        """The offending value is included in the ValueError message."""
+        with pytest.raises(ValueError, match="-3"):
+            self.fn(-3, step_name="save_steps")
+
+
+# ---------------------------------------------------------------------------
 # Tests for ValidationCallback
 # ---------------------------------------------------------------------------
 
