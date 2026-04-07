@@ -362,7 +362,7 @@ python -m src.llm_finetune.unsloth_finetune \
 | `--batch_size` | 2 | Per-device batch size |
 | `--grad_accum` | 1 | Gradient accumulation steps |
 | `--max_seq_length` | 16384 | Maximum sequence length in tokens |
-| `--use_perturbations` | `True` | Expand perturbation keys into separate examples |
+| `--use_perturbations` | `True` | Loads perturbation into separate examples |
 | `--balance_labels` | `False` | Balance True/False label distribution |
 | `--perturb_ratio` | `None` | Ratio of perturbed to original examples; `None` disables the constraint (keep all) |
 | `--false_perturb_t_to_f_ratio` | `None` | Among False perturbed examples, fraction that are T→F flips (e.g. `0.67`); `None` disables the constraint |

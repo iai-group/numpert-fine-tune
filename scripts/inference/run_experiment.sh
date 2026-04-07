@@ -83,7 +83,7 @@ show_experiment() {
     echo "  Max Seq Length:   $MAX_SEQ_LENGTH tokens"
     echo ""
     echo "Inference Options:"
-    echo "  Expand Perturb:   $USE_PERTURBATIONS"
+    echo "  Use perturbs:   $USE_PERTURBATIONS"
     if [ -n "$OUTPUT_DIR" ]; then
         echo "  Output Dir:       $OUTPUT_DIR"
     else
