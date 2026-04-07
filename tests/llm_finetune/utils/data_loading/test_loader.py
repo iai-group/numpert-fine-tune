@@ -223,7 +223,7 @@ class TestLoadSplitDefaults:
         assert kwargs["balance_labels"] is False
         assert kwargs["perturb_ratio"] is None
 
-    def test_expand_perturbations_false_sends_empty_allowed_types(self):
+    def test_use_perturbations_false_sends_empty_allowed_types(self):
         samples = [_make_balanced_sample("c1", is_perturbed=False)]
         raw = [("t.json", [{"claim_id": "c1", "doc": "d"}])]
         rows = [
@@ -241,7 +241,7 @@ class TestLoadSplitDefaults:
         ) as mock_bal, patch(
             f"{_PIPELINE}.convert_to_conversations", return_value=rows
         ):
-            load_split(json_paths=["t.json"], expand_perturbations=False)
+            load_split(json_paths=["t.json"], use_perturbations=False)
         allowed = mock_bal.call_args[1]["allowed_types_by_file"]
         # Empty set per file means no perturbed keys pass the filter
         assert allowed == {"t.json": set()}
@@ -358,7 +358,7 @@ class TestLoadSplitBalanced:
                 balance_labels=True,
                 perturb_ratio=0.5,
                 false_perturb_t_to_f_ratio=0.3,
-                equal_perturbation_methods=True,
+                method_balance_mode="undersample",
                 seed=42,
             )
         mock_bal.assert_called_once_with(

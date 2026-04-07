@@ -83,7 +83,7 @@ show_experiment() {
     echo "  Max Seq Length:   $MAX_SEQ_LENGTH tokens"
     echo ""
     echo "Inference Options:"
-    echo "  Expand Perturb:   $EXPAND_PERTURBATIONS"
+    echo "  Expand Perturb:   $USE_PERTURBATIONS"
     if [ -n "$OUTPUT_DIR" ]; then
         echo "  Output Dir:       $OUTPUT_DIR"
     else
@@ -151,10 +151,10 @@ run_experiment() {
     CMD="$CMD --start_epoch $START_EPOCH"
     CMD="$CMD --max_seq_length $MAX_SEQ_LENGTH"
 
-    if [ "$EXPAND_PERTURBATIONS" = true ]; then
-        CMD="$CMD --expand_perturbations"
+    if [[ "${USE_PERTURBATIONS,,}" == "true" ]]; then
+        CMD="$CMD --use_perturbations"
     else
-        CMD="$CMD --no-expand_perturbations"
+        CMD="$CMD --no-use_perturbations"
     fi
 
     if [ -n "$OUTPUT_DIR" ]; then

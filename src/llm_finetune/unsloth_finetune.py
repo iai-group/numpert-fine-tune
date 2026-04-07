@@ -21,6 +21,9 @@ from unsloth.chat_templates import get_chat_template
 from src.llm_finetune.config import prefix
 
 from src.llm_finetune.utils.data_loading.pipeline import load_split
+from src.llm_finetune.utils.data_loading.dataset_balancer import (
+    MethodBalanceMode,
+)
 from src.llm_finetune.utils.data_loading.perturbation_types import (
     FileLoadConfig,
     parse_file_config,
@@ -166,11 +169,11 @@ def finetune(  # noqa: C901
     batch_size: int = 2,
     gradient_accumulation_steps: int = 1,
     max_seq_length: int = 16384,
-    expand_perturbations: bool = True,
+    use_perturbations: bool = True,
     balance_labels: bool = False,
     perturb_ratio: Optional[float] = None,
     false_perturb_t_to_f_ratio: Optional[float] = None,
-    equal_perturbation_methods: bool = False,
+    method_balance_mode: Optional[MethodBalanceMode] = None,
     batch_match_claim_id: bool = False,
     split_large_claims: bool = True,
     ensure_original_in_batch: bool = True,
@@ -196,11 +199,11 @@ def finetune(  # noqa: C901
     print(f"Gradient accumulation: {gradient_accumulation_steps}")
     print(f"Effective batch size: {batch_size * gradient_accumulation_steps}")
     print(f"Max sequence length: {max_seq_length:,} tokens")
-    print(f"Expand perturbations: {expand_perturbations}")
+    print(f"Use perturbations: {use_perturbations}")
     print(f"Balance labels: {balance_labels}")
     print(f"Perturb ratio: {perturb_ratio}")
     print(f"False perturb T→F share: {false_perturb_t_to_f_ratio}")
-    print(f"Equal perturbation methods: {equal_perturbation_methods}")
+    print(f"Method balance mode: {method_balance_mode}")
     print(f"Batch match claim_id: {batch_match_claim_id}")
     if batch_match_claim_id:
         print(f"  - Split large claims: {split_large_claims}")
@@ -364,24 +367,23 @@ def finetune(  # noqa: C901
         file_configs=train_file_configs,
         json_paths=train_json_paths,
         split="train",
-        expand_perturbations=expand_perturbations,
+        use_perturbations=use_perturbations,
         include_doc=True,
         balance_labels=balance_labels,
         perturb_ratio=perturb_ratio,
         false_perturb_t_to_f_ratio=false_perturb_t_to_f_ratio,
-        equal_perturbation_methods=equal_perturbation_methods,
+        method_balance_mode=method_balance_mode,
         seed=3407 + start_epoch,
     )
     val_data = load_split(
         file_configs=val_file_configs,
         json_paths=val_json_paths,
         split="validation",
-        expand_perturbations=expand_perturbations,
+        use_perturbations=use_perturbations,
         include_doc=True,
         balance_labels=False,
         perturb_ratio=None,
         false_perturb_t_to_f_ratio=None,
-        equal_perturbation_methods=False,
         seed=3407 + start_epoch,
     )
 
@@ -692,11 +694,11 @@ def finetune(  # noqa: C901
         batch_size=batch_size,
         gradient_accumulation_steps=gradient_accumulation_steps,
         max_seq_length=max_seq_length,
-        expand_perturbations=expand_perturbations,
+        use_perturbations=use_perturbations,
         balance_labels=balance_labels,
         perturb_ratio=perturb_ratio,
         false_perturb_t_to_f_ratio=false_perturb_t_to_f_ratio,
-        equal_perturbation_methods=equal_perturbation_methods,
+        method_balance_mode=method_balance_mode,
         batch_match_claim_id=batch_match_claim_id,
         split_large_claims=split_large_claims,
         ensure_original_in_batch=ensure_original_in_batch,
@@ -729,11 +731,11 @@ def finetune(  # noqa: C901
             "gradient_accumulation": gradient_accumulation_steps,
             "effective_batch_size": batch_size * gradient_accumulation_steps,
             "max_seq_length": max_seq_length,
-            "expand_perturbations": expand_perturbations,
+            "use_perturbations": use_perturbations,
             "balance_labels": balance_labels,
             "perturb_ratio": perturb_ratio,
             "false_perturb_t_to_f_ratio": false_perturb_t_to_f_ratio,
-            "equal_perturbation_methods": equal_perturbation_methods,
+            "method_balance_mode": method_balance_mode,
             "batch_match_claim_id": batch_match_claim_id,
             "split_large_claims": split_large_claims,
             "ensure_original_in_batch": ensure_original_in_batch,
@@ -960,10 +962,14 @@ if __name__ == "__main__":
 
     # Dataset configuration
     parser.add_argument(
-        "--expand_perturbations",
+        "--use_perturbations",
         action=argparse.BooleanOptionalAction,
         default=True,
-        help="Expand perturbations in dataset",
+        help=(
+            "Include perturbed examples in the dataset. "
+            "Pass --no-use_perturbations to train on original "
+            "(normalised) claims only."
+        ),
     )
     parser.add_argument(
         "--balance_labels",
@@ -988,11 +994,15 @@ if __name__ == "__main__":
         ),
     )
     parser.add_argument(
-        "--equal_perturbation_methods",
-        action="store_true",
+        "--method_balance_mode",
+        type=str.lower,
+        default=None,
+        choices=["none", "undersample", "oversample"],
         help=(
-            "Stratify balancing so each perturbation method "
-            "(numeration, range, …) gets an equal share of the budget"
+            "How to balance perturbation methods: "
+            "'undersample' (equal count per method), "
+            "'oversample' (upsample minority methods), "
+            "'none' or omit for no method balancing"
         ),
     )
 
@@ -1084,11 +1094,11 @@ if __name__ == "__main__":
         batch_size=args.batch_size,
         gradient_accumulation_steps=args.grad_accum,
         max_seq_length=args.max_seq_length,
-        expand_perturbations=args.expand_perturbations,
+        use_perturbations=args.use_perturbations,
         balance_labels=args.balance_labels,
         perturb_ratio=args.perturb_ratio,
         false_perturb_t_to_f_ratio=args.false_perturb_t_to_f_ratio,
-        equal_perturbation_methods=args.equal_perturbation_methods,
+        method_balance_mode=args.method_balance_mode,
         batch_match_claim_id=args.batch_match_claim_id,
         split_large_claims=args.split_large_claims,
         ensure_original_in_batch=args.ensure_original_in_batch,

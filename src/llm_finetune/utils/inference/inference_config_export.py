@@ -78,7 +78,7 @@ def build_inference_config(
     test_dataset=None,
     rank: int = 32,
     start_epoch: int = 0,
-    expand_perturbations: bool = True,
+    use_perturbations: bool = True,
     max_seq_length: int = 16384,
     timestamp: Optional[datetime] = None,
 ) -> Dict[str, Any]:
@@ -93,7 +93,7 @@ def build_inference_config(
             ``None`` omits dataset statistics.
         rank: LoRA rank.
         start_epoch: Epoch of the trained model checkpoint.
-        expand_perturbations: Whether perturbation expansion is enabled.
+        use_perturbations: Whether perturbation expansion is enabled.
         max_seq_length: Maximum sequence length in tokens.
         timestamp: Run timestamp (defaults to ``datetime.now()``).
 
@@ -116,7 +116,7 @@ def build_inference_config(
             "max_seq_length": max_seq_length,
         },
         "data": {
-            "expand_perturbations": expand_perturbations,
+            "use_perturbations": use_perturbations,
             "test_files": (
                 [_file_config_to_dict(c) for c in test_file_configs]
                 if test_file_configs

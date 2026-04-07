@@ -105,7 +105,7 @@ def inference(  # noqa: C901
     model_name: str = "unsloth/Qwen3-8B",
     rank: int = 32,
     start_epoch: int = 0,
-    expand_perturbations: bool = True,
+    use_perturbations: bool = True,
     max_seq_length: int = 16384,
     output_dir: Optional[str] = None,
     inference_unperturbed_claims: bool = False,
@@ -123,7 +123,7 @@ def inference(  # noqa: C901
         output_dir = f"{predictions_dir}/{run_name}"
 
     if inference_unperturbed_claims:
-        expand_perturbations = False
+        use_perturbations = False
 
     print("\n" + "=" * 80)
     print(
@@ -134,7 +134,7 @@ def inference(  # noqa: C901
     print(f"Model: {model_name}")
     print(f"Model from Epoch: {start_epoch}")
     print(f"Max sequence length: {max_seq_length:,} tokens")
-    print(f"Expand perturbations: {expand_perturbations}")
+    print(f"Expand perturbations: {use_perturbations}")
     if inference_unperturbed_claims:
         print(
             "Unperturbed mode: using only normalized_claim (no perturbations)"
@@ -203,7 +203,7 @@ def inference(  # noqa: C901
         json_paths=test_json_paths,
         file_configs=test_file_configs,
         split="test",
-        expand_perturbations=expand_perturbations,
+        use_perturbations=use_perturbations,
         include_doc=True,
     )
 
@@ -271,7 +271,7 @@ def inference(  # noqa: C901
         test_dataset=test_data,
         rank=rank,
         start_epoch=start_epoch,
-        expand_perturbations=expand_perturbations,
+        use_perturbations=use_perturbations,
         max_seq_length=max_seq_length,
         timestamp=time_start,
     )
@@ -459,10 +459,14 @@ if __name__ == "__main__":
 
     # Dataset configuration
     parser.add_argument(
-        "--expand_perturbations",
+        "--use_perturbations",
         action=argparse.BooleanOptionalAction,
         default=True,
-        help="Expand perturbations in dataset",
+        help=(
+            "Include perturbed examples in the dataset. "
+            "Pass --no-use_perturbations to run inference on original "
+            "(normalised) claims only."
+        ),
     )
     parser.add_argument(
         "--inference_unperturbed_claims",
@@ -492,7 +496,7 @@ if __name__ == "__main__":
         model_name=args.model,
         rank=args.rank,
         start_epoch=args.start_epoch,
-        expand_perturbations=args.expand_perturbations,
+        use_perturbations=args.use_perturbations,
         max_seq_length=args.max_seq_length,
         output_dir=args.output_dir,
         inference_unperturbed_claims=args.inference_unperturbed_claims,

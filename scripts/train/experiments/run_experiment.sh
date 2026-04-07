@@ -182,14 +182,19 @@ run_experiment() {
         --batch_size $BATCH_SIZE \
         --grad_accum $GRAD_ACCUM \
         --max_seq_length $MAX_SEQ_LENGTH \
-        --expand_perturbations \
         --method_balance_mode $METHOD_BALANCE_MODE \
         --perturb_ratio $PERTURB_RATIO \
-        --false_perturb_t_to_f_ratio $FALSE_T_TO_F_RATIO \
+        --false_perturb_t_to_f_ratio $FALSE_PERTURB_T_TO_F_RATIO \
         --eval_steps $EVAL_STEPS \
         --perturb_type_names ${PERTURB_TYPE_NAMES}"
 
     # Add optional flags
+    if [[ "${USE_PERTURBATIONS,,}" == "true" ]]; then
+        CMD="$CMD --use_perturbations"
+    else
+        CMD="$CMD --no-use_perturbations"
+    fi
+
     if [ "$BALANCE_LABELS" = true ]; then
         CMD="$CMD --balance_labels"
     fi

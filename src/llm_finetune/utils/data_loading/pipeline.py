@@ -27,6 +27,7 @@ from src.llm_finetune.utils.data_loading.conversation import (
     convert_to_conversations,
 )
 from src.llm_finetune.utils.data_loading.dataset_balancer import (
+    MethodBalanceMode,
     build_balanced_dataset,
     load_files as _load_raw_json_files,
 )
@@ -133,13 +134,13 @@ def load_split(
     file_configs: Optional[List[FileLoadConfig]] = None,
     json_paths: Optional[Union[str, List[str]]] = None,
     split: str = "train",
-    expand_perturbations: bool = True,
+    use_perturbations: bool = True,
     include_doc: bool = True,
     # Balancing options
     balance_labels: bool = False,
     perturb_ratio: Optional[float] = None,
     false_perturb_t_to_f_ratio: Optional[float] = None,
-    equal_perturbation_methods: bool = False,
+    method_balance_mode: MethodBalanceMode | None = None,
     seed: int = 3407,
 ) -> Dataset:
     """Load a dataset split through a single unified pipeline.
@@ -162,17 +163,16 @@ def load_split(
             ``file_configs`` given).
         split: Dataset split label — ``"train"``, ``"validation"``, or
             ``"test"``.
-        expand_perturbations: Whether to expand perturbation keys into
-            separate examples. When ``False``, only original (normalised)
-            claims are loaded.
+        use_perturbations: Whether to include perturbed examples.
+            When ``False``, only original (normalised) claims are loaded.
         include_doc: Whether to include evidence documents in prompts.
         balance_labels: Enforce equal True/False label counts.
         perturb_ratio: Target ratio of perturbed to original samples.
             ``None`` (the default) keeps all perturbations.
         false_perturb_t_to_f_ratio: Desired share of False-producing
             perturbations that should be T→F; ``None`` disables constraint.
-        equal_perturbation_methods: Undersample so each perturbation method
-            contributes equally.
+        method_balance_mode: How to balance perturbation methods
+            (``"undersample"``, ``"oversample"``, ``"none"``, or ``None``).
         seed: Random seed for deterministic output.
 
     Returns:
@@ -191,9 +191,9 @@ def load_split(
     # Build per-file type filtering from file_configs
     allowed_types = _build_allowed_types_by_file(file_configs)
 
-    # When expand_perturbations=False we restrict to no perturbation types,
+    # When use_perturbations=False we restrict to no perturbation types,
     # so the balancer only produces originals.
-    if not expand_perturbations:
+    if not use_perturbations:
         # Empty set per file → no perturbed keys will pass the filter
         allowed_types = {Path(p).name: set() for p in file_paths}
 
@@ -205,9 +205,7 @@ def load_split(
         balance_labels=balance_labels,
         perturb_ratio=perturb_ratio,
         false_perturb_t_to_f_ratio=false_perturb_t_to_f_ratio,
-        method_balance_mode=(
-            "undersample" if equal_perturbation_methods else None
-        ),
+        method_balance_mode=method_balance_mode,
         seed=seed,
         allowed_types_by_file=allowed_types,
     )

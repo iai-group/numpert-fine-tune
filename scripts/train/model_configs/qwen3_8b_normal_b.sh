@@ -187,7 +187,7 @@ CMD="python -m src.llm_finetune.unsloth_finetune \
     --batch_size $BATCH_SIZE \
     --grad_accum $GRAD_ACCUM \
     --max_seq_length $MAX_SEQ_LENGTH \
-    --expand_perturbations \
+    --use_perturbations \
     --perturb_ratio $PERTURB_RATIO \
     --false_perturb_t_to_f_ratio $FALSE_T_TO_F_RATIO \
     --eval_steps $EVAL_STEPS \

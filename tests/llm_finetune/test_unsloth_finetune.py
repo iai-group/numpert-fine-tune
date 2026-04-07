@@ -673,7 +673,10 @@ class TestFinetune:
             assert val_call_kwargs["balance_labels"] is False
             assert val_call_kwargs["perturb_ratio"] is None
             assert val_call_kwargs["false_perturb_t_to_f_ratio"] is None
-            assert val_call_kwargs["equal_perturbation_methods"] is False
+            assert (
+                "method_balance_mode" not in val_call_kwargs
+                or val_call_kwargs["method_balance_mode"] is None
+            )
 
     def test_balancer_not_called_when_disabled(self, tmp_path):
         """balance_labels=False is forwarded to load_split."""

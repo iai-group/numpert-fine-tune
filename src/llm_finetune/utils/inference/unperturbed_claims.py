@@ -15,7 +15,7 @@ def deduplicate_unperturbed_claims(dataset: Dataset) -> Dataset:
 
     Keeps the first occurrence of each ``claim_id`` and discards
     subsequent duplicates.  This is intended to be called on a dataset
-    that was loaded with ``expand_perturbations_flag=False`` (i.e. only
+    that was loaded with ``use_perturbations_flag=False`` (i.e. only
     ``original_normalized`` entries).
 
     Args:
