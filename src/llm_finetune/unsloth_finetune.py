@@ -46,13 +46,18 @@ def resolve_step_interval(
     total_steps: Optional[int] = None,
     step_name: str = "steps",
 ) -> int:
-    """Resolve a step interval from absolute or fractional CLI input."""
+    """Resolve a step interval from absolute or fractional CLI input.
+
+    Fractional values in ``(0, 1]`` are multiplied by ``total_steps`` and
+    ceiled so that the result is always **at least** the intended fraction of
+    training (i.e. the interval is monotonic and never under-shoots).
+    """
     if isinstance(step_value, float) and 0.0 < step_value <= 1.0:
         if total_steps is None:
             raise ValueError(
                 f"total_steps is required when {step_name} is a fraction"
             )
-        return max(1, round(total_steps * step_value))
+        return max(1, math.ceil(total_steps * step_value))
 
     if isinstance(step_value, float):
         if step_value <= 0:

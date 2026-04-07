@@ -247,12 +247,16 @@ class TestResolveStepInterval:
     # --- fractional inputs (0 < value <= 1.0) ---
 
     def test_fraction_returns_rounded_steps(self):
-        """Fraction is multiplied by total_steps and rounded to nearest int."""
+        """Fraction is multiplied by total_steps and ceiled to nearest int."""
         assert self.fn(0.25, total_steps=100) == 25
 
     def test_fraction_rounds_to_nearest(self):
-        """Rounding follows standard half-up convention (0.33 * 100 = 33)."""
+        """Ceiling is used, so 0.33 * 100 = 33.0 → 33."""
         assert self.fn(0.33, total_steps=100) == 33
+
+    def test_fraction_ceiling_on_tie(self):
+        """Ties are ceiled rather than rounded-to-even (0.5 * 5 = 2.5 → 3)."""
+        assert self.fn(0.5, total_steps=5) == 3
 
     def test_fraction_minimum_one(self):
         """Result is clamped to at least 1 when fraction * total_steps < 1."""
