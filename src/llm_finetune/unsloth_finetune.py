@@ -38,6 +38,30 @@ from src.llm_finetune.utils.training.training_config_export import (
 )
 
 
+def resolve_step_interval(
+    step_value: Union[int, float],
+    total_steps: Optional[int] = None,
+    step_name: str = "steps",
+) -> int:
+    """Resolve a step interval from absolute or fractional CLI input."""
+    if isinstance(step_value, float) and 0.0 < step_value <= 1.0:
+        if total_steps is None:
+            raise ValueError(
+                f"total_steps is required when {step_name} is a fraction"
+            )
+        return max(1, round(total_steps * step_value))
+
+    if isinstance(step_value, float):
+        if step_value <= 0:
+            raise ValueError(f"{step_name} must be positive, got {step_value}")
+        return int(step_value)
+
+    if step_value <= 0:
+        raise ValueError(f"{step_name} must be positive, got {step_value}")
+
+    return step_value
+
+
 class PerturbationAwareSFTTrainer(SFTTrainer):
     """Custom SFTTrainer that uses EnhancedPerturbationBatchSampler.
 
@@ -152,7 +176,7 @@ def finetune(  # noqa: C901
     ensure_original_in_batch: bool = True,
     ensure_perturbed_in_batch: bool = True,
     eval_steps: Union[int, float] = 500,
-    save_steps: int = 500,
+    save_steps: Optional[int] = None,
     save_gguf: bool = False,
     gguf_quantization_method: str = DEFAULT_QUANT_METHOD,
     debug: bool = False,
@@ -192,6 +216,10 @@ def finetune(  # noqa: C901
             int(eval_steps) if isinstance(eval_steps, float) else eval_steps
         )
         print(f"Eval steps: {resolved}")
+    if save_steps is None:
+        print("Save steps: follow eval_steps")
+    else:
+        print(f"Save steps: {save_steps}")
     print("=" * 80 + "\n")
 
     # Model configuration
@@ -717,25 +745,34 @@ def finetune(  # noqa: C901
         },
     )
 
-    # Resolve eval_steps:
-    #   - float in (0, 1]  → percentage of total training steps
-    #   - int or float >= 1 → absolute step count
+    total_steps = None
     if isinstance(eval_steps, float) and 0.0 < eval_steps <= 1.0:
         steps_per_epoch = math.ceil(
             len(train_data) / (batch_size * gradient_accumulation_steps)
         )
         total_steps = steps_per_epoch * num_train_epochs
-        resolved_eval_steps = max(1, round(total_steps * eval_steps))
+        resolved_eval_steps = resolve_step_interval(
+            eval_steps,
+            total_steps=total_steps,
+            step_name="eval_steps",
+        )
         print(
             f"Resolved eval_steps: {eval_steps * 100:.1f}% of"
             f" {total_steps} total steps → {resolved_eval_steps} steps"
         )
         eval_steps = resolved_eval_steps
-    elif isinstance(eval_steps, float):
-        if eval_steps <= 0:
-            raise ValueError(f"eval_steps must be positive, got {eval_steps}")
-        # Float >= 1: treat as absolute step count
-        eval_steps = int(eval_steps)
+    else:
+        eval_steps = resolve_step_interval(eval_steps, step_name="eval_steps")
+
+    if save_steps is None:
+        save_steps = eval_steps
+        print(f"Resolved save_steps: following eval_steps → {save_steps}")
+    else:
+        save_steps = resolve_step_interval(
+            save_steps,
+            total_steps=total_steps,
+            step_name="save_steps",
+        )
 
     training_config = SFTConfig(
         per_device_train_batch_size=batch_size,
@@ -996,7 +1033,13 @@ if __name__ == "__main__":
         ),
     )
     parser.add_argument(
-        "--save_steps", type=int, default=500, help="Checkpoint save frequency"
+        "--save_steps",
+        type=int,
+        default=None,
+        help=(
+            "Checkpoint save frequency. Defaults to the resolved eval_steps "
+            "cadence unless explicitly set."
+        ),
     )
 
     # GGUF quantization

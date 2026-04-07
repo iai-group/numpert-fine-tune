@@ -263,6 +263,18 @@ class TestLoadSplit:
         assert all(
             p == "original_normalized" for p in dataset["perturbation_type"]
         )
+        example = dataset[0]
+        user_message = example["conversations"][1]["content"]
+
+        assert (
+            "Claim: The government distributed 35,000 LED bulbs."
+            in user_message
+        )
+        assert (
+            "Evidence: Official report shows distribution of 35,000 LED "
+            "bulbs in 2023." in user_message
+        )
+        assert "thirty-five thousand LED bulbs" not in user_message
 
     def test_load_multiple_files(self, temp_json_files):
         dataset = load_split(

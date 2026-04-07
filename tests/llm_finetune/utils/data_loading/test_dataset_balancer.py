@@ -638,7 +638,6 @@ class TestApplyBalancing:
             balance_labels=True,
             perturb_ratio=1.0,
             false_perturb_t_to_f_ratio=None,
-            equal_method_size=False,
             method_balance_mode=None,
             rng=rng,
         )
@@ -663,7 +662,6 @@ class TestApplyBalancing:
             balance_labels=False,
             perturb_ratio=1.0,
             false_perturb_t_to_f_ratio=None,
-            equal_method_size=False,
             method_balance_mode=None,
             rng=rng,
         )
@@ -696,7 +694,6 @@ class TestApplyBalancing:
             balance_labels=False,
             perturb_ratio=1.0,
             false_perturb_t_to_f_ratio=None,
-            equal_method_size=False,
             method_balance_mode=None,
             rng=rng,
         )
@@ -859,8 +856,7 @@ class TestApplyBalancing:
             balance_labels=False,
             perturb_ratio=100.0,  # high ratio, won't limit
             false_perturb_t_to_f_ratio=None,
-            equal_method_size=True,
-            method_balance_mode=None,
+            method_balance_mode="undersample",
             rng=rng,
         )
         method_counts = Counter(s.perturbation_method for s in result)
@@ -910,7 +906,6 @@ class TestApplyBalancing:
             balance_labels=False,
             perturb_ratio=100.0,
             false_perturb_t_to_f_ratio=None,
-            equal_method_size=False,
             method_balance_mode="oversample",
             rng=rng,
         )
@@ -971,7 +966,6 @@ class TestApplyBalancing:
             balance_labels=False,
             perturb_ratio=100.0,
             false_perturb_t_to_f_ratio=None,
-            equal_method_size=False,
             method_balance_mode="undersample",
             rng=rng,
         )
@@ -1038,7 +1032,6 @@ class TestApplyBalancing:
             balance_labels=False,
             perturb_ratio=100.0,
             false_perturb_t_to_f_ratio=None,
-            equal_method_size=False,
             method_balance_mode="oversample",
             rng=rng,
         )
@@ -1096,7 +1089,6 @@ class TestApplyBalancing:
             balance_labels=False,
             perturb_ratio=2.0,
             false_perturb_t_to_f_ratio=None,
-            equal_method_size=False,
             rng=rng,
             method_balance_mode="oversample",
         )
@@ -1137,7 +1129,6 @@ class TestApplyBalancing:
             balance_labels=False,
             perturb_ratio=100.0,
             false_perturb_t_to_f_ratio=None,
-            equal_method_size=False,
             method_balance_mode="none",
             rng=rng,
         )
@@ -1165,33 +1156,7 @@ class TestApplyBalancing:
                 balance_labels=False,
                 perturb_ratio=100.0,
                 false_perturb_t_to_f_ratio=None,
-                equal_method_size=False,
                 method_balance_mode="bad-mode",
-                rng=rng,
-            )
-
-    def test_equal_method_size_conflicts_with_oversample(self):
-        import random
-
-        rng = random.Random(42)
-        samples = [
-            _make_sample(
-                text="num_0",
-                label="True",
-                sample_type="T→T",
-                method="numeration",
-                is_perturbed=True,
-            )
-        ]
-
-        with pytest.raises(ValueError, match="equal_method_size=True"):
-            apply_balancing(
-                samples,
-                balance_labels=False,
-                perturb_ratio=100.0,
-                false_perturb_t_to_f_ratio=None,
-                equal_method_size=True,
-                method_balance_mode="oversample",
                 rng=rng,
             )
 
@@ -1285,7 +1250,6 @@ class TestApplyBalancing:
             balance_labels=False,
             perturb_ratio=2.0,
             false_perturb_t_to_f_ratio=0.5,
-            equal_method_size=False,
             method_balance_mode="oversample",
             rng=rng,
         )
@@ -1343,7 +1307,6 @@ class TestApplyBalancing:
             balance_labels=False,
             perturb_ratio=100.0,
             false_perturb_t_to_f_ratio=0.5,
-            equal_method_size=False,
             method_balance_mode=None,
             rng=rng,
         )
@@ -1387,7 +1350,6 @@ class TestApplyBalancing:
             balance_labels=False,
             perturb_ratio=100.0,
             false_perturb_t_to_f_ratio=0.5,
-            equal_method_size=False,
             method_balance_mode=None,
             rng=rng,
         )
@@ -1431,7 +1393,6 @@ class TestApplyBalancing:
             balance_labels=False,
             perturb_ratio=100.0,
             false_perturb_t_to_f_ratio=None,
-            equal_method_size=False,
             method_balance_mode=None,
             rng=rng,
         )
@@ -1496,7 +1457,6 @@ class TestApplyBalancing:
             balance_labels=False,
             perturb_ratio=1.0,
             false_perturb_t_to_f_ratio=0.1,
-            equal_method_size=False,
             method_balance_mode=None,
             rng=rng,
         )

@@ -211,7 +211,7 @@ result = build_balanced_dataset(
     balance_labels=True,
     perturb_ratio=1.0,  # explicitly set; default is None (keep all)
     false_perturb_t_to_f_ratio=0.5,
-    equal_method_size=True,
+  method_balance_mode="undersample",
     seed=42,
     allowed_types_by_file={"numeration_False.json": {"type1"}},  # optional per-file filtering
 )

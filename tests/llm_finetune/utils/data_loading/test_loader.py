@@ -366,7 +366,7 @@ class TestLoadSplitBalanced:
             balance_labels=True,
             perturb_ratio=0.5,
             false_perturb_t_to_f_ratio=0.3,
-            equal_method_size=True,
+            method_balance_mode="undersample",
             seed=42,
             allowed_types_by_file=None,
         )

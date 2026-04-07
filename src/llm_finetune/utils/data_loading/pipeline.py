@@ -205,7 +205,9 @@ def load_split(
         balance_labels=balance_labels,
         perturb_ratio=perturb_ratio,
         false_perturb_t_to_f_ratio=false_perturb_t_to_f_ratio,
-        equal_method_size=equal_perturbation_methods,
+        method_balance_mode=(
+            "undersample" if equal_perturbation_methods else None
+        ),
         seed=seed,
         allowed_types_by_file=allowed_types,
     )

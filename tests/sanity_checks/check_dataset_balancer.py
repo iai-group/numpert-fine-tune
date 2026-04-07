@@ -299,7 +299,6 @@ PRESET_CONFIGS = [
         "perturb_ratio": 1.0,
         "true_perturbation_fraction": 1 / 3,
         "false_perturb_t_to_f_ratio": 0.5,
-        "equal_method_size": False,
         "method_balance_mode": "none",
         "seed": 42,
     },
@@ -309,7 +308,6 @@ PRESET_CONFIGS = [
         "perturb_ratio": 100.0,
         "true_perturbation_fraction": 1 / 3,
         "false_perturb_t_to_f_ratio": None,
-        "equal_method_size": False,
         "method_balance_mode": "none",
         "seed": 42,
     },
@@ -319,7 +317,6 @@ PRESET_CONFIGS = [
         "perturb_ratio": 1.0,
         "true_perturbation_fraction": 1 / 3,
         "false_perturb_t_to_f_ratio": 0.5,
-        "equal_method_size": False,
         "method_balance_mode": "oversample",
         "seed": 42,
     },
@@ -329,7 +326,6 @@ PRESET_CONFIGS = [
         "perturb_ratio": 1.0,
         "true_perturbation_fraction": 1 / 3,
         "false_perturb_t_to_f_ratio": 0.5,
-        "equal_method_size": True,
         "method_balance_mode": "undersample",
         "seed": 42,
     },
@@ -339,7 +335,6 @@ PRESET_CONFIGS = [
         "perturb_ratio": 1.0,
         "true_perturbation_fraction": 0.5,
         "false_perturb_t_to_f_ratio": 0.5,
-        "equal_method_size": False,
         "method_balance_mode": "oversample",
         "seed": 42,
     },
@@ -349,7 +344,6 @@ PRESET_CONFIGS = [
         "perturb_ratio": 1.0,
         "true_perturbation_fraction": 0.2,
         "false_perturb_t_to_f_ratio": 0.5,
-        "equal_method_size": False,
         "method_balance_mode": "oversample",
         "seed": 42,
     },
@@ -359,7 +353,6 @@ PRESET_CONFIGS = [
         "perturb_ratio": 0.5,
         "true_perturbation_fraction": 1 / 3,
         "false_perturb_t_to_f_ratio": 0.5,
-        "equal_method_size": False,
         "method_balance_mode": "oversample",
         "seed": 42,
     },
@@ -369,7 +362,6 @@ PRESET_CONFIGS = [
         "perturb_ratio": 2.0,
         "true_perturbation_fraction": 1 / 3,
         "false_perturb_t_to_f_ratio": 0.5,
-        "equal_method_size": False,
         "method_balance_mode": "oversample",
         "seed": 42,
     },
@@ -379,7 +371,6 @@ PRESET_CONFIGS = [
         "perturb_ratio": 2.0,
         "true_perturbation_fraction": 0.5,
         "false_perturb_t_to_f_ratio": 0.5,
-        "equal_method_size": False,
         "method_balance_mode": "oversample",
         "seed": 42,
     },
@@ -389,7 +380,6 @@ PRESET_CONFIGS = [
         "perturb_ratio": 2.0,
         "true_perturbation_fraction": 0.2,
         "false_perturb_t_to_f_ratio": 0.5,
-        "equal_method_size": False,
         "method_balance_mode": "oversample",
         "seed": 42,
     },
@@ -399,7 +389,6 @@ PRESET_CONFIGS = [
         "perturb_ratio": 1.0,
         "true_perturbation_fraction": 1 / 3,
         "false_perturb_t_to_f_ratio": 0.8,
-        "equal_method_size": False,
         "method_balance_mode": "none",
         "seed": 42,
     },
@@ -409,7 +398,6 @@ PRESET_CONFIGS = [
         "perturb_ratio": 1.0,
         "true_perturbation_fraction": 1 / 3,
         "false_perturb_t_to_f_ratio": 0.2,
-        "equal_method_size": False,
         "method_balance_mode": "none",
         "seed": 42,
     },
@@ -419,7 +407,6 @@ PRESET_CONFIGS = [
         "perturb_ratio": 2.0,
         "true_perturbation_fraction": 1 / 3,
         "false_perturb_t_to_f_ratio": 0.8,
-        "equal_method_size": False,
         "method_balance_mode": "oversample",
         "seed": 42,
     },
@@ -429,7 +416,6 @@ PRESET_CONFIGS = [
         "perturb_ratio": 2.0,
         "true_perturbation_fraction": 1 / 3,
         "false_perturb_t_to_f_ratio": 0.2,
-        "equal_method_size": False,
         "method_balance_mode": "oversample",
         "seed": 42,
     },
@@ -523,12 +509,6 @@ def main() -> None:  # noqa: C901
         ),
     )
     parser.add_argument(
-        "--equal_methods",
-        action="store_true",
-        default=False,
-        help="Backward-compatible alias for --method_balance_mode undersample.",
-    )
-    parser.add_argument(
         "--method_balance_mode",
         choices=["none", "undersample", "oversample"],
         default=None,
@@ -597,7 +577,6 @@ def main() -> None:  # noqa: C901
         perturb_ratio=args.perturb_ratio,
         false_perturb_t_to_f_ratio=args.false_perturb_t_to_f_ratio,
         true_perturbation_fraction=args.true_perturbation_fraction,
-        equal_method_size=args.equal_methods,
         method_balance_mode=args.method_balance_mode,
         seed=args.seed,
     )
@@ -609,7 +588,6 @@ def main() -> None:  # noqa: C901
             f"ratio={args.perturb_ratio}, "
             f"true_pert={args.true_perturbation_fraction:.3f}, "
             f"t2f={args.false_perturb_t_to_f_ratio}, "
-            f"eq_methods={args.equal_methods}, "
             f"method_mode={args.method_balance_mode})"
         ),
     )

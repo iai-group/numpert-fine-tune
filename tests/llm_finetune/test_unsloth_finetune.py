@@ -700,6 +700,44 @@ class TestFinetune:
             train_call_kwargs = mock_load_split.call_args_list[0][1]
             assert train_call_kwargs["balance_labels"] is False
 
+    def test_save_steps_defaults_to_eval_steps(self, tmp_path):
+        """Unset save_steps follows the resolved eval_steps cadence."""
+        from src.llm_finetune.unsloth_finetune import finetune
+
+        with self._finetune_context(tmp_path) as m:
+            finetune(
+                train_json_paths=["t.json"],
+                val_json_paths=["v.json"],
+                model_name="test",
+                perturb_type_names="test",
+                max_seq_length=512,
+                eval_steps=7,
+                save_steps=None,
+            )
+
+            sft_config_kwargs = m["refs"]["SFTConfig"].call_args[1]
+            assert sft_config_kwargs["eval_steps"] == 7
+            assert sft_config_kwargs["save_steps"] == 7
+
+    def test_save_steps_preserves_custom_override(self, tmp_path):
+        """Explicit save_steps should not be overwritten by eval_steps."""
+        from src.llm_finetune.unsloth_finetune import finetune
+
+        with self._finetune_context(tmp_path) as m:
+            finetune(
+                train_json_paths=["t.json"],
+                val_json_paths=["v.json"],
+                model_name="test",
+                perturb_type_names="test",
+                max_seq_length=512,
+                eval_steps=7,
+                save_steps=3,
+            )
+
+            sft_config_kwargs = m["refs"]["SFTConfig"].call_args[1]
+            assert sft_config_kwargs["eval_steps"] == 7
+            assert sft_config_kwargs["save_steps"] == 3
+
 
 # ---------------------------------------------------------------------------
 # Tests for validation data filtering
