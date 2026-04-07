@@ -175,9 +175,9 @@ def finetune(  # noqa: C901
     false_perturb_t_to_f_ratio: Optional[float] = None,
     method_balance_mode: Optional[MethodBalanceMode] = None,
     batch_match_claim_id: bool = False,
-    split_large_claims: bool = True,
-    ensure_original_in_batch: bool = True,
-    ensure_perturbed_in_batch: bool = True,
+    split_large_claims: bool = False,
+    ensure_original_in_batch: bool = False,
+    ensure_perturbed_in_batch: bool = False,
     eval_steps: Union[int, float] = 500,
     save_steps: Optional[int] = None,
     save_gguf: bool = False,
@@ -1014,20 +1014,17 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--split_large_claims",
-        action=argparse.BooleanOptionalAction,
-        default=True,
+        action="store_true",
         help="Split claims with many perturbations across batches",
     )
     parser.add_argument(
         "--ensure_original_in_batch",
-        action=argparse.BooleanOptionalAction,
-        default=True,
+        action="store_true",
         help="Ensure each batch has at least one original example",
     )
     parser.add_argument(
         "--ensure_perturbed_in_batch",
-        action=argparse.BooleanOptionalAction,
-        default=True,
+        action="store_true",
         help="Ensure each batch has at least one perturbed example",
     )
 

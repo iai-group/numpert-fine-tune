@@ -35,12 +35,25 @@ source "$CONF_FILE"
 # ==============================================================================
 # LIST ALL AVAILABLE EXPERIMENTS
 # ==============================================================================
+# Resolve the full function name for a given experiment name.
+# Tries "experiment_<name>" first, then "exp_<name>".
+_resolve_func_name() {
+    local name="$1"
+    if declare -f "experiment_${name}" > /dev/null 2>&1; then
+        echo "experiment_${name}"
+    elif declare -f "exp_${name}" > /dev/null 2>&1; then
+        echo "exp_${name}"
+    else
+        echo ""
+    fi
+}
+
 list_experiments() {
     echo ""
     echo "Available experiments:"
     echo "─────────────────────────────────────────────"
-    # Extract all function names starting with experiment_
-    grep -oP '^experiment_\K[a-zA-Z0-9_]+(?=\(\))' "$CONF_FILE" | while read -r name; do
+    # Extract all function names starting with experiment_ or exp_
+    grep -oP '^(?:experiment_|exp_)\K[a-zA-Z0-9_]+(?=\(\))' "$CONF_FILE" | sort | while read -r name; do
         echo "  $name"
     done
     echo "─────────────────────────────────────────────"
@@ -56,9 +69,10 @@ list_experiments() {
 # ==============================================================================
 show_experiment() {
     local name="$1"
-    local func_name="experiment_${name}"
+    local func_name
+    func_name="$(_resolve_func_name "$name")"
 
-    if ! declare -f "$func_name" > /dev/null 2>&1; then
+    if [ -z "$func_name" ]; then
         echo "ERROR: Unknown experiment: $name"
         echo "Run '$0 --list' to see available experiments."
         exit 1
@@ -90,7 +104,6 @@ show_experiment() {
     echo ""
     echo "Dataset Balancing:"
     echo "  Method:           $METHOD_BALANCE_MODE"
-    echo "  Balance Labels:   $BALANCE_LABELS"
     echo "  Perturb Ratio:    $PERTURB_RATIO"
     echo "  False T→F Ratio:  $FALSE_PERTURB_T_TO_F_RATIO"
     echo ""
@@ -138,9 +151,10 @@ show_experiment() {
 run_experiment() {
     local name="$1"
     local dry_run="${2:-false}"
-    local func_name="experiment_${name}"
+    local func_name
+    func_name="$(_resolve_func_name "$name")"
 
-    if ! declare -f "$func_name" > /dev/null 2>&1; then
+    if [ -z "$func_name" ]; then
         echo "ERROR: Unknown experiment: $name"
         echo "Run '$0 --list' to see available experiments."
         exit 1
@@ -193,10 +207,6 @@ run_experiment() {
         CMD="$CMD --use_perturbations"
     else
         CMD="$CMD --no-use_perturbations"
-    fi
-
-    if [ "$BALANCE_LABELS" = true ]; then
-        CMD="$CMD --balance_labels"
     fi
 
     if [ "$BATCH_MATCH_CLAIM_ID" = true ]; then
