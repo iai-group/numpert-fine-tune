@@ -70,6 +70,8 @@ def convert_to_conversations(
             entry["source_file"] = example["source_file"]
         if "perturbation_method" in example:
             entry["perturbation_method"] = example["perturbation_method"]
+        if "sample_type" in example:
+            entry["sample_type"] = example["sample_type"]
         # Legacy field, keep for backward compat if present
         if "perturbation" in example:
             entry["perturbation"] = example["perturbation"]

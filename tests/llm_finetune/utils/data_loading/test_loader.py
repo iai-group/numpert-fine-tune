@@ -172,6 +172,7 @@ class TestEnrichSamples:
             "doc",
             "label",
             "perturbation_type",
+            "sample_type",
             "source_file",
             "perturbation_method",
         }

@@ -6,8 +6,8 @@ from unsloth.chat_templates import get_chat_template
 import argparse
 import math
 import os
-from collections import Counter
 from datetime import datetime
+from pathlib import Path
 from typing import Optional, List, Union
 
 import wandb
@@ -39,6 +39,12 @@ from src.llm_finetune.utils.training.convert_to_gguf import (
 from src.llm_finetune.utils.training.training_config_export import (
     build_training_config,
     save_training_config,
+)
+from src.llm_finetune.utils.training.dataset_distribution_report import (
+    DISTRIBUTION_REPORT_FILENAME,
+    compute_distribution,
+    format_distribution_report,
+    save_distribution_report,
 )
 
 
@@ -396,17 +402,19 @@ def finetune(  # noqa: C901
     print(f"Loaded train dataset size: {len(train_data)}")
     print(f"Loaded validation dataset size: {len(val_data)}")
 
-    # Show perturbation distribution
-    train_perturb_dist = Counter(train_data["perturbation_type"])
-    print("\nTrain perturbation distribution:")
-    for p_type, count in train_perturb_dist.most_common():
-        print(f"  {p_type:30s}: {count:5d} ({100*count/len(train_data):5.1f}%)")
-
-    # Show label distribution
-    train_label_dist = Counter(train_data["label"])
-    print("\nTrain label distribution:")
-    for label, count in train_label_dist.most_common():
-        print(f"  {label:30s}: {count:5d} ({100*count/len(train_data):5.1f}%)")
+    # Compute and log distribution reports (columns still available here)
+    train_dist_stats = compute_distribution(train_data)
+    val_dist_stats = compute_distribution(val_data)
+    print(
+        format_distribution_report(
+            train_dist_stats, "TRAIN DATASET DISTRIBUTION"
+        )
+    )
+    print(
+        format_distribution_report(
+            val_dist_stats, "VALIDATION DATASET DISTRIBUTION"
+        )
+    )
 
     # ============================================================================
     # DEBUG: Check conversation format
@@ -715,6 +723,14 @@ def finetune(  # noqa: C901
     )
     config_path = save_training_config(training_config_dict, base_dir)
     print(f"Training config saved to: {config_path}")
+
+    # Save dataset distribution report alongside the training config
+    dist_report_path = save_distribution_report(
+        train_dist_stats,
+        val_dist_stats,
+        Path(base_dir) / DISTRIBUTION_REPORT_FILENAME,
+    )
+    print(f"Distribution report saved to: {dist_report_path}")
 
     # Calculate final epoch number
     target_epoch = start_epoch + num_train_epochs - 1

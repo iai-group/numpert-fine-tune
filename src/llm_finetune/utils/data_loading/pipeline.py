@@ -118,6 +118,7 @@ def _enrich_samples(
                 "doc": doc_by_claim_id.get(cid, ""),
                 "label": sample["label"],
                 "perturbation_type": perturbation_type,
+                "sample_type": sample["type"],
                 "source_file": sample["source_file"],
                 "perturbation_method": sample["perturbation_method"] or "",
             }
