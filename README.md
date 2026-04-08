@@ -431,21 +431,11 @@ A machine-readable JSON file written to the model output directory at the start 
       }
     ],
     "train_stats": {
-      "size": 1200,
-      "perturbation_distribution": {
-        "original_normalized": 300,
-        "perturb_type1": 400,
-        "perturb_type2": 500
-      },
-      "label_distribution": {
-        "True": 600,
-        "False": 600
-      }
+      "size": 1200
     },
+
     "val_stats": {
       "size": 200,
-      "perturbation_distribution": { "..." : "..." },
-      "label_distribution": { "..." : "..." }
     }
   },
   "batch_sampler": {
