@@ -2,17 +2,17 @@
 ################################################################################
 # Experiment Launcher
 #
-# Loads an experiment by name from experiments.conf and runs training.
+# Loads an experiment by name from train/conf and runs training.
 #
 # USAGE:
-#   bash scripts/experiments/run_experiment.sh <experiment_name>
-#   bash scripts/experiments/run_experiment.sh --list
-#   bash scripts/experiments/run_experiment.sh --show <experiment_name>
-#   bash scripts/experiments/run_experiment.sh --dry-run <experiment_name>
+#   bash scripts/train/run_experiment.sh <experiment_name>
+#   bash scripts/train/run_experiment.sh --list
+#   bash scripts/train/run_experiment.sh --show <experiment_name>
+#   bash scripts/train/run_experiment.sh --dry-run <experiment_name>
 #
 # EXAMPLES:
-#   bash scripts/experiments/run_experiment.sh qwen3_8b_numeration_normal
-#   bash scripts/experiments/run_experiment.sh qwen3_32b_allperturb_enhanced
+#   bash scripts/train/run_experiment.sh qwen3_8b_numeration_normal
+#   bash scripts/train/run_experiment.sh qwen3_32b_allperturb_enhanced
 #
 # The "experiment_" prefix is added automatically if omitted.
 ################################################################################

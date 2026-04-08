@@ -154,10 +154,6 @@ class TestDatasetStats:
         stats = _dataset_stats(ds)
 
         assert stats["size"] == 6
-        assert stats["perturbation_distribution"]["original_normalized"] == 3
-        assert stats["perturbation_distribution"]["perturb_type1"] == 3
-        assert stats["label_distribution"]["True"] == 3
-        assert stats["label_distribution"]["False"] == 3
 
     def test_empty_dataset(self):
         """An empty dataset returns zeroed stats."""
@@ -165,8 +161,6 @@ class TestDatasetStats:
         stats = _dataset_stats(ds)
 
         assert stats["size"] == 0
-        assert stats["perturbation_distribution"] == {}
-        assert stats["label_distribution"] == {}
 
     def test_single_example(self):
         """A single-example dataset produces correct counts."""
@@ -178,8 +172,6 @@ class TestDatasetStats:
         stats = _dataset_stats(ds)
 
         assert stats["size"] == 1
-        assert stats["perturbation_distribution"] == {"perturb_type2": 1}
-        assert stats["label_distribution"] == {"False": 1}
 
 
 # ------------------------------------------------------------------

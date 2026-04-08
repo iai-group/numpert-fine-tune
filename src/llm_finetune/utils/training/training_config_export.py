@@ -9,7 +9,6 @@ provenance file.
 from __future__ import annotations
 
 import json
-from collections import Counter
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
@@ -64,27 +63,9 @@ def _dataset_stats(dataset) -> Dict[str, Any]:
     if size == 0:
         return {
             "size": 0,
-            "perturbation_distribution": {},
-            "label_distribution": {},
         }
 
-    columns = dataset.column_names if hasattr(dataset, "column_names") else []
-    perturb_dist = (
-        dict(Counter(dataset["perturbation_type"]).most_common())
-        if "perturbation_type" in columns
-        else {}
-    )
-    label_dist = (
-        dict(Counter(dataset["label"]).most_common())
-        if "label" in columns
-        else {}
-    )
-
-    return {
-        "size": size,
-        "perturbation_distribution": perturb_dist,
-        "label_distribution": label_dist,
-    }
+    return {"size": size}
 
 
 # ------------------------------------------------------------------
