@@ -42,7 +42,7 @@ if [ -z "$EXPERIMENT_NAME" ]; then
     echo "Usage: sbatch $0 <experiment_name>"
     echo ""
     echo "List availistlable experiments:"
-    echo "  bash scripts/train/experiments/run_experiment.sh --"
+    echo "  bash scripts/train/run_experiment.sh --"
     exit 1
 fi
 
@@ -80,7 +80,7 @@ echo ""
 # ==============================================================================
 # RUN EXPERIMENT
 # ==============================================================================
-bash scripts/train/experiments/run_experiment.sh "$EXPERIMENT_NAME"
+bash scripts/train/run_experiment.sh "$EXPERIMENT_NAME"
 
 # ==============================================================================
 # DONE
