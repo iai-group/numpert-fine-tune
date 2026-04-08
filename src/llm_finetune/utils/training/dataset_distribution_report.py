@@ -14,7 +14,11 @@ from collections import Counter
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-ORIGINAL_NORMALIZED = "original_normalized"
+from src.llm_finetune.utils.data_loading.perturbation_types import (
+    PerturbationType,
+)
+
+ORIGINAL_NORMALIZED = PerturbationType.ORIGINAL_NORMALIZED.value
 DISTRIBUTION_REPORT_FILENAME = "dataset_distribution.json"
 
 SEP = "=" * 80
@@ -479,7 +483,7 @@ def save_distribution_report(
     Returns:
         Resolved :class:`~pathlib.Path` of the written file.
     """
-    output_path = Path(output_path)
+    output_path = Path(output_path).resolve()
     output_path.parent.mkdir(parents=True, exist_ok=True)
     payload = {"train": train_stats, "val": val_stats}
     with open(output_path, "w", encoding="utf-8") as fh:

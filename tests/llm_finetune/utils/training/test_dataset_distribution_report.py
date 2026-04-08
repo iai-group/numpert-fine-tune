@@ -198,7 +198,7 @@ class TestComputeDistribution:
         assert stats["originals"] + stats["perturbed"] == stats["total"]
 
     def test_all_originals(self):
-        """Dataset of only originals has zero perturbed and null ratio."""
+        """Dataset of only originals has zero perturbed and zero ratio."""
         ds = _make_dataset(
             n=4,
             perturb_types=[ORIGINAL_NORMALIZED],
@@ -511,7 +511,7 @@ class TestSaveDistributionReport:
             out = Path(tmp) / "run" / DISTRIBUTION_REPORT_FILENAME
             returned = save_distribution_report(train_stats, val_stats, out)
             assert out.exists()
-            assert returned == out
+            assert returned == out.resolve()
 
     def test_json_is_valid(self):
         """The written file contains valid JSON."""
