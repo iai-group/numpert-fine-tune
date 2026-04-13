@@ -412,26 +412,42 @@ def finetune_peft(  # noqa: C901
 
     # Load and prepare data (reuse from unsloth_finetune)
     print("\nLoading training data...")
-    train_data, train_dist_stats = load_split(
-        train_json_paths,
-        train_file_configs,
+    train_data = load_split(
+        file_configs=train_file_configs,
+        split="train",
         use_perturbations=use_perturbations,
+        include_doc=True,
         balance_labels=balance_labels,
         perturb_ratio=perturb_ratio,
         false_perturb_t_to_f_ratio=false_perturb_t_to_f_ratio,
         method_balance_mode=method_balance_mode,
+        seed=3407 + start_epoch,
     )
     print(f"Loaded {len(train_data)} training examples")
 
     print("Loading validation data...")
-    val_data, val_dist_stats = load_split(
-        val_json_paths,
-        val_file_configs,
+    val_data = load_split(
+        file_configs=val_file_configs,
+        split="validation",
         use_perturbations=use_perturbations,
+        include_doc=True,
         balance_labels=False,  # Don't balance validation set
         perturb_ratio=None,
+        seed=3407 + start_epoch,
     )
     print(f"Loaded {len(val_data)} validation examples")
+
+    # Compute and log distribution reports
+    train_dist_stats = compute_distribution(train_data)
+    val_dist_stats = compute_distribution(val_data)
+    print(
+        format_distribution_report(
+            train_dist_stats, "TRAIN DATASET DISTRIBUTION"
+        )
+    )
+    print(
+        format_distribution_report(val_dist_stats, "VALIDATION DATASET DISTRIBUTION")
+    )
 
     # Tokenization function (reuse from unsloth but simplified)
     def tokenize_func(examples):
