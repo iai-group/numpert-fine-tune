@@ -6,7 +6,8 @@ This module supports multiple parameter-efficient fine-tuning approaches:
 - LoRA: Low-Rank Adaptation (via PEFT for consistency)
 - Combined: LoRA + Prompt/Prefix Tuning together
 
-Reuses data loading, tokenization, and training infrastructure from unsloth_finetune.
+Reuses data loading, tokenization, and training infrastructure from
+unsloth_finetune.
 """
 
 import argparse
@@ -23,8 +24,6 @@ import wandb
 from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
-    Trainer,
-    TrainingArguments,
     TrainerCallback,
     DataCollatorForSeq2Seq,
 )
@@ -302,11 +301,12 @@ def count_trainable_params(model) -> tuple:
 class EfficiencyTracker(TrainerCallback):
     """Callback to track training and inference efficiency metrics."""
 
-    def __init__(self):
-        self.epoch_start_time = None
-        self.epoch_times = []
-        self.batch_times = []
-        self.batch_start_time = None
+    def __init__(self) -> None:
+        """Initialize efficiency tracker."""
+        self.epoch_start_time: Optional[float] = None
+        self.epoch_times: List[float] = []
+        self.batch_times: List[float] = []
+        self.batch_start_time: Optional[float] = None
 
     def on_epoch_begin(self, args, state, control, **kwargs):
         """Record epoch start time."""
@@ -369,10 +369,13 @@ def finetune_peft(  # noqa: C901
     method_balance_mode: Optional[MethodBalanceMode] = None,
     eval_steps: Union[int, float] = 500,
     save_steps: Optional[int] = None,
+    start_epoch: int = 0,
     debug: bool = False,
 ):
-    """Fine-tune model using PEFT methods for fact-checking with numerical
-    perturbations."""
+    """Fine-tune model using PEFT methods for fact-checking.
+
+    Uses parameter-efficient fine-tuning methods for numerical perturbations.
+    """
     time_start = datetime.now()
 
     print("\n" + "=" * 80)
@@ -446,7 +449,9 @@ def finetune_peft(  # noqa: C901
         )
     )
     print(
-        format_distribution_report(val_dist_stats, "VALIDATION DATASET DISTRIBUTION")
+        format_distribution_report(
+            val_dist_stats, "VALIDATION DATASET DISTRIBUTION"
+        )
     )
 
     # Tokenization function (reuse from unsloth but simplified)
@@ -584,9 +589,12 @@ def finetune_peft(  # noqa: C901
     print(f"Distribution report saved to: {dist_report_path}")
 
     # Setup wandb
-    run = wandb.init(
+    wandb.init(  # type: ignore
         project="numpert_finetune_peft",
-        name=f"{model_name.split('/')[-1]}_{peft_method.value}_epoch_{num_train_epochs}",
+        name=(
+            f"{model_name.split('/')[-1]}_{peft_method.value}"
+            f"_epoch_{num_train_epochs}"
+        ),
         config={
             "model": model_name,
             "peft_method": peft_method.value,
@@ -644,7 +652,6 @@ def finetune_peft(  # noqa: C901
         report_to=["wandb"],
         fp16=dtype == torch.float16,
         bf16=dtype == torch.bfloat16,
-        max_seq_length=max_seq_length,
     )
 
     # Create efficiency tracker
@@ -656,7 +663,6 @@ def finetune_peft(  # noqa: C901
         args=training_args,
         train_dataset=train_data,
         eval_dataset=val_data,
-        tokenizer=tokenizer,
         data_collator=DataCollatorForSeq2Seq(tokenizer, pad_to_multiple_of=8),
         callbacks=[efficiency_tracker],
     )
@@ -671,7 +677,7 @@ def finetune_peft(  # noqa: C901
     # Log efficiency metrics
     efficiency_stats = efficiency_tracker.get_stats()
     for metric_name, value in efficiency_stats.items():
-        wandb.log({f"efficiency/{metric_name}": value})
+        wandb.log({f"efficiency/{metric_name}": value})  # type: ignore
 
     print("\n" + "=" * 80)
     print("TRAINING COMPLETED")
@@ -684,7 +690,7 @@ def finetune_peft(  # noqa: C901
     print(f"Model saved to: {output_dir}")
 
     # Finish wandb run
-    wandb.finish()
+    wandb.finish()  # type: ignore
 
     print("\n" + "=" * 80)
     print("DONE")
