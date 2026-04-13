@@ -222,7 +222,7 @@ if [ ! -f "pyproject.toml" ]; then
 fi
 
 # Sync dependencies
-uv sync --quiet
+uv sync --all-extras --quiet
 
 echo "✅ Environment ready"
 echo ""

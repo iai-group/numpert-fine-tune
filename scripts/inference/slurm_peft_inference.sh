@@ -178,7 +178,7 @@ if [ ! -f "pyproject.toml" ]; then
     exit 1
 fi
 
-uv sync --quiet
+uv sync --all-extras --quiet
 
 echo "✅ Environment ready"
 echo ""

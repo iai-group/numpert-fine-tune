@@ -43,6 +43,8 @@ if [ -z "$EXPERIMENT_NAME" ]; then
     exit 1
 fi
 
+export CUDA_VISIBLE_DEVICES=7
+export CUDA_DEVICE_ORDER=PCI_BUS_ID
 # ==============================================================================
 # SETUP DIRECTORIES
 # ==============================================================================
@@ -119,7 +121,7 @@ if [ ! -f "pyproject.toml" ]; then
     exit 1
 fi
 
-uv sync --quiet
+uv sync --all-extras --quiet
 
 echo "✅ Environment ready"
 echo ""

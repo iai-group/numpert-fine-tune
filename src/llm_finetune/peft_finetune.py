@@ -196,7 +196,6 @@ def create_peft_model(
                 "up_proj",
                 "down_proj",
             ],
-            random_state=3407,
         )
 
     elif peft_method == PeftMethod.PROMPT_TUNING:

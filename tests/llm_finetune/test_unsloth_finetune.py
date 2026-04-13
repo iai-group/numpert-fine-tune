@@ -387,6 +387,10 @@ class TestPerturbationAwareSFTTrainer:
         trainer.args.dataloader_num_workers = 0
         trainer.args.dataloader_pin_memory = False
 
+        # Mock the _train_batch_size attribute needed by parent's
+        # get_train_dataloader
+        trainer._train_batch_size = 8
+
         return trainer
 
     def test_defaults_to_super_when_sampler_disabled(self):
@@ -1124,6 +1128,11 @@ class TestPerturbationAwareSFTTrainerEdgeCases:
         trainer.args = MagicMock()
         trainer.args.dataloader_num_workers = 0
         trainer.args.dataloader_pin_memory = False
+
+        # Mock the _train_batch_size attribute needed by parent's
+        # get_train_dataloader
+        trainer._train_batch_size = 8
+
         return trainer
 
     def test_init_stores_custom_sampler_flag(self):
@@ -1131,9 +1140,18 @@ class TestPerturbationAwareSFTTrainerEdgeCases:
         from src.llm_finetune.unsloth_finetune import (
             PerturbationAwareSFTTrainer,
         )
+        from unittest.mock import patch
 
         trainer = object.__new__(PerturbationAwareSFTTrainer)
-        PerturbationAwareSFTTrainer.__init__(trainer, use_custom_sampler=True)
+        # Mock parent __init__ to avoid requiring SFTTrainer args
+        with patch.object(
+            PerturbationAwareSFTTrainer.__bases__[0],
+            "__init__",
+            return_value=None,
+        ):
+            PerturbationAwareSFTTrainer.__init__(
+                trainer, use_custom_sampler=True
+            )
         assert trainer.use_custom_sampler is True
 
     def test_init_stores_pre_built_sampler(self):
@@ -1141,14 +1159,21 @@ class TestPerturbationAwareSFTTrainerEdgeCases:
         from src.llm_finetune.unsloth_finetune import (
             PerturbationAwareSFTTrainer,
         )
+        from unittest.mock import patch
 
         sampler = MagicMock()
         trainer = object.__new__(PerturbationAwareSFTTrainer)
-        PerturbationAwareSFTTrainer.__init__(
-            trainer,
-            use_custom_sampler=True,
-            pre_built_batch_sampler=sampler,
-        )
+        # Mock parent __init__ to avoid requiring SFTTrainer args
+        with patch.object(
+            PerturbationAwareSFTTrainer.__bases__[0],
+            "__init__",
+            return_value=None,
+        ):
+            PerturbationAwareSFTTrainer.__init__(
+                trainer,
+                use_custom_sampler=True,
+                pre_built_batch_sampler=sampler,
+            )
         assert trainer.pre_built_batch_sampler is sampler
 
     def test_custom_dataloader_prints_info(self, capsys):
