@@ -391,6 +391,9 @@ class TestPerturbationAwareSFTTrainer:
         # get_train_dataloader
         trainer._train_batch_size = 8
 
+        # Ensure _signature_columns exists (needed when calling parent methods)
+        trainer._signature_columns = None
+
         return trainer
 
     def test_defaults_to_super_when_sampler_disabled(self):
@@ -1132,6 +1135,9 @@ class TestPerturbationAwareSFTTrainerEdgeCases:
         # Mock the _train_batch_size attribute needed by parent's
         # get_train_dataloader
         trainer._train_batch_size = 8
+
+        # Ensure _signature_columns exists (needed when calling parent methods)
+        trainer._signature_columns = None
 
         return trainer
 

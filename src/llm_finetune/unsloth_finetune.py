@@ -103,7 +103,10 @@ class PerturbationAwareSFTTrainer(SFTTrainer):
 
         self.use_custom_sampler = use_custom_sampler
         self.pre_built_batch_sampler = pre_built_batch_sampler
-        self._signature_columns = None
+        # Ensure _signature_columns exists (set after super init so parent
+        # can set it)
+        if not hasattr(self, "_signature_columns"):
+            self._signature_columns = None
 
     def get_train_dataloader(self) -> DataLoader:
         """Override to use custom batch sampler when enabled."""
