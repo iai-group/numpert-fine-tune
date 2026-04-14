@@ -95,8 +95,23 @@ def check_prompts(
             add_generation_prompt=False,
         )
 
-        # Check: gold label must NOT appear in inference prompt
-        has_leak = gold_label in inference_prompt
+        # Check: gold label must NOT appear in an assistant turn.
+        # Note: the user instruction *always* contains both {"label": true}
+        # and {"label": false} as format examples, so we can't just do a
+        # naive substring check.  Instead, find the last assistant turn
+        # header and verify nothing but whitespace follows it.
+        assistant_marker = "<|im_start|>assistant\n"
+        last_asst = inference_prompt.rfind(assistant_marker)
+        if last_asst != -1:
+            after_header = inference_prompt[last_asst + len(assistant_marker) :]
+            # For a clean inference prompt the generation header is the
+            # very last thing — nothing (or only whitespace) should follow.
+            has_leak = after_header.strip() != ""
+        else:
+            # No assistant header at all — something else is wrong, but
+            # not a label leak.
+            has_leak = False
+
         if has_leak:
             leaked += 1
         checked += 1
@@ -113,15 +128,21 @@ def check_prompts(
             )
             print(SEP)
 
-            print(f"\n  [INFERENCE PROMPT] (conv[:-1], add_generation_prompt=True)")
+            print(
+                "\n  [INFERENCE PROMPT] (conv[:-1], "
+                "add_generation_prompt=True)"
+            )
             print(THIN_SEP)
             # Show last 400 chars to focus on the boundary
-            tail = inference_prompt[-400:]
+            tail = inference_prompt[-400:]  # noqa: E501
             if len(inference_prompt) > 400:
                 tail = "..." + tail
             print(tail)
 
-            print(f"\n  [TRAINING FULL TEXT] (all turns, add_generation_prompt=False)")
+            print(
+                "\n  [TRAINING FULL TEXT] (all turns, "
+                "add_generation_prompt=False)"
+            )
             print(THIN_SEP)
             tail = training_full[-400:]
             if len(training_full) > 400:
@@ -135,16 +156,23 @@ def check_prompts(
     print(SEP)
 
     if leaked > 0:
-        print(f"\n  FAIL: {leaked}/{checked} examples have gold label in the inference prompt!")
+        print(
+            f"\n  FAIL: {leaked}/{checked} examples have gold label "
+            f"in the inference prompt!"
+        )
         print("  The model sees the answer before generating.\n")
         return False
     else:
-        print(f"\n  PASS: No gold label leakage detected in any inference prompt.")
+        print(
+            "\n  PASS: No gold label leakage detected in any "
+            "inference prompt."
+        )
         print(f"  All {checked} examples correctly strip the assistant turn.\n")
         return True
 
 
 def main() -> None:
+    """Parse arguments and run the label leak check."""
     parser = argparse.ArgumentParser(
         description="Check that inference prompts don't contain the gold label."
     )
@@ -158,7 +186,8 @@ def main() -> None:
         "--model_name",
         type=str,
         default="unsloth/Qwen3-8B",
-        help="HuggingFace model name for the tokenizer (default: unsloth/Qwen3-8B)",
+        help="HuggingFace model name for the tokenizer "
+        "(default: unsloth/Qwen3-8B)",
     )
     parser.add_argument(
         "--max_seq_length",
