@@ -224,7 +224,7 @@ def inference(  # noqa: C901
 
     for i, example in enumerate(test_data):
         formatted = tokenizer.apply_chat_template(
-            example["conversations"], tokenize=False, add_generation_prompt=True
+            example["conversations"][:-1], tokenize=False, add_generation_prompt=True
         )
         tokens = tokenizer(formatted, return_tensors=None)
         token_count = len(tokens["input_ids"])
@@ -314,13 +314,13 @@ def inference(  # noqa: C901
     for i in tqdm(unique_indices):
         # Format the prompt
         prompt_text = tokenizer.apply_chat_template(
-            test_data[i]["conversations"],
+            test_data[i]["conversations"][:-1],
             tokenize=False,
             add_generation_prompt=True,
         )
 
         model_inputs = tokenizer.apply_chat_template(
-            test_data[i]["conversations"],
+            test_data[i]["conversations"][:-1],
             tokenize=True,
             add_generation_prompt=True,
             return_tensors="pt",
