@@ -224,7 +224,9 @@ def inference(  # noqa: C901
 
     for i, example in enumerate(test_data):
         formatted = tokenizer.apply_chat_template(
-            example["conversations"][:-1], tokenize=False, add_generation_prompt=True
+            example["conversations"][:-1],
+            tokenize=False,
+            add_generation_prompt=True,
         )
         tokens = tokenizer(formatted, return_tensors=None)
         token_count = len(tokens["input_ids"])
@@ -347,7 +349,7 @@ def inference(  # noqa: C901
 
         outputs = model.generate(
             **model_inputs,
-            max_new_tokens=512,
+            max_new_tokens=32768,
             use_cache=True,
             temperature=0.001,
         )
