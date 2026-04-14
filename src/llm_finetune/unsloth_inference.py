@@ -349,7 +349,7 @@ def inference(  # noqa: C901
 
         outputs = model.generate(
             **model_inputs,
-            max_new_tokens=32768,
+            max_new_tokens=8192,
             use_cache=True,
             temperature=0.001,
         )
