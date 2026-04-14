@@ -18,7 +18,7 @@
 #SBATCH --time=01:00:00
 #SBATCH --mem=64G
 #SBATCH --job-name=chk-leak
-#SBATCH --output=scripts/slurm_out/sanity/check_label_leak_%j.out
+#SBATCH --output=scripts/slurm_out/check_label_leak_%j.out
 
 # ==============================================================================
 # DEFAULTS (override via --export)
@@ -30,7 +30,6 @@ SHOW="${SHOW:-5}"
 # ==============================================================================
 # SETUP
 # ==============================================================================
-mkdir -p scripts/slurm_out/sanity
 
 echo "=========================================="
 echo "SLURM Job Information" a
@@ -54,7 +53,7 @@ echo ""
 # ==============================================================================
 # RUN SANITY CHECK
 # ==============================================================================
-python -m tests.sanity_checks.check_chat_template_no_label_leak \
+uv run python -m tests.sanity_checks.check_chat_template_no_label_leak \
     --test_json "$TEST_JSON" \
     --model_name "$MODEL_NAME" \
     --show "$SHOW"

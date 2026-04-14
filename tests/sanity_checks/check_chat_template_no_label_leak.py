@@ -36,7 +36,7 @@ SEP = "=" * 80
 THIN_SEP = "-" * 60
 
 
-def check_prompts(
+def check_prompts(  # noqa: C901
     test_json: str,
     model_name: str = "unsloth/Qwen3-8B",
     max_seq_length: int = 8192,
@@ -46,7 +46,6 @@ def check_prompts(
 
     Returns True if all checks pass, False otherwise.
     """
-    # Load tokenizer (no GPU needed, just the tokenizer)
     print(f"Loading tokenizer from: {model_name}")
     _, tokenizer = FastLanguageModel.from_pretrained(
         model_name=model_name,
@@ -98,18 +97,25 @@ def check_prompts(
         # Check: gold label must NOT appear in an assistant turn.
         # Note: the user instruction *always* contains both {"label": true}
         # and {"label": false} as format examples, so we can't just do a
-        # naive substring check.  Instead, find the last assistant turn
-        # header and verify nothing but whitespace follows it.
+        # naive substring check on the whole prompt.
+        #
+        # A correct inference prompt has exactly ONE assistant header
+        # (the generation prompt at the end, with nothing after it).
+        # If the gold label leaked, there would be a *completed*
+        # assistant turn followed by a second assistant header.
         assistant_marker = "<|im_start|>assistant\n"
-        last_asst = inference_prompt.rfind(assistant_marker)
-        if last_asst != -1:
+        n_assistant_headers = inference_prompt.count(assistant_marker)
+        if n_assistant_headers > 1:
+            # Multiple assistant headers → a completed assistant turn
+            # exists before the generation prompt.
+            has_leak = True
+        elif n_assistant_headers == 1:
+            # Single header — verify it's at the end with nothing after.
+            last_asst = inference_prompt.rfind(assistant_marker)
             after_header = inference_prompt[last_asst + len(assistant_marker) :]
-            # For a clean inference prompt the generation header is the
-            # very last thing — nothing (or only whitespace) should follow.
             has_leak = after_header.strip() != ""
         else:
-            # No assistant header at all — something else is wrong, but
-            # not a label leak.
+            # No assistant header at all — unexpected, but not a label leak.
             has_leak = False
 
         if has_leak:
