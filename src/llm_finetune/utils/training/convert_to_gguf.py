@@ -11,7 +11,10 @@ Usage:
 """
 
 import argparse
+import glob
 import os
+import subprocess
+import sys
 from pathlib import Path
 from typing import Optional
 
@@ -30,6 +33,64 @@ SUPPORTED_QUANT_METHODS = [
 ]
 
 DEFAULT_QUANT_METHOD = "q4_k_m"
+
+
+def _build_env_with_cuda_libs() -> dict:
+    """Build an env dict with ``LD_LIBRARY_PATH`` pointing to CUDA libs.
+
+    Pip-installed PyTorch bundles CUDA/cuDNN shared libraries under
+    ``<site-packages>/nvidia/<pkg>/lib/`` and ``<site-packages>/torch/lib/``.
+    These paths aren't automatically on ``LD_LIBRARY_PATH`` for subprocesses,
+    causing ``import torch`` to fail with errors like
+    ``libcudnn.so.9: cannot open`` or ``libcusparseLt.so.0: cannot open``.
+
+    Uses a subprocess to dynamically discover library paths via Python's
+    import system, which is reliable regardless of package manager layout
+    (pip, uv, etc.).
+    """
+    env = os.environ.copy()
+
+    # Ask the target Python to discover nvidia and torch lib directories.
+    # This handles uv's hardlink/content-addressable layouts correctly
+    # because it resolves paths through Python's own import machinery.
+    _DISCOVER_SCRIPT = (
+        "import os\n"
+        "paths = []\n"
+        "try:\n"
+        "    import nvidia\n"
+        "    base = os.path.dirname(nvidia.__file__)\n"
+        "    for d in os.listdir(base):\n"
+        "        lib = os.path.join(base, d, 'lib')\n"
+        "        if os.path.isdir(lib):\n"
+        "            paths.append(lib)\n"
+        "except Exception:\n"
+        "    pass\n"
+        "try:\n"
+        "    import torch\n"
+        "    paths.append(os.path.join(os.path.dirname(torch.__file__), 'lib'))\n"
+        "except Exception:\n"
+        "    pass\n"
+        "print(os.pathsep.join(paths))\n"
+    )
+
+    try:
+        result = subprocess.run(
+            [sys.executable, "-c", _DISCOVER_SCRIPT],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        extra = result.stdout.strip()
+    except Exception:
+        extra = ""
+
+    if extra:
+        existing = env.get("LD_LIBRARY_PATH", "")
+        env["LD_LIBRARY_PATH"] = extra + (
+            ":" + existing if existing else ""
+        )
+
+    return env
 
 
 def check_llamacpp_setup() -> Optional[Path]:
@@ -139,42 +200,119 @@ def convert_existing_model(
 ) -> str:
     """Load a merged model from disk and convert it to GGUF.
 
+    Uses llama.cpp's ``convert_hf_to_gguf.py`` and ``llama-quantize``
+    directly via subprocess, so **no GPU or CUDA libraries are required**.
+
     Args:
         model_path: Path to the merged HuggingFace model directory.
         output_dir: Where to write the GGUF output.  Defaults to
             ``<model_path>_gguf_<quantization_method>``.
         quantization_method: Quantization scheme (default: q4_k_m).
-        max_seq_length: Maximum sequence length for loading the model.
+        max_seq_length: Maximum sequence length (unused, kept for API compat).
 
     Returns:
         The output directory path.
 
     Raises:
-        RuntimeError: If llama.cpp is not properly set up.
+        RuntimeError: If llama.cpp is not properly set up or conversion fails.
     """
-    # Verify llama.cpp setup before proceeding
-    check_llamacpp_setup()
+    llama_cpp_path = check_llamacpp_setup()
 
     if output_dir is None:
         output_dir = f"{model_path.rstrip('/')}_gguf_{quantization_method}"
 
+    if quantization_method not in SUPPORTED_QUANT_METHODS:
+        raise ValueError(
+            f"Unsupported quantization method: '{quantization_method}'. "
+            f"Supported: {SUPPORTED_QUANT_METHODS}"
+        )
+
+    os.makedirs(output_dir, exist_ok=True)
+
     print(f"Loading model from: {model_path}")
 
-    from unsloth import FastLanguageModel
+    converter_script = llama_cpp_path / "convert_hf_to_gguf.py"
+    quantizer_bin = llama_cpp_path / "build" / "bin" / "llama-quantize"
 
-    model, tokenizer = FastLanguageModel.from_pretrained(
-        model_name=model_path,
-        max_seq_length=max_seq_length,
-        dtype=None,
-        load_in_4bit=False,
+    # Determine output filenames
+    model_name = Path(model_path).name or "model"
+    f16_gguf = os.path.join(output_dir, f"{model_name}-f16.gguf")
+    quantized_gguf = os.path.join(
+        output_dir, f"{model_name}-{quantization_method}.gguf"
     )
 
-    return save_as_gguf(
-        model,
-        tokenizer,
-        output_dir=output_dir,
-        quantization_method=quantization_method,
-    )
+    print("\n" + "=" * 80)
+    print("GGUF CONVERSION")
+    print("=" * 80)
+    print(f"  Model path       : {model_path}")
+    print(f"  Output directory  : {output_dir}")
+    print(f"  Quantization      : {quantization_method}")
+    print("=" * 80)
+
+    # Build environment with CUDA library paths so torch can load in
+    # the subprocess even when LD_LIBRARY_PATH is incomplete.
+    env = _build_env_with_cuda_libs()
+
+    # Step 1: Convert HF model to f16 GGUF
+    print("\n[1/2] Converting HuggingFace model to f16 GGUF...")
+    convert_cmd = [
+        sys.executable,
+        str(converter_script),
+        model_path,
+        "--outfile",
+        f16_gguf,
+        "--outtype",
+        "f16",
+    ]
+    result = subprocess.run(convert_cmd, env=env, check=False)
+    if result.returncode != 0:
+        raise RuntimeError(
+            f"GGUF conversion failed (exit code {result.returncode}). "
+            f"Command: {' '.join(convert_cmd)}"
+        )
+
+    # Step 2: Quantize (skip if target is already f16 or f32)
+    if quantization_method in ("f16", "f32"):
+        final_gguf = f16_gguf
+        print(f"\nSkipping quantization (method={quantization_method}).")
+    else:
+        if not quantizer_bin.exists():
+            raise RuntimeError(
+                f"llama-quantize not found at {quantizer_bin}. "
+                "Rebuild llama.cpp with: bash scripts/setup_llamacpp.sh"
+            )
+        print(f"\n[2/2] Quantizing to {quantization_method}...")
+        quant_cmd = [
+            str(quantizer_bin),
+            f16_gguf,
+            quantized_gguf,
+            quantization_method,
+        ]
+        result = subprocess.run(quant_cmd, check=False)
+        if result.returncode != 0:
+            raise RuntimeError(
+                f"Quantization failed (exit code {result.returncode}). "
+                f"Command: {' '.join(quant_cmd)}"
+            )
+        final_gguf = quantized_gguf
+
+        # Remove intermediate f16 file to save disk space
+        if os.path.exists(f16_gguf) and f16_gguf != final_gguf:
+            print(f"Removing intermediate f16 file: {f16_gguf}")
+            os.remove(f16_gguf)
+
+    # List output files
+    gguf_files = glob.glob(os.path.join(output_dir, "*.gguf"))
+    print("\n" + "=" * 80)
+    print("GGUF OUTPUT FILES")
+    print("=" * 80)
+    for f in gguf_files:
+        size_mb = os.path.getsize(f) / (1024 * 1024)
+        print(f"  {f}  ({size_mb:.1f} MB)")
+    print("=" * 80)
+
+    print(f"\nGGUF model saved to: {output_dir}")
+    return output_dir
 
 
 if __name__ == "__main__":

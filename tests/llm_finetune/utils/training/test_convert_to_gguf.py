@@ -136,100 +136,100 @@ class TestSaveAsGguf:
 class TestConvertExistingModel:
     """Test the convert_existing_model orchestration function."""
 
-    @patch("src.llm_finetune.utils.training.convert_to_gguf.save_as_gguf")
-    def test_default_output_dir(self, mock_save):
-        mock_model = MagicMock()
-        mock_tok = MagicMock()
-        mock_flm = MagicMock()
-        mock_flm.from_pretrained.return_value = (mock_model, mock_tok)
-        mock_save.return_value = "/some/path"
+    @patch("src.llm_finetune.utils.training.convert_to_gguf.subprocess.run")
+    @patch("src.llm_finetune.utils.training.convert_to_gguf.os.makedirs")
+    def test_default_output_dir(self, mock_makedirs, mock_run):
+        mock_run.return_value = MagicMock(returncode=0)
 
-        with patch.dict(
-            "sys.modules",
-            {"unsloth": MagicMock(FastLanguageModel=mock_flm)},
-        ):
+        with patch(
+            "src.llm_finetune.utils.training.convert_to_gguf.check_llamacpp_setup"
+        ) as mock_check:
+            mock_check.return_value = MagicMock()
+            mock_check.return_value.__truediv__ = MagicMock(
+                side_effect=lambda x: MagicMock(
+                    __str__=lambda s: f"/fake/llama.cpp/{x}",
+                    exists=lambda s: True,
+                )
+            )
             convert_existing_model(model_path="/models/my_model")
 
         expected_out = "/models/my_model_gguf_q4_k_m"
-        mock_save.assert_called_once_with(
-            mock_model,
-            mock_tok,
-            output_dir=expected_out,
-            quantization_method=DEFAULT_QUANT_METHOD,
-        )
+        mock_makedirs.assert_called_once_with(expected_out, exist_ok=True)
 
-    @patch("src.llm_finetune.utils.training.convert_to_gguf.save_as_gguf")
-    def test_custom_output_dir(self, mock_save):
-        mock_flm = MagicMock()
-        mock_flm.from_pretrained.return_value = (MagicMock(), MagicMock())
-        mock_save.return_value = "/custom/out"
+    @patch("src.llm_finetune.utils.training.convert_to_gguf.subprocess.run")
+    @patch("src.llm_finetune.utils.training.convert_to_gguf.os.makedirs")
+    def test_custom_output_dir(self, mock_makedirs, mock_run):
+        mock_run.return_value = MagicMock(returncode=0)
 
-        with patch.dict(
-            "sys.modules",
-            {"unsloth": MagicMock(FastLanguageModel=mock_flm)},
-        ):
+        with patch(
+            "src.llm_finetune.utils.training.convert_to_gguf.check_llamacpp_setup"
+        ) as mock_check:
+            mock_check.return_value = MagicMock()
+            mock_check.return_value.__truediv__ = MagicMock(
+                side_effect=lambda x: MagicMock(
+                    __str__=lambda s: f"/fake/llama.cpp/{x}",
+                    exists=lambda s: True,
+                )
+            )
             convert_existing_model(
                 model_path="/models/my_model",
                 output_dir="/custom/out",
             )
 
-        assert mock_save.call_args[1]["output_dir"] == "/custom/out"
+        mock_makedirs.assert_called_once_with("/custom/out", exist_ok=True)
 
-    @patch("src.llm_finetune.utils.training.convert_to_gguf.save_as_gguf")
-    def test_custom_quant_method(self, mock_save):
-        mock_flm = MagicMock()
-        mock_flm.from_pretrained.return_value = (MagicMock(), MagicMock())
-        mock_save.return_value = "/out"
+    @patch("src.llm_finetune.utils.training.convert_to_gguf.subprocess.run")
+    @patch("src.llm_finetune.utils.training.convert_to_gguf.os.makedirs")
+    def test_rejects_unsupported_method(self, mock_makedirs, mock_run):
+        with patch(
+            "src.llm_finetune.utils.training.convert_to_gguf.check_llamacpp_setup"
+        ) as mock_check:
+            mock_check.return_value = MagicMock()
+            with pytest.raises(ValueError, match="Unsupported quantization"):
+                convert_existing_model(
+                    model_path="/models/m",
+                    quantization_method="invalid_method",
+                )
 
-        with patch.dict(
-            "sys.modules",
-            {"unsloth": MagicMock(FastLanguageModel=mock_flm)},
-        ):
-            convert_existing_model(
-                model_path="/models/m",
-                output_dir="/out",
-                quantization_method="q8_0",
+    @patch("src.llm_finetune.utils.training.convert_to_gguf.subprocess.run")
+    @patch("src.llm_finetune.utils.training.convert_to_gguf.os.makedirs")
+    def test_conversion_failure_raises(self, mock_makedirs, mock_run):
+        mock_run.return_value = MagicMock(returncode=1)
+
+        with patch(
+            "src.llm_finetune.utils.training.convert_to_gguf.check_llamacpp_setup"
+        ) as mock_check:
+            mock_check.return_value = MagicMock()
+            mock_check.return_value.__truediv__ = MagicMock(
+                side_effect=lambda x: MagicMock(
+                    __str__=lambda s: f"/fake/llama.cpp/{x}",
+                    exists=lambda s: True,
+                )
             )
+            with pytest.raises(RuntimeError, match="GGUF conversion failed"):
+                convert_existing_model(model_path="/models/m")
 
-        assert mock_save.call_args[1]["quantization_method"] == "q8_0"
+    @patch("src.llm_finetune.utils.training.convert_to_gguf.subprocess.run")
+    @patch("src.llm_finetune.utils.training.convert_to_gguf.os.makedirs")
+    def test_trailing_slash_stripped_from_default_dir(
+        self, mock_makedirs, mock_run
+    ):
+        mock_run.return_value = MagicMock(returncode=0)
 
-    @patch("src.llm_finetune.utils.training.convert_to_gguf.save_as_gguf")
-    def test_loads_model_correctly(self, mock_save):
-        mock_flm = MagicMock()
-        mock_flm.from_pretrained.return_value = (MagicMock(), MagicMock())
-        mock_save.return_value = "/out"
-
-        with patch.dict(
-            "sys.modules",
-            {"unsloth": MagicMock(FastLanguageModel=mock_flm)},
-        ):
-            convert_existing_model(
-                model_path="/models/m",
-                output_dir="/out",
-                max_seq_length=4096,
+        with patch(
+            "src.llm_finetune.utils.training.convert_to_gguf.check_llamacpp_setup"
+        ) as mock_check:
+            mock_check.return_value = MagicMock()
+            mock_check.return_value.__truediv__ = MagicMock(
+                side_effect=lambda x: MagicMock(
+                    __str__=lambda s: f"/fake/llama.cpp/{x}",
+                    exists=lambda s: True,
+                )
             )
-
-        mock_flm.from_pretrained.assert_called_once_with(
-            model_name="/models/m",
-            max_seq_length=4096,
-            dtype=None,
-            load_in_4bit=False,
-        )
-
-    @patch("src.llm_finetune.utils.training.convert_to_gguf.save_as_gguf")
-    def test_trailing_slash_stripped_from_default_dir(self, mock_save):
-        mock_flm = MagicMock()
-        mock_flm.from_pretrained.return_value = (MagicMock(), MagicMock())
-        mock_save.return_value = "/out"
-
-        with patch.dict(
-            "sys.modules",
-            {"unsloth": MagicMock(FastLanguageModel=mock_flm)},
-        ):
             convert_existing_model(model_path="/models/my_model/")
 
         expected_out = "/models/my_model_gguf_q4_k_m"
-        assert mock_save.call_args[1]["output_dir"] == expected_out
+        mock_makedirs.assert_called_once_with(expected_out, exist_ok=True)
 
 
 # ---------------------------------------------------------------------------
