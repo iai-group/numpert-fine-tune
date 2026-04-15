@@ -32,7 +32,7 @@ SHOW="${SHOW:-5}"
 # ==============================================================================
 
 echo "=========================================="
-echo "SLURM Job Information" a
+echo "SLURM Job Information"
 echo "=========================================="
 echo "Job ID:      ${SLURM_JOB_ID:-local}"
 echo "Job Name:    ${SLURM_JOB_NAME:-local}"
