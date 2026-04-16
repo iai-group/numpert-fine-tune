@@ -346,6 +346,64 @@ def _make_mock_inference_context(tmp_path, **extra_patches):
     return ctx()
 
 
+def _stub_gguf_runtime(tokenizer=None, llama_instance=None):
+    """Stub GGUF-only runtime imports used inside inference()."""
+    import contextlib
+
+    if tokenizer is None:
+        tokenizer = MagicMock()
+        tokenizer.apply_chat_template = MagicMock(return_value="prompt")
+
+    if llama_instance is None:
+        llama_instance = MagicMock()
+        llama_instance.tokenize = MagicMock(return_value=[1, 2, 3])
+        llama_instance.return_value = {"choices": [{"text": '{"label": true}'}]}
+
+    fake_llama_cpp = types.ModuleType("llama_cpp")
+    llama_cls = MagicMock(return_value=llama_instance)
+    fake_llama_cpp.Llama = llama_cls
+
+    fake_transformers = types.ModuleType("transformers")
+    auto_tokenizer_cls = MagicMock()
+    auto_tokenizer_cls.from_pretrained = MagicMock(return_value=tokenizer)
+    fake_transformers.AutoTokenizer = auto_tokenizer_cls
+
+    fake_chat_templates = types.ModuleType("unsloth.chat_templates")
+    get_chat_template_mock = MagicMock(side_effect=lambda tok, **_: tok)
+    fake_chat_templates.get_chat_template = get_chat_template_mock
+
+    @contextlib.contextmanager
+    def ctx():
+        unsloth_mod = sys.modules["unsloth"]
+        had_path = hasattr(unsloth_mod, "__path__")
+        old_path = getattr(unsloth_mod, "__path__", None)
+        unsloth_mod.__path__ = []
+
+        with patch.dict(
+            sys.modules,
+            {
+                "llama_cpp": fake_llama_cpp,
+                "transformers": fake_transformers,
+                "unsloth.chat_templates": fake_chat_templates,
+            },
+        ):
+            try:
+                yield {
+                    "Llama": llama_cls,
+                    "llama_instance": llama_instance,
+                    "AutoTokenizer": auto_tokenizer_cls,
+                    "get_chat_template": get_chat_template_mock,
+                    "tokenizer": tokenizer,
+                }
+            finally:
+                if had_path:
+                    unsloth_mod.__path__ = old_path
+                else:
+                    delattr(unsloth_mod, "__path__")
+
+    return ctx()
+
+
 class TestInference:
     """Test inference() orchestration with all heavy deps mocked."""
 
@@ -570,6 +628,92 @@ class TestInferenceModelResolution:
             )
             load_call = m["flm"].from_pretrained.call_args
             assert load_call[1]["model_name"] == "unsloth/Qwen3-8B"
+
+
+class TestInferenceGGUF:
+    """Test GGUF execution path in inference()."""
+
+    def test_gguf_requires_tokenizer_arg(self, tmp_path):
+        """GGUF mode requires --tokenizer to load chat template."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        gguf_file = tmp_path / "model.gguf"
+        gguf_file.write_text("stub")
+
+        with _make_mock_inference_context(tmp_path), _stub_gguf_runtime():
+            with pytest.raises(ValueError, match="--tokenizer is required"):
+                inference(
+                    test_json_paths=["test.json"],
+                    model_name=str(gguf_file),
+                    max_seq_length=512,
+                    output_dir=str(tmp_path / "output"),
+                )
+
+    def test_gguf_uses_chatml_template_and_generation_params(self, tmp_path):
+        """Qwen-like tokenizer selects ChatML and expected generate args."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        gguf_file = tmp_path / "model.gguf"
+        gguf_file.write_text("stub")
+
+        with _make_mock_inference_context(
+            tmp_path
+        ) as m, _stub_gguf_runtime() as g:
+            inference(
+                test_json_paths=["test.json"],
+                model_name=str(gguf_file),
+                tokenizer_name_or_path="unsloth/Qwen3-8B",
+                max_seq_length=512,
+                output_dir=str(tmp_path / "output"),
+            )
+
+            g["AutoTokenizer"].from_pretrained.assert_called_once_with(
+                "unsloth/Qwen3-8B"
+            )
+            g["get_chat_template"].assert_called_once_with(
+                g["tokenizer"], chat_template="chatml"
+            )
+            g["Llama"].assert_called_once_with(
+                model_path=str(gguf_file),
+                n_ctx=512,
+                n_gpu_layers=-1,
+                add_bos_token=False,
+                verbose=False,
+            )
+            g["llama_instance"].assert_called()
+            first_call = g["llama_instance"].call_args_list[0]
+            assert first_call.kwargs["max_tokens"] == 8192
+            assert first_call.kwargs["temperature"] == 0.001
+            assert first_call.kwargs["stop"] == [
+                "<|im_end|>",
+                "<|endoftext|>",
+            ]
+            m["flm"].from_pretrained.assert_not_called()
+
+    def test_gguf_llama_tokenizer_uses_llama_stop_tokens(self, tmp_path):
+        """Llama tokenizer path uses llama-3.1 template and stop tokens."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        gguf_file = tmp_path / "model.gguf"
+        gguf_file.write_text("stub")
+
+        with _make_mock_inference_context(tmp_path), _stub_gguf_runtime() as g:
+            inference(
+                test_json_paths=["test.json"],
+                model_name=str(gguf_file),
+                tokenizer_name_or_path="unsloth/Llama-3.2-3B-Instruct",
+                max_seq_length=512,
+                output_dir=str(tmp_path / "output"),
+            )
+
+            g["get_chat_template"].assert_called_once_with(
+                g["tokenizer"], chat_template="llama-3.1"
+            )
+            first_call = g["llama_instance"].call_args_list[0]
+            assert first_call.kwargs["stop"] == [
+                "<|eot_id|>",
+                "<|end_of_text|>",
+            ]
 
 
 # ---------------------------------------------------------------------------
