@@ -686,6 +686,7 @@ class TestInferenceGGUF:
                 model_path=str(gguf_file),
                 n_ctx=512,
                 n_gpu_layers=-1,
+                n_batch=512,
                 add_bos_token=False,
                 verbose=False,
             )

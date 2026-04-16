@@ -79,103 +79,50 @@ def build_repo_id(args) -> str:
     return f"{namespace}/{args.model_name}"
 
 
-def upload(args):
-    """Upload model to HuggingFace Hub.
-
-    Detects model type, creates repository, and uploads model files.
-    Handles LoRA adapters, merged models, and checkpoints.
-
-    Args:
-        args: Command-line arguments with model path and upload options.
-    """
-    from huggingface_hub import HfApi
-
-    model_path = Path(args.model_path).resolve()
-    if not model_path.exists():
-        print(f"[ERROR] model_path not found: {model_path}")
-        sys.exit(1)
-
-    # Auto-detect type unless overridden
-    # For single-file detection, check before calling iterdir()
-    upload_type = args.type or detect_upload_type(model_path)
-    if upload_type == "unknown":
+def _build_ignore_patterns(upload_type: str, include_optimizer_states: bool):
+    """Return ignore patterns for folder uploads, or None if not applicable."""
+    if upload_type == "checkpoint" and not include_optimizer_states:
         print(
-            "[WARN] Could not auto-detect model_path type "
-            "(merged/lora/checkpoint).\n"
-            "       Pass --type explicitly if the upload looks wrong."
+            "[i] Skipping optimizer/scheduler states "
+            "(pass --include-optimizer-states to keep them)."
         )
-    else:
-        print(f"[✓] Upload type detected: {upload_type}")
-
-    repo_id = build_repo_id(args)
-    private = not args.public
-    visibility = "public" if args.public else "private"
-    print(f"[✓] Visibility: {visibility}")
-
-    api = HfApi()
-
-    # Create repo if it doesn't exist
-    try:
-        api.create_repo(
-            repo_id=repo_id,
-            repo_type="model",
-            private=private,
-            exist_ok=True,
-        )
-        print("[✓] Repo ready")
-    except Exception as e:
-        print(f"[ERROR] Failed to create/access repo: {e}")
-        sys.exit(1)
-
-    # For checkpoints: skip optimizer/scheduler bloat unless
-    # explicitly requested
-    ignore_patterns = None
-    if upload_type == "checkpoint" and not args.include_optimizer_states:
-        ignore_patterns = [
+        return [
             "optimizer.pt",
             "optimizer.bin",
             "scheduler.pt",
             "rng_state*.pth",
         ]
-        print(
-            "[i] Skipping optimizer/scheduler states "
-            "(pass --include-optimizer-states to keep them)."
-        )
+    return None
 
-    # Upload
-    display_path = (
-        Path(*model_path.parts[-3:])
-        if len(model_path.parts) >= 3
-        else model_path
-    )
-    print(f"\n[→] Uploading from: .../{display_path}")
-    print("    This may take a while for large models...\n")
 
+def _do_upload(
+    api, model_path: Path, repo_id: str, commit_message: str, ignore_patterns
+):
+    """Upload a single file or folder to the Hub, exiting on failure."""
     try:
         if model_path.is_file():
-            # Single file upload (e.g. a single .gguf file)
             api.upload_file(
                 path_or_fileobj=str(model_path),
                 path_in_repo=model_path.name,
                 repo_id=repo_id,
                 repo_type="model",
-                commit_message=args.commit_message,
+                commit_message=commit_message,
             )
         else:
             api.upload_folder(
                 folder_path=str(model_path),
                 repo_id=repo_id,
                 repo_type="model",
-                commit_message=args.commit_message,
+                commit_message=commit_message,
                 ignore_patterns=ignore_patterns,
             )
     except Exception as e:
         print(f"[ERROR] Upload failed: {e}")
         sys.exit(1)
 
-    print("\n[✓] Upload complete!\n")
 
-    # Contextual reminders based on upload type
+def _print_type_reminder(upload_type: str):
+    """Print a contextual post-upload reminder based on upload type."""
     if upload_type == "lora":
         print(
             "[i] Note: You uploaded LoRA adapter weights.\n"
@@ -197,6 +144,69 @@ def upload(args):
             "and other\n"
             "    GGUF-compatible inference engines.\n"
         )
+
+
+def upload(args):
+    """Upload model to HuggingFace Hub.
+
+    Detects model type, creates repository, and uploads model files.
+    Handles LoRA adapters, merged models, and checkpoints.
+
+    Args:
+        args: Command-line arguments with model path and upload options.
+    """
+    from huggingface_hub import HfApi
+
+    model_path = Path(args.model_path).resolve()
+    if not model_path.exists():
+        print(f"[ERROR] model_path not found: {model_path}")
+        sys.exit(1)
+
+    upload_type = args.type or detect_upload_type(model_path)
+    if upload_type == "unknown":
+        print(
+            "[WARN] Could not auto-detect model_path type "
+            "(merged/lora/checkpoint).\n"
+            "       Pass --type explicitly if the upload looks wrong."
+        )
+    else:
+        print(f"[✓] Upload type detected: {upload_type}")
+
+    repo_id = build_repo_id(args)
+    private = not args.public
+    visibility = "public" if args.public else "private"
+    print(f"[✓] Visibility: {visibility}")
+
+    api = HfApi()
+
+    try:
+        api.create_repo(
+            repo_id=repo_id,
+            repo_type="model",
+            private=private,
+            exist_ok=True,
+        )
+        print("[✓] Repo ready")
+    except Exception as e:
+        print(f"[ERROR] Failed to create/access repo: {e}")
+        sys.exit(1)
+
+    ignore_patterns = _build_ignore_patterns(
+        upload_type, args.include_optimizer_states
+    )
+
+    display_path = (
+        Path(*model_path.parts[-3:])
+        if len(model_path.parts) >= 3
+        else model_path
+    )
+    print(f"\n[→] Uploading from: .../{display_path}")
+    print("    This may take a while for large models...\n")
+
+    _do_upload(api, model_path, repo_id, args.commit_message, ignore_patterns)
+
+    print("\n[✓] Upload complete!\n")
+    _print_type_reminder(upload_type)
 
 
 def main():
