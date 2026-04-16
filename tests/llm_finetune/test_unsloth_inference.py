@@ -1804,6 +1804,94 @@ class TestResumeInference:
             )
             assert m["model"].generate.call_count == 3
 
+    def test_out_of_bounds_index_skipped_on_resume(self, tmp_path):
+        """JSONL entry with index >= dataset size is silently skipped."""
+        from src.llm_finetune.unsloth_inference import inference
+        from src.llm_finetune.utils.naming import build_output_dir_name
+
+        ds = create_mock_test_dataset(n_claims=3, perturbations_per_claim=0)
+        out = tmp_path / "output"
+
+        pred_dir_name = build_output_dir_name("test", 32, 0, load_in_4bit=True)
+        pred_dir = out / pred_dir_name
+        pred_dir.mkdir(parents=True)
+        jsonl_path = pred_dir / "inference_details.jsonl"
+
+        # Write an entry whose index is well beyond the dataset length
+        with open(jsonl_path, "w") as f:
+            f.write(
+                json.dumps(
+                    {
+                        "index": 9999,
+                        "claim_id": "claim_9999",
+                        "perturbation_type": "original_normalized",
+                        "label": "True",
+                        "full_prompt": "prompt",
+                        "raw_response": '{"label": true}',
+                        "parsed_successfully": True,
+                        "predicted_label": '{"label": true}',
+                    }
+                )
+                + "\n"
+            )
+
+        with _make_mock_inference_context(
+            tmp_path,
+            load_split=MagicMock(return_value=ds),
+        ) as m:
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(out),
+            )
+            # All 3 entries must still be processed (bad entry was skipped)
+            assert m["model"].generate.call_count == 3
+
+    def test_non_integer_index_skipped_on_resume(self, tmp_path):
+        """JSONL entry with a non-integer index is silently skipped."""
+        from src.llm_finetune.unsloth_inference import inference
+        from src.llm_finetune.utils.naming import build_output_dir_name
+
+        ds = create_mock_test_dataset(n_claims=3, perturbations_per_claim=0)
+        out = tmp_path / "output"
+
+        pred_dir_name = build_output_dir_name("test", 32, 0, load_in_4bit=True)
+        pred_dir = out / pred_dir_name
+        pred_dir.mkdir(parents=True)
+        jsonl_path = pred_dir / "inference_details.jsonl"
+
+        # Write an entry with a string index (e.g., from manual editing)
+        with open(jsonl_path, "w") as f:
+            f.write(
+                json.dumps(
+                    {
+                        "index": "0",  # string, not int
+                        "claim_id": "claim_0000",
+                        "perturbation_type": "original_normalized",
+                        "label": "True",
+                        "full_prompt": "prompt",
+                        "raw_response": '{"label": true}',
+                        "parsed_successfully": True,
+                        "predicted_label": '{"label": true}',
+                    }
+                )
+                + "\n"
+            )
+
+        with _make_mock_inference_context(
+            tmp_path,
+            load_split=MagicMock(return_value=ds),
+        ) as m:
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(out),
+            )
+            # All 3 entries must still be processed (bad entry was skipped)
+            assert m["model"].generate.call_count == 3
+
     def test_corrupt_jsonl_lines_skipped_on_resume(self, tmp_path):
         """Malformed lines in existing JSONL are ignored during resume."""
         from src.llm_finetune.unsloth_inference import inference

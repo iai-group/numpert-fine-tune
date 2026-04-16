@@ -418,6 +418,10 @@ def inference(  # noqa: C901
                 try:
                     entry = json.loads(line)
                     idx = entry["index"]
+                    if not isinstance(idx, int) or not (
+                        0 <= idx < len(raw_outputs)
+                    ):
+                        continue
                     completed_indices.add(idx)
                     raw_outputs[idx] = entry
                 except (json.JSONDecodeError, KeyError):
