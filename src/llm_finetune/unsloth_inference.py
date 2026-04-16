@@ -377,110 +377,146 @@ def inference(  # noqa: C901
             f"(skipping {n_duplicates} duplicate original_normalized claims)"
         )
 
-    # Run inference on unique entries only
-    print("\nRunning inference...")
-
-    for i in tqdm(unique_indices):
-        messages = test_data[i]["conversations"][:-1]
-
-        if is_gguf:
-            # Format the prompt with the same chat template used in training.
-            # Use raw text completion (not create_chat_completion) so
-            # llama.cpp doesn't apply its own built-in template on top.
-            prompt_text = tokenizer.apply_chat_template(
-                messages,
-                tokenize=False,
-                add_generation_prompt=True,
-            )
-            response = model(
-                prompt_text,
-                max_tokens=8192,
-                temperature=0.001,
-                stop=gguf_stop_tokens,
-            )
-            decoded = response["choices"][0]["text"]
-        else:
-            # HuggingFace/unsloth: apply chat template and generate
-            prompt_text = tokenizer.apply_chat_template(
-                messages,
-                tokenize=False,
-                add_generation_prompt=True,
+    # Resume support: load previously completed results if the file exists
+    raw_outputs_path = f"{pred_dir}/{file_prefix}inference_details.jsonl"
+    completed_indices: set[int] = set()
+    if os.path.exists(raw_outputs_path):
+        with open(raw_outputs_path, "r", encoding="utf-8") as f_in:
+            for line in f_in:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    entry = json.loads(line)
+                    idx = entry["index"]
+                    completed_indices.add(idx)
+                    raw_outputs[idx] = entry
+                except (json.JSONDecodeError, KeyError):
+                    continue
+        if completed_indices:
+            print(
+                f"\nResuming: loaded {len(completed_indices)} "
+                f"previously completed results from {raw_outputs_path}"
             )
 
-            model_inputs = tokenizer.apply_chat_template(
-                messages,
-                tokenize=True,
-                add_generation_prompt=True,
-                return_tensors="pt",
-            )
+    # Filter out already-completed indices
+    remaining_indices = [
+        i for i in unique_indices if i not in completed_indices
+    ]
 
-            if isinstance(model_inputs, torch.Tensor):
-                model_inputs = {"input_ids": model_inputs}
+    # Run inference on remaining entries only
+    print(
+        f"\nRunning inference on {len(remaining_indices)}/{len(unique_indices)}"
+        " unique entries..."
+    )
 
-            model_inputs = {k: v.cuda() for k, v in model_inputs.items()}
+    with open(raw_outputs_path, "a", encoding="utf-8") as f_out:
+        for i in tqdm(remaining_indices):
+            messages = test_data[i]["conversations"][:-1]
 
-            if "attention_mask" not in model_inputs:
-                pad_id = getattr(tokenizer, "pad_token_id", None)
-                if pad_id is None:
-                    model_inputs["attention_mask"] = (
-                        model_inputs["input_ids"] != 0
-                    ).long()
-                else:
-                    model_inputs["attention_mask"] = (
-                        model_inputs["input_ids"] != pad_id
-                    ).long()
+            if is_gguf:
+                # Format the prompt with the same chat template used in
+                # training. Use raw text completion (not
+                # create_chat_completion) so llama.cpp doesn't apply its
+                # own built-in template on top.
+                prompt_text = tokenizer.apply_chat_template(
+                    messages,
+                    tokenize=False,
+                    add_generation_prompt=True,
+                )
+                response = model(
+                    prompt_text,
+                    max_tokens=8192,
+                    temperature=0.001,
+                    stop=gguf_stop_tokens,
+                )
+                decoded = response["choices"][0]["text"]
+            else:
+                # HuggingFace/unsloth: apply chat template and generate
+                prompt_text = tokenizer.apply_chat_template(
+                    messages,
+                    tokenize=False,
+                    add_generation_prompt=True,
+                )
 
-            # Store input length
-            input_length = model_inputs["input_ids"].shape[1]
+                model_inputs = tokenizer.apply_chat_template(
+                    messages,
+                    tokenize=True,
+                    add_generation_prompt=True,
+                    return_tensors="pt",
+                )
 
-            outputs = model.generate(
-                **model_inputs,
-                max_new_tokens=8192,
-                use_cache=True,
-                temperature=0.001,
-            )
+                if isinstance(model_inputs, torch.Tensor):
+                    model_inputs = {"input_ids": model_inputs}
 
-            # Decode only new tokens
-            new_tokens = outputs[0][input_length:]
-            decoded = tokenizer.decode(new_tokens, skip_special_tokens=True)
+                model_inputs = {k: v.cuda() for k, v in model_inputs.items()}
 
-        label = extract_label_from_response(decoded)
+                if "attention_mask" not in model_inputs:
+                    pad_id = getattr(tokenizer, "pad_token_id", None)
+                    if pad_id is None:
+                        model_inputs["attention_mask"] = (
+                            model_inputs["input_ids"] != 0
+                        ).long()
+                    else:
+                        model_inputs["attention_mask"] = (
+                            model_inputs["input_ids"] != pad_id
+                        ).long()
 
-        entry = {
-            "index": i,
-            "claim_id": test_data[i]["claim_id"],
-            "perturbation_type": test_data[i]["perturbation_type"],
-            "label": test_data[i]["label"],
-            "full_prompt": prompt_text,  # Full input
-            "raw_response": decoded,  # Model output only
-            "parsed_successfully": label is not None,
-            "predicted_label": label,
+                # Store input length
+                input_length = model_inputs["input_ids"].shape[1]
+
+                outputs = model.generate(
+                    **model_inputs,
+                    max_new_tokens=8192,
+                    use_cache=True,
+                    temperature=0.001,
+                )
+
+                # Decode only new tokens
+                new_tokens = outputs[0][input_length:]
+                decoded = tokenizer.decode(new_tokens, skip_special_tokens=True)
+
+            label = extract_label_from_response(decoded)
+
+            entry = {
+                "index": i,
+                "claim_id": test_data[i]["claim_id"],
+                "perturbation_type": test_data[i]["perturbation_type"],
+                "label": test_data[i]["label"],
+                "full_prompt": prompt_text,  # Full input
+                "raw_response": decoded,  # Model output only
+                "parsed_successfully": label is not None,
+                "predicted_label": label,
+            }
+            if "source_file" in test_data.column_names:
+                entry["source_file"] = test_data[i]["source_file"]
+            raw_outputs[i] = entry
+            f_out.write(json.dumps(entry) + "\n")
+            f_out.flush()
+
+        # Fill duplicate entries by reusing the inference result
+        remaining_dups = {
+            k: v for k, v in duplicate_map.items() if k not in completed_indices
         }
-        if "source_file" in test_data.column_names:
-            entry["source_file"] = test_data[i]["source_file"]
-        raw_outputs[i] = entry
+        for dup_idx, orig_idx in remaining_dups.items():
+            orig = raw_outputs[orig_idx]
+            entry = {
+                "index": dup_idx,
+                "claim_id": test_data[dup_idx]["claim_id"],
+                "perturbation_type": test_data[dup_idx]["perturbation_type"],
+                "label": test_data[dup_idx]["label"],
+                "full_prompt": orig["full_prompt"],
+                "raw_response": orig["raw_response"],
+                "parsed_successfully": orig["parsed_successfully"],
+                "predicted_label": orig["predicted_label"],
+                "reused_from_index": orig_idx,
+            }
+            if "source_file" in test_data.column_names:
+                entry["source_file"] = test_data[dup_idx]["source_file"]
+            raw_outputs[dup_idx] = entry
+            f_out.write(json.dumps(entry) + "\n")
+            f_out.flush()
 
-    # Fill duplicate entries by reusing the inference result
-    for dup_idx, orig_idx in duplicate_map.items():
-        orig = raw_outputs[orig_idx]
-        entry = {
-            "index": dup_idx,
-            "claim_id": test_data[dup_idx]["claim_id"],
-            "perturbation_type": test_data[dup_idx]["perturbation_type"],
-            "label": test_data[dup_idx]["label"],
-            "full_prompt": orig["full_prompt"],
-            "raw_response": orig["raw_response"],
-            "parsed_successfully": orig["parsed_successfully"],
-            "predicted_label": orig["predicted_label"],
-            "reused_from_index": orig_idx,
-        }
-        if "source_file" in test_data.column_names:
-            entry["source_file"] = test_data[dup_idx]["source_file"]
-        raw_outputs[dup_idx] = entry
-
-    raw_outputs_path = f"{pred_dir}/{file_prefix}inference_details.json"
-    with open(raw_outputs_path, "w") as f:
-        json.dump(raw_outputs, f, indent=2)
     print(
         f"Inference details (prompts + outputs) saved to: {raw_outputs_path}\n"
     )
