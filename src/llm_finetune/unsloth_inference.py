@@ -443,6 +443,17 @@ def inference(  # noqa: C901
         " unique entries..."
     )
 
+    # Ensure the file ends with a newline so the next appended record always
+    # starts on its own line (guards against partial/corrupt lines on resume).
+    if (
+        os.path.exists(raw_outputs_path)
+        and os.path.getsize(raw_outputs_path) > 0
+    ):
+        with open(raw_outputs_path, "rb+") as f_fix:
+            f_fix.seek(-1, os.SEEK_END)
+            if f_fix.read(1) != b"\n":
+                f_fix.write(b"\n")
+
     with open(raw_outputs_path, "a", encoding="utf-8") as f_out:
         for i in tqdm(remaining_indices):
             messages = test_data[i]["conversations"][:-1]

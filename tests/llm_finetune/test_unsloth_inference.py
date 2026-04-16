@@ -1937,3 +1937,212 @@ class TestResumeInference:
             )
             # Index 0 was loaded from file, so only 2 new generate calls
             assert m["model"].generate.call_count == 2
+
+
+# ---------------------------------------------------------------------------
+# Tests for newline guard (resume corruption fix)
+# ---------------------------------------------------------------------------
+
+
+class TestResumeNewlineGuard:
+    """Verify the newline guard that prevents JSONL corruption on resume.
+
+    When the inference process is interrupted mid-write the output file may lack
+    a trailing newline.  Opening that file in append mode without first ensuring
+    it ends with '\\n' would concatenate the next JSON record onto the same line
+    as the last (possibly truncated) record, permanently corrupting it.  The
+    guard adds a '\\n' when the last byte is not one.
+    """
+
+    def _write_entry(self, path, entry, trailing_newline=True):
+        """Write a single JSON entry to *path*, optionally without newline."""
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(json.dumps(entry))
+            if trailing_newline:
+                f.write("\n")
+
+    def _make_first_entry(self, ds):
+        return {
+            "index": 0,
+            "claim_id": ds[0]["claim_id"],
+            "perturbation_type": ds[0]["perturbation_type"],
+            "label": ds[0]["label"],
+            "full_prompt": "prompt",
+            "raw_response": '{"label": true}',
+            "parsed_successfully": True,
+            "predicted_label": '{"label": true}',
+        }
+
+    def _pred_dir(self, out, model_name="test"):
+        from src.llm_finetune.utils.naming import build_output_dir_name
+
+        name = build_output_dir_name(model_name, 32, 0, load_in_4bit=True)
+        d = out / name
+        d.mkdir(parents=True, exist_ok=True)
+        return d
+
+    def test_missing_trailing_newline_all_lines_parse(self, tmp_path):
+        """After resuming onto a file without a trailing newline, every line in
+        the output file is valid JSON (no two records concatenated)."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        ds = create_mock_test_dataset(n_claims=2, perturbations_per_claim=0)
+        out = tmp_path / "output"
+        jsonl_path = self._pred_dir(out) / "inference_details.jsonl"
+
+        # Simulate interrupted write: last byte is NOT '\n'
+        self._write_entry(
+            jsonl_path, self._make_first_entry(ds), trailing_newline=False
+        )
+        assert not jsonl_path.read_bytes().endswith(b"\n")
+
+        with _make_mock_inference_context(
+            tmp_path,
+            load_split=MagicMock(return_value=ds),
+        ):
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(out),
+            )
+
+        lines = [
+            ln
+            for ln in jsonl_path.read_text(encoding="utf-8").splitlines()
+            if ln.strip()
+        ]
+        assert len(lines) >= 2
+        for line in lines:
+            json.loads(line)  # Raises if any line is corrupt
+
+    def test_missing_trailing_newline_guard_adds_newline(self, tmp_path):
+        """The guard writes a '\\n' when the file does not end with one, so the
+        file ends with a newline immediately before inference appends."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        ds = create_mock_test_dataset(n_claims=2, perturbations_per_claim=0)
+        out = tmp_path / "output"
+        jsonl_path = self._pred_dir(out) / "inference_details.jsonl"
+
+        self._write_entry(
+            jsonl_path, self._make_first_entry(ds), trailing_newline=False
+        )
+
+        # Intercept the open() call to check file state just before appending
+        file_ends_with_newline_at_open = []
+        original_open = open
+
+        def _spy_open(path, mode="r", **kwargs):
+            fh = original_open(path, mode, **kwargs)
+            if str(path) == str(jsonl_path) and "a" in mode:
+                with original_open(path, "rb") as check:
+                    check.seek(0, 2)  # SEEK_END
+                    if check.tell() > 0:
+                        check.seek(-1, 2)
+                        file_ends_with_newline_at_open.append(
+                            check.read(1) == b"\n"
+                        )
+            return fh
+
+        with _make_mock_inference_context(
+            tmp_path,
+            load_split=MagicMock(return_value=ds),
+        ):
+            with patch("builtins.open", side_effect=_spy_open):
+                inference(
+                    test_json_paths=["test.json"],
+                    model_name="test",
+                    max_seq_length=512,
+                    output_dir=str(out),
+                )
+
+        # The first time append-mode open is intercepted, the file must
+        # already end with '\n' (guard ran before the append open).
+        assert (
+            file_ends_with_newline_at_open
+        ), "append-mode open was never observed"
+        assert file_ends_with_newline_at_open[0] is True
+
+    def test_existing_trailing_newline_not_corrupted(self, tmp_path):
+        """When the file already ends with '\\n', the guard is a no-op and the
+        output remains valid JSONL."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        ds = create_mock_test_dataset(n_claims=2, perturbations_per_claim=0)
+        out = tmp_path / "output"
+        jsonl_path = self._pred_dir(out) / "inference_details.jsonl"
+
+        self._write_entry(
+            jsonl_path, self._make_first_entry(ds), trailing_newline=True
+        )
+        assert jsonl_path.read_bytes().endswith(b"\n")
+
+        with _make_mock_inference_context(
+            tmp_path,
+            load_split=MagicMock(return_value=ds),
+        ):
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(out),
+            )
+
+        lines = [
+            ln
+            for ln in jsonl_path.read_text(encoding="utf-8").splitlines()
+            if ln.strip()
+        ]
+        assert len(lines) >= 2
+        for line in lines:
+            json.loads(line)
+
+    def test_empty_file_guard_skipped(self, tmp_path):
+        """An empty file is not touched by the newline guard (size guard
+        prevents the rb+ open on an empty file)."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        ds = create_mock_test_dataset(n_claims=1, perturbations_per_claim=0)
+        out = tmp_path / "output"
+        jsonl_path = self._pred_dir(out) / "inference_details.jsonl"
+        jsonl_path.write_bytes(b"")  # Empty file — getsize == 0
+
+        with _make_mock_inference_context(
+            tmp_path,
+            load_split=MagicMock(return_value=ds),
+        ):
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(out),
+            )
+
+        lines = [
+            ln
+            for ln in jsonl_path.read_text(encoding="utf-8").splitlines()
+            if ln.strip()
+        ]
+        assert len(lines) == 1
+        json.loads(lines[0])
+
+    def test_nonexistent_file_guard_skipped(self, tmp_path):
+        """When the JSONL file does not yet exist the guard does nothing and
+        inference runs normally."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        ds = create_mock_test_dataset(n_claims=1, perturbations_per_claim=0)
+        out = tmp_path / "output"
+
+        with _make_mock_inference_context(
+            tmp_path,
+            load_split=MagicMock(return_value=ds),
+        ) as m:
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(out),
+            )
+            assert m["model"].generate.call_count == 1
