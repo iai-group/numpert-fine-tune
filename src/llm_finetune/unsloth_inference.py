@@ -264,10 +264,11 @@ def inference(  # noqa: C901
                 f"   {_cuda_install_hint}"
             )
         elif not llama_cpp.llama_supports_gpu_offload():
-            raise RuntimeError(
-                "llama-cpp-python was built WITHOUT GPU support. "
-                "All layers are running on CPU. Reinstall with CUDA:\n"
-                f"  {_cuda_install_hint}"
+            print(
+                "⚠️  WARNING: llama-cpp-python was built WITHOUT GPU support. "
+                "All layers are running on CPU. To enable GPU offload, "
+                "reinstall with CUDA:\n"
+                f"   {_cuda_install_hint}"
             )
     else:
         model, tokenizer = FastLanguageModel.from_pretrained(

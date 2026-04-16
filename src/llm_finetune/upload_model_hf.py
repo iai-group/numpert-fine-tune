@@ -36,6 +36,9 @@ def detect_upload_type(model_path: Path) -> str:
     if model_path.is_file() and model_path.suffix == ".gguf":
         return "gguf"
 
+    if not model_path.is_dir():
+        return "unknown"
+
     files = set(f.name for f in model_path.iterdir())
 
     # Directory containing GGUF files
