@@ -17,6 +17,8 @@ from src.llm_finetune.utils.training.convert_to_gguf import (
     SUPPORTED_QUANT_METHODS,
 )
 
+_MODULE_PATH = "src.llm_finetune.utils.training.convert_to_gguf"
+
 
 # Fixture to mock check_llamacpp_setup
 @pytest.fixture(autouse=True)
@@ -136,14 +138,14 @@ class TestSaveAsGguf:
 class TestConvertExistingModel:
     """Test the convert_existing_model orchestration function."""
 
-    @patch("src.llm_finetune.utils.training.convert_to_gguf.subprocess.run")
-    @patch("src.llm_finetune.utils.training.convert_to_gguf.os.makedirs")
-    def test_default_output_dir(self, mock_makedirs, mock_run):
+    @patch(f"{_MODULE_PATH}.subprocess.run")
+    @patch(f"{_MODULE_PATH}.os.makedirs")
+    def test_default_output_dir(self, mock_makedirs, mock_run, tmp_path):
         mock_run.return_value = MagicMock(returncode=0)
+        model_dir = tmp_path / "models" / "my_model"
+        model_dir.mkdir(parents=True)
 
-        with patch(
-            "src.llm_finetune.utils.training.convert_to_gguf.check_llamacpp_setup"
-        ) as mock_check:
+        with patch(f"{_MODULE_PATH}.check_llamacpp_setup") as mock_check:
             mock_check.return_value = MagicMock()
             mock_check.return_value.__truediv__ = MagicMock(
                 side_effect=lambda x: MagicMock(
@@ -151,19 +153,19 @@ class TestConvertExistingModel:
                     exists=lambda s: True,
                 )
             )
-            convert_existing_model(model_path="/models/my_model")
+            convert_existing_model(model_path=str(model_dir))
 
-        expected_out = "/models/my_model_gguf_q4_k_m"
+        expected_out = "my_model_gguf_q4_k_m"
         mock_makedirs.assert_called_once_with(expected_out, exist_ok=True)
 
-    @patch("src.llm_finetune.utils.training.convert_to_gguf.subprocess.run")
-    @patch("src.llm_finetune.utils.training.convert_to_gguf.os.makedirs")
-    def test_custom_output_dir(self, mock_makedirs, mock_run):
+    @patch(f"{_MODULE_PATH}.subprocess.run")
+    @patch(f"{_MODULE_PATH}.os.makedirs")
+    def test_custom_output_dir(self, mock_makedirs, mock_run, tmp_path):
         mock_run.return_value = MagicMock(returncode=0)
+        model_dir = tmp_path / "models" / "my_model"
+        model_dir.mkdir(parents=True)
 
-        with patch(
-            "src.llm_finetune.utils.training.convert_to_gguf.check_llamacpp_setup"
-        ) as mock_check:
+        with patch(f"{_MODULE_PATH}.check_llamacpp_setup") as mock_check:
             mock_check.return_value = MagicMock()
             mock_check.return_value.__truediv__ = MagicMock(
                 side_effect=lambda x: MagicMock(
@@ -172,18 +174,16 @@ class TestConvertExistingModel:
                 )
             )
             convert_existing_model(
-                model_path="/models/my_model",
+                model_path=str(model_dir),
                 output_dir="/custom/out",
             )
 
         mock_makedirs.assert_called_once_with("/custom/out", exist_ok=True)
 
-    @patch("src.llm_finetune.utils.training.convert_to_gguf.subprocess.run")
-    @patch("src.llm_finetune.utils.training.convert_to_gguf.os.makedirs")
+    @patch(f"{_MODULE_PATH}.subprocess.run")
+    @patch(f"{_MODULE_PATH}.os.makedirs")
     def test_rejects_unsupported_method(self, mock_makedirs, mock_run):
-        with patch(
-            "src.llm_finetune.utils.training.convert_to_gguf.check_llamacpp_setup"
-        ) as mock_check:
+        with patch(f"{_MODULE_PATH}.check_llamacpp_setup") as mock_check:
             mock_check.return_value = MagicMock()
             with pytest.raises(ValueError, match="Unsupported quantization"):
                 convert_existing_model(
@@ -191,14 +191,14 @@ class TestConvertExistingModel:
                     quantization_method="invalid_method",
                 )
 
-    @patch("src.llm_finetune.utils.training.convert_to_gguf.subprocess.run")
-    @patch("src.llm_finetune.utils.training.convert_to_gguf.os.makedirs")
-    def test_conversion_failure_raises(self, mock_makedirs, mock_run):
+    @patch(f"{_MODULE_PATH}.subprocess.run")
+    @patch(f"{_MODULE_PATH}.os.makedirs")
+    def test_conversion_failure_raises(self, mock_makedirs, mock_run, tmp_path):
         mock_run.return_value = MagicMock(returncode=1)
+        model_dir = tmp_path / "models" / "m"
+        model_dir.mkdir(parents=True)
 
-        with patch(
-            "src.llm_finetune.utils.training.convert_to_gguf.check_llamacpp_setup"
-        ) as mock_check:
+        with patch(f"{_MODULE_PATH}.check_llamacpp_setup") as mock_check:
             mock_check.return_value = MagicMock()
             mock_check.return_value.__truediv__ = MagicMock(
                 side_effect=lambda x: MagicMock(
@@ -207,18 +207,18 @@ class TestConvertExistingModel:
                 )
             )
             with pytest.raises(RuntimeError, match="GGUF conversion failed"):
-                convert_existing_model(model_path="/models/m")
+                convert_existing_model(model_path=str(model_dir))
 
-    @patch("src.llm_finetune.utils.training.convert_to_gguf.subprocess.run")
-    @patch("src.llm_finetune.utils.training.convert_to_gguf.os.makedirs")
+    @patch(f"{_MODULE_PATH}.subprocess.run")
+    @patch(f"{_MODULE_PATH}.os.makedirs")
     def test_trailing_slash_stripped_from_default_dir(
-        self, mock_makedirs, mock_run
+        self, mock_makedirs, mock_run, tmp_path
     ):
         mock_run.return_value = MagicMock(returncode=0)
+        model_dir = tmp_path / "models" / "my_model"
+        model_dir.mkdir(parents=True)
 
-        with patch(
-            "src.llm_finetune.utils.training.convert_to_gguf.check_llamacpp_setup"
-        ) as mock_check:
+        with patch(f"{_MODULE_PATH}.check_llamacpp_setup") as mock_check:
             mock_check.return_value = MagicMock()
             mock_check.return_value.__truediv__ = MagicMock(
                 side_effect=lambda x: MagicMock(
@@ -226,9 +226,9 @@ class TestConvertExistingModel:
                     exists=lambda s: True,
                 )
             )
-            convert_existing_model(model_path="/models/my_model/")
+            convert_existing_model(model_path=f"{model_dir}/")
 
-        expected_out = "/models/my_model_gguf_q4_k_m"
+        expected_out = "my_model_gguf_q4_k_m"
         mock_makedirs.assert_called_once_with(expected_out, exist_ok=True)
 
 

@@ -80,7 +80,8 @@ def _build_env_with_cuda_libs() -> dict:
         "    pass\n"
         "try:\n"
         "    import torch\n"
-        "    paths.append(os.path.join(os.path.dirname(torch.__file__), 'lib'))\n"
+        "    lib_path = os.path.dirname(torch.__file__)\n"
+        "    paths.append(os.path.join(lib_path, 'lib'))\n"
         "except Exception:\n"
         "    pass\n"
         "print(os.pathsep.join(paths))\n"
@@ -99,9 +100,7 @@ def _build_env_with_cuda_libs() -> dict:
 
     if extra:
         existing = env.get("LD_LIBRARY_PATH", "")
-        env["LD_LIBRARY_PATH"] = extra + (
-            ":" + existing if existing else ""
-        )
+        env["LD_LIBRARY_PATH"] = extra + (":" + existing if existing else "")
 
     return env
 
@@ -205,16 +204,19 @@ def save_as_gguf(
     return output_dir
 
 
-def convert_existing_model(
+def convert_existing_model(  # noqa: C901
     model_path: str,
     output_dir: Optional[str] = None,
     quantization_method: str = DEFAULT_QUANT_METHOD,
     max_seq_length: int = 16384,
 ) -> str:
-    """Load a merged model from disk (or HuggingFace Hub) and convert it to GGUF.
+    """Convert a model to GGUF format.
 
-    Uses llama.cpp's ``convert_hf_to_gguf.py`` and ``llama-quantize``
-    directly via subprocess, so **no GPU or CUDA libraries are required**.
+    Loads a merged model from disk (or HuggingFace Hub) and converts it to
+    GGUF using llama.cpp's convert_hf_to_gguf.py and llama-quantize.
+    GPU execution is not required for conversion, though llama-quantize may
+    require PyTorch. In some environments, bundled CUDA/cuDNN shared
+    libraries also need to be discoverable.
 
     Args:
         model_path: Path to a local merged HuggingFace model directory **or**
@@ -231,6 +233,7 @@ def convert_existing_model(
         The output directory path.
 
     Raises:
+        ValueError: If model_path exists locally but is not a directory.
         RuntimeError: If llama.cpp is not properly set up or conversion fails.
     """
     llama_cpp_path = check_llamacpp_setup()
@@ -241,15 +244,25 @@ def convert_existing_model(
             f"Supported: {SUPPORTED_QUANT_METHODS}"
         )
 
-    # If model_path is not a local directory, treat it as a HF Hub model ID.
-    if not Path(model_path).is_dir():
+    # Resolve model_path as either a local model directory or a HF Hub model ID.
+    local_model_path = Path(model_path)
+    if local_model_path.exists():
+        if not local_model_path.is_dir():
+            raise ValueError(
+                f"Model path '{model_path}' exists locally but is not a "
+                "directory. Please provide a local HuggingFace model "
+                "directory or a HuggingFace Hub model ID."
+            )
+    else:
         if not _HF_HUB_AVAILABLE:
             raise RuntimeError(
                 "huggingface_hub is not installed. "
                 "Install it with: pip install huggingface-hub"
             )
-        print(f"Model path '{model_path}' is not a local directory. "
-              "Treating as a HuggingFace Hub model ID and downloading...")
+        print(
+            f"Model path '{model_path}' does not exist locally. "
+            "Treating it as a HuggingFace Hub model ID and downloading..."
+        )
         model_path = snapshot_download(repo_id=model_path)
         print(f"Downloaded to: {model_path}")
 

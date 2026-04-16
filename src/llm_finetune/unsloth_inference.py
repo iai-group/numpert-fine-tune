@@ -10,7 +10,6 @@ from typing import Optional, List
 import torch
 from tqdm import tqdm
 from unsloth import FastLanguageModel
-from unsloth.chat_templates import get_chat_template
 
 from src.llm_finetune.config import prefix
 from src.llm_finetune.utils.data_loading.pipeline import load_split
@@ -205,6 +204,13 @@ def inference(  # noqa: C901
                 "llama-cpp-python is required for GGUF inference. "
                 "Install it with: pip install llama-cpp-python"
             ) from e
+        try:
+            from unsloth.chat_templates import get_chat_template
+        except ModuleNotFoundError as e:
+            raise ModuleNotFoundError(
+                "unsloth.chat_templates is required for GGUF/chat-template "
+                "inference but is not available in this environment."
+            ) from e
         print("🦙 Mode: GGUF via llama-cpp-python")
 
         # Load the HF tokenizer so we can apply the exact same chat
@@ -219,9 +225,7 @@ def inference(  # noqa: C901
 
         tokenizer = AutoTokenizer.from_pretrained(tokenizer_name_or_path)
         if "llama-3" in tokenizer_name_or_path.lower():
-            tokenizer = get_chat_template(
-                tokenizer, chat_template="llama-3.1"
-            )
+            tokenizer = get_chat_template(tokenizer, chat_template="llama-3.1")
             # <|eot_id|> ends each turn; <|end_of_text|> is hard EOS
             gguf_stop_tokens = ["<|eot_id|>", "<|end_of_text|>"]
         else:  # Qwen / ChatML
