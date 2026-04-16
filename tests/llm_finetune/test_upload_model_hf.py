@@ -1,17 +1,15 @@
 """Tests for upload_model_hf module.
 
-All HuggingFace Hub dependencies are mocked so these tests run without
-network access or authentication.
+All HuggingFace Hub dependencies are mocked so these tests run without network
+access or authentication.
 """
 
 import argparse
 import pytest
-from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 from src.llm_finetune.upload_model_hf import (
     build_repo_id,
-    check_auth,
     detect_upload_type,
     upload,
 )
@@ -223,7 +221,9 @@ class TestUpload:
         mock_api.upload_folder.assert_called_once()
 
     @patch("src.llm_finetune.upload_model_hf.HfApi", create=True)
-    def test_upload_checkpoint_ignores_optimizer(self, mock_hfapi_cls, tmp_path):
+    def test_upload_checkpoint_ignores_optimizer(
+        self, mock_hfapi_cls, tmp_path
+    ):
         (tmp_path / "optimizer.pt").write_bytes(b"")
         (tmp_path / "trainer_state.json").write_text("{}")
 
