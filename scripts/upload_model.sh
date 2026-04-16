@@ -13,10 +13,9 @@ PUBLIC=false        # <-- set to true to make the repo public (default: private)
 COMMIT_MESSAGE=""   # <-- custom commit message (optional)
 
 
-source .finetune/bin/activate
 # ---------------------------------------------------------------------------
 
-CMD="python -m src.llm_finetune.upload_model_hf \
+CMD="uv run python -m src.llm_finetune.upload_model_hf \
     --model_path $MODEL_PATH \
     --model_name $MODEL_NAME"
 
