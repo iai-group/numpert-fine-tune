@@ -4,9 +4,15 @@ Standalone script for converting an already-trained merged model to GGUF.
 Also exposes `save_as_gguf()` for use in the fine-tuning pipeline.
 
 Usage:
+    # Local model directory
     python -m src.llm_finetune.utils.training.convert_to_gguf \
         --model_path path/to/merged_model \
         --output_dir path/to/output \
+        --quantization_method q4_k_m
+
+    # HuggingFace Hub model ID (downloaded automatically)
+    python -m src.llm_finetune.utils.training.convert_to_gguf \
+        --model_path unsloth/Qwen3-8b \
         --quantization_method q4_k_m
 """
 
@@ -17,6 +23,13 @@ import subprocess
 import sys
 from pathlib import Path
 from typing import Optional
+
+try:
+    from huggingface_hub import snapshot_download
+
+    _HF_HUB_AVAILABLE = True
+except ImportError:
+    _HF_HUB_AVAILABLE = False
 
 # Supported GGUF quantization methods (llama.cpp conventions).
 SUPPORTED_QUANT_METHODS = [
@@ -198,15 +211,19 @@ def convert_existing_model(
     quantization_method: str = DEFAULT_QUANT_METHOD,
     max_seq_length: int = 16384,
 ) -> str:
-    """Load a merged model from disk and convert it to GGUF.
+    """Load a merged model from disk (or HuggingFace Hub) and convert it to GGUF.
 
     Uses llama.cpp's ``convert_hf_to_gguf.py`` and ``llama-quantize``
     directly via subprocess, so **no GPU or CUDA libraries are required**.
 
     Args:
-        model_path: Path to the merged HuggingFace model directory.
+        model_path: Path to a local merged HuggingFace model directory **or**
+            a HuggingFace Hub model ID (e.g. ``unsloth/Qwen2.5-7B-Instruct``).
+            If the path does not exist locally it is downloaded via
+            ``huggingface_hub.snapshot_download``.
         output_dir: Where to write the GGUF output.  Defaults to
-            ``<model_path>_gguf_<quantization_method>``.
+            ``<model_name>_gguf_<quantization_method>`` in the current
+            working directory.
         quantization_method: Quantization scheme (default: q4_k_m).
         max_seq_length: Maximum sequence length (unused, kept for API compat).
 
@@ -218,14 +235,27 @@ def convert_existing_model(
     """
     llama_cpp_path = check_llamacpp_setup()
 
-    if output_dir is None:
-        output_dir = f"{model_path.rstrip('/')}_gguf_{quantization_method}"
-
     if quantization_method not in SUPPORTED_QUANT_METHODS:
         raise ValueError(
             f"Unsupported quantization method: '{quantization_method}'. "
             f"Supported: {SUPPORTED_QUANT_METHODS}"
         )
+
+    # If model_path is not a local directory, treat it as a HF Hub model ID.
+    if not Path(model_path).is_dir():
+        if not _HF_HUB_AVAILABLE:
+            raise RuntimeError(
+                "huggingface_hub is not installed. "
+                "Install it with: pip install huggingface-hub"
+            )
+        print(f"Model path '{model_path}' is not a local directory. "
+              "Treating as a HuggingFace Hub model ID and downloading...")
+        model_path = snapshot_download(repo_id=model_path)
+        print(f"Downloaded to: {model_path}")
+
+    if output_dir is None:
+        model_name_for_dir = Path(model_path).name or "model"
+        output_dir = f"{model_name_for_dir}_gguf_{quantization_method}"
 
     os.makedirs(output_dir, exist_ok=True)
 
@@ -324,7 +354,11 @@ if __name__ == "__main__":
         "--model_path",
         type=str,
         required=True,
-        help="Path to the merged HuggingFace model directory.",
+        help=(
+            "Path to the merged HuggingFace model directory, "
+            "or a HuggingFace Hub model ID (e.g. unsloth/Qwen2.5-7B-Instruct). "
+            "Hub models are downloaded automatically via huggingface_hub."
+        ),
     )
     parser.add_argument(
         "--output_dir",

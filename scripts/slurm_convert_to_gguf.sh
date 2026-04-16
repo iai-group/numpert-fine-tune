@@ -40,9 +40,9 @@
 # ==============================================================================
 # PARSE ARGUMENTS
 # ==============================================================================
-MODEL_PATH=".models/Qwen3-8B-daring-ant-evolves_normalized_claims_no_perturb_split/epoch-2/merged_model_r32"
-OUTPUT_DIR=".models/gguf/Qwen3-8B-daring-ant-evolves_normalized_claims_no_perturb_split"
-QUANTIZATION_METHOD="q4_k_m"
+MODEL_PATH=""
+OUTPUT_DIR=""
+QUANTIZATION_METHOD=""
 
 while [[ $# -gt 0 ]]; do
     case $1 in
