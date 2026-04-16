@@ -110,6 +110,7 @@ def inference(  # noqa: C901
     output_dir: Optional[str] = None,
     inference_unperturbed_claims: bool = False,
     tokenizer_name_or_path: Optional[str] = None,
+    verbose: bool = False,
 ):
     """Run inference on test data."""
     time_start = datetime.now()
@@ -202,7 +203,10 @@ def inference(  # noqa: C901
         except ImportError as e:
             raise ImportError(
                 "llama-cpp-python is required for GGUF inference. "
-                "Install it with: pip install llama-cpp-python"
+                "Install with CUDA support (pre-built wheel):\n"
+                "  pip install llama-cpp-python "
+                "--extra-index-url "
+                "https://abetlen.github.io/llama-cpp-python/whl/cu124"
             ) from e
         try:
             from unsloth.chat_templates import get_chat_template
@@ -236,11 +240,35 @@ def inference(  # noqa: C901
             model_path=model_name_arg,
             n_ctx=max_seq_length,
             n_gpu_layers=-1,
+            n_batch=max_seq_length,
+            # flash_attn=True,
             # The chat template already contains BOS; prevent llama.cpp
             # from prepending a second one.
             add_bos_token=False,
-            verbose=False,
+            verbose=verbose,
         )
+
+        # Verify GPU offloading is active
+        import llama_cpp
+
+        _cuda_install_hint = (
+            "pip install llama-cpp-python "
+            "--extra-index-url "
+            "https://abetlen.github.io/llama-cpp-python/whl/cu124 "
+            "--force-reinstall --no-cache-dir"
+        )
+        if not hasattr(llama_cpp, "llama_supports_gpu_offload"):
+            print(
+                "⚠️  WARNING: Cannot verify GPU offload support. "
+                "If inference is slow, reinstall with CUDA:\n"
+                f"   {_cuda_install_hint}"
+            )
+        elif not llama_cpp.llama_supports_gpu_offload():
+            raise RuntimeError(
+                "llama-cpp-python was built WITHOUT GPU support. "
+                "All layers are running on CPU. Reinstall with CUDA:\n"
+                f"  {_cuda_install_hint}"
+            )
     else:
         model, tokenizer = FastLanguageModel.from_pretrained(
             model_name=model_name_arg,
@@ -618,6 +646,12 @@ if __name__ == "__main__":
         help="Output directory for predictions "
         "(auto-generates run name if not set)",
     )
+    parser.add_argument(
+        "--verbose",
+        action="store_true",
+        default=False,
+        help="Enable verbose llama.cpp output (CUDA graph warmup, perf stats).",
+    )
 
     args = parser.parse_args()
 
@@ -634,4 +668,5 @@ if __name__ == "__main__":
         output_dir=args.output_dir,
         inference_unperturbed_claims=args.inference_unperturbed_claims,
         tokenizer_name_or_path=args.tokenizer,
+        verbose=args.verbose,
     )

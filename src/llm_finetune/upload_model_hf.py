@@ -30,9 +30,17 @@ def check_auth():
 def detect_upload_type(model_path: Path) -> str:
     """Heuristically determine what kind of model model_path this is.
 
-    Returns: 'merged', 'lora', or 'checkpoint'
+    Returns: 'merged', 'lora', 'checkpoint', or 'gguf'
     """
+    # Single GGUF file
+    if model_path.is_file() and model_path.suffix == ".gguf":
+        return "gguf"
+
     files = set(f.name for f in model_path.iterdir())
+
+    # Directory containing GGUF files
+    if any(f.endswith(".gguf") for f in files):
+        return "gguf"
 
     # LoRA adapter: has adapter_config.json but no full model shards
     if "adapter_config.json" in files:
@@ -88,6 +96,7 @@ def upload(args):
         sys.exit(1)
 
     # Auto-detect type unless overridden
+    # For single-file detection, check before calling iterdir()
     upload_type = args.type or detect_upload_type(model_path)
     if upload_type == "unknown":
         print(
@@ -143,13 +152,23 @@ def upload(args):
     print("    This may take a while for large models...\n")
 
     try:
-        api.upload_folder(
-            folder_path=str(model_path),
-            repo_id=repo_id,
-            repo_type="model",
-            commit_message=args.commit_message,
-            ignore_patterns=ignore_patterns,
-        )
+        if model_path.is_file():
+            # Single file upload (e.g. a single .gguf file)
+            api.upload_file(
+                path_or_fileobj=str(model_path),
+                path_in_repo=model_path.name,
+                repo_id=repo_id,
+                repo_type="model",
+                commit_message=args.commit_message,
+            )
+        else:
+            api.upload_folder(
+                folder_path=str(model_path),
+                repo_id=repo_id,
+                repo_type="model",
+                commit_message=args.commit_message,
+                ignore_patterns=ignore_patterns,
+            )
     except Exception as e:
         print(f"[ERROR] Upload failed: {e}")
         sys.exit(1)
@@ -170,6 +189,13 @@ def upload(args):
             "    This is useful for resuming training but is NOT "
             "directly\n"
             "    loadable as a standard inference model.\n"
+        )
+    elif upload_type == "gguf":
+        print(
+            "[i] Note: You uploaded GGUF quantized model file(s).\n"
+            "    These can be used directly with llama.cpp, ollama, "
+            "and other\n"
+            "    GGUF-compatible inference engines.\n"
         )
 
 
@@ -216,7 +242,7 @@ Examples:
     )
     parser.add_argument(
         "--type",
-        choices=["merged", "lora", "checkpoint"],
+        choices=["merged", "lora", "checkpoint", "gguf"],
         default=None,
         help="Explicitly set the upload type. Auto-detected if not provided.",
     )
