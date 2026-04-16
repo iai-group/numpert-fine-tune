@@ -111,6 +111,7 @@ def inference(  # noqa: C901
     inference_unperturbed_claims: bool = False,
     tokenizer_name_or_path: Optional[str] = None,
     verbose: bool = False,
+    require_gpu_offload: bool = False,
 ):
     """Run inference on test data."""
     time_start = datetime.now()
@@ -264,11 +265,15 @@ def inference(  # noqa: C901
                 f"   {_cuda_install_hint}"
             )
         elif not llama_cpp.llama_supports_gpu_offload():
-            raise RuntimeError(
+            _msg = (
                 "llama-cpp-python was built WITHOUT GPU support. "
                 "All layers are running on CPU. Reinstall with CUDA:\n"
                 f"  {_cuda_install_hint}"
             )
+            if require_gpu_offload:
+                raise RuntimeError(_msg)
+            else:
+                print(f"⚠️  WARNING: {_msg}")
     else:
         model, tokenizer = FastLanguageModel.from_pretrained(
             model_name=model_name_arg,
@@ -416,11 +421,19 @@ def inference(  # noqa: C901
                     continue
                 try:
                     entry = json.loads(line)
-                    idx = entry["index"]
-                    completed_indices.add(idx)
-                    raw_outputs[idx] = entry
-                except (json.JSONDecodeError, KeyError):
+                except json.JSONDecodeError:
                     continue
+                if not isinstance(entry, dict):
+                    continue
+                idx = entry.get("index")
+                if not isinstance(idx, int):
+                    continue
+                if not (0 <= idx < len(raw_outputs)):
+                    continue
+                if "predicted_label" not in entry:
+                    continue
+                raw_outputs[idx] = entry
+                completed_indices.add(idx)
         if completed_indices:
             print(
                 f"\nResuming: loaded {len(completed_indices)} "
@@ -652,6 +665,13 @@ if __name__ == "__main__":
         default=False,
         help="Enable verbose llama.cpp output (CUDA graph warmup, perf stats).",
     )
+    parser.add_argument(
+        "--require-gpu-offload",
+        action="store_true",
+        default=False,
+        help="Fail hard if llama-cpp-python was built without GPU offload support. "
+        "By default, a warning is printed and CPU inference proceeds.",
+    )
 
     args = parser.parse_args()
 
@@ -669,4 +689,5 @@ if __name__ == "__main__":
         inference_unperturbed_claims=args.inference_unperturbed_claims,
         tokenizer_name_or_path=args.tokenizer,
         verbose=args.verbose,
+        require_gpu_offload=args.require_gpu_offload,
     )

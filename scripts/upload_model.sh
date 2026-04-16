@@ -8,7 +8,7 @@
 MODEL_PATH=".models/gguf/Qwen3-8B-baseline_q4_k_m"       # <-- set your model path here
 MODEL_NAME="Qwen3-8B-baseline_q4_k_m"       # <-- set your HF repo name here (e.g. "my-llama-finetune")
 TYPE="gguf"             # <-- set to "merged", "lora", "checkpoint", or "gguf" if you want to specify the type (optional, auto-detected if empty)
-NAMESPACE="iai-group "        # <-- org or username namespace to upload under (optional, defaults to your HF username)
+NAMESPACE="iai-group"        # <-- org or username namespace to upload under (optional, defaults to your HF username)
 PUBLIC=false        # <-- set to true to make the repo public (default: private)
 COMMIT_MESSAGE=""   # <-- custom commit message (optional)
 
