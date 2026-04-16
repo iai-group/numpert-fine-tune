@@ -32,7 +32,7 @@
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:1
 #SBATCH --time=4:00:00
-#SBATCH --nodelist=gorina9
+##SBATCH --nodelist=gorina9
 #SBATCH --mem=300G
 #SBATCH --job-name=gguf-convert
 #SBATCH --output=scripts/slurm_out/gguf-convert_%j.out

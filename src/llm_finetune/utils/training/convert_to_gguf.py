@@ -42,7 +42,6 @@ SUPPORTED_QUANT_METHODS = [
     "q6_k",
     "q8_0",
     "f16",
-    "f32",
 ]
 
 DEFAULT_QUANT_METHOD = "q4_k_m"
@@ -314,8 +313,8 @@ def convert_existing_model(  # noqa: C901
             f"Command: {' '.join(convert_cmd)}"
         )
 
-    # Step 2: Quantize (skip if target is already f16 or f32)
-    if quantization_method in ("f16", "f32"):
+    # Step 2: Quantize (skip if target is already f16)
+    if quantization_method in ("f16"):
         final_gguf = f16_gguf
         print(f"\nSkipping quantization (method={quantization_method}).")
     else:
