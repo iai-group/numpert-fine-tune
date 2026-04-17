@@ -399,3 +399,106 @@ class TestUpload:
 
         call_kwargs = mock_api.upload_folder.call_args[1]
         assert call_kwargs["ignore_patterns"] is None
+
+    @patch("src.llm_finetune.upload_model_hf.HfApi", create=True)
+    def test_upload_single_non_gguf_file_exits_when_type_unknown(
+        self, mock_hfapi_cls, tmp_path
+    ):
+        """Single-file upload must be GGUF; unknown file types should fail."""
+        text_file = tmp_path / "artifact.txt"
+        text_file.write_text("not a model")
+
+        mock_api = MagicMock()
+        mock_hfapi_cls.return_value = mock_api
+
+        with patch.dict(
+            "sys.modules",
+            {"huggingface_hub": MagicMock(HfApi=mock_hfapi_cls)},
+        ):
+            from importlib import reload
+            import src.llm_finetune.upload_model_hf as mod
+
+            reload(mod)
+
+            args = _make_upload_args(text_file)
+            with pytest.raises(SystemExit):
+                mod.upload(args)
+
+        mock_hfapi_cls.assert_not_called()
+
+    @patch("src.llm_finetune.upload_model_hf.HfApi", create=True)
+    def test_upload_gguf_type_rejects_non_gguf_file(
+        self, mock_hfapi_cls, tmp_path
+    ):
+        """--type gguf on a non-.gguf file should fail fast."""
+        bad_file = tmp_path / "model.bin"
+        bad_file.write_bytes(b"bin")
+
+        mock_api = MagicMock()
+        mock_hfapi_cls.return_value = mock_api
+
+        with patch.dict(
+            "sys.modules",
+            {"huggingface_hub": MagicMock(HfApi=mock_hfapi_cls)},
+        ):
+            from importlib import reload
+            import src.llm_finetune.upload_model_hf as mod
+
+            reload(mod)
+
+            args = _make_upload_args(bad_file, type="gguf")
+            with pytest.raises(SystemExit):
+                mod.upload(args)
+
+        mock_hfapi_cls.assert_not_called()
+
+    @patch("src.llm_finetune.upload_model_hf.HfApi", create=True)
+    def test_upload_explicit_non_gguf_type_rejects_single_file(
+        self, mock_hfapi_cls, tmp_path
+    ):
+        """Merged/lora/checkpoint types require directories."""
+        gguf_file = tmp_path / "model-q4.gguf"
+        gguf_file.write_bytes(b"GGUF")
+
+        mock_api = MagicMock()
+        mock_hfapi_cls.return_value = mock_api
+
+        with patch.dict(
+            "sys.modules",
+            {"huggingface_hub": MagicMock(HfApi=mock_hfapi_cls)},
+        ):
+            from importlib import reload
+            import src.llm_finetune.upload_model_hf as mod
+
+            reload(mod)
+
+            args = _make_upload_args(gguf_file, type="merged")
+            with pytest.raises(SystemExit):
+                mod.upload(args)
+
+        mock_hfapi_cls.assert_not_called()
+
+    @patch("src.llm_finetune.upload_model_hf.HfApi", create=True)
+    def test_upload_gguf_type_rejects_directory_without_gguf(
+        self, mock_hfapi_cls, tmp_path
+    ):
+        """--type gguf on a directory requires at least one .gguf file."""
+        (tmp_path / "README.md").write_text("no gguf here")
+
+        mock_api = MagicMock()
+        mock_hfapi_cls.return_value = mock_api
+
+        with patch.dict(
+            "sys.modules",
+            {"huggingface_hub": MagicMock(HfApi=mock_hfapi_cls)},
+        ):
+            from importlib import reload
+            import src.llm_finetune.upload_model_hf as mod
+
+            reload(mod)
+
+            args = _make_upload_args(tmp_path, type="gguf")
+            with pytest.raises(SystemExit):
+                mod.upload(args)
+
+        mock_hfapi_cls.assert_not_called()
