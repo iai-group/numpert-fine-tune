@@ -1639,6 +1639,7 @@ class TestResumeInference:
                 model_name="test",
                 max_seq_length=512,
                 output_dir=str(out),
+                resume=True,
             )
             assert m["model"].generate.call_count == 0
 
@@ -1697,6 +1698,7 @@ class TestResumeInference:
                 model_name="test",
                 max_seq_length=512,
                 output_dir=str(out),
+                resume=True,
             )
             assert m["model"].generate.call_count == 2
 
@@ -1737,6 +1739,7 @@ class TestResumeInference:
                 model_name="test",
                 max_seq_length=512,
                 output_dir=str(out),
+                resume=True,
             )
 
         second_run = _read_jsonl(jsonl_files[0])
@@ -1779,6 +1782,7 @@ class TestResumeInference:
                 model_name="test",
                 max_seq_length=512,
                 output_dir=str(out),
+                resume=True,
             )
             assert m["model"].generate.call_count == 0
 
@@ -1844,6 +1848,7 @@ class TestResumeInference:
                 model_name="test",
                 max_seq_length=512,
                 output_dir=str(out),
+                resume=True,
             )
             # All 3 entries must still be processed (bad entry was skipped)
             assert m["model"].generate.call_count == 3
@@ -1888,6 +1893,7 @@ class TestResumeInference:
                 model_name="test",
                 max_seq_length=512,
                 output_dir=str(out),
+                resume=True,
             )
             # All 3 entries must still be processed (bad entry was skipped)
             assert m["model"].generate.call_count == 3
@@ -1934,6 +1940,7 @@ class TestResumeInference:
                 model_name="test",
                 max_seq_length=512,
                 output_dir=str(out),
+                resume=True,
             )
             # Index 0 was loaded from file, so only 2 new generate calls
             assert m["model"].generate.call_count == 2
@@ -2005,6 +2012,7 @@ class TestResumeNewlineGuard:
                 model_name="test",
                 max_seq_length=512,
                 output_dir=str(out),
+                resume=True,
             )
 
         lines = [
@@ -2055,6 +2063,7 @@ class TestResumeNewlineGuard:
                     model_name="test",
                     max_seq_length=512,
                     output_dir=str(out),
+                    resume=True,
                 )
 
         # The first time append-mode open is intercepted, the file must

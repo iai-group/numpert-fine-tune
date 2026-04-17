@@ -112,6 +112,7 @@ def inference(  # noqa: C901
     tokenizer_name_or_path: Optional[str] = None,
     verbose: bool = False,
     require_gpu_offload: bool = False,
+    resume: bool = False,
 ):
     """Run inference on test data."""
     time_start = datetime.now()
@@ -413,7 +414,7 @@ def inference(  # noqa: C901
     # Resume support: load previously completed results if the file exists
     raw_outputs_path = f"{pred_dir}/{file_prefix}inference_details.jsonl"
     completed_indices: set[int] = set()
-    if os.path.exists(raw_outputs_path):
+    if resume and os.path.exists(raw_outputs_path):
         with open(raw_outputs_path, "r", encoding="utf-8") as f_in:
             for line in f_in:
                 line = line.strip()
@@ -454,7 +455,8 @@ def inference(  # noqa: C901
     # When resuming JSONL writes, ensure the file ends with a newline so
     # the next appended record always starts on its own line.
     if (
-        os.path.exists(raw_outputs_path)
+        resume
+        and os.path.exists(raw_outputs_path)
         and os.path.getsize(raw_outputs_path) > 0
     ):
         with open(raw_outputs_path, "rb+") as f_fix:
@@ -684,6 +686,17 @@ if __name__ == "__main__":
         "without GPU offload support. "
         "By default, a warning is printed and CPU inference proceeds.",
     )
+    parser.add_argument(
+        "--resume",
+        action="store_true",
+        default=False,
+        help=(
+            "Resume a previous inference run by loading already-completed "
+            "results from an existing inference_details.jsonl in the output "
+            "directory. Without this flag, inference always starts from "
+            "scratch even if a prior output file exists."
+        ),
+    )
 
     args = parser.parse_args()
 
@@ -702,4 +715,5 @@ if __name__ == "__main__":
         tokenizer_name_or_path=args.tokenizer,
         verbose=args.verbose,
         require_gpu_offload=args.require_gpu_offload,
+        resume=args.resume,
     )

@@ -194,6 +194,16 @@ def upload(args):
         print(f"[ERROR] Failed to create/access repo: {e}")
         sys.exit(1)
 
+    # Validate that model_path shape matches the declared upload type.
+    # merged / lora / checkpoint must be directories; only gguf may be a file.
+    if upload_type in {"merged", "lora", "checkpoint"} and model_path.is_file():
+        print(
+            f"[ERROR] --type {upload_type} requires a directory, "
+            f"but got a file: {model_path}\n"
+            "        Pass --type gguf if you intended to upload a GGUF file."
+        )
+        sys.exit(1)
+
     ignore_patterns = _build_ignore_patterns(
         upload_type, args.include_optimizer_states
     )
