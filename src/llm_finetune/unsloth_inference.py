@@ -464,7 +464,8 @@ def inference(  # noqa: C901
             if f_fix.read(1) != b"\n":
                 f_fix.write(b"\n")
 
-    with open(raw_outputs_path, "a", encoding="utf-8") as f_out:
+    write_mode = "a" if resume else "w"
+    with open(raw_outputs_path, write_mode, encoding="utf-8") as f_out:
         for i in tqdm(remaining_indices):
             messages = test_data[i]["conversations"][:-1]
 

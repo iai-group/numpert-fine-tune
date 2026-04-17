@@ -15,22 +15,24 @@ COMMIT_MESSAGE=""   # <-- custom commit message (optional)
 
 # ---------------------------------------------------------------------------
 
-CMD="uv run python -m src.llm_finetune.upload_model_hf \
-    --model_path $MODEL_PATH \
-    --model_name $MODEL_NAME"
+CMD=(
+    uv run python -m src.llm_finetune.upload_model_hf
+    --model_path "$MODEL_PATH"
+    --model_name "$MODEL_NAME"
+)
 
 # Append optional flags
-[[ -n "$TYPE" ]] && CMD="$CMD --type $TYPE"
-[[ -n "$NAMESPACE" ]] && CMD="$CMD --namespace $NAMESPACE"
-[[ "$PUBLIC" == "true" ]] && CMD="$CMD --public"
-[[ -n "$COMMIT_MESSAGE" ]] && CMD="$CMD --commit-message \"$COMMIT_MESSAGE\""
+[[ -n "$TYPE" ]] && CMD+=(--type "$TYPE")
+[[ -n "$NAMESPACE" ]] && CMD+=(--namespace "$NAMESPACE")
+[[ "$PUBLIC" == "true" ]] && CMD+=(--public)
+[[ -n "$COMMIT_MESSAGE" ]] && CMD+=(--commit-message "$COMMIT_MESSAGE")
 
 # Print full command (for debugging)
 echo "Attempting to upload model to Hugging Face Hub"
-echo "$CMD"
+echo "${CMD[@]}"
 echo ""
 
-eval $CMD
+"${CMD[@]}"
 
 echo ""
 echo "=========================================="
