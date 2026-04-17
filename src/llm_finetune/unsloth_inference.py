@@ -29,6 +29,7 @@ from src.llm_finetune.utils.inference.metrics import (
     save_parse_failures,
     save_predictions_csv,
 )
+from src.llm_finetune.utils.inference.resume import load_resume_data
 from src.llm_finetune.utils.inference.unperturbed_claims import (
     deduplicate_unperturbed_claims,
 )
@@ -415,26 +416,9 @@ def inference(  # noqa: C901
     raw_outputs_path = f"{pred_dir}/{file_prefix}inference_details.jsonl"
     completed_indices: set[int] = set()
     if resume and os.path.exists(raw_outputs_path):
-        with open(raw_outputs_path, "r", encoding="utf-8") as f_in:
-            for line in f_in:
-                line = line.strip()
-                if not line:
-                    continue
-                try:
-                    entry = json.loads(line)
-                except json.JSONDecodeError:
-                    continue
-                if not isinstance(entry, dict):
-                    continue
-                idx = entry.get("index")
-                if not isinstance(idx, int):
-                    continue
-                if not (0 <= idx < len(raw_outputs)):
-                    continue
-                if "predicted_label" not in entry:
-                    continue
-                raw_outputs[idx] = entry
-                completed_indices.add(idx)
+        raw_outputs, completed_indices = load_resume_data(
+            raw_outputs_path, len(raw_outputs)
+        )
         if completed_indices:
             print(
                 f"\nResuming: loaded {len(completed_indices)} "
