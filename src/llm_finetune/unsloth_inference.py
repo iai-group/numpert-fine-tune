@@ -451,6 +451,17 @@ def inference(  # noqa: C901
         " unique entries..."
     )
 
+    # When resuming JSONL writes, ensure the file ends with a newline so
+    # the next appended record always starts on its own line.
+    if (
+        os.path.exists(raw_outputs_path)
+        and os.path.getsize(raw_outputs_path) > 0
+    ):
+        with open(raw_outputs_path, "rb+") as f_fix:
+            f_fix.seek(-1, os.SEEK_END)
+            if f_fix.read(1) != b"\n":
+                f_fix.write(b"\n")
+
     with open(raw_outputs_path, "a", encoding="utf-8") as f_out:
         for i in tqdm(remaining_indices):
             messages = test_data[i]["conversations"][:-1]
@@ -669,7 +680,8 @@ if __name__ == "__main__":
         "--require-gpu-offload",
         action="store_true",
         default=False,
-        help="Fail hard if llama-cpp-python was built without GPU offload support. "
+        help="Fail hard if llama-cpp-python was built "
+        "without GPU offload support. "
         "By default, a warning is printed and CPU inference proceeds.",
     )
 
