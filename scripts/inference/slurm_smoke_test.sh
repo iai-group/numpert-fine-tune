@@ -36,7 +36,7 @@
 # ==============================================================================
 # DEFAULTS
 # ==============================================================================
-MODEL=".models/gguf/Qwen3-8B-daring-ant-evolves_no_approx_no_f2f_type2/merged_model_r32-q4_k_m.gguf"
+MODEL=".models/gguf/Qwen3-8B-daring-ant-evolves_no_approx_no_f2f_type2_q4_k_m/merged_model_r32-q4_k_m.gguf"
 TOKENIZER="unsloth/Qwen3-8B"
 EPOCH=0
 RANK=32
@@ -91,6 +91,20 @@ echo "Start time:     $(date)"
 echo "=========================================="
 
 nvidia-smi 2>/dev/null || echo "(No GPU detected)"
+
+# Ensure cuDNN from nvidia-cudnn-cu12 package is on LD_LIBRARY_PATH.
+# Use $HOME so the path resolves correctly on both login and compute nodes.
+CUDNN_LIB="$HOME/.local/lib/python3.11/site-packages/nvidia/cudnn/lib"
+if [ ! -d "$CUDNN_LIB" ]; then
+    # Fallback: try dynamic detection via uv
+    CUDNN_LIB=$(uv run python -c "import os, nvidia.cudnn; print(os.path.join(os.path.dirname(nvidia.cudnn.__file__), 'lib'))" 2>/dev/null || true)
+fi
+if [ -n "$CUDNN_LIB" ] && [ -d "$CUDNN_LIB" ]; then
+    export LD_LIBRARY_PATH="${CUDNN_LIB}:${LD_LIBRARY_PATH:-}"
+    echo "Added cuDNN to LD_LIBRARY_PATH: $CUDNN_LIB"
+else
+    echo "WARNING: cuDNN library directory not found. torch may fail to load."
+fi
 echo ""
 
 # ==============================================================================

@@ -106,8 +106,3 @@ module = [
     "pytest.*",
 ]
 ignore_missing_imports = true
-
-[dependency-groups]
-dev = [
-    "llama-cpp-python>=0.3.20",
-]

@@ -52,6 +52,17 @@ from src.llm_finetune.unsloth_inference import (  # noqa: E402
 # ---------------------------------------------------------------------------
 
 
+def _read_jsonl(path):
+    """Read a JSONL file and return a list of dicts."""
+    entries = []
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if line:
+                entries.append(json.loads(line))
+    return entries
+
+
 def _make_test_example(claim_id, perturb_type, label, claim_text="claim"):
     """Build a single example dict matching the inference pipeline."""
     return {
@@ -532,8 +543,8 @@ class TestInference:
         subdirs = [d.name for d in out.iterdir() if d.is_dir()]
         assert all("_r16" not in d for d in subdirs)
 
-    def test_inference_details_json_written(self, tmp_path):
-        """Raw inference details are written to a JSON file."""
+    def test_inference_details_jsonl_written(self, tmp_path):
+        """Raw inference details are written to a JSONL file."""
         from src.llm_finetune.unsloth_inference import inference
 
         out = tmp_path / "output"
@@ -544,12 +555,10 @@ class TestInference:
                 max_seq_length=512,
                 output_dir=str(out),
             )
-        # Find inference_details.json somewhere under output
-        json_files = list(out.rglob("inference_details.json"))
-        assert len(json_files) == 1
+        jsonl_files = list(out.rglob("inference_details.jsonl"))
+        assert len(jsonl_files) == 1
 
-        with open(json_files[0]) as f:
-            data = json.load(f)
+        data = _read_jsonl(jsonl_files[0])
         assert isinstance(data, list)
         assert len(data) > 0
 
@@ -677,6 +686,7 @@ class TestInferenceGGUF:
                 model_path=str(gguf_file),
                 n_ctx=512,
                 n_gpu_layers=-1,
+                n_batch=512,
                 add_bos_token=False,
                 verbose=False,
             )
@@ -821,7 +831,7 @@ class TestUnperturbedClaimsInference:
 
     def test_unperturbed_inference_details_prefixed(self, tmp_path):
         """inference_unperturbed_claims=True writes
-        unperturbed_inference_details.json."""
+        unperturbed_inference_details.jsonl."""
         from src.llm_finetune.unsloth_inference import inference
 
         out = tmp_path / "output"
@@ -833,8 +843,8 @@ class TestUnperturbedClaimsInference:
                 output_dir=str(out),
                 inference_unperturbed_claims=True,
             )
-        json_files = list(out.rglob("unperturbed_inference_details.json"))
-        assert len(json_files) == 1
+        jsonl_files = list(out.rglob("unperturbed_inference_details.jsonl"))
+        assert len(jsonl_files) == 1
 
     def test_non_unperturbed_no_prefix(self, tmp_path):
         """Without the flag, output files have no prefix."""
@@ -1028,7 +1038,7 @@ class TestInferenceDeduplication:
             assert m["model"].generate.call_count == 6
 
     def test_all_entries_in_output(self, tmp_path):
-        """inference_details.json contains an entry for every row, including
+        """inference_details.jsonl contains an entry for every row, including
         duplicates."""
         from src.llm_finetune.unsloth_inference import inference
 
@@ -1044,10 +1054,9 @@ class TestInferenceDeduplication:
                 max_seq_length=512,
                 output_dir=str(out),
             )
-        json_files = list(out.rglob("inference_details.json"))
-        assert len(json_files) == 1
-        with open(json_files[0]) as f:
-            details = json.load(f)
+        jsonl_files = list(out.rglob("inference_details.jsonl"))
+        assert len(jsonl_files) == 1
+        details = _read_jsonl(jsonl_files[0])
         assert len(details) == 8
 
     def test_duplicates_have_reused_marker(self, tmp_path):
@@ -1067,9 +1076,8 @@ class TestInferenceDeduplication:
                 max_seq_length=512,
                 output_dir=str(out),
             )
-        json_files = list(out.rglob("inference_details.json"))
-        with open(json_files[0]) as f:
-            details = json.load(f)
+        jsonl_files = list(out.rglob("inference_details.jsonl"))
+        details = _read_jsonl(jsonl_files[0])
 
         reused = [d for d in details if "reused_from_index" in d]
         not_reused = [d for d in details if "reused_from_index" not in d]
@@ -1096,9 +1104,8 @@ class TestInferenceDeduplication:
                 max_seq_length=512,
                 output_dir=str(out),
             )
-        json_files = list(out.rglob("inference_details.json"))
-        with open(json_files[0]) as f:
-            details = json.load(f)
+        jsonl_files = list(out.rglob("inference_details.jsonl"))
+        details = _read_jsonl(jsonl_files[0])
 
         reused = [d for d in details if "reused_from_index" in d]
         # The duplicates come from approximation_True.json
@@ -1161,9 +1168,8 @@ class TestInferenceDeduplication:
             # Both must be evaluated — no deduplication
             assert m["model"].generate.call_count == 2
 
-        json_files = list(out.rglob("inference_details.json"))
-        with open(json_files[0]) as f:
-            details = json.load(f)
+        jsonl_files = list(out.rglob("inference_details.jsonl"))
+        details = _read_jsonl(jsonl_files[0])
         # No reused entries
         assert all("reused_from_index" not in d for d in details)
 
@@ -1183,9 +1189,8 @@ class TestInferenceDeduplication:
                 max_seq_length=512,
                 output_dir=str(out),
             )
-        json_files = list(out.rglob("inference_details.json"))
-        with open(json_files[0]) as f:
-            details = json.load(f)
+        jsonl_files = list(out.rglob("inference_details.jsonl"))
+        details = _read_jsonl(jsonl_files[0])
 
         by_index = {d["index"]: d for d in details}
         for d in details:
@@ -1479,3 +1484,674 @@ class TestDeduplicationMetricsIntegration:
         assert len(report.per_source_file) == 3
         for src in ["file_a.json", "file_b.json", "file_c.json"]:
             assert report.per_source_file[src].total == 1
+
+
+# ---------------------------------------------------------------------------
+# Tests for iterative JSONL saving and resume behaviour
+# ---------------------------------------------------------------------------
+
+
+class TestIterativeJsonlSave:
+    """Verify that inference results are written incrementally to JSONL."""
+
+    def test_each_entry_is_a_valid_jsonl_line(self, tmp_path):
+        """Each line in the output file is a valid JSON object with the expected
+        fields."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        out = tmp_path / "output"
+        with _make_mock_inference_context(tmp_path):
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test-model",
+                max_seq_length=512,
+                output_dir=str(out),
+            )
+        jsonl_files = list(out.rglob("inference_details.jsonl"))
+        assert len(jsonl_files) == 1
+
+        entries = _read_jsonl(jsonl_files[0])
+        required_keys = {
+            "index",
+            "claim_id",
+            "perturbation_type",
+            "label",
+            "full_prompt",
+            "raw_response",
+            "parsed_successfully",
+            "predicted_label",
+        }
+        for entry in entries:
+            assert required_keys.issubset(
+                entry.keys()
+            ), f"Missing keys: {required_keys - entry.keys()}"
+
+    def test_raw_response_stored_per_entry(self, tmp_path):
+        """Each JSONL entry contains the full raw model output."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        out = tmp_path / "output"
+        with _make_mock_inference_context(tmp_path) as m:
+            # Configure tokenizer.decode to return a response with reasoning
+            m["tokenizer"].decode = MagicMock(
+                return_value=(
+                    "<think>The claim says 350 but evidence says three "
+                    "hundred fifty. These are the same number.</think>"
+                    '{"label": true}'
+                )
+            )
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test-model",
+                max_seq_length=512,
+                output_dir=str(out),
+            )
+
+        entries = _read_jsonl(list(out.rglob("inference_details.jsonl"))[0])
+        for entry in entries:
+            if "reused_from_index" not in entry:
+                assert "<think>" in entry["raw_response"]
+                assert '{"label": true}' in entry["raw_response"]
+
+    def test_jsonl_grows_incrementally(self, tmp_path):
+        """The JSONL file is written to after each inference call, not all at
+        once at the end.
+
+        We verify this by checking that the file has content after each
+        model.generate call via a side effect.
+        """
+        from src.llm_finetune.unsloth_inference import inference
+
+        ds = create_mock_test_dataset(n_claims=2, perturbations_per_claim=0)
+        out = tmp_path / "output"
+        lines_seen_during_inference = []
+
+        def _counting_generate(**kwargs):
+            """Side effect that checks file size after each generate."""
+            jsonl_files = list(out.rglob("inference_details.jsonl"))
+            if jsonl_files:
+                with open(jsonl_files[0], "r") as f:
+                    lines = [line for line in f if line.strip()]
+                lines_seen_during_inference.append(len(lines))
+            else:
+                lines_seen_during_inference.append(0)
+            # Return mock output
+            mock_output_slice = MagicMock()
+            mock_output_row = MagicMock()
+            mock_output_row.__getitem__ = MagicMock(
+                return_value=mock_output_slice
+            )
+            mock_outputs = MagicMock()
+            mock_outputs.__getitem__ = MagicMock(return_value=mock_output_row)
+            return mock_outputs
+
+        with _make_mock_inference_context(
+            tmp_path,
+            load_split=MagicMock(return_value=ds),
+        ) as m:
+            m["model"].generate = MagicMock(side_effect=_counting_generate)
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(out),
+            )
+
+        # After 1st generate: 0 lines (file written AFTER generate)
+        # After 2nd generate: 1 line (first result already flushed)
+        assert len(lines_seen_during_inference) == 2
+        # The second call should see at least 1 line from the first
+        assert lines_seen_during_inference[1] >= 1
+
+
+class TestResumeInference:
+    """Verify that inference resumes from a partially completed JSONL file."""
+
+    def test_resume_skips_completed_entries(self, tmp_path):
+        """Re-running inference skips entries already in the JSONL file."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        ds = create_mock_test_dataset(n_claims=3, perturbations_per_claim=0)
+        out = tmp_path / "output"
+
+        # First run: complete all entries
+        with _make_mock_inference_context(
+            tmp_path,
+            load_split=MagicMock(return_value=ds),
+        ) as m:
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(out),
+            )
+            first_run_calls = m["model"].generate.call_count
+
+        assert first_run_calls == 3
+
+        # Second run: everything already done, no generate calls
+        with _make_mock_inference_context(
+            tmp_path,
+            load_split=MagicMock(return_value=ds),
+        ) as m:
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(out),
+                resume=True,
+            )
+            assert m["model"].generate.call_count == 0
+
+    def test_resume_completes_partial_run(self, tmp_path):
+        """Partial JSONL from an interrupted run is continued on re-run."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        ds = create_mock_test_dataset(n_claims=4, perturbations_per_claim=0)
+        out = tmp_path / "output"
+
+        # First run: interrupt after 2 entries using a side effect
+        call_count = 0
+
+        def _interrupt_after_two(**kwargs):
+            nonlocal call_count
+            call_count += 1
+            if call_count > 2:
+                raise KeyboardInterrupt("Simulated interruption")
+            mock_output_slice = MagicMock()
+            mock_output_row = MagicMock()
+            mock_output_row.__getitem__ = MagicMock(
+                return_value=mock_output_slice
+            )
+            mock_outputs = MagicMock()
+            mock_outputs.__getitem__ = MagicMock(return_value=mock_output_row)
+            return mock_outputs
+
+        with _make_mock_inference_context(
+            tmp_path,
+            load_split=MagicMock(return_value=ds),
+        ) as m:
+            m["model"].generate = MagicMock(side_effect=_interrupt_after_two)
+            try:
+                inference(
+                    test_json_paths=["test.json"],
+                    model_name="test",
+                    max_seq_length=512,
+                    output_dir=str(out),
+                )
+            except KeyboardInterrupt:
+                pass
+
+        # Verify partial file exists with 2 entries
+        jsonl_files = list(out.rglob("inference_details.jsonl"))
+        assert len(jsonl_files) == 1
+        partial = _read_jsonl(jsonl_files[0])
+        assert len(partial) == 2
+
+        # Second run: should only generate for the remaining 2
+        with _make_mock_inference_context(
+            tmp_path,
+            load_split=MagicMock(return_value=ds),
+        ) as m:
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(out),
+                resume=True,
+            )
+            assert m["model"].generate.call_count == 2
+
+        # Final file should have all 4 entries
+        final = _read_jsonl(jsonl_files[0])
+        assert len(final) == 4
+
+    def test_resume_preserves_existing_results(self, tmp_path):
+        """Results from the first run are not overwritten on resume."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        ds = create_mock_test_dataset(n_claims=2, perturbations_per_claim=0)
+        out = tmp_path / "output"
+
+        # First run
+        with _make_mock_inference_context(
+            tmp_path,
+            load_split=MagicMock(return_value=ds),
+        ) as m:
+            m["tokenizer"].decode = MagicMock(return_value='{"label": true}')
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(out),
+            )
+
+        jsonl_files = list(out.rglob("inference_details.jsonl"))
+        first_run = _read_jsonl(jsonl_files[0])
+
+        # Second run (no new entries)
+        with _make_mock_inference_context(
+            tmp_path,
+            load_split=MagicMock(return_value=ds),
+        ):
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(out),
+                resume=True,
+            )
+
+        second_run = _read_jsonl(jsonl_files[0])
+        # Same content, nothing overwritten or duplicated
+        assert len(second_run) == len(first_run)
+        for orig, resumed in zip(first_run, second_run):
+            assert orig["index"] == resumed["index"]
+            assert orig["claim_id"] == resumed["claim_id"]
+            assert orig["raw_response"] == resumed["raw_response"]
+
+    def test_resume_with_duplicates(self, tmp_path):
+        """Resume correctly handles duplicate original_normalized entries."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        ds = _create_dataset_with_duplicates()
+        out = tmp_path / "output"
+
+        # First run
+        with _make_mock_inference_context(
+            tmp_path,
+            load_split=MagicMock(return_value=ds),
+        ):
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(out),
+            )
+
+        jsonl_files = list(out.rglob("inference_details.jsonl"))
+        first_run = _read_jsonl(jsonl_files[0])
+
+        # Second run: no new generate calls
+        with _make_mock_inference_context(
+            tmp_path,
+            load_split=MagicMock(return_value=ds),
+        ) as m:
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(out),
+                resume=True,
+            )
+            assert m["model"].generate.call_count == 0
+
+        second_run = _read_jsonl(jsonl_files[0])
+        assert len(second_run) == len(first_run)
+
+    def test_no_existing_file_starts_fresh(self, tmp_path):
+        """When no JSONL file exists, all entries are processed."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        ds = create_mock_test_dataset(n_claims=3, perturbations_per_claim=0)
+        out = tmp_path / "output"
+
+        with _make_mock_inference_context(
+            tmp_path,
+            load_split=MagicMock(return_value=ds),
+        ) as m:
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(out),
+            )
+            assert m["model"].generate.call_count == 3
+
+    def test_out_of_bounds_index_skipped_on_resume(self, tmp_path):
+        """JSONL entry with index >= dataset size is silently skipped."""
+        from src.llm_finetune.unsloth_inference import inference
+        from src.llm_finetune.utils.naming import build_output_dir_name
+
+        ds = create_mock_test_dataset(n_claims=3, perturbations_per_claim=0)
+        out = tmp_path / "output"
+
+        pred_dir_name = build_output_dir_name("test", 32, 0, load_in_4bit=True)
+        pred_dir = out / pred_dir_name
+        pred_dir.mkdir(parents=True)
+        jsonl_path = pred_dir / "inference_details.jsonl"
+
+        # Write an entry whose index is well beyond the dataset length
+        with open(jsonl_path, "w") as f:
+            f.write(
+                json.dumps(
+                    {
+                        "index": 9999,
+                        "claim_id": "claim_9999",
+                        "perturbation_type": "original_normalized",
+                        "label": "True",
+                        "full_prompt": "prompt",
+                        "raw_response": '{"label": true}',
+                        "parsed_successfully": True,
+                        "predicted_label": '{"label": true}',
+                    }
+                )
+                + "\n"
+            )
+
+        with _make_mock_inference_context(
+            tmp_path,
+            load_split=MagicMock(return_value=ds),
+        ) as m:
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(out),
+                resume=True,
+            )
+            # All 3 entries must still be processed (bad entry was skipped)
+            assert m["model"].generate.call_count == 3
+
+    def test_non_integer_index_skipped_on_resume(self, tmp_path):
+        """JSONL entry with a non-integer index is silently skipped."""
+        from src.llm_finetune.unsloth_inference import inference
+        from src.llm_finetune.utils.naming import build_output_dir_name
+
+        ds = create_mock_test_dataset(n_claims=3, perturbations_per_claim=0)
+        out = tmp_path / "output"
+
+        pred_dir_name = build_output_dir_name("test", 32, 0, load_in_4bit=True)
+        pred_dir = out / pred_dir_name
+        pred_dir.mkdir(parents=True)
+        jsonl_path = pred_dir / "inference_details.jsonl"
+
+        # Write an entry with a string index (e.g., from manual editing)
+        with open(jsonl_path, "w") as f:
+            f.write(
+                json.dumps(
+                    {
+                        "index": "0",  # string, not int
+                        "claim_id": "claim_0000",
+                        "perturbation_type": "original_normalized",
+                        "label": "True",
+                        "full_prompt": "prompt",
+                        "raw_response": '{"label": true}',
+                        "parsed_successfully": True,
+                        "predicted_label": '{"label": true}',
+                    }
+                )
+                + "\n"
+            )
+
+        with _make_mock_inference_context(
+            tmp_path,
+            load_split=MagicMock(return_value=ds),
+        ) as m:
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(out),
+                resume=True,
+            )
+            # All 3 entries must still be processed (bad entry was skipped)
+            assert m["model"].generate.call_count == 3
+
+    def test_corrupt_jsonl_lines_skipped_on_resume(self, tmp_path):
+        """Malformed lines in existing JSONL are ignored during resume."""
+        from src.llm_finetune.unsloth_inference import inference
+        from src.llm_finetune.utils.naming import build_output_dir_name
+
+        ds = create_mock_test_dataset(n_claims=3, perturbations_per_claim=0)
+        out = tmp_path / "output"
+
+        # Create pred_dir manually to plant a corrupt JSONL file
+        pred_dir_name = build_output_dir_name("test", 32, 0, load_in_4bit=True)
+        pred_dir = out / pred_dir_name
+        pred_dir.mkdir(parents=True)
+        jsonl_path = pred_dir / "inference_details.jsonl"
+
+        # Write one valid line and one corrupt line
+        with open(jsonl_path, "w") as f:
+            f.write(
+                json.dumps(
+                    {
+                        "index": 0,
+                        "claim_id": "claim_0000",
+                        "perturbation_type": "original_normalized",
+                        "label": "True",
+                        "full_prompt": "prompt",
+                        "raw_response": '{"label": true}',
+                        "parsed_successfully": True,
+                        "predicted_label": '{"label": true}',
+                    }
+                )
+                + "\n"
+            )
+            f.write("THIS IS NOT VALID JSON\n")
+
+        with _make_mock_inference_context(
+            tmp_path,
+            load_split=MagicMock(return_value=ds),
+        ) as m:
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(out),
+                resume=True,
+            )
+            # Index 0 was loaded from file, so only 2 new generate calls
+            assert m["model"].generate.call_count == 2
+
+
+# ---------------------------------------------------------------------------
+# Tests for newline guard (resume corruption fix)
+# ---------------------------------------------------------------------------
+
+
+class TestResumeNewlineGuard:
+    """Verify the newline guard that prevents JSONL corruption on resume.
+
+    When the inference process is interrupted mid-write the output file may lack
+    a trailing newline.  Opening that file in append mode without first ensuring
+    it ends with '\\n' would concatenate the next JSON record onto the same line
+    as the last (possibly truncated) record, permanently corrupting it.  The
+    guard adds a '\\n' when the last byte is not one.
+    """
+
+    def _write_entry(self, path, entry, trailing_newline=True):
+        """Write a single JSON entry to *path*, optionally without newline."""
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(json.dumps(entry))
+            if trailing_newline:
+                f.write("\n")
+
+    def _make_first_entry(self, ds):
+        return {
+            "index": 0,
+            "claim_id": ds[0]["claim_id"],
+            "perturbation_type": ds[0]["perturbation_type"],
+            "label": ds[0]["label"],
+            "full_prompt": "prompt",
+            "raw_response": '{"label": true}',
+            "parsed_successfully": True,
+            "predicted_label": '{"label": true}',
+        }
+
+    def _pred_dir(self, out, model_name="test"):
+        from src.llm_finetune.utils.naming import build_output_dir_name
+
+        name = build_output_dir_name(model_name, 32, 0, load_in_4bit=True)
+        d = out / name
+        d.mkdir(parents=True, exist_ok=True)
+        return d
+
+    def test_missing_trailing_newline_all_lines_parse(self, tmp_path):
+        """After resuming onto a file without a trailing newline, every line in
+        the output file is valid JSON (no two records concatenated)."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        ds = create_mock_test_dataset(n_claims=2, perturbations_per_claim=0)
+        out = tmp_path / "output"
+        jsonl_path = self._pred_dir(out) / "inference_details.jsonl"
+
+        # Simulate interrupted write: last byte is NOT '\n'
+        self._write_entry(
+            jsonl_path, self._make_first_entry(ds), trailing_newline=False
+        )
+        assert not jsonl_path.read_bytes().endswith(b"\n")
+
+        with _make_mock_inference_context(
+            tmp_path,
+            load_split=MagicMock(return_value=ds),
+        ):
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(out),
+                resume=True,
+            )
+
+        lines = [
+            ln
+            for ln in jsonl_path.read_text(encoding="utf-8").splitlines()
+            if ln.strip()
+        ]
+        assert len(lines) >= 2
+        for line in lines:
+            json.loads(line)  # Raises if any line is corrupt
+
+    def test_missing_trailing_newline_guard_adds_newline(self, tmp_path):
+        """The guard writes a '\\n' when the file does not end with one, so the
+        file ends with a newline immediately before inference appends."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        ds = create_mock_test_dataset(n_claims=2, perturbations_per_claim=0)
+        out = tmp_path / "output"
+        jsonl_path = self._pred_dir(out) / "inference_details.jsonl"
+
+        self._write_entry(
+            jsonl_path, self._make_first_entry(ds), trailing_newline=False
+        )
+
+        # Intercept the open() call to check file state just before appending
+        file_ends_with_newline_at_open = []
+        original_open = open
+
+        def _spy_open(path, mode="r", **kwargs):
+            fh = original_open(path, mode, **kwargs)
+            if str(path) == str(jsonl_path) and "a" in mode:
+                with original_open(path, "rb") as check:
+                    check.seek(0, 2)  # SEEK_END
+                    if check.tell() > 0:
+                        check.seek(-1, 2)
+                        file_ends_with_newline_at_open.append(
+                            check.read(1) == b"\n"
+                        )
+            return fh
+
+        with _make_mock_inference_context(
+            tmp_path,
+            load_split=MagicMock(return_value=ds),
+        ):
+            with patch("builtins.open", side_effect=_spy_open):
+                inference(
+                    test_json_paths=["test.json"],
+                    model_name="test",
+                    max_seq_length=512,
+                    output_dir=str(out),
+                    resume=True,
+                )
+
+        # The first time append-mode open is intercepted, the file must
+        # already end with '\n' (guard ran before the append open).
+        assert (
+            file_ends_with_newline_at_open
+        ), "append-mode open was never observed"
+        assert file_ends_with_newline_at_open[0] is True
+
+    def test_existing_trailing_newline_not_corrupted(self, tmp_path):
+        """When the file already ends with '\\n', the guard is a no-op and the
+        output remains valid JSONL."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        ds = create_mock_test_dataset(n_claims=2, perturbations_per_claim=0)
+        out = tmp_path / "output"
+        jsonl_path = self._pred_dir(out) / "inference_details.jsonl"
+
+        self._write_entry(
+            jsonl_path, self._make_first_entry(ds), trailing_newline=True
+        )
+        assert jsonl_path.read_bytes().endswith(b"\n")
+
+        with _make_mock_inference_context(
+            tmp_path,
+            load_split=MagicMock(return_value=ds),
+        ):
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(out),
+            )
+
+        lines = [
+            ln
+            for ln in jsonl_path.read_text(encoding="utf-8").splitlines()
+            if ln.strip()
+        ]
+        assert len(lines) >= 2
+        for line in lines:
+            json.loads(line)
+
+    def test_empty_file_guard_skipped(self, tmp_path):
+        """An empty file is not touched by the newline guard (size guard
+        prevents the rb+ open on an empty file)."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        ds = create_mock_test_dataset(n_claims=1, perturbations_per_claim=0)
+        out = tmp_path / "output"
+        jsonl_path = self._pred_dir(out) / "inference_details.jsonl"
+        jsonl_path.write_bytes(b"")  # Empty file — getsize == 0
+
+        with _make_mock_inference_context(
+            tmp_path,
+            load_split=MagicMock(return_value=ds),
+        ):
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(out),
+            )
+
+        lines = [
+            ln
+            for ln in jsonl_path.read_text(encoding="utf-8").splitlines()
+            if ln.strip()
+        ]
+        assert len(lines) == 1
+        json.loads(lines[0])
+
+    def test_nonexistent_file_guard_skipped(self, tmp_path):
+        """When the JSONL file does not yet exist the guard does nothing and
+        inference runs normally."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        ds = create_mock_test_dataset(n_claims=1, perturbations_per_claim=0)
+        out = tmp_path / "output"
+
+        with _make_mock_inference_context(
+            tmp_path,
+            load_split=MagicMock(return_value=ds),
+        ) as m:
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(out),
+            )
+            assert m["model"].generate.call_count == 1
