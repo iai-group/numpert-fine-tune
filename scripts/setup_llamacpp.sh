@@ -45,7 +45,8 @@ cd "$LLAMA_CPP_DIR"
 # Create build directory if it doesn't exist
 mkdir -p build
 
-# Configure with CMake
+# Configure with CMake (CPU-only build — this is for conversion/quantization
+# tools only; GPU inference uses the pre-built llama-cpp-python wheel)
 cmake -S . -B build \
     -DGGML_CUDA=OFF \
     -DCMAKE_BUILD_TYPE=Release
@@ -67,23 +68,43 @@ fi
 PYTHON_VERSION=$(python3 --version 2>&1 | awk '{print $2}')
 echo "✅ Found Python: $PYTHON_VERSION"
 
-# Install Python dev dependencies using uv
-echo "Installing Python llama-cpp-python wrapper..."
+# Install llama-cpp-python with pre-built CUDA wheels (avoids compiling from
+# source, which can fail with NVCC/GCC version mismatches on HPC clusters).
+# The cu124 index provides wheels compiled against CUDA 12.4.
+echo "Installing llama-cpp-python with CUDA support (pre-built wheel)..."
 cd "$PROJECT_ROOT"
 
-# Try to add package; if it fails due to Python version, suggest workaround
-if ! uv add --dev llama-cpp-python 2>&1; then
-    echo "⚠️  uv encountered a Python version issue. Attempting workaround..."
-    echo "Installing via pip instead (requires uv environment to be activated)..."
-    if command -v pip &> /dev/null; then
-        pip install llama-cpp-python
-        echo "✅ Installed via pip"
-    else
-        echo "⚠️  Could not auto-install llama-cpp-python. Please run manually:"
-        echo "   uv add --python /path/to/python3.11+ llama-cpp-python"
-        echo "   OR"
-        echo "   pip install llama-cpp-python"
-    fi
+CUDA_WHEEL_INDEX="https://abetlen.github.io/llama-cpp-python/whl/cu124"
+
+if command -v uv &> /dev/null; then
+    uv pip install llama-cpp-python \
+        --extra-index-url "$CUDA_WHEEL_INDEX" \
+        --force-reinstall --no-cache-dir
+elif command -v pip &> /dev/null; then
+    pip install llama-cpp-python \
+        --extra-index-url "$CUDA_WHEEL_INDEX" \
+        --force-reinstall --no-cache-dir
+else
+    echo "⚠️  Neither uv nor pip found. Install llama-cpp-python manually:"
+    echo "   pip install llama-cpp-python --extra-index-url $CUDA_WHEEL_INDEX"
+    exit 1
+fi
+
+# Verify GPU offload support (use uv run to ensure venv Python is used)
+echo "Verifying GPU offload support..."
+VERIFY_CMD='
+import llama_cpp
+if hasattr(llama_cpp, "llama_supports_gpu_offload"):
+    assert llama_cpp.llama_supports_gpu_offload(), \
+        "llama-cpp-python installed but WITHOUT GPU support!"
+    print("✅ llama-cpp-python installed with GPU/CUDA support")
+else:
+    print("⚠️  Cannot verify GPU support (older API), but wheel should include it")
+'
+if command -v uv &> /dev/null; then
+    uv run python -c "$VERIFY_CMD"
+else
+    python3 -c "$VERIFY_CMD"
 fi
 
 echo ""

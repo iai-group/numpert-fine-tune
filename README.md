@@ -510,7 +510,6 @@ convert_existing_model(
 
 | Method | Bits | Size vs f16 | Quality | Use Case |
 |---|---|---|---|---|
-| `f32` | 32 | 2× | Lossless | Debugging / reference |
 | `f16` | 16 | 1× | Lossless | Full-precision inference |
 | `q8_0` | 8 | ~0.5× | Near-lossless | High-quality, moderate memory |
 | `q6_k` | 6 | ~0.38× | Very good | Good balance of quality and size |

@@ -78,6 +78,9 @@ show_experiment() {
     echo ""
     echo "Model Configuration:"
     echo "  Model:            $MODEL"
+    if [ -n "${TOKENIZER:-}" ]; then
+        echo "  Tokenizer:        $TOKENIZER"
+    fi
     echo "  LoRA Rank:        $RANK"
     echo "  Start Epoch:      $START_EPOCH"
     echo "  Max Seq Length:   $MAX_SEQ_LENGTH tokens"
@@ -159,6 +162,10 @@ run_experiment() {
 
     if [ -n "$OUTPUT_DIR" ]; then
         CMD="$CMD --output_dir $OUTPUT_DIR"
+    fi
+
+    if [ -n "${TOKENIZER:-}" ]; then
+        CMD="$CMD --tokenizer $TOKENIZER"
     fi
 
     echo "═══════════════════════════════════════════════"

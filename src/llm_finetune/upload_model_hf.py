@@ -30,9 +30,20 @@ def check_auth():
 def detect_upload_type(model_path: Path) -> str:
     """Heuristically determine what kind of model model_path this is.
 
-    Returns: 'merged', 'lora', or 'checkpoint'
+    Returns: 'merged', 'lora', 'checkpoint', or 'gguf'
     """
+    # Single GGUF file
+    if model_path.is_file() and model_path.suffix == ".gguf":
+        return "gguf"
+
+    if not model_path.is_dir():
+        return "unknown"
+
     files = set(f.name for f in model_path.iterdir())
+
+    # Directory containing GGUF files
+    if any(f.endswith(".gguf") for f in files):
+        return "gguf"
 
     # LoRA adapter: has adapter_config.json but no full model shards
     if "adapter_config.json" in files:
@@ -71,6 +82,111 @@ def build_repo_id(args) -> str:
     return f"{namespace}/{args.model_name}"
 
 
+def _build_ignore_patterns(upload_type: str, include_optimizer_states: bool):
+    """Return ignore patterns for folder uploads, or None if not applicable."""
+    if upload_type == "checkpoint" and not include_optimizer_states:
+        print(
+            "[i] Skipping optimizer/scheduler states "
+            "(pass --include-optimizer-states to keep them)."
+        )
+        return [
+            "optimizer.pt",
+            "optimizer.bin",
+            "scheduler.pt",
+            "rng_state*.pth",
+        ]
+    return None
+
+
+def _validate_model_path_shape(model_path: Path, upload_type: str):
+    """Validate model_path shape and file extension against upload_type."""
+    # merged / lora / checkpoint must be directories; only gguf may be a file.
+    if upload_type in {"merged", "lora", "checkpoint"} and model_path.is_file():
+        print(
+            f"[ERROR] --type {upload_type} requires a directory, "
+            f"but got a file: {model_path}\n"
+            "        Pass --type gguf if you intended to upload a GGUF file."
+        )
+        sys.exit(1)
+
+    if model_path.is_file():
+        if upload_type != "gguf":
+            print(
+                "[ERROR] Single-file upload is only supported for GGUF files.\n"
+                f"        Detected type: {upload_type}\n"
+                f"        File: {model_path}\n"
+                "        Pass --type gguf and provide a .gguf file."
+            )
+            sys.exit(1)
+
+        if model_path.suffix.lower() != ".gguf":
+            print(
+                "[ERROR] --type gguf requires a .gguf file when model_path "
+                "is a file.\n"
+                f"        Got: {model_path}"
+            )
+            sys.exit(1)
+
+    if upload_type == "gguf" and model_path.is_dir():
+        if not any(p.suffix.lower() == ".gguf" for p in model_path.iterdir()):
+            print(
+                "[ERROR] --type gguf requires at least one .gguf file in "
+                f"directory: {model_path}"
+            )
+            sys.exit(1)
+
+
+def _do_upload(
+    api, model_path: Path, repo_id: str, commit_message: str, ignore_patterns
+):
+    """Upload a single file or folder to the Hub, exiting on failure."""
+    try:
+        if model_path.is_file():
+            api.upload_file(
+                path_or_fileobj=str(model_path),
+                path_in_repo=model_path.name,
+                repo_id=repo_id,
+                repo_type="model",
+                commit_message=commit_message,
+            )
+        else:
+            api.upload_folder(
+                folder_path=str(model_path),
+                repo_id=repo_id,
+                repo_type="model",
+                commit_message=commit_message,
+                ignore_patterns=ignore_patterns,
+            )
+    except Exception as e:
+        print(f"[ERROR] Upload failed: {e}")
+        sys.exit(1)
+
+
+def _print_type_reminder(upload_type: str):
+    """Print a contextual post-upload reminder based on upload type."""
+    if upload_type == "lora":
+        print(
+            "[i] Note: You uploaded LoRA adapter weights.\n"
+            "    Users will need the base model + 'peft' to load this.\n"
+            "    Consider also uploading a merged model for broader "
+            "usability.\n"
+        )
+    elif upload_type == "checkpoint":
+        print(
+            "[i] Note: You uploaded a training checkpoint.\n"
+            "    This is useful for resuming training but is NOT "
+            "directly\n"
+            "    loadable as a standard inference model.\n"
+        )
+    elif upload_type == "gguf":
+        print(
+            "[i] Note: You uploaded GGUF quantized model file(s).\n"
+            "    These can be used directly with llama.cpp, ollama, "
+            "and other\n"
+            "    GGUF-compatible inference engines.\n"
+        )
+
+
 def upload(args):
     """Upload model to HuggingFace Hub.
 
@@ -87,7 +203,6 @@ def upload(args):
         print(f"[ERROR] model_path not found: {model_path}")
         sys.exit(1)
 
-    # Auto-detect type unless overridden
     upload_type = args.type or detect_upload_type(model_path)
     if upload_type == "unknown":
         print(
@@ -103,9 +218,10 @@ def upload(args):
     visibility = "public" if args.public else "private"
     print(f"[✓] Visibility: {visibility}")
 
+    _validate_model_path_shape(model_path, upload_type)
+
     api = HfApi()
 
-    # Create repo if it doesn't exist
     try:
         api.create_repo(
             repo_id=repo_id,
@@ -118,22 +234,10 @@ def upload(args):
         print(f"[ERROR] Failed to create/access repo: {e}")
         sys.exit(1)
 
-    # For checkpoints: skip optimizer/scheduler bloat unless
-    # explicitly requested
-    ignore_patterns = None
-    if upload_type == "checkpoint" and not args.include_optimizer_states:
-        ignore_patterns = [
-            "optimizer.pt",
-            "optimizer.bin",
-            "scheduler.pt",
-            "rng_state*.pth",
-        ]
-        print(
-            "[i] Skipping optimizer/scheduler states "
-            "(pass --include-optimizer-states to keep them)."
-        )
+    ignore_patterns = _build_ignore_patterns(
+        upload_type, args.include_optimizer_states
+    )
 
-    # Upload
     display_path = (
         Path(*model_path.parts[-3:])
         if len(model_path.parts) >= 3
@@ -142,35 +246,10 @@ def upload(args):
     print(f"\n[→] Uploading from: .../{display_path}")
     print("    This may take a while for large models...\n")
 
-    try:
-        api.upload_folder(
-            folder_path=str(model_path),
-            repo_id=repo_id,
-            repo_type="model",
-            commit_message=args.commit_message,
-            ignore_patterns=ignore_patterns,
-        )
-    except Exception as e:
-        print(f"[ERROR] Upload failed: {e}")
-        sys.exit(1)
+    _do_upload(api, model_path, repo_id, args.commit_message, ignore_patterns)
 
     print("\n[✓] Upload complete!\n")
-
-    # Contextual reminders based on upload type
-    if upload_type == "lora":
-        print(
-            "[i] Note: You uploaded LoRA adapter weights.\n"
-            "    Users will need the base model + 'peft' to load this.\n"
-            "    Consider also uploading a merged model for broader "
-            "usability.\n"
-        )
-    elif upload_type == "checkpoint":
-        print(
-            "[i] Note: You uploaded a training checkpoint.\n"
-            "    This is useful for resuming training but is NOT "
-            "directly\n"
-            "    loadable as a standard inference model.\n"
-        )
+    _print_type_reminder(upload_type)
 
 
 def main():
@@ -216,7 +295,7 @@ Examples:
     )
     parser.add_argument(
         "--type",
-        choices=["merged", "lora", "checkpoint"],
+        choices=["merged", "lora", "checkpoint", "gguf"],
         default=None,
         help="Explicitly set the upload type. Auto-detected if not provided.",
     )
