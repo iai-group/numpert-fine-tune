@@ -70,6 +70,12 @@ _trl = _ensure_module(
         "SFTConfig": MagicMock,
     },
 )
+# Force the stub even if trl was already imported by another test file
+# (e.g. test_peft_finetune.py loads the real trl before this file runs).
+# unsloth_finetune.py hasn't been imported yet at this point, so patching
+# sys.modules["trl"].SFTTrainer here ensures PerturbationAwareSFTTrainer
+# inherits from _StubSFTTrainer regardless of collection order.
+_trl.SFTTrainer = _StubSFTTrainer
 
 # --- wandb ---
 _wandb = _ensure_module("wandb", {"init": MagicMock(), "finish": MagicMock()})
