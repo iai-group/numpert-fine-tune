@@ -152,7 +152,16 @@ def run_inference(
     # Load test data
     print(f"Loading test data from {test_json_path}...")
     with open(test_json_path) as f:
-        test_data = [json.loads(line) for line in f]
+        content = f.read().strip()
+        # Handle both JSON array and JSONL formats
+        if content.startswith("["):
+            # JSON array format: [{ ... }, { ... }]
+            test_data = json.loads(content)
+        else:
+            # JSONL format: one object per line
+            test_data = [
+                json.loads(line) for line in content.split("\n") if line.strip()
+            ]
     print(f"Loaded {len(test_data)} test examples")
 
     # Prepare output directory
@@ -203,8 +212,10 @@ def run_inference(
             )
             inference_latency = time.time() - start_time
 
-        # Decode
-        response = tokenizer.decode(outputs[0], skip_special_tokens=True)
+        # Decode - only get the generated tokens (skip input)
+        input_length = inputs["input_ids"].shape[1]
+        generated_ids = outputs[0][input_length:]
+        response = tokenizer.decode(generated_ids, skip_special_tokens=True)
 
         # Extract label
         predicted_label = extract_label_from_response(response)
