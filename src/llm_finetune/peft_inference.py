@@ -8,7 +8,7 @@ import argparse
 import json
 import time
 from pathlib import Path
-from typing import Optional, Dict, Any
+from typing import Optional, Dict
 import csv
 
 import torch
@@ -19,6 +19,7 @@ from src.llm_finetune.utils.inference.inference_config_export import (
     build_inference_config,
     save_inference_config,
 )
+from src.llm_finetune.utils.inference.metrics import _compute_scores
 
 
 class InferenceEfficiencyTracker:
@@ -106,172 +107,185 @@ def extract_label_from_response(response_text: str) -> Optional[bool]:
     return None
 
 
-def run_inference(
-    model_path: str,
-    test_json_path: str,
-    output_dir: str = "./inference_results",
-    batch_size: int = 8,
-    max_seq_length: int = 16384,
-    track_memory: bool = False,
-):
-    """Run inference on test set with efficiency tracking.
+def _process_inference_sample(
+    example: dict,
+    idx: int,
+    tokenizer,
+    model,
+    max_seq_length: int,
+    track_memory: bool,
+) -> tuple[dict, Optional[dict]]:
+    """Process a single sample through inference.
 
     Args:
-        model_path: Path to fine-tuned PEFT model
-        test_json_path: Path to test data JSON file
-        output_dir: Directory to save results
-        batch_size: Batch size for inference
+        example: Input example with claim, doc, label
+        idx: Sample index
+        tokenizer: Tokenizer for encoding
+        model: Model for generation
         max_seq_length: Max sequence length
-        track_memory: Whether to track GPU memory usage
+        track_memory: Whether to track memory
+
+    Returns:
+        Tuple of (prediction_dict, parse_failure_dict or None)
     """
-    print("\n" + "=" * 80)
-    print("STARTING PEFT INFERENCE")
-    print("=" * 80)
-    print(f"Model path: {model_path}")
-    print(f"Test data: {test_json_path}")
-    print(f"Batch size: {batch_size}")
-    print("=" * 80 + "\n")
+    # Get peak memory before
+    if track_memory and torch.cuda.is_available():
+        torch.cuda.reset_peak_memory_stats()
 
-    # Setup
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    efficiency_tracker = InferenceEfficiencyTracker()
+    # Prepare input
+    claim = example.get("claim", "")
+    doc = example.get("doc", "")
+    label_true = example.get("label", None)
 
-    # Load model
-    print("Loading PEFT model...")
-    model = AutoPeftModelForCausalLM.from_pretrained(
-        model_path,
-        device_map="auto",
-        torch_dtype=torch.float16
-        if torch.cuda.is_available()
-        else torch.float32,
+    prompt = (
+        "Given the claim and evidence below, determine if the claim is "
+        f"true or false.\n\nClaim: {claim}\n\nEvidence: {doc}"
     )
-    tokenizer = AutoTokenizer.from_pretrained(model_path)
 
-    print("Model loaded successfully")
+    # Tokenize
+    inputs = tokenizer(
+        prompt,
+        truncation=True,
+        max_length=max_seq_length,
+        padding=True,
+        return_tensors="pt",
+    )
 
-    # Load test data
-    print(f"Loading test data from {test_json_path}...")
-    with open(test_json_path) as f:
-        content = f.read().strip()
-        # Handle both JSON array and JSONL formats
-        if content.startswith("["):
-            # JSON array format: [{ ... }, { ... }]
-            test_data = json.loads(content)
-        else:
-            # JSONL format: one object per line
-            test_data = [
-                json.loads(line) for line in content.split("\n") if line.strip()
-            ]
-    print(f"Loaded {len(test_data)} test examples")
-
-    # Prepare output directory
-    Path(output_dir).mkdir(parents=True, exist_ok=True)
-
-    # Run inference
-    predictions = []
-    parse_failures = []
-    total_inference_time: float = 0.0
-
-    print("\nRunning inference...\n")
-
-    for idx, example in enumerate(test_data):
-        if (idx + 1) % max(1, len(test_data) // 10) == 0:
-            print(f"  Processing {idx + 1}/{len(test_data)} samples...")
-
-        # Get peak memory before
-        if track_memory and torch.cuda.is_available():
-            torch.cuda.reset_peak_memory_stats()
-
-        # Prepare input
-        claim = example.get("claim", "")
-        doc = example.get("doc", "")
-        label_true = example.get("label", None)
-
-        prompt = (
-            "Given the claim and evidence below, determine if the claim is "
-            f"true or false.\n\nClaim: {claim}\n\nEvidence: {doc}"
+    # Inference timing
+    with torch.no_grad():
+        start_time = time.time()
+        outputs = model.generate(
+            **inputs,
+            max_new_tokens=50,
+            temperature=0.7,
+            top_p=0.9,
         )
+        inference_latency = time.time() - start_time
 
-        # Tokenize
-        inputs = tokenizer(
-            prompt,
-            truncation=True,
-            max_length=max_seq_length,
-            padding=True,
-            return_tensors="pt",
-        ).to(device)
+    # Decode - only get the generated tokens (skip input)
+    input_length = inputs["input_ids"].shape[1]
+    generated_ids = outputs[0][input_length:]
+    response = tokenizer.decode(generated_ids, skip_special_tokens=True)
 
-        # Inference timing
-        with torch.no_grad():
-            start_time = time.time()
-            outputs = model.generate(
-                **inputs,
-                max_new_tokens=50,
-                temperature=0.7,
-                top_p=0.9,
-            )
-            inference_latency = time.time() - start_time
+    # Extract label
+    predicted_label = extract_label_from_response(response)
 
-        # Decode - only get the generated tokens (skip input)
-        input_length = inputs["input_ids"].shape[1]
-        generated_ids = outputs[0][input_length:]
-        response = tokenizer.decode(generated_ids, skip_special_tokens=True)
+    # Track memory
+    peak_memory_mb = None
+    if track_memory and torch.cuda.is_available():
+        peak_memory_mb = torch.cuda.max_memory_allocated() / 1024 / 1024
 
-        # Extract label
-        predicted_label = extract_label_from_response(response)
-
-        # Track memory
-        peak_memory_mb = None
-        if track_memory and torch.cuda.is_available():
-            peak_memory_mb = torch.cuda.max_memory_allocated() / 1024 / 1024
-
-        efficiency_tracker.add_sample(inference_latency, peak_memory_mb)
-
-        # Store prediction
-        parse_success = predicted_label is not None
-        predictions.append(
-            {
-                "claim_id": example.get("id", f"sample_{idx}"),
-                "claim": claim,
-                "ground_truth": label_true,
-                "predicted_label": predicted_label,
-                "parse_success": parse_success,
-                "response": response,
-                "latency_seconds": inference_latency,
-            }
-        )
-
-        if not parse_success:
-            parse_failures.append(
-                {
-                    "claim_id": example.get("id", f"sample_{idx}"),
-                    "response": response,
-                }
-            )
-
-        total_inference_time += inference_latency
-
-    print("\n" + "=" * 80)
-    print("INFERENCE COMPLETED")
-    print("=" * 80)
-
-    # Compute metrics
-    print("\nComputing metrics...")
-    metrics_dict: Dict[str, Any] = {
-        "accuracy": 0.0,
-        "f1_macro": 0.0,
-        "precision_macro": 0.0,
-        "recall_macro": 0.0,
-        "parse_success_rate": sum(
-            1 for p in predictions if p.get("parse_success", False)
-        )
-        / len(predictions)
-        if predictions
-        else 0.0,
+    # Store prediction
+    parse_success = predicted_label is not None
+    prediction = {
+        "claim_id": example.get("id", f"sample_{idx}"),
+        "claim": claim,
+        "ground_truth": label_true,
+        "predicted_label": predicted_label,
+        "parse_success": parse_success,
+        "response": response,
+        "latency_seconds": inference_latency,
+        "peak_memory_mb": peak_memory_mb,
     }
 
-    # Get efficiency stats
-    efficiency_stats = efficiency_tracker.get_stats()
+    parse_failure = None
+    if not parse_success:
+        parse_failure = {
+            "claim_id": example.get("id", f"sample_{idx}"),
+            "response": response,
+        }
+
+    return prediction, parse_failure
+
+
+def _convert_predictions_to_metrics_format(
+    predictions: list[dict],
+) -> tuple[list[str], list[Optional[str]]]:
+    """Convert predictions to metrics computation format.
+
+    Args:
+        predictions: List of prediction dicts
+
+    Returns:
+        Tuple of (true_labels, predictions) in JSON format
+    """
+    true_labels_for_metrics: list[str] = []
+    predictions_for_metrics: list[Optional[str]] = []
+
+    for p in predictions:
+        ground_truth = p.get("ground_truth")
+        predicted_label = p.get("predicted_label")
+
+        # Convert ground truth to JSON format
+        if ground_truth is not None:
+            if isinstance(ground_truth, str):
+                # String like "True" or "False"
+                gt_bool = ground_truth.lower() == "true"
+            else:
+                # Already boolean
+                gt_bool = bool(ground_truth)
+            true_labels_for_metrics.append(json.dumps({"label": gt_bool}))
+        else:
+            # Skip if no ground truth
+            continue
+
+        # Convert prediction to JSON format
+        if predicted_label is None:
+            predictions_for_metrics.append(None)
+        else:
+            predictions_for_metrics.append(
+                json.dumps({"label": predicted_label})
+            )
+
+    return true_labels_for_metrics, predictions_for_metrics
+
+
+def _compute_and_print_metrics(
+    predictions: list[dict],
+    efficiency_stats: dict,
+) -> dict:
+    """Compute and print metrics.
+
+    Args:
+        predictions: List of prediction dicts
+        efficiency_stats: Efficiency statistics
+
+    Returns:
+        Metrics dictionary
+    """
+    # Convert predictions to metrics format
+    true_labels, pred_labels = _convert_predictions_to_metrics_format(
+        predictions
+    )
+
+    # Compute scores
+    if true_labels:
+        scores = _compute_scores("overall", true_labels, pred_labels)
+        metrics_dict = {
+            "accuracy": scores.accuracy,
+            "f1_macro": scores.f1_macro,
+            "precision_macro": scores.precision_macro,
+            "recall_macro": scores.recall_macro,
+            "parse_success_rate": sum(
+                1 for p in predictions if p.get("parse_success", False)
+            )
+            / len(predictions)
+            if predictions
+            else 0.0,
+        }
+    else:
+        metrics_dict = {
+            "accuracy": 0.0,
+            "f1_macro": 0.0,
+            "precision_macro": 0.0,
+            "recall_macro": 0.0,
+            "parse_success_rate": sum(
+                1 for p in predictions if p.get("parse_success", False)
+            )
+            / len(predictions)
+            if predictions
+            else 0.0,
+        }
 
     # Print results
     print("\nAccuracy Metrics:")
@@ -282,19 +296,42 @@ def run_inference(
     print(f"  Parse success rate: {metrics_dict['parse_success_rate']:.4f}")
 
     print("\nEfficiency Metrics:")
-    print(f"  Avg latency: {efficiency_stats['avg_latency_ms']:.2f} ms")
-    print(
-        f"  Throughput: "
-        f"{efficiency_stats['avg_throughput_samples_per_sec']:.2f} samples/sec"
-    )
-    if "avg_peak_memory_mb" in efficiency_stats:
+    if efficiency_stats:
+        print(f"  Avg latency: {efficiency_stats['avg_latency_ms']:.2f} ms")
         print(
-            f"  Avg peak memory: {efficiency_stats['avg_peak_memory_mb']:.1f} MB"  # noqa: E501
+            f"  Throughput: "
+            f"{efficiency_stats['avg_throughput_samples_per_sec']:.2f} samples/sec"  # noqa: E501
         )
+        if "avg_peak_memory_mb" in efficiency_stats:
+            print(
+                f"  Avg peak memory: {efficiency_stats['avg_peak_memory_mb']:.1f} MB"  # noqa: E501
+            )
+    else:
+        print("  No efficiency stats available (no samples processed).")
 
-    # Save results
-    print("\nSaving results...")
+    return metrics_dict
 
+
+def _save_inference_results(
+    output_dir: str,
+    predictions: list[dict],
+    metrics_dict: dict,
+    efficiency_stats: dict,
+    parse_failures: list[dict],
+    model_path: str,
+    max_seq_length: int,
+) -> None:
+    """Save inference results to files.
+
+    Args:
+        output_dir: Output directory
+        predictions: List of predictions
+        metrics_dict: Metrics dictionary
+        efficiency_stats: Efficiency statistics
+        parse_failures: List of parse failures
+        model_path: Path to model
+        max_seq_length: Max sequence length
+    """
     # Save predictions
     predictions_file = Path(output_dir) / "predictions.json"
     with open(predictions_file, "w") as f:
@@ -352,6 +389,118 @@ def run_inference(
     )
     config_file = save_inference_config(inference_config, output_dir)
     print(f"  Inference config: {config_file}")
+
+
+def run_inference(
+    model_path: str,
+    test_json_path: str,
+    output_dir: str = "./inference_results",
+    batch_size: int = 8,
+    max_seq_length: int = 16384,
+    track_memory: bool = False,
+):
+    """Run inference on test set with efficiency tracking.
+
+    Args:
+        model_path: Path to fine-tuned PEFT model
+        test_json_path: Path to test data JSON file
+        output_dir: Directory to save results
+        batch_size: Batch size for inference
+        max_seq_length: Max sequence length
+        track_memory: Whether to track GPU memory usage
+    """
+    print("\n" + "=" * 80)
+    print("STARTING PEFT INFERENCE")
+    print("=" * 80)
+    print(f"Model path: {model_path}")
+    print(f"Test data: {test_json_path}")
+    print(f"Batch size: {batch_size}")
+    print("=" * 80 + "\n")
+
+    # Setup
+    efficiency_tracker = InferenceEfficiencyTracker()
+
+    # Load model
+    print("Loading PEFT model...")
+    model = AutoPeftModelForCausalLM.from_pretrained(
+        model_path,
+        device_map="auto",
+        torch_dtype=torch.float16
+        if torch.cuda.is_available()
+        else torch.float32,
+    )
+    tokenizer = AutoTokenizer.from_pretrained(model_path)
+
+    print("Model loaded successfully")
+
+    # Load test data
+    print(f"Loading test data from {test_json_path}...")
+    with open(test_json_path) as f:
+        content = f.read().strip()
+        # Handle both JSON array and JSONL formats
+        if content.startswith("["):
+            # JSON array format: [{ ... }, { ... }]
+            test_data = json.loads(content)
+        else:
+            # JSONL format: one object per line
+            test_data = [
+                json.loads(line) for line in content.split("\n") if line.strip()
+            ]
+    print(f"Loaded {len(test_data)} test examples")
+
+    # Prepare output directory
+    Path(output_dir).mkdir(parents=True, exist_ok=True)
+
+    # Run inference
+    predictions = []
+    parse_failures = []
+
+    print("\nRunning inference...\n")
+
+    for idx, example in enumerate(test_data):
+        if (idx + 1) % max(1, len(test_data) // 10) == 0:
+            print(f"  Processing {idx + 1}/{len(test_data)} samples...")
+
+        prediction, parse_failure = _process_inference_sample(
+            example,
+            idx,
+            tokenizer,
+            model,
+            max_seq_length,
+            track_memory,
+        )
+
+        predictions.append(prediction)
+        efficiency_tracker.add_sample(
+            prediction["latency_seconds"],
+            prediction.get("peak_memory_mb"),
+        )
+
+        if parse_failure:
+            parse_failures.append(parse_failure)
+
+    print("\n" + "=" * 80)
+    print("INFERENCE COMPLETED")
+    print("=" * 80)
+
+    # Get efficiency stats
+    efficiency_stats = efficiency_tracker.get_stats()
+
+    # Compute metrics and print results
+    print("\nComputing metrics...")
+    metrics_dict = _compute_and_print_metrics(predictions, efficiency_stats)
+
+    # Save results
+    print("\nSaving results...")
+    _save_inference_results(
+        output_dir,
+        predictions,
+        metrics_dict,
+        efficiency_stats,
+        parse_failures,
+        model_path,
+        max_seq_length,
+    )
 
     print("\n" + "=" * 80)
     print("DONE")
