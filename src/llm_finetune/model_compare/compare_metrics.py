@@ -76,7 +76,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--charts",
         action="store_true",
-        help="Create PNG charts in output-dir/charts",
+        help=(
+            "Create PNG charts in split-specific directories under output-dir "
+            "(for example, <output-dir>/true_split/charts and "
+            "<output-dir>/false_split/charts)"
+        ),
     )
     parser.add_argument(
         "--include-normalized-in-charts",

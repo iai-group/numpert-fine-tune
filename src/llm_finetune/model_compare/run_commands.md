@@ -21,8 +21,7 @@ python -m src.llm_finetune.model_compare.compare_metrics \
 ## Run with explicit venv Python
 
 ```bash
-/Users/aarnes/Documents/PhD/code/numpert-fine-tune/.numpert-fine-tune/bin/python \
-  -m src.llm_finetune.model_compare.compare_metrics \
+  python -m src.llm_finetune.model_compare.compare_metrics \
   --input-dir results/inference/qwen3-8b \
   --output-dir results/inference/qwen3-8b/model_comparison_true_false \
   --charts \
