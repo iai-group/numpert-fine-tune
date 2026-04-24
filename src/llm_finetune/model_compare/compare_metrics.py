@@ -14,6 +14,7 @@ import argparse
 import csv
 import json
 import math
+import re
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
@@ -41,6 +42,56 @@ def model_sort_key(model_name: str) -> Tuple[int, str]:
     if "range" in name:
         return (4, name)
     return (5, name)
+
+
+_MODEL_ABBREV_RULES: List[Tuple[str, str]] = [
+    ("baseline", "baseline"),
+    ("normalized", "normalized"),
+    # Negation variants must appear before the positive ones so that e.g.
+    # "no-range" is matched before "range".
+    ("no-num", "no-num"),
+    ("no-approx", "no-approx"),
+    ("no-range", "no-range"),
+    ("num", "num"),
+    ("approx", "approx"),
+    ("range", "range"),
+]
+
+_SIZE_RE = re.compile(r"(\d+\.?\d*b)", re.IGNORECASE)
+
+
+def abbreviate_model_name(model_name: str) -> str:
+    """Return a shortened chart label derived from a full model name.
+
+    Extracts a family prefix (tokens before the size tag), an optional
+    size tag (e.g. ``8b``, ``32b``), and a perturbation tag matched
+    against ``_MODEL_ABBREV_RULES``.  The result has the form
+    ``<family>-<size>-<tag>`` or ``<family>-<tag>`` when no size is
+    found, mirroring the priority order used in ``model_sort_key``.
+    """
+    name_lower = model_name.lower()
+    tokens = re.split(r"[-_]", name_lower)
+
+    size_match = _SIZE_RE.search(name_lower)
+    if size_match:
+        size_tag = size_match.group(1)
+        try:
+            size_idx = tokens.index(size_tag)
+            family = "-".join(tokens[:size_idx]) or tokens[0]
+        except ValueError:
+            family = tokens[0]
+    else:
+        size_tag = ""
+        family = tokens[0]
+
+    perturb_tag = ""
+    for phrase, tag in _MODEL_ABBREV_RULES:
+        if phrase in name_lower:
+            perturb_tag = tag
+            break
+
+    parts = [p for p in [family, size_tag, perturb_tag] if p]
+    return "-".join(parts)
 
 
 def parse_args() -> argparse.Namespace:
@@ -97,6 +148,15 @@ def parse_args() -> argparse.Namespace:
         help=(
             "How to infer model name: 'parent' uses metrics.json parent "
             "folder name, 'stem' uses metrics filename stem"
+        ),
+    )
+    parser.add_argument(
+        "--abbreviate-model-names",
+        action="store_true",
+        help=(
+            "Shorten model names to <family>-<size>-<perturbation_tag> "
+            "(e.g. qwen3-8b-baseline, qwen3-32b-approx). "
+            "Applied to both CSV outputs and chart labels."
         ),
     )
     return parser.parse_args()
@@ -300,6 +360,24 @@ def to_wide(
     return ["group_name", *models], out_rows
 
 
+def apply_model_name_abbreviations(
+    rows: List[Dict[str, object]],
+) -> List[Dict[str, object]]:
+    """Return a new row list with 'model' field replaced by abbreviations.
+
+    Args:
+        rows: List of row dictionaries to abbreviate.
+
+    Returns:
+        List of new dictionaries with abbreviated model names; original rows
+        are not modified.
+    """
+    return [
+        {**row, "model": abbreviate_model_name(str(row["model"]))}
+        for row in rows
+    ]
+
+
 def write_csv(
     path: Path, rows: List[Dict[str, object]], fields: List[str]
 ) -> None:
@@ -337,6 +415,7 @@ def write_split_outputs(
     overall_rows: List[Dict[str, object]],
     normalized_rows: List[Dict[str, object]],
     include_normalized_in_charts: bool,
+    abbreviate_model_names: bool = False,
 ) -> List[str]:
     """Write CSV/chart outputs for one split into its own folder."""
     outputs: List[str] = []
@@ -356,6 +435,7 @@ def write_split_outputs(
                     normalized_rows,
                     include_normalized_in_charts,
                     split_output_dir,
+                    abbreviate_model_names,
                 )
             except ImportError:
                 print(
@@ -455,6 +535,7 @@ def write_split_outputs(
                 normalized_rows,
                 include_normalized_in_charts,
                 split_output_dir,
+                abbreviate_model_names,
             )
         except ImportError:
             print(
@@ -518,6 +599,7 @@ def _plot_family_heatmaps(
     title_prefix: str,
     file_prefix: str,
     charts_dir: Path,
+    abbreviate_model_names: bool = False,
 ) -> None:
     """Plot accuracy and parse-failure heatmaps for a perturbation family."""
     if not rows:
@@ -554,10 +636,16 @@ def _plot_family_heatmaps(
         acc_matrix.append(acc_row)
         pf_matrix.append(pf_row)
 
+    model_labels = (
+        [abbreviate_model_name(m) for m in models]
+        if abbreviate_model_names
+        else models
+    )
+
     _plot_heatmap(
         matrix=acc_matrix,
         row_labels=groups,
-        col_labels=models,
+        col_labels=model_labels,
         title=f"Accuracy: {title_prefix}",
         output_path=charts_dir / f"{file_prefix}_accuracy_heatmap.png",
         value_fmt=".3f",
@@ -567,7 +655,7 @@ def _plot_family_heatmaps(
     _plot_heatmap(
         matrix=pf_matrix,
         row_labels=groups,
-        col_labels=models,
+        col_labels=model_labels,
         title=f"Parse Failures: {title_prefix}",
         output_path=charts_dir / f"{file_prefix}_parse_failures_heatmap.png",
         value_fmt=".0f",
@@ -578,6 +666,7 @@ def _plot_family_heatmaps(
 def _plot_overall_parse_failures_bar(
     overall_rows: List[Dict[str, object]],
     charts_dir: Path,
+    abbreviate_model_names: bool = False,
 ) -> None:
     """Plot overall parse-failure bar chart by model."""
     import matplotlib.pyplot as plt
@@ -589,7 +678,12 @@ def _plot_overall_parse_failures_bar(
     if not sorted_overall:
         return
 
-    labels = [str(r["model"]) for r in sorted_overall]
+    labels = [
+        abbreviate_model_name(str(r["model"]))
+        if abbreviate_model_names
+        else str(r["model"])
+        for r in sorted_overall
+    ]
     values = [
         safe_int(r.get("overall_parse_failures")) or 0 for r in sorted_overall
     ]
@@ -621,6 +715,7 @@ def _plot_overall_parse_failures_bar(
 def _plot_normalized_baseline_bars(
     normalized_rows: List[Dict[str, object]],
     charts_dir: Path,
+    abbreviate_model_names: bool = False,
 ) -> None:
     """Plot accuracy and parse-failure bars for normalized baseline."""
     import matplotlib.pyplot as plt
@@ -632,7 +727,12 @@ def _plot_normalized_baseline_bars(
     if not sorted_normalized:
         return
 
-    n_labels = [str(r["model"]) for r in sorted_normalized]
+    n_labels = [
+        abbreviate_model_name(str(r["model"]))
+        if abbreviate_model_names
+        else str(r["model"])
+        for r in sorted_normalized
+    ]
     n_acc = [safe_float_or_nan(r.get("accuracy")) for r in sorted_normalized]
     n_pf = [safe_int(r.get("parse_failures")) or 0 for r in sorted_normalized]
 
@@ -701,6 +801,7 @@ def create_charts(
     normalized_rows: List[Dict[str, object]],
     include_normalized_in_charts: bool,
     output_dir: Path,
+    abbreviate_model_names: bool = False,
 ) -> None:
     """Generate grouped charts for split comparison outputs.
 
@@ -714,12 +815,14 @@ def create_charts(
         title_prefix="Perturb Type 1",
         file_prefix="perturb_type1",
         charts_dir=charts_dir,
+        abbreviate_model_names=abbreviate_model_names,
     )
     _plot_family_heatmaps(
         type23_rows,
         title_prefix="Perturb Type 2 + 3",
         file_prefix="perturb_type23",
         charts_dir=charts_dir,
+        abbreviate_model_names=abbreviate_model_names,
     )
 
     combined_rows = [*type1_rows, *type23_rows]
@@ -728,12 +831,17 @@ def create_charts(
         title_prefix="All Perturbation Types (1 + 2 + 3)",
         file_prefix="perturb_all",
         charts_dir=charts_dir,
+        abbreviate_model_names=abbreviate_model_names,
     )
 
-    _plot_overall_parse_failures_bar(overall_rows, charts_dir)
+    _plot_overall_parse_failures_bar(
+        overall_rows, charts_dir, abbreviate_model_names
+    )
 
     if include_normalized_in_charts and normalized_rows:
-        _plot_normalized_baseline_bars(normalized_rows, charts_dir)
+        _plot_normalized_baseline_bars(
+            normalized_rows, charts_dir, abbreviate_model_names
+        )
 
 
 def main() -> int:
@@ -764,6 +872,12 @@ def main() -> int:
     )
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
+
+    if args.abbreviate_model_names:
+        true_group_rows = apply_model_name_abbreviations(true_group_rows)
+        false_group_rows = apply_model_name_abbreviations(false_group_rows)
+        overall_rows = apply_model_name_abbreviations(overall_rows)
+        normalized_rows = apply_model_name_abbreviations(normalized_rows)
 
     overall_fields = [
         "model",
@@ -806,6 +920,7 @@ def main() -> int:
         overall_rows=overall_rows,
         normalized_rows=normalized_rows,
         include_normalized_in_charts=args.include_normalized_in_charts,
+        abbreviate_model_names=args.abbreviate_model_names,
     )
     false_split_outputs = write_split_outputs(
         split_rows=false_group_rows,
@@ -815,6 +930,7 @@ def main() -> int:
         overall_rows=overall_rows,
         normalized_rows=normalized_rows,
         include_normalized_in_charts=args.include_normalized_in_charts,
+        abbreviate_model_names=args.abbreviate_model_names,
     )
 
     print(f"Found {len(metrics_files)} metrics files.")

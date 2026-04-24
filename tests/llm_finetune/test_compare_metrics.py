@@ -8,6 +8,8 @@ from pathlib import Path
 import pytest
 
 from src.llm_finetune.model_compare.compare_metrics import (
+    abbreviate_model_name,
+    apply_model_name_abbreviations,
     build_rows,
     discover_metrics_files,
     extract_normalized_baseline,
@@ -437,3 +439,150 @@ class TestBuildRows:
         files = discover_metrics_files(tmp_path, "**/metrics.json")
         _, overall_rows, _ = build_rows(files, tmp_path, "parent", "True")
         assert overall_rows[0]["overall_parse_failure_rate"] is None
+
+
+# ---------------------------------------------------------------------------
+# abbreviate_model_name
+# ---------------------------------------------------------------------------
+
+
+class TestAbbreviateModelName:
+    """Tests for the abbreviate_model_name function."""
+
+    # -- size extraction -----------------------------------------------------
+
+    def test_extracts_8b_size(self):
+        assert (
+            abbreviate_model_name("qwen3-8b-instruct-baseline")
+            == "qwen3-8b-baseline"
+        )
+
+    def test_extracts_32b_size(self):
+        assert (
+            abbreviate_model_name("qwen3-32b-instruct-approx")
+            == "qwen3-32b-approx"
+        )
+
+    def test_extracts_70b_size(self):
+        assert (
+            abbreviate_model_name("llama3-70b-instruct-range")
+            == "llama3-70b-range"
+        )
+
+    def test_extracts_7b_size_with_version(self):
+        # mistral-7b-v0.1-baseline: size tag "7b" found first
+        result = abbreviate_model_name("mistral-7b-v0.1-baseline")
+        assert result == "mistral-7b-baseline"
+
+    # -- perturbation tag matching -------------------------------------------
+
+    def test_baseline_tag(self):
+        result = abbreviate_model_name("qwen3-8b-instruct-baseline")
+        assert result.endswith("-baseline")
+
+    def test_normalized_tag(self):
+        result = abbreviate_model_name("qwen3-8b-instruct-normalized-only")
+        assert result.endswith("-normalized")
+
+    def test_num_tag(self):
+        result = abbreviate_model_name("qwen3-32b-instruct-num")
+        assert result.endswith("-num")
+
+    def test_approx_tag(self):
+        result = abbreviate_model_name("qwen3-32b-instruct-approx")
+        assert result.endswith("-approx")
+
+    def test_range_tag(self):
+        result = abbreviate_model_name("llama3-70b-instruct-range")
+        assert result.endswith("-range")
+
+    # -- negation variants take priority over positive matches ---------------
+
+    def test_no_range_wins_over_range(self):
+        result = abbreviate_model_name("qwen3-8b-instruct-no-range")
+        assert result.endswith(
+            "-no-range"
+        ), f"Expected suffix '-no-range', got {result!r}"
+
+    def test_no_approx_wins_over_approx(self):
+        result = abbreviate_model_name("qwen3-8b-instruct-no-approx")
+        assert result.endswith("-no-approx")
+
+    def test_no_num_wins_over_num(self):
+        result = abbreviate_model_name("qwen3-8b-instruct-no-num")
+        assert result.endswith("-no-num")
+
+    # -- baseline takes priority over num/approx/range when both present -----
+
+    def test_baseline_priority_over_num(self):
+        result = abbreviate_model_name("qwen3-8b-num-baseline")
+        assert result.endswith("-baseline")
+
+    # -- no perturbation tag -------------------------------------------------
+
+    def test_no_tag_omitted(self):
+        # "instruct" matches no rule → no tag appended
+        result = abbreviate_model_name("qwen3-8b-instruct")
+        assert result == "qwen3-8b"
+
+    def test_no_size_no_tag(self):
+        # Falls back to first token only
+        result = abbreviate_model_name("some-model-without-size")
+        assert result == "some"
+
+    # -- idempotency ---------------------------------------------------------
+
+    def test_already_abbreviated_name_is_stable(self):
+        """Abbreviating an already-abbreviated name should not change it."""
+        first = abbreviate_model_name("qwen3-8b-instruct-baseline")
+        second = abbreviate_model_name(first)
+        assert first == second
+
+    # -- case insensitivity --------------------------------------------------
+
+    def test_upper_case_model_name(self):
+        result = abbreviate_model_name("QWEN3-8B-INSTRUCT-BASELINE")
+        # family and size extracted in lower case
+        assert "8b" in result
+        assert result.endswith("-baseline")
+
+
+# ---------------------------------------------------------------------------
+# apply_model_name_abbreviations
+# ---------------------------------------------------------------------------
+
+
+class TestApplyModelNameAbbreviations:
+    def test_rewrites_model_field(self):
+        rows = [{"model": "qwen3-8b-instruct-baseline", "accuracy": 0.9}]
+        out = apply_model_name_abbreviations(rows)
+        assert out[0]["model"] == "qwen3-8b-baseline"
+
+    def test_other_fields_preserved(self):
+        rows = [
+            {
+                "model": "qwen3-8b-instruct-baseline",
+                "accuracy": 0.9,
+                "total": 50,
+            }
+        ]
+        out = apply_model_name_abbreviations(rows)
+        assert out[0]["accuracy"] == pytest.approx(0.9)
+        assert out[0]["total"] == 50
+
+    def test_does_not_mutate_original(self):
+        rows = [{"model": "qwen3-8b-instruct-baseline"}]
+        apply_model_name_abbreviations(rows)
+        assert rows[0]["model"] == "qwen3-8b-instruct-baseline"
+
+    def test_multiple_rows(self):
+        rows = [
+            {"model": "qwen3-8b-instruct-baseline"},
+            {"model": "qwen3-32b-instruct-approx"},
+        ]
+        out = apply_model_name_abbreviations(rows)
+        assert out[0]["model"] == "qwen3-8b-baseline"
+        assert out[1]["model"] == "qwen3-32b-approx"
+
+    def test_empty_list(self):
+        assert apply_model_name_abbreviations([]) == []
