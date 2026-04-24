@@ -23,7 +23,7 @@
 #SBATCH --time=48:00:00
 #SBATCH --mem=300G
 # These are set dynamically below if possible, defaults here as fallback
-#SBATCH --job-name=infer-exp
+#SBATCH --job-name=numpert_inference
 #SBATCH --output=scripts/slurm_out/inference/infer_%j.out
 
 # ==============================================================================
