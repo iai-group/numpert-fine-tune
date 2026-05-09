@@ -1,0 +1,19 @@
+% Requires \usepackage[table]{xcolor}
+\begin{table*}[ht]
+\centering
+\definecolor{numpertdeltaimprove}{RGB}{0,100,0}
+\definecolor{numpertdeltadecline}{RGB}{180,35,24}
+\small
+\begin{tabular}{lcccccc}
+\hline
+Model & approximation & numeration & range & negative & masked & random \\
+\hline
+qwen3\_baseline & 85.05 & 69.59 & 82.35 & 27.27 & 8.87 & 86.98 \\
+qwen3\_no\_approx & \textbf{97.84}\textsuperscript{\textcolor{numpertdeltaimprove}{+12.79}} & \textbf{97.69}\textsuperscript{\textcolor{numpertdeltaimprove}{+28.10}} & \textbf{96.84}\textsuperscript{\textcolor{numpertdeltaimprove}{+14.49}} & \textbf{100.00}\textsuperscript{\textcolor{numpertdeltaimprove}{+72.73}} & \textbf{100.00}\textsuperscript{\textcolor{numpertdeltaimprove}{+91.13}} & \textbf{99.54}\textsuperscript{\textcolor{numpertdeltaimprove}{+12.56}} \\
+qwen3\_no\_num & \textbf{97.84}\textsuperscript{\textcolor{numpertdeltaimprove}{+12.79}} & 62.04\textsuperscript{\textcolor{numpertdeltadecline}{-7.55}} & 95.79\textsuperscript{\textcolor{numpertdeltaimprove}{+13.44}} & \textbf{100.00}\textsuperscript{\textcolor{numpertdeltaimprove}{+72.73}} & \textbf{100.00}\textsuperscript{\textcolor{numpertdeltaimprove}{+91.13}} & 98.61\textsuperscript{\textcolor{numpertdeltaimprove}{+11.63}} \\
+qwen3\_no\_range & 95.68\textsuperscript{\textcolor{numpertdeltaimprove}{+10.63}} & 93.06\textsuperscript{\textcolor{numpertdeltaimprove}{+23.47}} & 95.26\textsuperscript{\textcolor{numpertdeltaimprove}{+12.91}} & 98.08\textsuperscript{\textcolor{numpertdeltaimprove}{+70.81}} & 99.54\textsuperscript{\textcolor{numpertdeltaimprove}{+90.67}} & 97.69\textsuperscript{\textcolor{numpertdeltaimprove}{+10.71}} \\
+qwen3\_no\_perturb\_split & 8.63\textsuperscript{\textcolor{numpertdeltadecline}{-76.42}} & 7.41\textsuperscript{\textcolor{numpertdeltadecline}{-62.18}} & 9.47\textsuperscript{\textcolor{numpertdeltadecline}{-72.88}} & 7.69\textsuperscript{\textcolor{numpertdeltadecline}{-19.58}} & 5.56\textsuperscript{\textcolor{numpertdeltadecline}{-3.31}} & 12.50\textsuperscript{\textcolor{numpertdeltadecline}{-74.48}} \\
+\hline
+\end{tabular}
+\caption{Placeholder description for the accuracy comparison table populated with perturb\_type2, perturb\_type3\_masked, perturb\_type3\_random.}
+\end{table*}
