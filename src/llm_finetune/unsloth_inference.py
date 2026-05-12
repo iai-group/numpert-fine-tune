@@ -151,7 +151,10 @@ def inference(  # noqa: C901
     print(f"Model from Epoch: {start_epoch}")
     print(f"Max sequence length: {max_seq_length:,} tokens")
     print(f"Using perturbations: {use_perturbations}")
-    print(f"Prompt type: {prompt_type.name}")
+    cli_prompt_type = next(
+        k for k, v in _CLI_PROMPT_TYPE_MAP.items() if v is prompt_type
+    )
+    print(f"Prompt type: {cli_prompt_type}")
     if inference_unperturbed_claims:
         print(
             "Unperturbed mode: using only normalized_claim (no perturbations)"
@@ -602,7 +605,8 @@ def inference(  # noqa: C901
     print(f"Predictions saved to: {csv_path}\n")
 
 
-if __name__ == "__main__":
+def build_parser() -> argparse.ArgumentParser:
+    """Return the argument parser for the inference CLI."""
     parser = argparse.ArgumentParser(
         description="Run inference with fact-checking models"
     )
@@ -708,7 +712,11 @@ if __name__ == "__main__":
         ),
     )
 
-    args = parser.parse_args()
+    return parser
+
+
+if __name__ == "__main__":
+    args = build_parser().parse_args()
 
     # Parse file configs for test data
     test_configs = [parse_file_config(p) for p in args.test_json]

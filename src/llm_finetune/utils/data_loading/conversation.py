@@ -27,6 +27,9 @@ def convert_to_conversations(
         examples: List of expanded example dictionaries to convert.
         split: ``"train"`` or ``"validation"`` / ``"test"``.
         include_doc: Whether to include the evidence document in the prompt.
+            When ``False``, the evidence field is passed as an empty string.
+        prompt_type: Controls which example block is injected before the
+            claim/evidence. Defaults to ``PromptType.ZERO_SHOT`` (no examples).
 
     Returns:
         List of examples in conversation format.

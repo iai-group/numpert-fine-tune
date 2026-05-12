@@ -169,6 +169,8 @@ def load_split(
         use_perturbations: Whether to include perturbed examples.
             When ``False``, only original (normalised) claims are loaded.
         include_doc: Whether to include evidence documents in prompts.
+        prompt_type: Controls which example block is injected into the user
+            prompt. Defaults to ``PromptType.ZERO_SHOT`` (no examples).
         balance_labels: Enforce equal True/False label counts.
         perturb_ratio: Target ratio of perturbed to original samples.
             ``None`` (the default) keeps all perturbations.

@@ -2282,46 +2282,12 @@ class TestCLIPromptTypeArgParsing:
     """Test that --prompt_type CLI argument is accepted and mapped correctly."""
 
     def _run_parser(self, extra_args):
-        """Parse a minimal argument list and return args namespace."""
-        import argparse
-        import sys
-        import types
+        """Parse args using the production build_parser()."""
+        from src.llm_finetune.unsloth_inference import build_parser
 
-        # Patch heavy imports so argparse setup runs without GPU deps
-        for mod in ["unsloth", "torch", "tqdm"]:
-            if mod not in sys.modules:
-                sys.modules[mod] = types.ModuleType(mod)
-
-        # Re-import to get the live parser definition
-        import src.llm_finetune.unsloth_inference as m
-
-        parser = argparse.ArgumentParser()
-        parser.add_argument("--test_json", nargs="+", required=True)
-        parser.add_argument("--model", default=None)
-        parser.add_argument("--rank", type=int, default=32)
-        parser.add_argument("--start_epoch", type=int, default=0)
-        parser.add_argument("--max_seq_length", type=int, default=16384)
-        parser.add_argument(
-            "--use_perturbations",
-            action=argparse.BooleanOptionalAction,
-            default=True,
+        return build_parser().parse_args(
+            ["--test_json", "dummy.json"] + extra_args
         )
-        parser.add_argument(
-            "--inference_unperturbed_claims", action="store_true", default=False
-        )
-        parser.add_argument("--output_dir", default=None)
-        parser.add_argument("--verbose", action="store_true", default=False)
-        parser.add_argument(
-            "--require-gpu-offload", action="store_true", default=False
-        )
-        parser.add_argument("--resume", action="store_true", default=False)
-        parser.add_argument("--tokenizer", default=None)
-        parser.add_argument(
-            "--prompt_type",
-            default="ZERO_SHOT",
-            choices=list(m._CLI_PROMPT_TYPE_MAP.keys()),
-        )
-        return parser.parse_args(["--test_json", "dummy.json"] + extra_args)
 
     def test_default_prompt_type_is_zero_shot_string(self):
         args = self._run_parser([])
