@@ -85,8 +85,8 @@ PERTURBATION_TYPE_ORDER = {
 }
 
 PERTURBATION_HEADER_LABELS = {
-    "perturb_type3_masked": "masked",
-    "perturb_type3_random": "random",
+    "perturb_type3_masked": "Masked",
+    "perturb_type3_random": "Random",
 }
 
 
@@ -291,7 +291,7 @@ def format_header(group_name: str) -> str:
     perturb_type = canonical_perturb_type(perturb_type)
     if perturb_type in PERTURBATION_HEADER_LABELS:
         return escape_latex(PERTURBATION_HEADER_LABELS[perturb_type])
-    return escape_latex(source_family_label(source_file))
+    return escape_latex(source_family_label(source_file).title())
 
 
 def group_sort_key(group_name: str) -> tuple[int, str, int, str, str]:
@@ -640,8 +640,7 @@ def derive_selected_groups(
             if group_name != ORIGINAL_GROUP_NAME
         ]
 
-    if not exact_groups:
-        selected = sorted(selected, key=group_sort_key)
+    selected = sorted(selected, key=group_sort_key)
 
     if include_original:
         if ORIGINAL_GROUP_NAME not in baseline_scores:

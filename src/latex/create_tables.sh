@@ -57,6 +57,7 @@ run_table "false_split_no_type2.tex" \
     --perturb-type type1 \
     --perturb-type type3_masked \
     --perturb-type type3_random \
+    --group "negative_False.json | perturb_type2" \
     --class-label false \
     --include-original
 
