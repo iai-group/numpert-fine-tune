@@ -13,6 +13,7 @@ from unsloth import FastLanguageModel
 
 from src.llm_finetune.config import prefix
 from src.llm_finetune.utils.data_loading.pipeline import load_split
+from src.numpert_prompt.prompt import PromptType
 from src.llm_finetune.utils.data_loading.perturbation_types import (
     FileLoadConfig,
     parse_file_config,
@@ -100,6 +101,15 @@ def extract_label_from_response(text: str) -> Optional[str]:
         return None
 
 
+_CLI_PROMPT_TYPE_MAP = {
+    "ZERO_SHOT": PromptType.ZERO_SHOT,
+    "FEW_SHOT": PromptType.FEW_SHOT,
+    "NEGATIVE_EXAMPLES_SYNTHETIC_WITH_REASONING": (
+        PromptType.NEGATIVE_SYNTHETIC_ALL_WITH_REASONING
+    ),
+}
+
+
 def inference(  # noqa: C901
     test_json_paths: Optional[List[str]] = None,
     test_file_configs: Optional[List[FileLoadConfig]] = None,
@@ -114,6 +124,7 @@ def inference(  # noqa: C901
     verbose: bool = False,
     require_gpu_offload: bool = False,
     resume: bool = False,
+    prompt_type: PromptType = PromptType.ZERO_SHOT,
 ):
     """Run inference on test data."""
     time_start = datetime.now()
@@ -140,6 +151,7 @@ def inference(  # noqa: C901
     print(f"Model from Epoch: {start_epoch}")
     print(f"Max sequence length: {max_seq_length:,} tokens")
     print(f"Using perturbations: {use_perturbations}")
+    print(f"Prompt type: {prompt_type.name}")
     if inference_unperturbed_claims:
         print(
             "Unperturbed mode: using only normalized_claim (no perturbations)"
@@ -294,6 +306,7 @@ def inference(  # noqa: C901
         split="test",
         use_perturbations=use_perturbations,
         include_doc=True,
+        prompt_type=prompt_type,
     )
 
     if inference_unperturbed_claims:
@@ -682,6 +695,18 @@ if __name__ == "__main__":
             "scratch even if a prior output file exists."
         ),
     )
+    parser.add_argument(
+        "--prompt_type",
+        default="ZERO_SHOT",
+        choices=list(_CLI_PROMPT_TYPE_MAP.keys()),
+        help=(
+            "User prompt type to use during inference. "
+            "ZERO_SHOT (default): no examples. "
+            "FEW_SHOT: two-shot true/false examples. "
+            "NEGATIVE_EXAMPLES_SYNTHETIC_WITH_REASONING: synthetic "
+            "numerical perturbation examples with reasoning chains."
+        ),
+    )
 
     args = parser.parse_args()
 
@@ -701,4 +726,5 @@ if __name__ == "__main__":
         verbose=args.verbose,
         require_gpu_offload=args.require_gpu_offload,
         resume=args.resume,
+        prompt_type=_CLI_PROMPT_TYPE_MAP[args.prompt_type],
     )

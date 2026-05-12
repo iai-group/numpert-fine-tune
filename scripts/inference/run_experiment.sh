@@ -87,6 +87,7 @@ show_experiment() {
     echo ""
     echo "Inference Options:"
     echo "  Use perturbs:   $USE_PERTURBATIONS"
+    echo "  Prompt type:    ${PROMPT_TYPE:-ZERO_SHOT}"
     if [ -n "$OUTPUT_DIR" ]; then
         echo "  Output Dir:       $OUTPUT_DIR"
     else
@@ -167,6 +168,8 @@ run_experiment() {
     if [ -n "${TOKENIZER:-}" ]; then
         CMD="$CMD --tokenizer $TOKENIZER"
     fi
+
+    CMD="$CMD --prompt_type ${PROMPT_TYPE:-ZERO_SHOT}"
 
     echo "═══════════════════════════════════════════════"
     echo " Command"

@@ -35,6 +35,7 @@ from src.llm_finetune.utils.data_loading.perturbation_types import (
     FileLoadConfig,
     PerturbationType,
 )
+from src.numpert_prompt.prompt import PromptType
 
 logger = logging.getLogger(__name__)
 
@@ -137,6 +138,7 @@ def load_split(
     split: str = "train",
     use_perturbations: bool = True,
     include_doc: bool = True,
+    prompt_type: PromptType = PromptType.ZERO_SHOT,
     # Balancing options
     balance_labels: bool = False,
     perturb_ratio: Optional[float] = None,
@@ -223,6 +225,9 @@ def load_split(
     # Convert to conversation format for SFTTrainer
     effective_split = "validation" if split == "test" else split
     conversation_data = convert_to_conversations(
-        processed, split=effective_split, include_doc=include_doc
+        processed,
+        split=effective_split,
+        include_doc=include_doc,
+        prompt_type=prompt_type,
     )
     return Dataset.from_list(conversation_data)

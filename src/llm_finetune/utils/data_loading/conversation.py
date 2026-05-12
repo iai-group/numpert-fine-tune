@@ -10,7 +10,8 @@ from typing import Dict, List
 
 from src.numpert_prompt.prompt import (
     FACT_CHECK_SYSTEM_PROMPT,
-    FACT_CHECK_USER_PROMPT,
+    PromptType,
+    get_fact_check_user_prompt,
 )
 
 
@@ -18,6 +19,7 @@ def convert_to_conversations(
     examples: List[Dict],
     split: str = "train",
     include_doc: bool = True,
+    prompt_type: PromptType = PromptType.ZERO_SHOT,
 ) -> List[Dict]:
     """Convert examples to conversation format for SFTTrainer.
 
@@ -41,10 +43,10 @@ def convert_to_conversations(
 
         # User message
         evidence = example["doc"] if include_doc else ""
-        user_content = FACT_CHECK_USER_PROMPT.format(
-            examples="",
+        user_content = get_fact_check_user_prompt(
             claim=example["claim"],
             evidence=evidence,
+            prompt_type=prompt_type,
         )
         conversations.append({"role": "user", "content": user_content})
 

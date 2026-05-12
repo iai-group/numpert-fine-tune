@@ -43,18 +43,20 @@ RANK=32
 MAX_SEQ_LENGTH=16000   # small — smoke test only
 TEST_FILE="data/inference_mini_test.json"
 OUTPUT_DIR="results/smoke_test"
+PROMPT_TYPE="ZERO_SHOT"
 
 # ==============================================================================
 # PARSE ARGUMENTS
 # ==============================================================================
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        --model)      MODEL="$2";     shift 2 ;;
-        --tokenizer)  TOKENIZER="$2"; shift 2 ;;
-        --epoch)      EPOCH="$2";     shift 2 ;;
-        --rank)       RANK="$2";      shift 2 ;;
-        --test_file)  TEST_FILE="$2"; shift 2 ;;
-        --output_dir) OUTPUT_DIR="$2";shift 2 ;;
+        --model)       MODEL="$2";       shift 2 ;;
+        --tokenizer)   TOKENIZER="$2";   shift 2 ;;
+        --epoch)       EPOCH="$2";       shift 2 ;;
+        --rank)        RANK="$2";        shift 2 ;;
+        --test_file)   TEST_FILE="$2";   shift 2 ;;
+        --output_dir)  OUTPUT_DIR="$2";  shift 2 ;;
+        --prompt_type) PROMPT_TYPE="$2"; shift 2 ;;
         *) echo "ERROR: Unknown argument: $1"; exit 1 ;;
     esac
 done
@@ -82,6 +84,7 @@ echo "Model:          $MODEL"
 echo "Epoch:          $EPOCH"
 echo "Rank:           $RANK"
 echo "Max seq length: $MAX_SEQ_LENGTH"
+echo "Prompt type:    $PROMPT_TYPE"
 echo "Test file:      $TEST_FILE"
 echo "Output dir:     $OUTPUT_DIR"
 if [ -n "$TOKENIZER" ]; then
@@ -118,6 +121,7 @@ CMD="$CMD --start_epoch ${EPOCH}"
 CMD="$CMD --max_seq_length ${MAX_SEQ_LENGTH}"
 CMD="$CMD --use_perturbations"
 CMD="$CMD --output_dir ${OUTPUT_DIR}"
+CMD="$CMD --prompt_type ${PROMPT_TYPE}"
 
 if [ -n "$TOKENIZER" ]; then
     CMD="$CMD --tokenizer ${TOKENIZER}"
