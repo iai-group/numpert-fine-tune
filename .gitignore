@@ -38,3 +38,5 @@ inference_tests/
 .python-version
 uv.lock
 .models
+# llama.cpp (large external dependency — keep on disk, not tracked)
+external/llama.cpp/
