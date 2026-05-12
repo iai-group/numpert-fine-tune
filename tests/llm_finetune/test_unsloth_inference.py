@@ -2165,8 +2165,8 @@ class TestResumeNewlineGuard:
 class TestPromptTypeMapping:
     """Test _CLI_PROMPT_TYPE_MAP and its relationship to PromptType enum."""
 
-    def test_map_has_all_three_keys(self):
-        """All three supported CLI choices are present in the map."""
+    def test_map_has_all_keys(self):
+        """All supported CLI choices are present in the map."""
         from src.llm_finetune.unsloth_inference import _CLI_PROMPT_TYPE_MAP
 
         assert "ZERO_SHOT" in _CLI_PROMPT_TYPE_MAP
@@ -2174,6 +2174,7 @@ class TestPromptTypeMapping:
         assert (
             "NEGATIVE_EXAMPLES_SYNTHETIC_WITH_REASONING" in _CLI_PROMPT_TYPE_MAP
         )
+        assert "PAP" in _CLI_PROMPT_TYPE_MAP
 
     def test_zero_shot_maps_to_zero_shot_enum(self):
         from src.llm_finetune.unsloth_inference import _CLI_PROMPT_TYPE_MAP
@@ -2198,12 +2199,27 @@ class TestPromptTypeMapping:
             is PromptType.NEGATIVE_SYNTHETIC_ALL_WITH_REASONING
         )
 
-    def test_map_values_are_distinct(self):
-        """All three prompt types map to different enum values."""
+    def test_pap_alias_maps_to_negative_synthetic_enum(self):
+        """PAP is an alias for NEGATIVE_EXAMPLES_SYNTHETIC_WITH_REASONING."""
+        from src.llm_finetune.unsloth_inference import _CLI_PROMPT_TYPE_MAP
+        from src.numpert_prompt.prompt import PromptType
+
+        assert (
+            _CLI_PROMPT_TYPE_MAP["PAP"]
+            is PromptType.NEGATIVE_SYNTHETIC_ALL_WITH_REASONING
+        )
+
+    def test_pap_and_full_name_map_to_same_enum(self):
+        """PAP and NEGATIVE_EXAMPLES_SYNTHETIC_WITH_REASONING resolve to the
+        same PromptType."""
         from src.llm_finetune.unsloth_inference import _CLI_PROMPT_TYPE_MAP
 
-        values = list(_CLI_PROMPT_TYPE_MAP.values())
-        assert len(values) == len(set(values))
+        assert (
+            _CLI_PROMPT_TYPE_MAP["PAP"]
+            is _CLI_PROMPT_TYPE_MAP[
+                "NEGATIVE_EXAMPLES_SYNTHETIC_WITH_REASONING"
+            ]
+        )
 
 
 class TestInferencePromptType:
@@ -2320,3 +2336,18 @@ class TestCLIPromptTypeArgParsing:
         args = self._run_parser(["--prompt_type", "FEW_SHOT"])
         resolved = _CLI_PROMPT_TYPE_MAP[args.prompt_type]
         assert resolved is PromptType.FEW_SHOT
+
+    def test_pap_alias_cli_arg_accepted(self):
+        args = self._run_parser(["--prompt_type", "PAP"])
+        assert args.prompt_type == "PAP"
+
+    def test_pap_alias_maps_to_negative_synthetic_enum(self):
+        """PAP CLI arg resolves to NEGATIVE_SYNTHETIC_ALL_WITH_REASONING."""
+        from src.llm_finetune.unsloth_inference import _CLI_PROMPT_TYPE_MAP
+        from src.numpert_prompt.prompt import PromptType
+
+        args = self._run_parser(["--prompt_type", "PAP"])
+        assert (
+            _CLI_PROMPT_TYPE_MAP[args.prompt_type]
+            is PromptType.NEGATIVE_SYNTHETIC_ALL_WITH_REASONING
+        )
