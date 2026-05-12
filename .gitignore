@@ -40,3 +40,6 @@ uv.lock
 .models
 # llama.cpp (large external dependency — keep on disk, not tracked)
 external/llama.cpp/
+.claude/settings.local.json
+# Claude local settings (machine-specific)
+.claude/
