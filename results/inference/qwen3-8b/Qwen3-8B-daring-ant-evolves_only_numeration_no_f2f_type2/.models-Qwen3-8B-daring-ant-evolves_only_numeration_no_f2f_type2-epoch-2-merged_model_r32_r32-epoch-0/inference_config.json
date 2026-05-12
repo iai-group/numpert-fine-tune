@@ -1,0 +1,157 @@
+{
+  "timestamp": "2026-05-12T19:52:32.058365",
+  "model": {
+    "name": ".models/Qwen3-8B-daring-ant-evolves_only_numeration_no_f2f_type2/epoch-2/merged_model_r32",
+    "path": ".models/Qwen3-8B-daring-ant-evolves_only_numeration_no_f2f_type2/epoch-2/merged_model_r32",
+    "lora_rank": 32,
+    "start_epoch": 0
+  },
+  "inference": {
+    "max_seq_length": 16384
+  },
+  "data": {
+    "use_perturbations": true,
+    "test_files": [
+      {
+        "path": "data/perturbed_data/test_split/numeration_True.json",
+        "perturb_types": [
+          "perturb_type1",
+          "perturb_type2"
+        ]
+      },
+      {
+        "path": "data/perturbed_data/test_split/numeration_False.json",
+        "perturb_types": [
+          "perturb_type1",
+          "perturb_type2"
+        ]
+      },
+      {
+        "path": "data/perturbed_data/test_split/approximation_True.json",
+        "perturb_types": [
+          "perturb_type1",
+          "perturb_type2"
+        ]
+      },
+      {
+        "path": "data/perturbed_data/test_split/approximation_False.json",
+        "perturb_types": [
+          "perturb_type1",
+          "perturb_type2"
+        ]
+      },
+      {
+        "path": "data/perturbed_data/test_split/range_True.json",
+        "perturb_types": [
+          "perturb_type1",
+          "perturb_type2"
+        ]
+      },
+      {
+        "path": "data/perturbed_data/test_split/range_False.json",
+        "perturb_types": [
+          "perturb_type1",
+          "perturb_type2"
+        ]
+      },
+      {
+        "path": "data/perturbed_data/test_split/negative_True.json",
+        "perturb_types": [
+          "perturb_type2"
+        ]
+      },
+      {
+        "path": "data/perturbed_data/test_split/negative_False.json",
+        "perturb_types": [
+          "perturb_type2"
+        ]
+      },
+      {
+        "path": "data/perturbed_data/test_split/obfuscation_True.json",
+        "perturb_types": [
+          "perturb_type3_random",
+          "perturb_type3_masked"
+        ]
+      },
+      {
+        "path": "data/perturbed_data/test_split/obfuscation_False.json",
+        "perturb_types": [
+          "perturb_type3_random",
+          "perturb_type3_masked"
+        ]
+      }
+    ],
+    "test_stats": {
+      "size": 6175
+    }
+  },
+  "training_provenance": {
+    "timestamp": "2026-05-09T15:52:25.514619",
+    "model": {
+      "name": "Qwen3-8B",
+      "lora_rank": 32
+    },
+    "training": {
+      "start_epoch": 0,
+      "num_train_epochs": 2,
+      "batch_size": 5,
+      "gradient_accumulation_steps": 1,
+      "effective_batch_size": 5,
+      "max_seq_length": 16384,
+      "learning_rate": 0.0001
+    },
+    "data": {
+      "use_perturbations": true,
+      "balance_labels": false,
+      "perturb_ratio": 1.0,
+      "false_perturb_t_to_f_ratio": 0.67,
+      "method_balance_mode": "oversample",
+      "train_files": [
+        {
+          "path": "./data/perturbed_data/train_split/numeration_True.json",
+          "perturb_types": [
+            "perturb_type1",
+            "perturb_type2"
+          ]
+        },
+        {
+          "path": "./data/perturbed_data/train_split/numeration_False.json",
+          "perturb_types": [
+            "perturb_type1"
+          ]
+        }
+      ],
+      "val_files": [
+        {
+          "path": "./data/perturbed_data/val_split/numeration_True.json",
+          "perturb_types": [
+            "perturb_type1",
+            "perturb_type2"
+          ]
+        },
+        {
+          "path": "./data/perturbed_data/val_split/numeration_False.json",
+          "perturb_types": [
+            "perturb_type1"
+          ]
+        }
+      ],
+      "train_stats": {
+        "size": 4637
+      },
+      "val_stats": {
+        "size": 2018
+      }
+    },
+    "batch_sampler": {
+      "batch_match_claim_id": false,
+      "split_large_claims": false,
+      "ensure_original_in_batch": false,
+      "ensure_perturbed_in_batch": false
+    },
+    "gguf": {
+      "save_gguf": true,
+      "quantization_method": "q4_k_m"
+    }
+  }
+}
