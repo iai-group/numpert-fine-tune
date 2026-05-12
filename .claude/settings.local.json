@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m pytest tests/llm_finetune/utils/data_loading/test_conversation.py tests/llm_finetune/test_unsloth_inference.py::TestPromptTypeMapping tests/llm_finetune/test_unsloth_inference.py::TestInferencePromptType tests/llm_finetune/test_unsloth_inference.py::TestCLIPromptTypeArgParsing -v)"
+    ]
+  }
+}

@@ -13,6 +13,7 @@ from unsloth import FastLanguageModel
 
 from src.llm_finetune.config import prefix
 from src.llm_finetune.utils.data_loading.pipeline import load_split
+from src.numpert_prompt.prompt import PromptType
 from src.llm_finetune.utils.data_loading.perturbation_types import (
     FileLoadConfig,
     parse_file_config,
@@ -100,6 +101,16 @@ def extract_label_from_response(text: str) -> Optional[str]:
         return None
 
 
+_CLI_PROMPT_TYPE_MAP = {
+    "ZERO_SHOT": PromptType.ZERO_SHOT,
+    "FEW_SHOT": PromptType.FEW_SHOT,
+    "NEGATIVE_EXAMPLES_SYNTHETIC_WITH_REASONING": (
+        PromptType.NEGATIVE_SYNTHETIC_ALL_WITH_REASONING
+    ),
+    "PAP": PromptType.NEGATIVE_SYNTHETIC_ALL_WITH_REASONING,
+}
+
+
 def inference(  # noqa: C901
     test_json_paths: Optional[List[str]] = None,
     test_file_configs: Optional[List[FileLoadConfig]] = None,
@@ -114,6 +125,7 @@ def inference(  # noqa: C901
     verbose: bool = False,
     require_gpu_offload: bool = False,
     resume: bool = False,
+    prompt_type: PromptType = PromptType.ZERO_SHOT,
 ):
     """Run inference on test data."""
     time_start = datetime.now()
@@ -140,6 +152,10 @@ def inference(  # noqa: C901
     print(f"Model from Epoch: {start_epoch}")
     print(f"Max sequence length: {max_seq_length:,} tokens")
     print(f"Using perturbations: {use_perturbations}")
+    cli_prompt_type = next(
+        k for k, v in _CLI_PROMPT_TYPE_MAP.items() if v is prompt_type
+    )
+    print(f"Prompt type: {cli_prompt_type}")
     if inference_unperturbed_claims:
         print(
             "Unperturbed mode: using only normalized_claim (no perturbations)"
@@ -294,6 +310,7 @@ def inference(  # noqa: C901
         split="test",
         use_perturbations=use_perturbations,
         include_doc=True,
+        prompt_type=prompt_type,
     )
 
     if inference_unperturbed_claims:
@@ -589,7 +606,8 @@ def inference(  # noqa: C901
     print(f"Predictions saved to: {csv_path}\n")
 
 
-if __name__ == "__main__":
+def build_parser() -> argparse.ArgumentParser:
+    """Return the argument parser for the inference CLI."""
     parser = argparse.ArgumentParser(
         description="Run inference with fact-checking models"
     )
@@ -682,8 +700,24 @@ if __name__ == "__main__":
             "scratch even if a prior output file exists."
         ),
     )
+    parser.add_argument(
+        "--prompt_type",
+        default="ZERO_SHOT",
+        choices=list(_CLI_PROMPT_TYPE_MAP.keys()),
+        help=(
+            "User prompt type to use during inference. "
+            "ZERO_SHOT (default): no examples. "
+            "FEW_SHOT: two-shot true/false examples. "
+            "NEGATIVE_EXAMPLES_SYNTHETIC_WITH_REASONING: synthetic "
+            "numerical perturbation examples with reasoning chains."
+        ),
+    )
 
-    args = parser.parse_args()
+    return parser
+
+
+if __name__ == "__main__":
+    args = build_parser().parse_args()
 
     # Parse file configs for test data
     test_configs = [parse_file_config(p) for p in args.test_json]
@@ -701,4 +735,5 @@ if __name__ == "__main__":
         verbose=args.verbose,
         require_gpu_offload=args.require_gpu_offload,
         resume=args.resume,
+        prompt_type=_CLI_PROMPT_TYPE_MAP[args.prompt_type],
     )

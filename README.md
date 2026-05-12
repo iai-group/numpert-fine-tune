@@ -64,6 +64,7 @@ dataset = load_split(
     split="train",
     use_perturbations=True,
     include_doc=True,
+    prompt_type=PromptType.ZERO_SHOT,  # ZERO_SHOT | FEW_SHOT | NEGATIVE_SYNTHETIC_ALL_WITH_REASONING
     balance_labels=False,
     perturb_ratio=None,        # None = keep all perturbations; float = target ratio
     false_perturb_t_to_f_ratio=None,
@@ -177,8 +178,29 @@ ALL_PERTURB_TYPES          = STRUCTURE_PRESERVING_TYPES | VALUE_MODIFYING_TYPES 
 
 - The **system prompt** instructs the model to act as a fact-checker.
 - The **user prompt** contains the claim and (optionally) the evidence document. Set `include_doc=False` to omit evidence.
+- The **`prompt_type`** parameter controls which example block is injected before the claim (see [Prompt Types](#prompt-types) below).
 - The **assistant response** is the JSON-formatted label (`{"label": true}` or `{"label": false}`).
 - The assistant message is always included — SFT needs it for training, and evaluation uses it for scoring.
+
+---
+
+## Prompt Types
+
+The user prompt injected into each conversation is controlled by the `prompt_type` parameter, which accepts a `PromptType` enum value (defined in `src.numpert_prompt.prompt`). All three types use the same base template (`FACT_CHECK_USER_PROMPT`) — they differ only in the example block prepended before the claim.
+
+| `PromptType` | CLI string | Injected content |
+|---|---|---|
+| `ZERO_SHOT` | `ZERO_SHOT` | No examples (default) |
+| `FEW_SHOT` | `FEW_SHOT` | Two full-length true/false examples with evidence |
+| `NEGATIVE_SYNTHETIC_ALL_WITH_REASONING` | `NEGATIVE_EXAMPLES_SYNTHETIC_WITH_REASONING` | Six synthetic numerical perturbation examples, each with a `Reasoning:` chain explaining why the claim is false |
+
+The `prompt_type` flows through the entire data loading pipeline:
+
+```
+load_split(prompt_type=...) → convert_to_conversations(prompt_type=...) → get_fact_check_user_prompt(prompt_type=...)
+```
+
+`prompt_type` only affects the **user turn** — the system prompt and assistant response are unchanged.
 
 ---
 
@@ -551,8 +573,27 @@ python -m src.llm_finetune.unsloth_inference \
     --start_epoch 3 \
     --max_seq_length 8192 \
     --use_perturbations \
+    --prompt_type ZERO_SHOT \
     --output_dir predictions/numpert
 ```
+
+### Key Arguments
+
+| Argument | Default | Description |
+|---|---|---|
+| `--test_json` | (required) | Test JSON path(s), optionally with `:type` suffix |
+| `--model` | — | Model name, HuggingFace path, local directory, or `.gguf` file |
+| `--tokenizer` | `None` | HuggingFace tokenizer path. Required when `--model` is a GGUF file |
+| `--rank` | `32` | LoRA rank (used to locate training checkpoints) |
+| `--start_epoch` | `0` | Epoch of the checkpoint to load; `0` loads from HuggingFace |
+| `--max_seq_length` | `16384` | Maximum sequence length in tokens |
+| `--use_perturbations` / `--no-use_perturbations` | `True` | Include or exclude perturbed examples |
+| `--inference_unperturbed_claims` | `False` | Run inference only on original (normalized) claims; outputs prefixed with `unperturbed_` |
+| `--prompt_type` | `ZERO_SHOT` | User prompt variant: `ZERO_SHOT`, `FEW_SHOT`, or `NEGATIVE_EXAMPLES_SYNTHETIC_WITH_REASONING` |
+| `--output_dir` | (auto) | Output directory; auto-generates a timestamped run name if omitted |
+| `--resume` | `False` | Resume a previous run from an existing `inference_details.jsonl` |
+| `--verbose` | `False` | Enable verbose llama.cpp output |
+| `--require-gpu-offload` | `False` | Fail hard if llama-cpp-python was built without GPU support |
 
 ### Output Files
 
