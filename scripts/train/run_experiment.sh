@@ -166,29 +166,31 @@ run_experiment() {
     # Show config summary
     show_experiment "$name"
 
-    # Validate data files exist
-    echo "Checking data files..."
-    local all_files_exist=true
-    for entry in "${TRAIN_JSON[@]}" "${VAL_JSON[@]}"; do
-        file="${entry%%:*}"
-        if [ ! -f "$file" ]; then
-            echo "ERROR: File not found: $file"
-            all_files_exist=false
-        fi
-    done
+    # Validate data files exist (skipped when no training epochs / no data files)
+    if [ "${#TRAIN_JSON[@]}" -eq 0 ]; then
+        echo "No data files configured (num_train_epochs=0): skipping data file validation"
+    else
+        echo "Checking data files..."
+        local all_files_exist=true
+        for entry in "${TRAIN_JSON[@]}" "${VAL_JSON[@]}"; do
+            file="${entry%%:*}"
+            if [ ! -f "$file" ]; then
+                echo "ERROR: File not found: $file"
+                all_files_exist=false
+            fi
+        done
 
-    if [ "$all_files_exist" = false ]; then
-        echo ""
-        echo "Please ensure all data files exist before running training."
-        exit 1
+        if [ "$all_files_exist" = false ]; then
+            echo ""
+            echo "Please ensure all data files exist before running training."
+            exit 1
+        fi
+        echo "✓ All data files found"
     fi
-    echo "✓ All data files found"
     echo ""
 
     # Build command
     CMD="uv run python -m src.llm_finetune.unsloth_finetune \
-        --train_json ${TRAIN_JSON[@]} \
-        --val_json ${VAL_JSON[@]} \
         --model ${MODEL} \
         --rank $RANK \
         --start_epoch $START_EPOCH \
@@ -201,6 +203,11 @@ run_experiment() {
         --false_perturb_t_to_f_ratio $FALSE_PERTURB_T_TO_F_RATIO \
         --eval_steps $EVAL_STEPS \
         --perturb_type_names ${PERTURB_TYPE_NAMES}"
+
+    # Add data args only when data files are configured
+    if [ "${#TRAIN_JSON[@]}" -gt 0 ]; then
+        CMD="$CMD --train_json ${TRAIN_JSON[@]} --val_json ${VAL_JSON[@]}"
+    fi
 
     # Add optional flags
     if [[ "${USE_PERTURBATIONS,,}" == "true" ]]; then
