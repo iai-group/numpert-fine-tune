@@ -35,13 +35,13 @@
 ##SBATCH --nodelist=gorina9
 #SBATCH --mem=300G
 #SBATCH --job-name=gguf-convert
-#SBATCH --output=scripts/slurm_out/gguf-convert_%j.out
+#SBATCH --output=scripts/zslurm_out/gguf-convert_%j.out
 
 # ==============================================================================
 # PARSE ARGUMENTS
 # ==============================================================================
-MODEL_PATH=""
-OUTPUT_DIR=""
+MODEL_PATH=".models/Qwen3-8B-young-nightingale-manifests_all_perturb_no_f_type2/epoch-2/merged_model_r32"
+OUTPUT_DIR=".models/Qwen3-8B-young-nightingale-manifests_all_perturb_no_f_type2/gguf"
 QUANTIZATION_METHOD=""
 
 while [[ $# -gt 0 ]]; do
@@ -83,7 +83,7 @@ fi
 # ==============================================================================
 # SETUP DIRECTORIES
 # ==============================================================================
-mkdir -p scripts/slurm_out
+mkdir -p scripts/zslurm_out
 
 # ==============================================================================
 # ENVIRONMENT SETUP

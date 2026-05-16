@@ -20,11 +20,11 @@
 
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:1
-#SBATCH --time=48:00:00
+#SBATCH --time=24:00:00
 #SBATCH --mem=300G
 # These are set dynamically below if possible, defaults here as fallback
 #SBATCH --job-name=numpert_inference
-#SBATCH --output=scripts/slurm_out/inference/infer_%j.out
+#SBATCH --output=scripts/zslurm_out/inference/infer_%j.out
 
 # ==============================================================================
 # PARSE EXPERIMENT NAME
@@ -43,7 +43,7 @@ fi
 # ==============================================================================
 # SETUP DIRECTORIES
 # ==============================================================================
-mkdir -p scripts/slurm_out/inference
+mkdir -p scripts/zslurm_out/inference
 
 # ==============================================================================
 # JOB INFO
