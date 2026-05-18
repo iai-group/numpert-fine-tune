@@ -17,6 +17,7 @@ is supported and parsed by :func:`~perturbation_types.parse_file_config`.
 
 from __future__ import annotations
 
+import glob
 import logging
 from pathlib import Path
 from typing import List, Optional, Union
@@ -49,10 +50,33 @@ def _resolve_file_paths(
     file_configs: Optional[List[FileLoadConfig]],
     json_paths: Optional[Union[str, List[str]]],
 ) -> list[Union[str, Path]]:
-    """Return a flat list of file paths from either configs or raw paths."""
+    """Return a flat list of file paths from either configs or raw paths.
+
+    Expands glob patterns (e.g., '*.json') into individual file paths.
+    """
     if isinstance(json_paths, str):
         json_paths = [json_paths]
-    return [cfg.path for cfg in (file_configs or [])] or list(json_paths or [])
+
+    paths = [cfg.path for cfg in (file_configs or [])] or list(json_paths or [])
+
+    # Expand glob patterns
+    expanded_paths: list[Union[str, Path]] = []
+    for p in paths:
+        p_str = str(p)
+        if "*" in p_str or "?" in p_str or "[" in p_str:
+            # This is a glob pattern, expand it
+            matched = glob.glob(p_str)
+            if matched:
+                expanded_paths.extend(sorted(matched))
+            else:
+                # Pattern didn't match anything,
+                # keep original for error reporting
+                expanded_paths.append(p)
+        else:
+            # Not a glob pattern, use as-is
+            expanded_paths.append(p)
+
+    return expanded_paths
 
 
 def _build_allowed_types_by_file(
