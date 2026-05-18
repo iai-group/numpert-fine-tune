@@ -695,7 +695,7 @@ def finetune_peft(  # noqa: C901
     print("\n" + "=" * 80)
     print("TRAINING COMPLETED")
     print("=" * 80)
-    print(f"Training time: {train_result.training_loss:.4f}")
+    print(f"Training loss: {train_result.training_loss:.4f}")
 
     # Save model
     print("\nSaving model...")
