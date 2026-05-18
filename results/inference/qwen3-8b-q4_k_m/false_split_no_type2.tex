@@ -1,19 +1,19 @@
-% Requires \usepackage[table]{xcolor}
+% Requires \usepackage{booktabs} and \usepackage[table]{xcolor}
 \begin{table*}[ht]
 \centering
 \definecolor{numpertdeltaimprove}{RGB}{0,100,0}
 \definecolor{numpertdeltadecline}{RGB}{180,35,24}
 \small
-\begin{tabular}{lcccccc}
-\hline
-Model & Original & Approximation & Numeration & Range & Masked & Random \\
-\hline
-qwen3\_baseline & 94.30 & 95.51 & 94.65 & 92.18 & 94.03 & 97.70 \\
-qwen3\_no\_approx & \textbf{97.07}\textsuperscript{\textcolor{numpertdeltaimprove}{+2.77}} & \textbf{99.23}\textsuperscript{\textcolor{numpertdeltaimprove}{+3.72}} & \textbf{97.01}\textsuperscript{\textcolor{numpertdeltaimprove}{+2.36}} & 93.13\textsuperscript{\textcolor{numpertdeltaimprove}{+0.95}} & \textbf{100.00}\textsuperscript{\textcolor{numpertdeltaimprove}{+5.97}} & \textbf{100.00}\textsuperscript{\textcolor{numpertdeltaimprove}{+2.30}} \\
-qwen3\_no\_num & 96.75\textsuperscript{\textcolor{numpertdeltaimprove}{+2.45}} & 96.43\textsuperscript{\textcolor{numpertdeltaimprove}{+0.92}} & 96.21\textsuperscript{\textcolor{numpertdeltaimprove}{+1.56}} & 91.47\textsuperscript{\textcolor{numpertdeltadecline}{-0.71}} & \textbf{100.00}\textsuperscript{\textcolor{numpertdeltaimprove}{+5.97}} & \textbf{100.00}\textsuperscript{\textcolor{numpertdeltaimprove}{+2.30}} \\
-qwen3\_no\_range & 95.12\textsuperscript{\textcolor{numpertdeltaimprove}{+0.82}} & 95.15\textsuperscript{\textcolor{numpertdeltadecline}{-0.36}} & 94.61\textsuperscript{\textcolor{numpertdeltadecline}{-0.04}} & 95.50\textsuperscript{\textcolor{numpertdeltaimprove}{+3.32}} & 99.80\textsuperscript{\textcolor{numpertdeltaimprove}{+5.77}} & 99.60\textsuperscript{\textcolor{numpertdeltaimprove}{+1.90}} \\
-qwen3\_no\_perturb\_split & 96.75\textsuperscript{\textcolor{numpertdeltaimprove}{+2.45}} & 97.70\textsuperscript{\textcolor{numpertdeltaimprove}{+2.19}} & 96.41\textsuperscript{\textcolor{numpertdeltaimprove}{+1.76}} & \textbf{96.92}\textsuperscript{\textcolor{numpertdeltaimprove}{+4.74}} & 96.61\textsuperscript{\textcolor{numpertdeltaimprove}{+2.58}} & 98.20\textsuperscript{\textcolor{numpertdeltaimprove}{+0.50}} \\
-\hline
+\begin{tabular}{lccccccc}
+\toprule
+\textbf{Model} & \textbf{Original} & \textbf{Approximation} & \textbf{Numeration} & \textbf{Range} & \textbf{Negative} & \textbf{Masked} & \textbf{Random} \\
+\midrule
+\mbase & 94.30 & 95.51\textsuperscript{\textcolor{numpertdeltaimprove}{+1.21}} & 94.65\textsuperscript{\textcolor{numpertdeltaimprove}{+0.35}} & 92.18\textsuperscript{\textcolor{numpertdeltadecline}{-2.12}} & 93.75\textsuperscript{\textcolor{numpertdeltadecline}{-0.55}} & 94.03\textsuperscript{\textcolor{numpertdeltadecline}{-0.27}} & 97.70\textsuperscript{\textcolor{numpertdeltaimprove}{+3.40}} \\
+\mnoperturb & 96.75 & 97.70\textsuperscript{\textcolor{numpertdeltaimprove}{+0.95}} & 96.41\textsuperscript{\textcolor{numpertdeltadecline}{-0.34}} & \textbf{96.92}\textsuperscript{\textcolor{numpertdeltaimprove}{+0.17}} & 96.70\textsuperscript{\textcolor{numpertdeltadecline}{-0.05}} & 96.61\textsuperscript{\textcolor{numpertdeltadecline}{-0.14}} & 98.20\textsuperscript{\textcolor{numpertdeltaimprove}{+1.45}} \\
+\mnoapproximation & \textbf{97.07} & \textbf{99.23}\textsuperscript{\textcolor{numpertdeltaimprove}{+2.16}} & \textbf{97.01}\textsuperscript{\textcolor{numpertdeltadecline}{-0.06}} & 93.13\textsuperscript{\textcolor{numpertdeltadecline}{-3.94}} & \textbf{100.00}\textsuperscript{\textcolor{numpertdeltaimprove}{+2.93}} & \textbf{100.00}\textsuperscript{\textcolor{numpertdeltaimprove}{+2.93}} & \textbf{100.00}\textsuperscript{\textcolor{numpertdeltaimprove}{+2.93}} \\
+\mnonumeration & 96.75 & 96.43\textsuperscript{\textcolor{numpertdeltadecline}{-0.32}} & 96.21\textsuperscript{\textcolor{numpertdeltadecline}{-0.54}} & 91.47\textsuperscript{\textcolor{numpertdeltadecline}{-5.28}} & \textbf{100.00}\textsuperscript{\textcolor{numpertdeltaimprove}{+3.25}} & \textbf{100.00}\textsuperscript{\textcolor{numpertdeltaimprove}{+3.25}} & \textbf{100.00}\textsuperscript{\textcolor{numpertdeltaimprove}{+3.25}} \\
+\mnorange & 95.12 & 95.15\textsuperscript{\textcolor{numpertdeltaimprove}{+0.03}} & 94.61\textsuperscript{\textcolor{numpertdeltadecline}{-0.51}} & 95.50\textsuperscript{\textcolor{numpertdeltaimprove}{+0.38}} & \textbf{100.00}\textsuperscript{\textcolor{numpertdeltaimprove}{+4.88}} & 99.80\textsuperscript{\textcolor{numpertdeltaimprove}{+4.68}} & 99.60\textsuperscript{\textcolor{numpertdeltaimprove}{+4.48}} \\
+\bottomrule
 \end{tabular}
-\caption{Placeholder description for the accuracy comparison table populated with original\_normalized, perturb\_type1, perturb\_type3\_masked, perturb\_type3\_random.}
+\caption{Placeholder description for the accuracy comparison table populated with original\_normalized, perturb\_type1, perturb\_type2, perturb\_type3\_masked, perturb\_type3\_random.}
 \end{table*}
