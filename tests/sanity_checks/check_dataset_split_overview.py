@@ -9,7 +9,8 @@ Usage::
     python -m tests.sanity_checks.check_dataset_split_overview
 
     # Specific split(s)
-    python -m tests.sanity_checks.check_dataset_split_overview --splits train val
+    python -m tests.sanity_checks.check_dataset_split_overview \
+        --splits train val
 
     # Custom data root
     python -m tests.sanity_checks.check_dataset_split_overview \\
@@ -146,7 +147,9 @@ def print_text_table(
     print(header)
     print(f"  {THIN_SEP}")
 
-    all_methods = [m for m in METHOD_ORDER if m in counts or m in METHOD_DISPLAY]
+    all_methods = [
+        m for m in METHOD_ORDER if m in counts or m in METHOD_DISPLAY
+    ]
     for method in all_methods:
         method_counts = counts.get(method, {})
         t_to_t = method_counts.get("T→T", 0)
@@ -169,9 +172,7 @@ def print_text_table(
 
     # Totals row
     total_t_to_t = sum(
-        c.get("T→T", 0)
-        for m, c in counts.items()
-        if m not in NO_T_TO_T_METHODS
+        c.get("T→T", 0) for m, c in counts.items() if m not in NO_T_TO_T_METHODS
     )
     total_t_to_f = sum(c.get("T→F", 0) for c in counts.values())
     total_f_to_f = sum(c.get("F→F", 0) for c in counts.values())
@@ -231,7 +232,9 @@ def render_latex_table(
     )
     lines.append(r"\midrule")
 
-    all_methods = [m for m in METHOD_ORDER if m in counts or m in METHOD_DISPLAY]
+    all_methods = [
+        m for m in METHOD_ORDER if m in counts or m in METHOD_DISPLAY
+    ]
     for method in all_methods:
         method_counts = counts.get(method, {})
         t_to_t = method_counts.get("T→T", 0)

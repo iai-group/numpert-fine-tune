@@ -3,7 +3,7 @@
 # Generate predefined LaTeX tables for qwen3-8b-q4_k_m inference results.
 #
 # Usage:
-#   bash scripts/inference/generate_qwen3_8b_q4_k_m_tables.sh
+#   bash src/latex/create_tables.sh
 #
 ################################################################################
 
@@ -19,7 +19,7 @@ else
 fi
 
 PYTHON_BIN="${PYTHON_BIN:-${DEFAULT_PYTHON_BIN}}"
-RESULTS_SUBDIR="${RESULTS_SUBDIR:-qwen3-32b-q4_k_m}"
+RESULTS_SUBDIR="${RESULTS_SUBDIR:-qwen3-8b-q4_k_m}"
 RESULTS_DIR="results/inference/${RESULTS_SUBDIR}"
 
 cd "${REPO_ROOT}"
@@ -33,6 +33,7 @@ run_table() {
 run_table "true_split.tex" \
     --results-root "${RESULTS_DIR}" \
     --output "${RESULTS_DIR}/true_split.tex" \
+    --model-name-map src/latex/model_name_map.jsonl \
     --baseline-model baseline \
     --source-file-pattern "*_True.json" \
     --perturb-type type1 \
@@ -42,6 +43,7 @@ run_table "true_split.tex" \
 run_table "true_split_flipped.tex" \
     --results-root "${RESULTS_DIR}" \
     --output "${RESULTS_DIR}/true_split_flipped.tex" \
+    --model-name-map src/latex/model_name_map.jsonl \
     --baseline-model baseline \
     --source-file-pattern "*_True.json" \
     --perturb-type type2 \
@@ -52,6 +54,7 @@ run_table "true_split_flipped.tex" \
 run_table "false_split_no_type2.tex" \
     --results-root "${RESULTS_DIR}" \
     --output "${RESULTS_DIR}/false_split_no_type2.tex" \
+    --model-name-map src/latex/model_name_map.jsonl \
     --baseline-model baseline \
     --source-file-pattern "*_False.json" \
     --perturb-type type1 \
@@ -59,6 +62,6 @@ run_table "false_split_no_type2.tex" \
     --perturb-type type3_random \
     --group "negative_False.json | perturb_type2" \
     --class-label false \
-    --include-original
+    --include-original 
 
 echo "Finished generating tables."
