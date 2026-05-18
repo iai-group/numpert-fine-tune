@@ -80,7 +80,7 @@ NO_T_TO_T_METHODS = frozenset({"masked", "random", "negative"})
 def load_split(split: str, data_root: Path) -> list[Sample]:
     """Load and flatten all JSON files for the given split."""
     split_dir = data_root / f"{split}_split"
-    file_paths = sorted(split_dir.glob("*.json"))
+    file_paths: list[str | Path] = sorted(split_dir.glob("*.json"))
     if not file_paths:
         raise FileNotFoundError(
             f"No JSON files found in {split_dir}. "

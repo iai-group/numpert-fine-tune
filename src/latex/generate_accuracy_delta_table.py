@@ -152,9 +152,9 @@ def escape_latex(text: str) -> str:
 
 
 def source_family_label(source_file: str) -> str:
-    """Collapse a source filename like approximation_True.json to approximation.
+    """Strip the boolean suffix from a source filename, returning the family.
 
-    Strips the boolean suffix and file extension, returning only the family name.
+    For example, ``approximation_True.json`` becomes ``approximation``.
     """
     stem = Path(source_file).stem
     return re.sub(r"_(true|false)$", "", stem, flags=re.IGNORECASE)
@@ -194,7 +194,7 @@ def group_sort_key(group_name: str) -> tuple[int, str, int, str, str]:
 
 
 def default_caption(groups: Sequence[str]) -> str:
-    """Build a placeholder caption that mentions the populated perturbation types.
+    """Build a placeholder caption mentioning the populated perturbation types.
 
     Lists each distinct perturbation type found across the given groups.
     """
@@ -214,7 +214,7 @@ def default_caption(groups: Sequence[str]) -> str:
 
 
 def format_score(value: float, digits: int) -> str:
-    """Format an accuracy value as a percentage string with the given precision."""
+    """Format accuracy as a percentage string with the given precision."""
     return f"{value * 100:.{digits}f}"
 
 
@@ -228,7 +228,7 @@ def extract_score(
     """
     if class_label is None:
         accuracy = entry.get("accuracy")
-        if accuracy is None:
+        if not isinstance(accuracy, (int, float)):
             raise ValueError("Metrics entry is missing an accuracy value")
         return float(accuracy)
 
@@ -677,7 +677,7 @@ def ensure_baseline_groups(
 
 
 def write_output(output_path: Path, latex: str) -> None:
-    """Write the LaTeX string to a file, creating parent directories as needed."""
+    """Write LaTeX to a file, creating parent directories as needed."""
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(latex + "\n", encoding="utf-8")
 
