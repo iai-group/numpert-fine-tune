@@ -1,4 +1,4 @@
-"""Dataset split overview — per-perturbation-type size breakdown.
+r"""Dataset split overview — per-perturbation-type size breakdown.
 
 Prints a plain-text table and a LaTeX table showing the number of samples
 per perturbation category (T→T, F→F, T→F) for each dataset split.
@@ -13,7 +13,7 @@ Usage::
         --splits train val
 
     # Custom data root
-    python -m tests.sanity_checks.check_dataset_split_overview \\
+    python -m tests.sanity_checks.check_dataset_split_overview \
         --data_root data/perturbed_data
 """
 

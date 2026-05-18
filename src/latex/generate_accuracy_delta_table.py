@@ -76,6 +76,7 @@ class GroupScore:
 
     @property
     def group_name(self) -> str:
+        """Return a combined key joining source file and perturbation type."""
         return f"{self.source_file} | {self.perturb_type}"
 
 
@@ -125,11 +126,13 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def canonical_perturb_type(raw_value: str) -> str:
+    """Resolve a perturbation type alias to its canonical name."""
     lowered = raw_value.strip()
     return PERTURBATION_ALIASES.get(lowered, lowered)
 
 
 def escape_latex(text: str) -> str:
+    """Escape special LaTeX characters in a plain-text string."""
     replacements = {
         "\\": r"\textbackslash{}",
         "&": r"\&",
@@ -149,8 +152,10 @@ def escape_latex(text: str) -> str:
 
 
 def source_family_label(source_file: str) -> str:
-    """Collapse a source filename like approximation_True.json to
-    approximation."""
+    """Collapse a source filename like approximation_True.json to approximation.
+
+    Strips the boolean suffix and file extension, returning only the family name.
+    """
     stem = Path(source_file).stem
     return re.sub(r"_(true|false)$", "", stem, flags=re.IGNORECASE)
 
@@ -189,8 +194,10 @@ def group_sort_key(group_name: str) -> tuple[int, str, int, str, str]:
 
 
 def default_caption(groups: Sequence[str]) -> str:
-    """Build a placeholder caption that mentions the populated perturbation
-    types."""
+    """Build a placeholder caption that mentions the populated perturbation types.
+
+    Lists each distinct perturbation type found across the given groups.
+    """
     seen: list[str] = []
     for group_name in groups:
         perturb_type = (
@@ -207,6 +214,7 @@ def default_caption(groups: Sequence[str]) -> str:
 
 
 def format_score(value: float, digits: int) -> str:
+    """Format an accuracy value as a percentage string with the given precision."""
     return f"{value * 100:.{digits}f}"
 
 
@@ -275,8 +283,10 @@ def short_model_label(model_label: str, results_root: Path) -> str:
 
 
 def formal_model_label(model_label: str, results_root: Path) -> str:
-    """Return the formal LaTeX math notation for a model, e.g.
-    $\\text{M}_{\\text{Excl-Range}}$."""
+    r"""Return the formal LaTeX math notation for a model.
+
+    For example: $\text{M}_{\text{Excl-Range}}$.
+    """
     short = short_model_label(model_label, results_root)
     idx = short.find("_")
     suffix = short[idx + 1 :] if idx != -1 else short
@@ -667,6 +677,7 @@ def ensure_baseline_groups(
 
 
 def write_output(output_path: Path, latex: str) -> None:
+    """Write the LaTeX string to a file, creating parent directories as needed."""
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(latex + "\n", encoding="utf-8")
 
