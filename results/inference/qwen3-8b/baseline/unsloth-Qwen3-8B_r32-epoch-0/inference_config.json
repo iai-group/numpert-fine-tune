@@ -1,0 +1,89 @@
+{
+  "timestamp": "2026-04-19T14:59:35.761783",
+  "model": {
+    "name": "unsloth/Qwen3-8B",
+    "path": "unsloth/Qwen3-8B",
+    "lora_rank": 32,
+    "start_epoch": 0
+  },
+  "inference": {
+    "max_seq_length": 16384
+  },
+  "data": {
+    "use_perturbations": true,
+    "test_files": [
+      {
+        "path": "data/perturbed_data/test_split/numeration_True.json",
+        "perturb_types": [
+          "perturb_type1",
+          "perturb_type2"
+        ]
+      },
+      {
+        "path": "data/perturbed_data/test_split/numeration_False.json",
+        "perturb_types": [
+          "perturb_type1",
+          "perturb_type2"
+        ]
+      },
+      {
+        "path": "data/perturbed_data/test_split/approximation_True.json",
+        "perturb_types": [
+          "perturb_type1",
+          "perturb_type2"
+        ]
+      },
+      {
+        "path": "data/perturbed_data/test_split/approximation_False.json",
+        "perturb_types": [
+          "perturb_type1",
+          "perturb_type2"
+        ]
+      },
+      {
+        "path": "data/perturbed_data/test_split/range_True.json",
+        "perturb_types": [
+          "perturb_type1",
+          "perturb_type2"
+        ]
+      },
+      {
+        "path": "data/perturbed_data/test_split/range_False.json",
+        "perturb_types": [
+          "perturb_type1",
+          "perturb_type2"
+        ]
+      },
+      {
+        "path": "data/perturbed_data/test_split/negative_True.json",
+        "perturb_types": [
+          "perturb_type2"
+        ]
+      },
+      {
+        "path": "data/perturbed_data/test_split/negative_False.json",
+        "perturb_types": [
+          "perturb_type2"
+        ]
+      },
+      {
+        "path": "data/perturbed_data/test_split/obfuscation_True.json",
+        "perturb_types": [
+          "perturb_type3_random",
+          "perturb_type3_masked"
+        ]
+      },
+      {
+        "path": "data/perturbed_data/test_split/obfuscation_False.json",
+        "perturb_types": [
+          "perturb_type3_random",
+          "perturb_type3_masked"
+        ]
+      }
+    ],
+    "test_stats": {
+      "size": 6175
+    }
+  },
+  "training_provenance": null
+}

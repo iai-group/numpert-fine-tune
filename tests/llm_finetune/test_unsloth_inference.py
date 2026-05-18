@@ -2155,3 +2155,199 @@ class TestResumeNewlineGuard:
                 output_dir=str(out),
             )
             assert m["model"].generate.call_count == 1
+
+
+# ---------------------------------------------------------------------------
+# Tests for prompt_type feature
+# ---------------------------------------------------------------------------
+
+
+class TestPromptTypeMapping:
+    """Test _CLI_PROMPT_TYPE_MAP and its relationship to PromptType enum."""
+
+    def test_map_has_all_keys(self):
+        """All supported CLI choices are present in the map."""
+        from src.llm_finetune.unsloth_inference import _CLI_PROMPT_TYPE_MAP
+
+        assert "ZERO_SHOT" in _CLI_PROMPT_TYPE_MAP
+        assert "FEW_SHOT" in _CLI_PROMPT_TYPE_MAP
+        assert (
+            "NEGATIVE_EXAMPLES_SYNTHETIC_WITH_REASONING" in _CLI_PROMPT_TYPE_MAP
+        )
+        assert "PAP" in _CLI_PROMPT_TYPE_MAP
+
+    def test_zero_shot_maps_to_zero_shot_enum(self):
+        from src.llm_finetune.unsloth_inference import _CLI_PROMPT_TYPE_MAP
+        from src.numpert_prompt.prompt import PromptType
+
+        assert _CLI_PROMPT_TYPE_MAP["ZERO_SHOT"] is PromptType.ZERO_SHOT
+
+    def test_few_shot_maps_to_few_shot_enum(self):
+        from src.llm_finetune.unsloth_inference import _CLI_PROMPT_TYPE_MAP
+        from src.numpert_prompt.prompt import PromptType
+
+        assert _CLI_PROMPT_TYPE_MAP["FEW_SHOT"] is PromptType.FEW_SHOT
+
+    def test_negative_examples_maps_to_negative_synthetic_with_reasoning_enum(
+        self,
+    ):
+        from src.llm_finetune.unsloth_inference import _CLI_PROMPT_TYPE_MAP
+        from src.numpert_prompt.prompt import PromptType
+
+        assert (
+            _CLI_PROMPT_TYPE_MAP["NEGATIVE_EXAMPLES_SYNTHETIC_WITH_REASONING"]
+            is PromptType.NEGATIVE_SYNTHETIC_ALL_WITH_REASONING
+        )
+
+    def test_pap_alias_maps_to_negative_synthetic_enum(self):
+        """PAP is an alias for NEGATIVE_EXAMPLES_SYNTHETIC_WITH_REASONING."""
+        from src.llm_finetune.unsloth_inference import _CLI_PROMPT_TYPE_MAP
+        from src.numpert_prompt.prompt import PromptType
+
+        assert (
+            _CLI_PROMPT_TYPE_MAP["PAP"]
+            is PromptType.NEGATIVE_SYNTHETIC_ALL_WITH_REASONING
+        )
+
+    def test_pap_and_full_name_map_to_same_enum(self):
+        """PAP and NEGATIVE_EXAMPLES_SYNTHETIC_WITH_REASONING resolve to the
+        same PromptType."""
+        from src.llm_finetune.unsloth_inference import _CLI_PROMPT_TYPE_MAP
+
+        assert (
+            _CLI_PROMPT_TYPE_MAP["PAP"]
+            is _CLI_PROMPT_TYPE_MAP[
+                "NEGATIVE_EXAMPLES_SYNTHETIC_WITH_REASONING"
+            ]
+        )
+
+
+class TestInferencePromptType:
+    """Test that inference() passes prompt_type to load_split correctly."""
+
+    def test_default_prompt_type_is_zero_shot(self, tmp_path):
+        """Without prompt_type, load_split receives PromptType.ZERO_SHOT."""
+        from src.llm_finetune.unsloth_inference import inference
+        from src.numpert_prompt.prompt import PromptType
+
+        with _make_mock_inference_context(tmp_path) as m:
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(tmp_path / "output"),
+            )
+            load_call = m["refs"]["load_split"].call_args
+            assert load_call[1]["prompt_type"] is PromptType.ZERO_SHOT
+
+    def test_few_shot_prompt_type_forwarded(self, tmp_path):
+        """FEW_SHOT is passed through to load_split."""
+        from src.llm_finetune.unsloth_inference import inference
+        from src.numpert_prompt.prompt import PromptType
+
+        with _make_mock_inference_context(tmp_path) as m:
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(tmp_path / "output"),
+                prompt_type=PromptType.FEW_SHOT,
+            )
+            load_call = m["refs"]["load_split"].call_args
+            assert load_call[1]["prompt_type"] is PromptType.FEW_SHOT
+
+    def test_negative_synthetic_prompt_type_forwarded(self, tmp_path):
+        """NEGATIVE_SYNTHETIC_ALL_WITH_REASONING is passed through to
+        load_split."""
+        from src.llm_finetune.unsloth_inference import inference
+        from src.numpert_prompt.prompt import PromptType
+
+        with _make_mock_inference_context(tmp_path) as m:
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test",
+                max_seq_length=512,
+                output_dir=str(tmp_path / "output"),
+                prompt_type=PromptType.NEGATIVE_SYNTHETIC_ALL_WITH_REASONING,
+            )
+            load_call = m["refs"]["load_split"].call_args
+            assert (
+                load_call[1]["prompt_type"]
+                is PromptType.NEGATIVE_SYNTHETIC_ALL_WITH_REASONING
+            )
+
+    def test_prompt_type_does_not_affect_model_loading(self, tmp_path):
+        """Changing prompt_type has no effect on how the model is loaded."""
+        from src.llm_finetune.unsloth_inference import inference
+        from src.numpert_prompt.prompt import PromptType
+
+        with _make_mock_inference_context(tmp_path) as m:
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test-model",
+                max_seq_length=512,
+                output_dir=str(tmp_path / "output"),
+                prompt_type=PromptType.FEW_SHOT,
+            )
+            m["flm"].from_pretrained.assert_called_once()
+            load_call = m["flm"].from_pretrained.call_args
+            assert load_call[1]["model_name"] == "test-model"
+
+
+class TestCLIPromptTypeArgParsing:
+    """Test that --prompt_type CLI argument is accepted and mapped correctly."""
+
+    def _run_parser(self, extra_args):
+        """Parse args using the production build_parser()."""
+        from src.llm_finetune.unsloth_inference import build_parser
+
+        return build_parser().parse_args(
+            ["--test_json", "dummy.json"] + extra_args
+        )
+
+    def test_default_prompt_type_is_zero_shot_string(self):
+        args = self._run_parser([])
+        assert args.prompt_type == "ZERO_SHOT"
+
+    def test_few_shot_cli_arg_accepted(self):
+        args = self._run_parser(["--prompt_type", "FEW_SHOT"])
+        assert args.prompt_type == "FEW_SHOT"
+
+    def test_negative_examples_cli_arg_accepted(self):
+        args = self._run_parser(
+            ["--prompt_type", "NEGATIVE_EXAMPLES_SYNTHETIC_WITH_REASONING"]
+        )
+        assert args.prompt_type == "NEGATIVE_EXAMPLES_SYNTHETIC_WITH_REASONING"
+
+    def test_zero_shot_cli_arg_accepted(self):
+        args = self._run_parser(["--prompt_type", "ZERO_SHOT"])
+        assert args.prompt_type == "ZERO_SHOT"
+
+    def test_invalid_prompt_type_raises_system_exit(self):
+        """An unknown prompt type name causes argparse to exit."""
+        with pytest.raises(SystemExit):
+            self._run_parser(["--prompt_type", "INVALID_TYPE"])
+
+    def test_cli_string_maps_to_enum_via_map(self):
+        """Verify round-trip: CLI string → _CLI_PROMPT_TYPE_MAP → PromptType."""
+        from src.llm_finetune.unsloth_inference import _CLI_PROMPT_TYPE_MAP
+        from src.numpert_prompt.prompt import PromptType
+
+        args = self._run_parser(["--prompt_type", "FEW_SHOT"])
+        resolved = _CLI_PROMPT_TYPE_MAP[args.prompt_type]
+        assert resolved is PromptType.FEW_SHOT
+
+    def test_pap_alias_cli_arg_accepted(self):
+        args = self._run_parser(["--prompt_type", "PAP"])
+        assert args.prompt_type == "PAP"
+
+    def test_pap_alias_maps_to_negative_synthetic_enum(self):
+        """PAP CLI arg resolves to NEGATIVE_SYNTHETIC_ALL_WITH_REASONING."""
+        from src.llm_finetune.unsloth_inference import _CLI_PROMPT_TYPE_MAP
+        from src.numpert_prompt.prompt import PromptType
+
+        args = self._run_parser(["--prompt_type", "PAP"])
+        assert (
+            _CLI_PROMPT_TYPE_MAP[args.prompt_type]
+            is PromptType.NEGATIVE_SYNTHETIC_ALL_WITH_REASONING
+        )

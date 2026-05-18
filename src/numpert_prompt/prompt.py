@@ -110,6 +110,8 @@ Evidence: The Wembley Stadium in London has a seating capacity of 90,000.
 {"label": false}
 """
 
+# NEGATIVE_EXAMPLES_SYNTHETIC_WITH_REASONING
+# Also referred to as Perturbation Aware Prompting (PAP) in the paper.
 NEGATIVE_EXAMPLES_SYNTHETIC_WITH_REASONING = """
 The numbers in the evidence may not match the claim. For example:
 Claim: The Eiffel Tower is three hundred and fifty-one meters tall.
