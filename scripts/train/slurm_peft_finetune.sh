@@ -14,6 +14,14 @@
 #       --epochs 3 \
 #       --batch-size 2
 #
+#   # Train and convert to GGUF
+#   sbatch scripts/train/slurm_peft_finetune.sh \
+#       --method lora \
+#       --epochs 3 \
+#       --batch-size 2 \
+#       --save-as-gguf \
+#       --gguf-quantization q4_k_m
+#
 #   # Train all methods for comparison
 #   sbatch scripts/train/slurm_peft_finetune.sh \
 #       --compare \
@@ -31,13 +39,12 @@
 
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:1
-#SBATCH --gres=gpu:nvidia_h100_nvl:1
-#SBATCH --time=24:00:00
+#SBATCH --time=48:00:00
 #SBATCH --mem=300G
 #SBATCH --nodelist=gorina9
 #SBATCH --cpus-per-task=8
 #SBATCH --job-name=peft_finetune
-#SBATCH --output=scripts/slurm_out/peft/peft_finetune_%j.out
+#SBATCH --output=scripts/slurm_out/peft/peft_finetune_8b_r32.out
 
 # ==============================================================================
 # CONFIGURATION
@@ -50,10 +57,16 @@ BATCH_SIZE="${BATCH_SIZE:-2}"
 GRAD_ACCUM="${GRAD_ACCUM:-1}"
 RANK="${RANK:-32}"
 NUM_VIRTUAL_TOKENS="${NUM_VIRTUAL_TOKENS:-20}"
-MODEL="${MODEL:-Qwen/Qwen2.5-8B-Instruct}"
+MODEL="${MODEL:-Qwen/Qwen3-8B}"
 MAX_SEQ_LENGTH="${MAX_SEQ_LENGTH:-16384}"
 COMPARE_MODE="${COMPARE_MODE:-false}"
 RUN_INFERENCE="${RUN_INFERENCE:-false}"
+SAMPLE_PERCENT="${SAMPLE_PERCENT:-100}"
+SAVE_AS_GGUF="${SAVE_AS_GGUF:-false}"
+GGUF_QUANTIZATION="${GGUF_QUANTIZATION:-q4_k_m}"
+# SAMPLE_PERCENT=10
+CUDA_VISIBLE_DEVICES=7
+CUDA_DEVICE_ORDER=PCI_BUS_ID CUDA_DEVICE_ORDER=PCI_BUS_ID
 
 # Data paths
 TRAIN_DATA="${TRAIN_DATA:-data/perturbed_data/train_split/*.json}"
@@ -117,6 +130,18 @@ while [[ $# -gt 0 ]]; do
             TEST_DATA="$2"
             shift 2
             ;;
+        --sample-percent)
+            SAMPLE_PERCENT="$2"
+            shift 2
+            ;;
+        --save-as-gguf)
+            SAVE_AS_GGUF="true"
+            shift
+            ;;
+        --gguf-quantization)
+            GGUF_QUANTIZATION="$2"
+            shift 2
+            ;;
         *)
             echo "Unknown option: $1"
             exit 1
@@ -165,11 +190,15 @@ if [ "$PEFT_METHOD" != "lora" ]; then
     echo "  Virtual Tokens:    $NUM_VIRTUAL_TOKENS"
 fi
 echo "  Max Seq Length:    $MAX_SEQ_LENGTH"
+echo "  Sample Percent:    $SAMPLE_PERCENT%"
 echo "  Train Data:        $TRAIN_DATA"
 echo "  Val Data:          $VAL_DATA"
 if [ "$RUN_INFERENCE" = "true" ]; then
     echo "  Test Data:         $TEST_DATA"
     echo "  Run Inference:     YES"
+fi
+if [ "$SAVE_AS_GGUF" = "true" ]; then
+    echo "  Save as GGUF:      YES (quantization: $GGUF_QUANTIZATION)"
 fi
 echo ""
 
@@ -249,6 +278,7 @@ if [ "$COMPARE_MODE" = "true" ]; then
         --num_train_epochs "$NUM_EPOCHS" \
         --batch_size "$BATCH_SIZE" \
         --grad_accum "$GRAD_ACCUM" \
+        --sample_percent "$SAMPLE_PERCENT" \
         --output_dir "comparison_results"
 
     echo ""
@@ -270,7 +300,7 @@ else
     echo ""
 
     # Build command
-    CMD="uv run python -m src.llm_finetune.peft_finetune"
+    CMD="CUDA_VISIBLE_DEVICES=7 CUDA_DEVICE_ORDER=PCI_BUS_ID uv run python -m src.llm_finetune.peft_finetune"
     CMD="$CMD --train_json '$TRAIN_DATA'"
     CMD="$CMD --val_json '$VAL_DATA'"
     CMD="$CMD --model '$MODEL'"
@@ -281,6 +311,7 @@ else
     CMD="$CMD --batch_size '$BATCH_SIZE'"
     CMD="$CMD --grad_accum '$GRAD_ACCUM'"
     CMD="$CMD --max_seq_length '$MAX_SEQ_LENGTH'"
+    CMD="$CMD --sample_percent '$SAMPLE_PERCENT'"
 
     # Run training
     eval "$CMD"
@@ -288,6 +319,66 @@ else
     echo ""
     echo "✅ Training complete!"
     echo ""
+
+    # ==============================================================================
+    # CONVERT TO GGUF (OPTIONAL)
+    # ==============================================================================
+    if [ "$SAVE_AS_GGUF" = "true" ]; then
+        echo ""
+        echo "╔════════════════════════════════════════════════════════════════════════╗"
+        echo "║                  Converting Model to GGUF Format                       ║"
+        echo "╚════════════════════════════════════════════════════════════════════════╝"
+        echo ""
+
+        # Find the latest model checkpoint
+        LATEST_MODEL=$(find models -name "*_${PEFT_METHOD}" -type d -printf '%T@ %p\n' | sort -rn | head -1 | cut -d' ' -f2-)
+        if [ -z "$LATEST_MODEL" ]; then
+            echo "WARNING: Could not find trained model for $PEFT_METHOD"
+            echo "Skipping GGUF conversion"
+        else
+            MODEL_PATH="$LATEST_MODEL"
+            GGUF_OUTPUT_DIR="${LATEST_MODEL}_gguf_${GGUF_QUANTIZATION}"
+
+            echo "Source model: $MODEL_PATH"
+            echo "Output directory: $GGUF_OUTPUT_DIR"
+            echo "Quantization: $GGUF_QUANTIZATION"
+            echo ""
+
+            # Run GGUF conversion
+            uv run python external/llama.cpp/convert_hf_to_gguf.py \
+                "$MODEL_PATH" \
+                --outtype f16 \
+                --outfile "$GGUF_OUTPUT_DIR/model-fp16.gguf"
+
+            if [ $? -eq 0 ]; then
+                echo ""
+                echo "Running quantization with $GGUF_QUANTIZATION..."
+                
+                # Run quantization
+                external/llama.cpp/quantize "$GGUF_OUTPUT_DIR/model-fp16.gguf" \
+                    "$GGUF_OUTPUT_DIR/model-${GGUF_QUANTIZATION}.gguf" \
+                    "$GGUF_QUANTIZATION"
+
+                if [ $? -eq 0 ]; then
+                    echo ""
+                    echo "✅ GGUF conversion complete!"
+                    echo ""
+                    echo "GGUF models saved to: $GGUF_OUTPUT_DIR"
+                    echo "  - model-fp16.gguf (full precision)"
+                    echo "  - model-${GGUF_QUANTIZATION}.gguf (quantized)"
+                else
+                    echo ""
+                    echo "⚠️  Quantization failed, but fp16 model is available"
+                fi
+            else
+                echo ""
+                echo "ERROR: GGUF conversion failed"
+                exit 1
+            fi
+        fi
+
+        echo ""
+    fi
 
     # ==============================================================================
     # RUN INFERENCE (OPTIONAL)

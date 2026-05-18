@@ -36,6 +36,7 @@ def run_training(
     batch_size: int,
     grad_accum: int,
     output_dir: str,
+    sample_percent: float = 100,
 ) -> Dict[str, Any]:
     """Run training for a specific PEFT method.
 
@@ -68,6 +69,8 @@ def run_training(
         str(batch_size),
         "--grad_accum",
         str(grad_accum),
+        "--sample_percent",
+        str(sample_percent),
     ]
 
     print(f"Running: {' '.join(cmd)}\n")
@@ -218,6 +221,7 @@ def main(
     batch_size: int = 2,
     grad_accum: int = 1,
     output_base_dir: str = "./comparison_results",
+    sample_percent: float = 100,
 ):
     """Run comparison of PEFT methods.
 
@@ -233,6 +237,7 @@ def main(
         batch_size: Batch size
         grad_accum: Gradient accumulation steps
         output_base_dir: Base directory for outputs
+        sample_percent: Percentage of training data to use
     """
     # Setup output directory
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -267,6 +272,7 @@ def main(
             batch_size=batch_size,
             grad_accum=grad_accum,
             output_dir=str(method_dir),
+            sample_percent=sample_percent,
         )
 
         if training_result["status"] != "success":
@@ -373,6 +379,12 @@ if __name__ == "__main__":
         default="./comparison_results",
         help="Output directory",
     )
+    parser.add_argument(
+        "--sample_percent",
+        type=float,
+        default=100,
+        help="Percentage of training data to use (e.g., 10 for 10% sample)",
+    )
 
     args = parser.parse_args()
     methods = args.methods.split(",")
@@ -389,4 +401,5 @@ if __name__ == "__main__":
         batch_size=args.batch_size,
         grad_accum=args.grad_accum,
         output_base_dir=args.output_dir,
+        sample_percent=args.sample_percent,
     )

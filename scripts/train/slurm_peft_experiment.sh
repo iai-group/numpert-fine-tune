@@ -23,7 +23,7 @@
 
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:1
-#SBATCH --time=24:00:00
+#SBATCH --time=2:00:00
 #SBATCH --mem=300G
 #SBATCH --nodelist=gorina9
 #SBATCH --job-name=peft_exp

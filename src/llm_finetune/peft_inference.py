@@ -5,6 +5,7 @@ methods. Tracks inference latency and throughput metrics.
 """
 
 import argparse
+import glob
 import json
 import time
 from pathlib import Path
@@ -15,11 +16,16 @@ import torch
 from peft import AutoPeftModelForCausalLM
 from transformers import AutoTokenizer
 
+from src.llm_finetune.peft_finetune import setup_chat_template
 from src.llm_finetune.utils.inference.inference_config_export import (
     build_inference_config,
     save_inference_config,
 )
 from src.llm_finetune.utils.inference.metrics import _compute_scores
+from src.numpert_prompt.prompt import (
+    FACT_CHECK_SYSTEM_PROMPT,
+    FACT_CHECK_USER_PROMPT,
+)
 
 
 class InferenceEfficiencyTracker:
@@ -137,9 +143,18 @@ def _process_inference_sample(
     doc = example.get("doc", "")
     label_true = example.get("label", None)
 
-    prompt = (
-        "Given the claim and evidence below, determine if the claim is "
-        f"true or false.\n\nClaim: {claim}\n\nEvidence: {doc}"
+    # Use same prompt format as training
+    messages = [
+        {"role": "system", "content": FACT_CHECK_SYSTEM_PROMPT},
+        {
+            "role": "user",
+            "content": FACT_CHECK_USER_PROMPT.format(
+                examples="", claim=claim, evidence=doc
+            ),
+        },
+    ]
+    prompt = tokenizer.apply_chat_template(
+        messages, tokenize=False, add_generation_prompt=True
     )
 
     # Tokenize
@@ -147,9 +162,11 @@ def _process_inference_sample(
         prompt,
         truncation=True,
         max_length=max_seq_length,
-        padding=True,
+        padding=False,
         return_tensors="pt",
     )
+    device = next(model.parameters()).device
+    inputs = {k: v.to(device) for k, v in inputs.items()}
 
     # Inference timing
     with torch.no_grad():
@@ -430,23 +447,31 @@ def run_inference(
         else torch.float32,
     )
     tokenizer = AutoTokenizer.from_pretrained(model_path)
+    setup_chat_template(tokenizer, model_path)
 
     print("Model loaded successfully")
 
-    # Load test data
+    # Load test data (supports glob patterns and multiple files)
     print(f"Loading test data from {test_json_path}...")
-    with open(test_json_path) as f:
-        content = f.read().strip()
-        # Handle both JSON array and JSONL formats
-        if content.startswith("["):
-            # JSON array format: [{ ... }, { ... }]
-            test_data = json.loads(content)
-        else:
-            # JSONL format: one object per line
-            test_data = [
-                json.loads(line) for line in content.split("\n") if line.strip()
-            ]
-    print(f"Loaded {len(test_data)} test examples")
+    matched_files = sorted(glob.glob(test_json_path))
+    if not matched_files:
+        raise FileNotFoundError(f"No files matched: {test_json_path}")
+    test_data = []
+    for path in matched_files:
+        with open(path) as f:
+            content = f.read().strip()
+            if content.startswith("["):
+                test_data.extend(json.loads(content))
+            else:
+                test_data.extend(
+                    json.loads(line)
+                    for line in content.split("\n")
+                    if line.strip()
+                )
+        print(f"  Loaded {path}")
+    print(
+        f"Loaded {len(test_data)} test examples from {len(matched_files)} file(s)"  # noqa: E501
+    )
 
     # Prepare output directory
     Path(output_dir).mkdir(parents=True, exist_ok=True)

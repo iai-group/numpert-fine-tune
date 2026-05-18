@@ -27,9 +27,10 @@
 
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:1
-#SBATCH --time=04:00:00
+#SBATCH --time=24:00:00
 #SBATCH --mem=100G
 #SBATCH --cpus-per-task=8
+#SBATCH --nodelist=gorina9
 #SBATCH --job-name=peft_inference
 #SBATCH --output=scripts/slurm_out/peft/peft_inference_%j.out
 
@@ -224,6 +225,11 @@ if [ "$BATCH_MODE" = "true" ]; then
 
         if [ ! -d "$CHECKPOINT_PATH" ]; then
             echo "⚠️  Skipping $MODEL_NAME: checkpoints not found at $CHECKPOINT_PATH"
+            continue
+        fi
+
+        if [ ! -f "$CHECKPOINT_PATH/adapter_config.json" ]; then
+            echo "⚠️  Skipping $MODEL_NAME: no adapter_config.json (incomplete training)"
             continue
         fi
 

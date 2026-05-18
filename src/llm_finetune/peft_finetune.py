@@ -368,6 +368,7 @@ def finetune_peft(  # noqa: C901
     method_balance_mode: Optional[MethodBalanceMode] = None,
     eval_steps: Union[int, float] = 500,
     save_steps: Optional[int] = None,
+    sample_percent: float = 100,
     start_epoch: int = 0,
     debug: bool = False,
 ):
@@ -426,6 +427,19 @@ def finetune_peft(  # noqa: C901
         seed=3407 + start_epoch,
     )
     print(f"Loaded {len(train_data)} training examples")
+
+    # Apply data sampling if requested
+    if sample_percent < 100:
+        original_size = len(train_data)
+        sample_size = max(1, int(len(train_data) * sample_percent / 100))
+        train_data = train_data.select(
+            list(range(0, original_size, max(1, original_size // sample_size)))[
+                :sample_size
+            ]
+        )
+        print(
+            f"Sampled {len(train_data)} training examples ({sample_percent}% of {original_size})"  # noqa: E501
+        )
 
     print("Loading validation data...")
     val_data = load_split(
@@ -835,6 +849,12 @@ if __name__ == "__main__":
         default=None,
         help="Save frequency (default=eval_steps)",
     )
+    parser.add_argument(
+        "--sample_percent",
+        type=float,
+        default=100,
+        help="Percentage of training data to use (e.g., 10 for 10% sample)",
+    )
 
     args = parser.parse_args()
 
@@ -858,4 +878,5 @@ if __name__ == "__main__":
         perturb_ratio=args.perturb_ratio,
         eval_steps=args.eval_steps,
         save_steps=args.save_steps,
+        sample_percent=args.sample_percent,
     )
