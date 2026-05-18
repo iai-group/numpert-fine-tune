@@ -38,6 +38,22 @@ source "$CONF_FILE"
 cd "${REPO_ROOT}"
 
 # ==============================================================================
+# ENVIRONMENT: cuDNN
+# Ensure cuDNN from nvidia-cudnn-cu12 package is on LD_LIBRARY_PATH.
+# Required for torch to load on nodes where it isn't set automatically.
+# ==============================================================================
+CUDNN_LIB="$HOME/.local/lib/python3.11/site-packages/nvidia/cudnn/lib"
+if [ ! -d "$CUDNN_LIB" ]; then
+    CUDNN_LIB=$(uv run python -c "import os, nvidia.cudnn; print(os.path.join(os.path.dirname(nvidia.cudnn.__file__), 'lib'))" 2>/dev/null || true)
+fi
+if [ -n "$CUDNN_LIB" ] && [ -d "$CUDNN_LIB" ]; then
+    export LD_LIBRARY_PATH="${CUDNN_LIB}:${LD_LIBRARY_PATH:-}"
+    echo "Added cuDNN to LD_LIBRARY_PATH: $CUDNN_LIB"
+else
+    echo "WARNING: cuDNN library directory not found. torch may fail to load."
+fi
+
+# ==============================================================================
 # LIST ALL AVAILABLE EXPERIMENTS
 # ==============================================================================
 list_experiments() {
