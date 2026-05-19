@@ -24,7 +24,7 @@
 #SBATCH --mem=300G
 # These are set dynamically below if possible, defaults here as fallback
 #SBATCH --job-name=numpert_inference
-#SBATCH --output=scripts/zslurm_out/inference/infer_%j.out
+#SBATCH --output=scripts/slurm_out/inference/infer_%j.out
 
 # ==============================================================================
 # PARSE EXPERIMENT NAME
@@ -40,10 +40,6 @@ if [ -z "$EXPERIMENT_NAME" ]; then
     exit 1
 fi
 
-# ==============================================================================
-# SETUP DIRECTORIES
-# ==============================================================================
-mkdir -p scripts/zslurm_out/inference
 
 # ==============================================================================
 # JOB INFO
