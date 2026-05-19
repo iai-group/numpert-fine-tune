@@ -88,7 +88,13 @@ show_experiment() {
     echo ""
     echo "Model Configuration:"
     echo "  Model:            $MODEL"
-    echo "  LoRA Rank:        $RANK"
+    if [ -z "${PEFT_METHOD:-}" ]; then
+        echo "  LoRA Rank:        $RANK"
+    else
+        echo "  Training Method:  PEFT ($PEFT_METHOD)"
+        echo "  PEFT Rank:        ${PEFT_RANK:-N/A}"
+        echo "  Virtual Tokens:   ${PEFT_VIRTUAL_TOKENS:-N/A}"
+    fi
     echo "  Start Epoch:      $START_EPOCH"
     echo "  Train Epochs:     $NUM_TRAIN_EPOCHS"
     echo "  Perturb Type:     $PERTURB_TYPE_NAMES"
@@ -189,27 +195,62 @@ run_experiment() {
     fi
     echo ""
 
-    # Build command
-    CMD="uv run python -m src.llm_finetune.unsloth_finetune \
-        --model ${MODEL} \
-        --rank $RANK \
-        --start_epoch $START_EPOCH \
-        --num_train_epochs $NUM_TRAIN_EPOCHS \
-        --batch_size $BATCH_SIZE \
-        --grad_accum $GRAD_ACCUM \
-        --max_seq_length $MAX_SEQ_LENGTH \
-        --method_balance_mode $METHOD_BALANCE_MODE \
-        --perturb_ratio $PERTURB_RATIO \
-        --false_perturb_t_to_f_ratio $FALSE_PERTURB_T_TO_F_RATIO \
-        --eval_steps $EVAL_STEPS \
-        --perturb_type_names ${PERTURB_TYPE_NAMES}"
-
-    # Add data args only when data files are configured
-    if [ "${#TRAIN_JSON[@]}" -gt 0 ]; then
-        CMD="$CMD --train_json ${TRAIN_JSON[@]} --val_json ${VAL_JSON[@]}"
+    # Detect if this is a PEFT experiment
+    local is_peft=false
+    if [ -n "${PEFT_METHOD:-}" ]; then
+        is_peft=true
     fi
 
-    # Add optional flags
+    # Build command based on experiment type
+    if [ "$is_peft" = true ]; then
+        # PEFT experiment
+        CMD="uv run python -m src.llm_finetune.peft_finetune \
+            --train_json ${TRAIN_JSON[@]} \
+            --val_json ${VAL_JSON[@]} \
+            --model ${MODEL} \
+            --peft_method $PEFT_METHOD"
+        
+        # Add PEFT-specific parameters
+        if [ -n "${PEFT_RANK:-}" ]; then
+            CMD="$CMD --rank $PEFT_RANK"
+        fi
+        
+        if [ -n "${PEFT_VIRTUAL_TOKENS:-}" ]; then
+            CMD="$CMD --num_virtual_tokens $PEFT_VIRTUAL_TOKENS"
+        fi
+        
+        # Add shared training parameters
+        CMD="$CMD \
+            --start_epoch $START_EPOCH \
+            --num_train_epochs $NUM_TRAIN_EPOCHS \
+            --batch_size $BATCH_SIZE \
+            --grad_accum $GRAD_ACCUM \
+            --max_seq_length $MAX_SEQ_LENGTH \
+            --method_balance_mode $METHOD_BALANCE_MODE \
+            --perturb_ratio $PERTURB_RATIO \
+            --false_perturb_t_to_f_ratio $FALSE_PERTURB_T_TO_F_RATIO \
+            --eval_steps $EVAL_STEPS \
+            --perturb_type_names ${PERTURB_TYPE_NAMES}"
+    else
+        # Unsloth experiment (traditional)
+        CMD="uv run python -m src.llm_finetune.unsloth_finetune \
+            --train_json ${TRAIN_JSON[@]} \
+            --val_json ${VAL_JSON[@]} \
+            --model ${MODEL} \
+            --rank $RANK \
+            --start_epoch $START_EPOCH \
+            --num_train_epochs $NUM_TRAIN_EPOCHS \
+            --batch_size $BATCH_SIZE \
+            --grad_accum $GRAD_ACCUM \
+            --max_seq_length $MAX_SEQ_LENGTH \
+            --method_balance_mode $METHOD_BALANCE_MODE \
+            --perturb_ratio $PERTURB_RATIO \
+            --false_perturb_t_to_f_ratio $FALSE_PERTURB_T_TO_F_RATIO \
+            --eval_steps $EVAL_STEPS \
+            --perturb_type_names ${PERTURB_TYPE_NAMES}"
+    fi
+
+    # Add optional flags (shared by both)
     if [[ "${USE_PERTURBATIONS,,}" == "true" ]]; then
         CMD="$CMD --use_perturbations"
     else
