@@ -56,6 +56,15 @@ PERTURBATION_HEADER_LABELS = {
     "perturb_type3_random": "Random",
 }
 
+_ONLY_CATEGORY_ALIASES = (
+    ("only_obfuscation_masked", "masked"),
+    ("only_obfuscation_random", "random"),
+    ("only_approximation", "approx"),
+    ("only_numeration", "num"),
+    ("only_range", "range"),
+    ("only_negative", "negation"),
+)
+
 MODEL_SUBSCRIPTS: Dict[str, str] = {
     "baseline": "Baseline",
     "no_approx": "Excl-Approx",
@@ -275,6 +284,14 @@ def short_model_label(model_label: str, results_root: Path) -> str:
             return f"{family}{tag}"
     if "normalized_claims" in top:
         return f"{family}_normalized_claims"
+    for pattern, alias in _ONLY_CATEGORY_ALIASES:
+        if pattern in top:
+            return f"{family}_{alias}"
+    if "base" in top:
+        if "two" in top:
+            return f"{family}_base_two_shot"
+        if "pap" in top:
+            return f"{family}_base_pap"
 
     cleaned = re.sub(r"[^a-z0-9]+", "_", top).strip("_")
     if cleaned.startswith(family + "_"):
@@ -592,14 +609,18 @@ def render_table(
     best_scores = compute_best_scores(model_scores, groups)
     caption_text = caption or default_caption(groups)
 
+    def _model_slot(lbl: str) -> int:
+        short = short_model_label(lbl, results_root)
+        if "_base_two_shot" in short:
+            return 0
+        if "_base_pap" in short:
+            return 1
+        if "_no_perturb_split" in short:
+            return 2
+        return 3
+
     others = [lbl for lbl in model_scores if lbl != baseline_model]
-    no_perturb = [
-        lbl
-        for lbl in others
-        if "_no_perturb_split" in short_model_label(lbl, results_root)
-    ]
-    rest = sorted(lbl for lbl in others if lbl not in no_perturb)
-    ordered_models = [baseline_model] + no_perturb + rest
+    ordered_models = [baseline_model] + sorted(others, key=lambda lbl: (_model_slot(lbl), lbl))
 
     lines = [
         "% Requires \\usepackage{booktabs} and \\usepackage[table]{xcolor}",

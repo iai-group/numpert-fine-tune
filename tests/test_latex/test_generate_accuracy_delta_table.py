@@ -218,6 +218,38 @@ class TestShortModelLabel:
         result = short_model_label("qwen3_no_perturb_split", self._root())
         assert result == "qwen3_no_perturb_split"
 
+    def test_only_approximation(self):
+        folder = "Qwen3-8B-daring-ant-evolves_only_approximation_no_f2f_type2_q4_k_m"
+        assert short_model_label(folder, self._root("qwen3-8b-q4_k_m")) == "qwen3_approx"
+
+    def test_only_numeration(self):
+        folder = "Qwen3-8B-daring-ant-evolves_only_numeration_no_f2f_type2_q4_k_m"
+        assert short_model_label(folder, self._root("qwen3-8b-q4_k_m")) == "qwen3_num"
+
+    def test_only_range(self):
+        folder = "Qwen3-8B-daring-ant-evolves_only_range_no_f2f_type2_q4_k_m"
+        assert short_model_label(folder, self._root("qwen3-8b-q4_k_m")) == "qwen3_range"
+
+    def test_only_negative(self):
+        folder = "Qwen3-8B-daring-ant-evolves_only_negative_q4_k_m"
+        assert short_model_label(folder, self._root("qwen3-8b-q4_k_m")) == "qwen3_negation"
+
+    def test_only_obfuscation_masked(self):
+        folder = "Qwen3-8B-daring-ant-evolves_only_obfuscation_masked_q4_k_m"
+        assert short_model_label(folder, self._root("qwen3-8b-q4_k_m")) == "qwen3_masked"
+
+    def test_only_obfuscation_random(self):
+        folder = "Qwen3-8B-daring-ant-evolves_only_obfuscation_random_q4_k_m"
+        assert short_model_label(folder, self._root("qwen3-8b-q4_k_m")) == "qwen3_random"
+
+    def test_base_pap(self):
+        folder = "Qwen3-8B-base_q4_k_m-pap"
+        assert short_model_label(folder, self._root("qwen3-8b-q4_k_m")) == "qwen3_base_pap"
+
+    def test_base_two_shot(self):
+        folder = "Qwen3-8b-base_q4_k_m-two-shot"
+        assert short_model_label(folder, self._root("qwen3-8b-q4_k_m")) == "qwen3_base_two_shot"
+
 
 # ---------------------------------------------------------------------------
 # formal_model_label
