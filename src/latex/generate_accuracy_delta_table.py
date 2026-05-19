@@ -620,7 +620,9 @@ def render_table(
         return 3
 
     others = [lbl for lbl in model_scores if lbl != baseline_model]
-    ordered_models = [baseline_model] + sorted(others, key=lambda lbl: (_model_slot(lbl), lbl))
+    ordered_models = [baseline_model] + sorted(
+        others, key=lambda lbl: (_model_slot(lbl), lbl)
+    )
 
     lines = [
         "% Requires \\usepackage{booktabs} and \\usepackage[table]{xcolor}",
