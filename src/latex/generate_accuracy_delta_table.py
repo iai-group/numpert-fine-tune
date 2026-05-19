@@ -289,6 +289,8 @@ def short_model_label(  # noqa: C901
     for pattern, alias in _ONLY_CATEGORY_ALIASES:
         if pattern in top:
             return f"{family}_{alias}"
+    if "all_perturb" in top:
+        return f"{family}_all_perturb"
     if "base" in top:
         if "two" in top:
             return f"{family}_base_two_shot"

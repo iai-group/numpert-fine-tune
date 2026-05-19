@@ -278,6 +278,13 @@ class TestShortModelLabel:
             == "qwen3_base_two_shot"
         )
 
+    def test_all_perturb_with_leading_dot(self):
+        folder = "Qwen3-8B-young-nightingale-manifests_all_perturb_no_f_type2"
+        assert (
+            short_model_label(folder, self._root("qwen3-8b-q4_k_m"))
+            == "qwen3_all_perturb"
+        )
+
 
 # ---------------------------------------------------------------------------
 # formal_model_label
@@ -791,47 +798,53 @@ class TestRenderTable:
         # ft_model has 0.88 > 0.85, so ft_model's cell should be bolded
         assert "\\textbf" in result
 
-    def test_no_perturb_split_ordered_after_baseline(self):
+    def test_model_ordering(self):
         group = "approximation_True.json | perturb_type1"
-        base_scores = {
-            group: _make_group_score(
-                "approximation_True.json", "perturb_type1", 0.80
-            )
-        }
-        perturb_scores = {
-            group: _make_group_score(
-                "approximation_True.json", "perturb_type1", 0.82
-            )
-        }
-        other_scores = {
-            group: _make_group_score(
-                "approximation_True.json", "perturb_type1", 0.85
-            )
-        }
+
+        def s(acc):
+            return {
+                group: _make_group_score(
+                    "approximation_True.json", "perturb_type1", acc
+                )
+            }
+
+        root = Path("results/qwen3-8b-q4_k_m")
         model_scores = {
-            "baseline": base_scores,
-            "qwen3_no_perturb_split": perturb_scores,
-            "aaa_other_model": other_scores,
+            "baseline": s(0.80),
+            "Qwen3-8b-base_q4_k_m-two-shot": s(0.81),
+            "Qwen3-8B-base_q4_k_m-pap": s(0.82),
+            "Qwen3-8B-daring-ant-evolves_normalized_claims_no_perturb_split_q4_k_m": s(  # noqa: E501
+                0.83
+            ),
+            "aaa_other_model": s(0.85),  # alphabetically first but goes last
+            "Qwen3-8B-young-nightingale-manifests_all_perturb_no_f_type2": s(
+                0.86
+            ),
         }
-        # aaa_other_model is alphabetically before no_perturb_split.
         result = render_table(
             model_scores,
             [group],
             baseline_model="baseline",
-            results_root=Path("results/qwen3-8b"),
+            results_root=root,
             digits=2,
         )
-        lines = [
+        data_lines = [
             line
             for line in result.splitlines()
-            if "\\\\" in line
-            and "Model" not in line
-            and "\\toprule" not in line
+            if "\\\\" in line and "textbf{Model}" not in line
         ]
-        # First data row is baseline, second is no_perturb_split, third is
-        # aaa_other_model
-        assert "Baseline" in lines[0] or "baseline" in lines[0].lower()
-        assert "Excl-Split" in lines[1] or "Split" in lines[1]
+        # Expected order: baseline(0), two-shot(1), pap(2),
+        # no_perturb_split(3), rest alphabetically
+        assert (
+            "Baseline" in data_lines[0] or "baseline" in data_lines[0].lower()
+        )
+        assert "Two-Shot" in data_lines[1] or "two" in data_lines[1].lower()
+        assert "PAP" in data_lines[2] or "pap" in data_lines[2].lower()
+        assert (
+            "Excl-Perturb" in data_lines[3]
+            or "Split" in data_lines[3]
+            or "Perturb" in data_lines[3]
+        )
 
     def test_name_map_command_used(self):
         model_scores, group = self._build_scores()

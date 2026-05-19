@@ -15,3 +15,4 @@
 {"short_label": "qwen3_negation", "command": "\\mnegation", "definition": "$\\text{M}_{\\text{Negation}}$"}
 {"short_label": "qwen3_masked", "command": "\\mmasked", "definition": "$\\text{M}_{\\text{Masked}}$"}
 {"short_label": "qwen3_random", "command": "\\mrandom", "definition": "$\\text{M}_{\\text{Random}}$"}
+{"short_label": "qwen3_all_perturb", "command": "\\mallperturb", "definition": "$\\text{M}_{\\text{All-Perturb}}$"}
