@@ -262,7 +262,9 @@ def extract_score(
     return float(class_recall)
 
 
-def short_model_label(model_label: str, results_root: Path) -> str:
+def short_model_label(  # noqa: C901
+    model_label: str, results_root: Path
+) -> str:
     """Convert a discovered model folder label to a compact display label."""
     top = Path(model_label).parts[0].lstrip(".").lower()
 
@@ -595,7 +597,7 @@ def compute_best_scores(
     return best_scores
 
 
-def render_table(
+def render_table(  # noqa: C901
     model_scores: Mapping[str, Mapping[str, GroupScore]],
     groups: Sequence[str],
     baseline_model: str,
