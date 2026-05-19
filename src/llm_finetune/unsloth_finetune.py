@@ -103,6 +103,10 @@ class PerturbationAwareSFTTrainer(SFTTrainer):
 
         self.use_custom_sampler = use_custom_sampler
         self.pre_built_batch_sampler = pre_built_batch_sampler
+        # Ensure _signature_columns exists (set after super init so parent
+        # can set it)
+        if not hasattr(self, "_signature_columns"):
+            self._signature_columns = None
 
     def get_train_dataloader(self) -> DataLoader:
         """Override to use custom batch sampler when enabled."""
@@ -770,7 +774,7 @@ def finetune(  # noqa: C901
     target_epoch = start_epoch + num_train_epochs - 1
 
     # Initialize wandb
-    run = wandb.init(
+    run = wandb.init(  # type: ignore
         project="numpert_finetune",
         name=(
             f"{model_name}{quant_status}_epoch_"
