@@ -306,6 +306,40 @@ def finetune(  # noqa: C901
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
+    if num_train_epochs == 0:
+        print("\n" + "=" * 80)
+        print("num_train_epochs=0 — skipping training, saving model as-is")
+        print("=" * 80)
+
+        models_dir = f"{prefix}models"
+        run_name = generate_run_name(
+            model_name,
+            timestamp=time_start,
+            perturb_type_names=perturb_type_names,
+            base_path=models_dir,
+        )
+        base_dir = f"{models_dir}/{run_name}"
+        save_dir = f"{base_dir}/epoch-{start_epoch}{quant_status}"
+        lora_path = f"{save_dir}/lora_weights{rank_postfix}"
+        merged_path = f"{save_dir}/merged_model{rank_postfix}"
+
+        os.makedirs(lora_path, exist_ok=True)
+        os.makedirs(merged_path, exist_ok=True)
+
+        model.save_pretrained(lora_path)
+        tokenizer.save_pretrained(lora_path)
+        print(f"LoRA weights saved to: {lora_path}")
+
+        model.save_pretrained_merged(
+            merged_path,
+            tokenizer,
+            save_method="merged_16bit",
+        )
+        print(f"Merged model saved to: {merged_path}")
+
+        print("✅ Base model saved (no training performed)")
+        return
+
     # Formatting function with length monitoring
     truncated_count = 0
     total_count = 0
@@ -923,10 +957,11 @@ if __name__ == "__main__":
 
     # Data paths — supports per-file perturbation type control.
     # Format: path/to/file.json[:type1,type2,...] (see parse_file_config)
+    # Not required when --save_base_model is set.
     parser.add_argument(
         "--train_json",
         nargs="+",
-        required=True,
+        default=None,
         help=(
             "Path(s) to training JSON files. Supports per-file type control: "
             "path.json:type1,type2  (see FileLoadConfig)"
@@ -935,7 +970,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--val_json",
         nargs="+",
-        required=True,
+        default=None,
         help=("Path(s) to validation JSON files. Same format as --train_json."),
     )
 
@@ -1101,9 +1136,14 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    # Parse file configs (supports path:type1,type2 notation)
-    train_configs = [parse_file_config(p) for p in args.train_json]
-    val_configs = [parse_file_config(p) for p in args.val_json]
+    train_configs = (
+        [parse_file_config(p) for p in args.train_json]
+        if args.train_json
+        else None
+    )
+    val_configs = (
+        [parse_file_config(p) for p in args.val_json] if args.val_json else None
+    )
 
     finetune(
         train_file_configs=train_configs,

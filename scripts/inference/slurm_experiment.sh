@@ -20,7 +20,7 @@
 
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:1
-#SBATCH --time=48:00:00
+#SBATCH --time=24:00:00
 #SBATCH --mem=300G
 # These are set dynamically below if possible, defaults here as fallback
 #SBATCH --job-name=numpert_inference
@@ -40,10 +40,6 @@ if [ -z "$EXPERIMENT_NAME" ]; then
     exit 1
 fi
 
-# ==============================================================================
-# SETUP DIRECTORIES
-# ==============================================================================
-mkdir -p scripts/slurm_out/inference
 
 # ==============================================================================
 # JOB INFO

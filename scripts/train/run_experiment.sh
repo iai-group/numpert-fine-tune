@@ -172,23 +172,27 @@ run_experiment() {
     # Show config summary
     show_experiment "$name"
 
-    # Validate data files exist
-    echo "Checking data files..."
-    local all_files_exist=true
-    for entry in "${TRAIN_JSON[@]}" "${VAL_JSON[@]}"; do
-        file="${entry%%:*}"
-        if [ ! -f "$file" ]; then
-            echo "ERROR: File not found: $file"
-            all_files_exist=false
-        fi
-    done
+    # Validate data files exist (skipped when no training epochs / no data files)
+    if [ "${#TRAIN_JSON[@]}" -eq 0 ]; then
+        echo "No data files configured (num_train_epochs=0): skipping data file validation"
+    else
+        echo "Checking data files..."
+        local all_files_exist=true
+        for entry in "${TRAIN_JSON[@]}" "${VAL_JSON[@]}"; do
+            file="${entry%%:*}"
+            if [ ! -f "$file" ]; then
+                echo "ERROR: File not found: $file"
+                all_files_exist=false
+            fi
+        done
 
-    if [ "$all_files_exist" = false ]; then
-        echo ""
-        echo "Please ensure all data files exist before running training."
-        exit 1
+        if [ "$all_files_exist" = false ]; then
+            echo ""
+            echo "Please ensure all data files exist before running training."
+            exit 1
+        fi
+        echo "✓ All data files found"
     fi
-    echo "✓ All data files found"
     echo ""
 
     # Detect if this is a PEFT experiment
