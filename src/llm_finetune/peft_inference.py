@@ -5,23 +5,30 @@ methods. Tracks inference latency and throughput metrics.
 """
 
 import argparse
+import ast
 import glob
 import json
 import time
 from pathlib import Path
 from typing import Optional, Dict
-import csv
+
+from tqdm import tqdm
 
 import torch
 from peft import AutoPeftModelForCausalLM
 from transformers import AutoTokenizer
 
 from src.llm_finetune.peft_finetune import setup_chat_template
+from src.llm_finetune.utils.data_loading.pipeline import load_split
 from src.llm_finetune.utils.inference.inference_config_export import (
     build_inference_config,
     save_inference_config,
 )
-from src.llm_finetune.utils.inference.metrics import _compute_scores
+from src.llm_finetune.utils.inference.metrics import (
+    compute_metrics,
+    print_metrics_report,
+    save_metrics_report,
+)
 from src.numpert_prompt.prompt import (
     FACT_CHECK_SYSTEM_PROMPT,
     FACT_CHECK_USER_PROMPT,
@@ -138,21 +145,35 @@ def _process_inference_sample(
     if track_memory and torch.cuda.is_available():
         torch.cuda.reset_peak_memory_stats()
 
-    # Prepare input
-    claim = example.get("claim", "")
-    doc = example.get("doc", "")
+    # Prepare input.
+    # correct claim text and perturbation applied), not raw 'claim'/'doc' fields. # noqa: E501
     label_true = example.get("label", None)
-
-    # Use same prompt format as training
-    messages = [
-        {"role": "system", "content": FACT_CHECK_SYSTEM_PROMPT},
-        {
-            "role": "user",
-            "content": FACT_CHECK_USER_PROMPT.format(
-                examples="", claim=claim, evidence=doc
-            ),
-        },
-    ]
+    convs_raw = example.get("conversations")
+    if convs_raw is not None:
+        convs = (
+            ast.literal_eval(convs_raw)
+            if isinstance(convs_raw, str)
+            else convs_raw
+        )
+        # Drop the assistant turn — we only want system + user as input
+        messages = [m for m in convs if m.get("role") in ("system", "user")]
+        # Extract claim text from the user message for logging
+        user_content = next(
+            (m["content"] for m in messages if m["role"] == "user"), ""
+        )
+        claim = user_content[:200]
+    else:
+        claim = example.get("claim", "")
+        doc = example.get("doc", "")
+        messages = [
+            {"role": "system", "content": FACT_CHECK_SYSTEM_PROMPT},
+            {
+                "role": "user",
+                "content": FACT_CHECK_USER_PROMPT.format(
+                    examples="", claim=claim, evidence=doc
+                ),
+            },
+        ]
     prompt = tokenizer.apply_chat_template(
         messages, tokenize=False, add_generation_prompt=True
     )
@@ -192,125 +213,61 @@ def _process_inference_sample(
     if track_memory and torch.cuda.is_available():
         peak_memory_mb = torch.cuda.max_memory_allocated() / 1024 / 1024
 
-    # Store prediction
-    parse_success = predicted_label is not None
+    # Convert ground-truth label to JSON-format string expected by metrics.
+    # load_split() returns labels already as '{"label": true}' JSON strings.
+    if label_true is None:
+        label_json = None
+    elif isinstance(label_true, str) and label_true.strip().startswith("{"):
+        label_json = (
+            label_true  # already '{"label": true}' or '{"label": false}'
+        )
+    elif isinstance(label_true, str):
+        gt_bool = label_true.lower() == "true"
+        label_json = json.dumps({"label": gt_bool})
+    else:
+        label_json = json.dumps({"label": bool(label_true)})
+
+    # Convert prediction to JSON-format string (None = parse failure)
+    prediction_json = (
+        json.dumps({"label": predicted_label})
+        if predicted_label is not None
+        else None
+    )
+
     prediction = {
-        "claim_id": example.get("id", f"sample_{idx}"),
+        "claim_id": example.get("claim_id", example.get("id", f"sample_{idx}")),
         "claim": claim,
-        "ground_truth": label_true,
-        "predicted_label": predicted_label,
-        "parse_success": parse_success,
-        "response": response,
+        "label": label_json,
+        "prediction": prediction_json,
+        "perturbation_type": example.get("perturbation_type", "unknown"),
+        "source_file": example.get("source_file", ""),
+        "raw_response": response,
         "latency_seconds": inference_latency,
         "peak_memory_mb": peak_memory_mb,
     }
 
     parse_failure = None
-    if not parse_success:
+    if prediction_json is None:
         parse_failure = {
-            "claim_id": example.get("id", f"sample_{idx}"),
+            "claim_id": prediction["claim_id"],
             "response": response,
         }
 
     return prediction, parse_failure
 
 
-def _convert_predictions_to_metrics_format(
-    predictions: list[dict],
-) -> tuple[list[str], list[Optional[str]]]:
-    """Convert predictions to metrics computation format.
-
-    Args:
-        predictions: List of prediction dicts
-
-    Returns:
-        Tuple of (true_labels, predictions) in JSON format
-    """
-    true_labels_for_metrics: list[str] = []
-    predictions_for_metrics: list[Optional[str]] = []
-
-    for p in predictions:
-        ground_truth = p.get("ground_truth")
-        predicted_label = p.get("predicted_label")
-
-        # Convert ground truth to JSON format
-        if ground_truth is not None:
-            if isinstance(ground_truth, str):
-                # String like "True" or "False"
-                gt_bool = ground_truth.lower() == "true"
-            else:
-                # Already boolean
-                gt_bool = bool(ground_truth)
-            true_labels_for_metrics.append(json.dumps({"label": gt_bool}))
-        else:
-            # Skip if no ground truth
-            continue
-
-        # Convert prediction to JSON format
-        if predicted_label is None:
-            predictions_for_metrics.append(None)
-        else:
-            predictions_for_metrics.append(
-                json.dumps({"label": predicted_label})
-            )
-
-    return true_labels_for_metrics, predictions_for_metrics
-
-
-def _compute_and_print_metrics(
+def _save_inference_results(
+    output_dir: str,
     predictions: list[dict],
     efficiency_stats: dict,
-) -> dict:
-    """Compute and print metrics.
-
-    Args:
-        predictions: List of prediction dicts
-        efficiency_stats: Efficiency statistics
-
-    Returns:
-        Metrics dictionary
-    """
-    # Convert predictions to metrics format
-    true_labels, pred_labels = _convert_predictions_to_metrics_format(
-        predictions
-    )
-
-    # Compute scores
-    if true_labels:
-        scores = _compute_scores("overall", true_labels, pred_labels)
-        metrics_dict = {
-            "accuracy": scores.accuracy,
-            "f1_macro": scores.f1_macro,
-            "precision_macro": scores.precision_macro,
-            "recall_macro": scores.recall_macro,
-            "parse_success_rate": sum(
-                1 for p in predictions if p.get("parse_success", False)
-            )
-            / len(predictions)
-            if predictions
-            else 0.0,
-        }
-    else:
-        metrics_dict = {
-            "accuracy": 0.0,
-            "f1_macro": 0.0,
-            "precision_macro": 0.0,
-            "recall_macro": 0.0,
-            "parse_success_rate": sum(
-                1 for p in predictions if p.get("parse_success", False)
-            )
-            / len(predictions)
-            if predictions
-            else 0.0,
-        }
-
-    # Print results
-    print("\nAccuracy Metrics:")
-    print(f"  Accuracy: {metrics_dict['accuracy']:.4f}")
-    print(f"  F1 Score (macro): {metrics_dict['f1_macro']:.4f}")
-    print(f"  Precision (macro): {metrics_dict['precision_macro']:.4f}")
-    print(f"  Recall (macro): {metrics_dict['recall_macro']:.4f}")
-    print(f"  Parse success rate: {metrics_dict['parse_success_rate']:.4f}")
+    parse_failures: list[dict],
+    model_path: str,
+    max_seq_length: int,
+) -> None:
+    """Save inference results using the shared metrics pipeline."""
+    # Compute full structured metrics report
+    metrics_report = compute_metrics(predictions)
+    print_metrics_report(metrics_report)
 
     print("\nEfficiency Metrics:")
     if efficiency_stats:
@@ -323,47 +280,18 @@ def _compute_and_print_metrics(
             print(
                 f"  Avg peak memory: {efficiency_stats['avg_peak_memory_mb']:.1f} MB"  # noqa: E501
             )
-    else:
-        print("  No efficiency stats available (no samples processed).")
 
-    return metrics_dict
+    print("\nSaving results...")
 
-
-def _save_inference_results(
-    output_dir: str,
-    predictions: list[dict],
-    metrics_dict: dict,
-    efficiency_stats: dict,
-    parse_failures: list[dict],
-    model_path: str,
-    max_seq_length: int,
-) -> None:
-    """Save inference results to files.
-
-    Args:
-        output_dir: Output directory
-        predictions: List of predictions
-        metrics_dict: Metrics dictionary
-        efficiency_stats: Efficiency statistics
-        parse_failures: List of parse failures
-        model_path: Path to model
-        max_seq_length: Max sequence length
-    """
-    # Save predictions
+    # Save predictions JSON
     predictions_file = Path(output_dir) / "predictions.json"
     with open(predictions_file, "w") as f:
         json.dump(predictions, f, indent=2)
     print(f"  Predictions: {predictions_file}")
 
-    # Save metrics
-    metrics_file = Path(output_dir) / "metrics.json"
-    metrics_output = {
-        "accuracy_metrics": metrics_dict,
-        "efficiency_metrics": efficiency_stats,
-    }
-    with open(metrics_file, "w") as f:
-        json.dump(metrics_output, f, indent=2)
-    print(f"  Metrics: {metrics_file}")
+    # Save metrics (structured format matching other inference pipelines)
+    metrics_path = save_metrics_report(metrics_report, output_dir)
+    print(f"  Metrics: {metrics_path}")
 
     # Save parse failures
     if parse_failures:
@@ -372,30 +300,27 @@ def _save_inference_results(
             json.dump(parse_failures, f, indent=2)
         print(f"  Parse failures: {failures_file}")
 
-    # Save predictions CSV for analysis
+    # Save predictions CSV
+    import pandas as pd
+
+    df = pd.DataFrame(
+        [
+            {
+                "claim_id": p["claim_id"],
+                "perturbation_type": p.get("perturbation_type", ""),
+                "source_file": p.get("source_file", ""),
+                "label": p["label"],
+                "prediction": p["prediction"]
+                if p["prediction"] is not None
+                else "PARSE_FAILURE",
+                "parsed_successfully": p["prediction"] is not None,
+                "raw_response": p.get("raw_response", ""),
+            }
+            for p in predictions
+        ]
+    )
     predictions_csv = Path(output_dir) / "predictions.csv"
-    with open(predictions_csv, "w", newline="") as f:
-        writer = csv.DictWriter(
-            f,
-            fieldnames=[
-                "claim_id",
-                "ground_truth",
-                "predicted_label",
-                "parse_success",
-                "latency_seconds",
-            ],
-        )
-        writer.writeheader()
-        for p in predictions:
-            writer.writerow(
-                {
-                    "claim_id": p["claim_id"],
-                    "ground_truth": p["ground_truth"],
-                    "predicted_label": p["predicted_label"],
-                    "parse_success": p["parse_success"],
-                    "latency_seconds": p["latency_seconds"],
-                }
-            )
+    df.to_csv(predictions_csv, index=False)
     print(f"  Predictions CSV: {predictions_csv}")
 
     # Save inference config
@@ -415,6 +340,7 @@ def run_inference(
     batch_size: int = 8,
     max_seq_length: int = 16384,
     track_memory: bool = False,
+    sample_frac: float = 1.0,
 ):
     """Run inference on test set with efficiency tracking.
 
@@ -425,6 +351,7 @@ def run_inference(
         batch_size: Batch size for inference
         max_seq_length: Max sequence length
         track_memory: Whether to track GPU memory usage
+        sample_frac: Fraction of test data to use (0 < frac <= 1); useful for smoke tests # noqa: E501
     """
     print("\n" + "=" * 80)
     print("STARTING PEFT INFERENCE")
@@ -451,24 +378,19 @@ def run_inference(
 
     print("Model loaded successfully")
 
-    # Load test data (supports glob patterns and multiple files)
+    # Load test data using the shared pipeline (adds perturbation_type, source_file) # noqa: E501
     print(f"Loading test data from {test_json_path}...")
     matched_files = sorted(glob.glob(test_json_path))
     if not matched_files:
         raise FileNotFoundError(f"No files matched: {test_json_path}")
-    test_data = []
-    for path in matched_files:
-        with open(path) as f:
-            content = f.read().strip()
-            if content.startswith("["):
-                test_data.extend(json.loads(content))
-            else:
-                test_data.extend(
-                    json.loads(line)
-                    for line in content.split("\n")
-                    if line.strip()
-                )
-        print(f"  Loaded {path}")
+    test_dataset = load_split(json_paths=matched_files, split="test")
+    test_data = [test_dataset[i] for i in range(len(test_dataset))]
+    if sample_frac < 1.0:
+        import math
+
+        n = max(1, math.ceil(len(test_data) * sample_frac))
+        test_data = test_data[:n]
+        print(f"Sampling {n}/{len(test_dataset)} examples ({sample_frac:.0%})")
     print(
         f"Loaded {len(test_data)} test examples from {len(matched_files)} file(s)"  # noqa: E501
     )
@@ -482,27 +404,33 @@ def run_inference(
 
     print("\nRunning inference...\n")
 
-    for idx, example in enumerate(test_data):
-        if (idx + 1) % max(1, len(test_data) // 10) == 0:
-            print(f"  Processing {idx + 1}/{len(test_data)} samples...")
+    parse_fail_count = 0
+    with tqdm(total=len(test_data), unit="claim", dynamic_ncols=True) as pbar:
+        for idx, example in enumerate(test_data):
+            prediction, parse_failure = _process_inference_sample(
+                example,
+                idx,
+                tokenizer,
+                model,
+                max_seq_length,
+                track_memory,
+            )
 
-        prediction, parse_failure = _process_inference_sample(
-            example,
-            idx,
-            tokenizer,
-            model,
-            max_seq_length,
-            track_memory,
-        )
+            predictions.append(prediction)
+            efficiency_tracker.add_sample(
+                prediction["latency_seconds"],
+                prediction.get("peak_memory_mb"),
+            )
 
-        predictions.append(prediction)
-        efficiency_tracker.add_sample(
-            prediction["latency_seconds"],
-            prediction.get("peak_memory_mb"),
-        )
+            if parse_failure:
+                parse_failures.append(parse_failure)
+                parse_fail_count += 1
 
-        if parse_failure:
-            parse_failures.append(parse_failure)
+            pbar.update(1)
+            pbar.set_postfix(
+                latency=f"{prediction['latency_seconds']*1000:.0f}ms",  # noqa: E226 E501
+                parse_fails=parse_fail_count,
+            )
 
     print("\n" + "=" * 80)
     print("INFERENCE COMPLETED")
@@ -511,16 +439,10 @@ def run_inference(
     # Get efficiency stats
     efficiency_stats = efficiency_tracker.get_stats()
 
-    # Compute metrics and print results
-    print("\nComputing metrics...")
-    metrics_dict = _compute_and_print_metrics(predictions, efficiency_stats)
-
-    # Save results
-    print("\nSaving results...")
+    # Compute metrics, print, and save
     _save_inference_results(
         output_dir,
         predictions,
-        metrics_dict,
         efficiency_stats,
         parse_failures,
         model_path,
@@ -573,6 +495,12 @@ if __name__ == "__main__":
         default=False,
         help="Track GPU memory usage",
     )
+    parser.add_argument(
+        "--sample_frac",
+        type=float,
+        default=1.0,
+        help="Fraction of test data to use (e.g. 0.05 for 5%% smoke test)",
+    )
 
     args = parser.parse_args()
 
@@ -583,4 +511,5 @@ if __name__ == "__main__":
         batch_size=args.batch_size,
         max_seq_length=args.max_seq_length,
         track_memory=args.track_memory,
+        sample_frac=args.sample_frac,
     )

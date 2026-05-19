@@ -3,6 +3,7 @@
 {"short_label": "qwen3_base_pap", "command": "\\mbasepap", "definition": "$\\text{M}_{\\text{Base-PAP}}$"}
 {"short_label": "qwen3_base_two_shot", "command": "\\mbasetwoshot", "definition": "$\\text{M}_{\\text{Base-Two-Shot}}$"}
 {"short_label": "qwen3_no_approx", "command": "\\mnoapproximation", "definition": "$\\text{M}_{\\text{Excl-Approximation}}$"}
+{"short_label": "noble_no_approx", "command": "\\mptnoappox", "definition": "$\\text{M}_{\\text{PT-Excl-Approximation}}$"}
 {"short_label": "qwen3_no_num", "command": "\\mnonumeration", "definition": "$\\text{M}_{\\text{Excl-Numeration}}$"}
 {"short_label": "qwen3_no_range", "command": "\\mnorange", "definition": "$\\text{M}_{\\text{Excl-Range}}$"}
 {"short_label": "qwen3_no_perturb_split", "command": "\\mnoperturb", "definition": "$\\text{M}_{\\text{Excl-Perturb}}$"}

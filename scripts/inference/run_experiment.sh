@@ -130,6 +130,7 @@ show_experiment() {
 run_experiment() {
     local name="$1"
     local dry_run="${2:-false}"
+    local sample_frac="${3:-}"
     local func_name="experiment_${name}"
 
     if ! declare -f "$func_name" > /dev/null 2>&1; then
@@ -163,29 +164,42 @@ run_experiment() {
     echo "✓ All data files found"
     echo ""
 
-    # Build command
-    CMD="uv run python -m src.llm_finetune.unsloth_inference"
-    CMD="$CMD --test_json ${TEST_JSON[*]}"
-    CMD="$CMD --model ${MODEL}"
-    CMD="$CMD --rank $RANK"
-    CMD="$CMD --start_epoch $START_EPOCH"
-    CMD="$CMD --max_seq_length $MAX_SEQ_LENGTH"
-
-    if [[ "${USE_PERTURBATIONS,,}" == "true" ]]; then
-        CMD="$CMD --use_perturbations"
+    # Build command — PEFT models use peft_inference, all others use unsloth_inference
+    if [ -n "${PEFT_MODEL_PATH:-}" ]; then
+        CMD="uv run python -m src.llm_finetune.peft_inference"
+        CMD="$CMD --model_path ${PEFT_MODEL_PATH}"
+        CMD="$CMD --test_json \"data/perturbed_data/test_split/*.json\""
+        CMD="$CMD --max_seq_length $MAX_SEQ_LENGTH"
+        if [ -n "$OUTPUT_DIR" ]; then
+            CMD="$CMD --output_dir $OUTPUT_DIR"
+        fi
+        if [ -n "$sample_frac" ]; then
+            CMD="$CMD --sample_frac $sample_frac"
+        fi
     else
-        CMD="$CMD --no-use_perturbations"
-    fi
+        CMD="uv run python -m src.llm_finetune.unsloth_inference"
+        CMD="$CMD --test_json ${TEST_JSON[*]}"
+        CMD="$CMD --model ${MODEL}"
+        CMD="$CMD --rank $RANK"
+        CMD="$CMD --start_epoch $START_EPOCH"
+        CMD="$CMD --max_seq_length $MAX_SEQ_LENGTH"
 
-    if [ -n "$OUTPUT_DIR" ]; then
-        CMD="$CMD --output_dir $OUTPUT_DIR"
-    fi
+        if [[ "${USE_PERTURBATIONS,,}" == "true" ]]; then
+            CMD="$CMD --use_perturbations"
+        else
+            CMD="$CMD --no-use_perturbations"
+        fi
 
-    if [ -n "${TOKENIZER:-}" ]; then
-        CMD="$CMD --tokenizer $TOKENIZER"
-    fi
+        if [ -n "$OUTPUT_DIR" ]; then
+            CMD="$CMD --output_dir $OUTPUT_DIR"
+        fi
 
-    CMD="$CMD --prompt_type ${PROMPT_TYPE:-ZERO_SHOT}"
+        if [ -n "${TOKENIZER:-}" ]; then
+            CMD="$CMD --tokenizer $TOKENIZER"
+        fi
+
+        CMD="$CMD --prompt_type ${PROMPT_TYPE:-ZERO_SHOT}"
+    fi
 
     echo "═══════════════════════════════════════════════"
     echo " Command"
@@ -238,14 +252,23 @@ case "$1" in
         fi
         run_experiment "$2" true
         ;;
+    --sample|-S)
+        if [ $# -lt 3 ]; then
+            echo "ERROR: --sample requires <fraction> <experiment_name>."
+            echo "Example: $0 --sample 0.05 qwen3_8b_pt_no_numeration"
+            exit 1
+        fi
+        run_experiment "$3" false "$2"
+        ;;
     --help|-h)
-        echo "Usage: $0 [--list | --show <name> | --dry-run <name> | <name>]"
+        echo "Usage: $0 [--list | --show <name> | --dry-run <name> | --sample <frac> <name> | <name>]"
         echo ""
-        echo "  <name>          Run inference experiment (experiment_ prefix optional)"
-        echo "  --list, -l      List all available experiments"
-        echo "  --show, -s      Show config for an experiment without running"
-        echo "  --dry-run, -d   Show full command without executing"
-        echo "  --help, -h      Show this help"
+        echo "  <name>               Run inference experiment (experiment_ prefix optional)"
+        echo "  --list, -l           List all available experiments"
+        echo "  --show, -s           Show config for an experiment without running"
+        echo "  --dry-run, -d        Show full command without executing"
+        echo "  --sample, -S <frac>  Run on a fraction of test data (e.g. 0.05 for 5%%)"
+        echo "  --help, -h           Show this help"
         ;;
     -*)
         echo "ERROR: Unknown option: $1"
