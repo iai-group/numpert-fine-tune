@@ -49,8 +49,9 @@ run_table "true_split_flipped.tex" \
     --perturb-type type2 \
     --perturb-type type3_masked \
     --perturb-type type3_random \
-    --class-label false
-
+    --class-label false \
+    --include-original
+    
 run_table "false_split_no_type2.tex" \
     --results-root "${RESULTS_DIR}" \
     --output "${RESULTS_DIR}/false_split_no_type2.tex" \
