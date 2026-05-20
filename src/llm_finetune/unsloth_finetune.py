@@ -164,6 +164,18 @@ def get_model_name_arg(model_name):
         "unsloth/Qwen3-32B"
     ):
         return "unsloth/Qwen3-32B"
+    elif model_name.startswith("Qwen3-0.6B") or model_name.startswith(
+        "unsloth/Qwen3-0.6B"
+    ):
+        return "unsloth/Qwen3-0.6B"
+    elif model_name.startswith("Qwen3-1.7B") or model_name.startswith(
+        "unsloth/Qwen3-1.7B"
+    ):
+        return "unsloth/Qwen3-1.7B"
+    elif model_name.startswith("Qwen3-4B") or model_name.startswith(
+        "unsloth/Qwen3-4B"
+    ):
+        return "unsloth/Qwen3-4B"
     elif model_name.startswith("llama-3.2-3b"):
         return "unsloth/Llama-3.2-3B-Instruct"
     elif model_name.startswith("llama-3.2-1b"):
