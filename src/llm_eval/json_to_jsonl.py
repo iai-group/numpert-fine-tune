@@ -50,9 +50,14 @@ def parse_args():
     )
 
     parser.add_argument(
-        "--few_shot",
-        action="store_true",
-        help="Uses few-shot prompting instead of zero-shot prompting.",
+        "--prompt_type",
+        type=str,
+        default=PromptType.ZERO_SHOT.value,
+        choices=[pt.value for pt in PromptType],
+        help=(
+            "Which PromptType to use when building the user prompt. "
+            f"Default: {PromptType.ZERO_SHOT.value}."
+        ),
     )
 
     parser.add_argument(
@@ -113,6 +118,28 @@ def parse_args():
         help="Enable reasoning for reasoning models (o1, o3, gpt-5)",
     )
 
+    parser.add_argument(
+        "--test_split_dir",
+        type=str,
+        default=None,
+        help=(
+            "Directory containing test_split JSON files. When set, ignores "
+            "the built-in dataset configs and emits one JSONL per JSON file. "
+            "Each entry produces one row for 'normalized_claim' plus one row "
+            "for every 'perturb_type*' key present on that entry."
+        ),
+    )
+
+    parser.add_argument(
+        "--test_split_output_dir",
+        type=str,
+        default=None,
+        help=(
+            "Output directory for per-file JSONLs when --test_split_dir is "
+            "set. Defaults to '<test_split_dir>/jsonl/'."
+        ),
+    )
+
     return parser.parse_args()
 
 
@@ -165,11 +192,10 @@ def get_gemini_response_format():
     }
 
 
-def get_structured_prompt_for_gemini(claim, evidence, few_shot=False) -> str:
+def get_structured_prompt_for_gemini(
+    claim, evidence, prompt_type: PromptType = PromptType.ZERO_SHOT
+) -> str:
     """Get a more explicit prompt for Gemini structured output."""
-    prompt_type = (
-        PromptType.FEW_SHOT if few_shot else PromptType.NEGATIVE_SYNTHETIC_ALL
-    )
     base_prompt = get_fact_check_user_prompt(
         claim=claim,
         evidence=evidence,
@@ -256,26 +282,12 @@ def create_consolidated_jsonl(  # noqa: C901
                         )
                         continue
 
-                    # Construct the user message with the claim and evidence
+                    prompt_type = PromptType(args.prompt_type)
                     if is_gemini and args.response_format_openai:
-                        # Use more explicit prompt for Gemini structured output
                         user_content = get_structured_prompt_for_gemini(
-                            claim, evidence, args.few_shot
+                            claim, evidence, prompt_type
                         )
                     else:
-                        # Use standard prompt (already includes
-                        # claim and evidence)
-
-                        # prompt.py defaults to
-                        # include_few_shot_examples=True
-
-                        # set include_few_shot_examples
-                        # to args.few_shot explicitly
-                        prompt_type = (
-                            PromptType.FEW_SHOT
-                            if args.few_shot
-                            else PromptType.NEGATIVE_SYNTHETIC_ALL
-                        )
                         user_content = get_fact_check_user_prompt(
                             claim=claim,
                             evidence=evidence,
@@ -395,16 +407,12 @@ def create_jsonl_from_json(  # noqa: C901
                     )
                     continue
 
+                prompt_type = PromptType(args.prompt_type)
                 if is_gemini and args.response_format_openai:
                     user_content = get_structured_prompt_for_gemini(
-                        claim, evidence, args.few_shot
+                        claim, evidence, prompt_type
                     )
                 else:
-                    prompt_type = (
-                        PromptType.FEW_SHOT
-                        if args.few_shot
-                        else PromptType.NEGATIVE_SYNTHETIC_ALL
-                    )
                     user_content = get_fact_check_user_prompt(
                         claim=claim,
                         evidence=evidence,
@@ -455,9 +463,180 @@ def create_jsonl_from_json(  # noqa: C901
         return False
 
 
+def _build_request_body(model_name, claim, evidence, args):
+    """Build the chat-completions body shared across modes."""
+    is_reasoning = is_reasoning_model(model_name)
+    is_gemini = is_gemini_model(model_name)
+
+    prompt_type = PromptType(args.prompt_type)
+    if is_gemini and args.response_format_openai:
+        user_content = get_structured_prompt_for_gemini(
+            claim, evidence, prompt_type
+        )
+    else:
+        user_content = get_fact_check_user_prompt(
+            claim=claim,
+            evidence=evidence,
+            prompt_type=prompt_type,
+        )
+
+    body = {
+        "model": model_name,
+        "messages": [
+            {
+                "role": "system",
+                "content": get_fact_check_system_prompt(),
+            },
+            {"role": "user", "content": user_content},
+        ],
+    }
+
+    if args.response_format_openai:
+        if is_gemini:
+            body["response_format"] = get_gemini_response_format()
+        else:
+            body["response_format"] = get_openai_response_format()
+
+    if not (is_reasoning and args.enable_reasoning):
+        body["max_tokens"] = 50
+        body["temperature"] = 0.0
+
+    return body
+
+
+def create_jsonl_from_test_split(  # noqa: C901
+    input_path, output_path, dataset_type, args
+):
+    """Emit one JSONL line per claim variant for a test_split JSON file.
+
+    Each entry yields:
+      - one row for 'normalized_claim'
+      - one row for every key matching 'perturb_type*' on that entry
+    The variant key is recorded inside the custom_id so the source claim is
+    recoverable downstream.
+    """
+    print(f"Reading data from '{input_path}'...")
+    try:
+        with open(input_path, "r", encoding="utf-8") as f:
+            input_data = json.load(f)
+    except FileNotFoundError:
+        print(f"Error: Input file not found at '{input_path}'.")
+        return False
+    except json.JSONDecodeError as e:
+        print(f"Error: Invalid JSON in input file: {e}")
+        return False
+
+    if not isinstance(input_data, list):
+        print("Error: Input JSON must be a list of objects.")
+        return False
+
+    print(f"Creating JSONL file at '{output_path}'...")
+
+    model_name = (
+        args.reasoning_model_name
+        if args.reasoning_model_name
+        else args.model_name
+    )
+    is_reasoning = is_reasoning_model(model_name)
+    if is_reasoning:
+        state = "enabled" if args.enable_reasoning else "disabled"
+        print(f"Reasoning {state} for {model_name}")
+
+    written = 0
+    skipped = 0
+
+    try:
+        with open(output_path, "w", encoding="utf-8") as outfile:
+            for i, entry in enumerate(input_data):
+                custom_id = entry.get("claim_id")
+                label = entry.get("label")
+                evidence = entry.get("doc")
+                normalized_claim = entry.get("normalized_claim")
+
+                if not all([custom_id is not None, evidence, normalized_claim]):
+                    print(
+                        f"Warning: Skipping entry {i} in '{input_path}' due "
+                        "to missing claim_id/doc/normalized_claim."
+                    )
+                    skipped += 1
+                    continue
+
+                variants = [("normalized_claim", normalized_claim)]
+                for key, value in entry.items():
+                    if key.startswith("perturb_type") and isinstance(
+                        value, str
+                    ):
+                        variants.append((key, value))
+
+                for variant_key, claim in variants:
+                    if not claim:
+                        skipped += 1
+                        continue
+                    body = _build_request_body(
+                        model_name, claim, evidence, args
+                    )
+                    json_request = {
+                        "custom_id": (
+                            f"{custom_id}-{label}-{variant_key}-{dataset_type}"
+                        ),
+                        "method": "POST",
+                        "url": "/v1/chat/completions",
+                        "body": body,
+                    }
+                    outfile.write(json.dumps(json_request) + "\n")
+                    written += 1
+
+        print(
+            f"Wrote {written} rows to '{output_path}' "
+            f"({skipped} variants skipped)."
+        )
+        return True
+    except IOError as e:
+        print(f"Error writing to output file: {e}")
+        return False
+
+
+def run_test_split_mode(args):
+    """Process every JSON file in args.test_split_dir."""
+    test_dir = args.test_split_dir
+    if not os.path.isdir(test_dir):
+        print(f"Error: --test_split_dir '{test_dir}' is not a directory.")
+        return False
+
+    output_dir = args.test_split_output_dir or os.path.join(test_dir, "jsonl")
+    os.makedirs(output_dir, exist_ok=True)
+    print(f"Writing per-file JSONLs to '{output_dir}'.")
+
+    json_files = sorted(f for f in os.listdir(test_dir) if f.endswith(".json"))
+    if not json_files:
+        print(f"No .json files found in '{test_dir}'.")
+        return False
+
+    overall_ok = True
+    for filename in json_files:
+        input_path = os.path.join(test_dir, filename)
+        stem = os.path.splitext(filename)[0]
+        output_path = os.path.join(output_dir, f"{stem}.jsonl")
+        ok = create_jsonl_from_test_split(
+            input_path=input_path,
+            output_path=output_path,
+            dataset_type=stem,
+            args=args,
+        )
+        if not ok:
+            overall_ok = False
+    return overall_ok
+
+
 def main():
     """Main function to run the script."""
     args = parse_args()
+
+    if args.test_split_dir:
+        success = run_test_split_mode(args)
+        if not success:
+            exit(1)
+        return
 
     # Define all dataset configurations
     datasets_config = [
