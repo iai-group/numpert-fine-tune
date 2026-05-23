@@ -504,7 +504,9 @@ def _build_request_body(model_name, claim, evidence, args):
     return body
 
 
-def create_jsonl_from_test_split(input_path, output_path, dataset_type, args):
+def create_jsonl_from_test_split(  # noqa: C901
+    input_path, output_path, dataset_type, args
+):
     """Emit one JSONL line per claim variant for a test_split JSON file.
 
     Each entry yields:
