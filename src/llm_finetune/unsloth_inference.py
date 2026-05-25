@@ -131,6 +131,7 @@ def inference(  # noqa: C901
     """Run inference on test data."""
     time_start = datetime.now()
 
+    user_provided_output_dir = output_dir is not None
     if output_dir is None:
         predictions_dir = f"{prefix}predictions"
         run_name = generate_run_name(
@@ -380,13 +381,16 @@ def inference(  # noqa: C901
     file_prefix = "unperturbed_" if inference_unperturbed_claims else ""
 
     # Create output directory
-    pred_dir_name = build_output_dir_name(
-        model_name,
-        rank,
-        start_epoch,
-        load_in_4bit=load_in_4bit,
-    )
-    pred_dir = f"{output_dir}/{pred_dir_name}"
+    if user_provided_output_dir:
+        pred_dir = output_dir
+    else:
+        pred_dir_name = build_output_dir_name(
+            model_name,
+            rank,
+            start_epoch,
+            load_in_4bit=load_in_4bit,
+        )
+        pred_dir = f"{output_dir}/{pred_dir_name}"
     os.makedirs(pred_dir, exist_ok=True)
 
     # Export inference configuration to JSON

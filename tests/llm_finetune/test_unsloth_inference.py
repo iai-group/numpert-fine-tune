@@ -510,38 +510,39 @@ class TestInference:
         # inference creates pred_dir under output_dir
         assert out.exists()
 
-    def test_rank_affects_output_path(self, tmp_path):
-        """Non-default rank includes _r{rank} in output path."""
+    def test_rank_affects_auto_output_path(self, tmp_path):
+        """Non-default rank includes _r{rank} in auto-generated subdir name."""
         from src.llm_finetune.unsloth_inference import inference
 
-        out = tmp_path / "output"
         with _make_mock_inference_context(tmp_path):
             inference(
                 test_json_paths=["test.json"],
                 model_name="test-model",
                 rank=64,
                 max_seq_length=512,
-                output_dir=str(out),
+                output_dir=None,
             )
-        # Check that a directory with _r64 was created
-        subdirs = [d.name for d in out.iterdir() if d.is_dir()]
-        assert any("_r64" in d for d in subdirs)
+        # Auto-path: {prefix}predictions/{run_name}/{pred_dir_name}
+        # pred_dir_name contains _r64 for rank=64
+        all_dirs = list((tmp_path / "predictions").rglob("*"))
+        dir_names = [d.name for d in all_dirs if d.is_dir()]
+        assert any("_r64" in d for d in dir_names)
 
-    def test_default_rank_no_suffix(self, tmp_path):
-        """Rank == 16 produces no _r suffix in output path."""
+    def test_default_rank_no_suffix_in_auto_path(self, tmp_path):
+        """Rank == 16 produces no _r suffix in the auto-generated subdir."""
         from src.llm_finetune.unsloth_inference import inference
 
-        out = tmp_path / "output"
         with _make_mock_inference_context(tmp_path):
             inference(
                 test_json_paths=["test.json"],
                 model_name="test-model",
                 rank=16,
                 max_seq_length=512,
-                output_dir=str(out),
+                output_dir=None,
             )
-        subdirs = [d.name for d in out.iterdir() if d.is_dir()]
-        assert all("_r16" not in d for d in subdirs)
+        all_dirs = list((tmp_path / "predictions").rglob("*"))
+        dir_names = [d.name for d in all_dirs if d.is_dir()]
+        assert all("_r16" not in d for d in dir_names)
 
     def test_inference_details_jsonl_written(self, tmp_path):
         """Raw inference details are written to a JSONL file."""
@@ -1811,15 +1812,11 @@ class TestResumeInference:
     def test_out_of_bounds_index_skipped_on_resume(self, tmp_path):
         """JSONL entry with index >= dataset size is silently skipped."""
         from src.llm_finetune.unsloth_inference import inference
-        from src.llm_finetune.utils.naming import build_output_dir_name
 
         ds = create_mock_test_dataset(n_claims=3, perturbations_per_claim=0)
         out = tmp_path / "output"
-
-        pred_dir_name = build_output_dir_name("test", 32, 0, load_in_4bit=True)
-        pred_dir = out / pred_dir_name
-        pred_dir.mkdir(parents=True)
-        jsonl_path = pred_dir / "inference_details.jsonl"
+        out.mkdir(parents=True, exist_ok=True)
+        jsonl_path = out / "inference_details.jsonl"
 
         # Write an entry whose index is well beyond the dataset length
         with open(jsonl_path, "w") as f:
@@ -1856,15 +1853,11 @@ class TestResumeInference:
     def test_non_integer_index_skipped_on_resume(self, tmp_path):
         """JSONL entry with a non-integer index is silently skipped."""
         from src.llm_finetune.unsloth_inference import inference
-        from src.llm_finetune.utils.naming import build_output_dir_name
 
         ds = create_mock_test_dataset(n_claims=3, perturbations_per_claim=0)
         out = tmp_path / "output"
-
-        pred_dir_name = build_output_dir_name("test", 32, 0, load_in_4bit=True)
-        pred_dir = out / pred_dir_name
-        pred_dir.mkdir(parents=True)
-        jsonl_path = pred_dir / "inference_details.jsonl"
+        out.mkdir(parents=True, exist_ok=True)
+        jsonl_path = out / "inference_details.jsonl"
 
         # Write an entry with a string index (e.g., from manual editing)
         with open(jsonl_path, "w") as f:
@@ -1901,16 +1894,11 @@ class TestResumeInference:
     def test_corrupt_jsonl_lines_skipped_on_resume(self, tmp_path):
         """Malformed lines in existing JSONL are ignored during resume."""
         from src.llm_finetune.unsloth_inference import inference
-        from src.llm_finetune.utils.naming import build_output_dir_name
 
         ds = create_mock_test_dataset(n_claims=3, perturbations_per_claim=0)
         out = tmp_path / "output"
-
-        # Create pred_dir manually to plant a corrupt JSONL file
-        pred_dir_name = build_output_dir_name("test", 32, 0, load_in_4bit=True)
-        pred_dir = out / pred_dir_name
-        pred_dir.mkdir(parents=True)
-        jsonl_path = pred_dir / "inference_details.jsonl"
+        out.mkdir(parents=True, exist_ok=True)
+        jsonl_path = out / "inference_details.jsonl"
 
         # Write one valid line and one corrupt line
         with open(jsonl_path, "w") as f:
@@ -1995,7 +1983,8 @@ class TestResumeNewlineGuard:
 
         ds = create_mock_test_dataset(n_claims=2, perturbations_per_claim=0)
         out = tmp_path / "output"
-        jsonl_path = self._pred_dir(out) / "inference_details.jsonl"
+        out.mkdir(parents=True, exist_ok=True)
+        jsonl_path = out / "inference_details.jsonl"
 
         # Simulate interrupted write: last byte is NOT '\n'
         self._write_entry(
@@ -2031,7 +2020,8 @@ class TestResumeNewlineGuard:
 
         ds = create_mock_test_dataset(n_claims=2, perturbations_per_claim=0)
         out = tmp_path / "output"
-        jsonl_path = self._pred_dir(out) / "inference_details.jsonl"
+        out.mkdir(parents=True, exist_ok=True)
+        jsonl_path = out / "inference_details.jsonl"
 
         self._write_entry(
             jsonl_path, self._make_first_entry(ds), trailing_newline=False
@@ -2080,7 +2070,8 @@ class TestResumeNewlineGuard:
 
         ds = create_mock_test_dataset(n_claims=2, perturbations_per_claim=0)
         out = tmp_path / "output"
-        jsonl_path = self._pred_dir(out) / "inference_details.jsonl"
+        out.mkdir(parents=True, exist_ok=True)
+        jsonl_path = out / "inference_details.jsonl"
 
         self._write_entry(
             jsonl_path, self._make_first_entry(ds), trailing_newline=True
@@ -2114,7 +2105,8 @@ class TestResumeNewlineGuard:
 
         ds = create_mock_test_dataset(n_claims=1, perturbations_per_claim=0)
         out = tmp_path / "output"
-        jsonl_path = self._pred_dir(out) / "inference_details.jsonl"
+        out.mkdir(parents=True, exist_ok=True)
+        jsonl_path = out / "inference_details.jsonl"
         jsonl_path.write_bytes(b"")  # Empty file — getsize == 0
 
         with _make_mock_inference_context(
@@ -2126,6 +2118,7 @@ class TestResumeNewlineGuard:
                 model_name="test",
                 max_seq_length=512,
                 output_dir=str(out),
+                resume=True,
             )
 
         lines = [
@@ -2351,3 +2344,99 @@ class TestCLIPromptTypeArgParsing:
             _CLI_PROMPT_TYPE_MAP[args.prompt_type]
             is PromptType.NEGATIVE_SYNTHETIC_ALL_WITH_REASONING
         )
+
+
+# ---------------------------------------------------------------------------
+# Tests for output_dir resolution (fix: user-provided dir used directly)
+# ---------------------------------------------------------------------------
+
+
+class TestOutputDirResolution:
+    """Verify that a user-provided output_dir is used as-is (no subdir) and that
+    auto-generated paths still create the model-named subdir."""
+
+    def test_user_provided_dir_files_land_directly(self, tmp_path):
+        """Files go directly into output_dir when it is explicitly provided."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        out = tmp_path / "my_results"
+        with _make_mock_inference_context(tmp_path):
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test-model",
+                rank=32,
+                max_seq_length=512,
+                output_dir=str(out),
+            )
+        assert (out / "inference_details.jsonl").exists()
+
+    def test_user_provided_dir_no_model_subdir_created(self, tmp_path):
+        """No model-named subdirectory is created inside a user-provided dir."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        out = tmp_path / "results"
+        with _make_mock_inference_context(tmp_path):
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test-model",
+                rank=64,
+                max_seq_length=512,
+                output_dir=str(out),
+            )
+        subdirs = [d for d in out.iterdir() if d.is_dir()]
+        assert len(subdirs) == 0
+
+    def test_user_provided_dir_rank_not_in_path(self, tmp_path):
+        """Rank suffix not appear in any subdir name in user-provided dir."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        out = tmp_path / "results"
+        with _make_mock_inference_context(tmp_path):
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test-model",
+                rank=64,
+                max_seq_length=512,
+                output_dir=str(out),
+            )
+        all_names = [p.name for p in out.rglob("*")]
+        assert not any("_r64" in name for name in all_names)
+
+    def test_auto_dir_creates_model_subdir(self, tmp_path):
+        """When output_dir=None, model-named subdir is created automatically."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        with _make_mock_inference_context(tmp_path):
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test-model",
+                rank=32,
+                max_seq_length=512,
+                output_dir=None,
+            )
+        predictions_dir = tmp_path / "predictions"
+        assert predictions_dir.exists()
+        # Structure: predictions/{run_name}/{pred_dir_name}/…
+        run_dirs = [d for d in predictions_dir.iterdir() if d.is_dir()]
+        assert len(run_dirs) >= 1
+        pred_dirs = [d for rd in run_dirs for d in rd.iterdir() if d.is_dir()]
+        assert len(pred_dirs) >= 1
+
+    def test_auto_dir_jsonl_in_subdir_not_in_predictions_root(self, tmp_path):
+        """inference_details.jsonl lives inside the auto-created subdir."""
+        from src.llm_finetune.unsloth_inference import inference
+
+        with _make_mock_inference_context(tmp_path):
+            inference(
+                test_json_paths=["test.json"],
+                model_name="test-model",
+                rank=32,
+                max_seq_length=512,
+                output_dir=None,
+            )
+        predictions_dir = tmp_path / "predictions"
+        # File must not be directly under predictions/
+        assert not (predictions_dir / "inference_details.jsonl").exists()
+        # But it must exist somewhere deeper
+        found = list(predictions_dir.rglob("inference_details.jsonl"))
+        assert len(found) == 1
