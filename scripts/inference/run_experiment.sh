@@ -93,17 +93,24 @@ show_experiment() {
     echo "═══════════════════════════════════════════════"
     echo ""
     echo "Model Configuration:"
-    echo "  Model:            $MODEL"
-    if [ -n "${TOKENIZER:-}" ]; then
-        echo "  Tokenizer:        $TOKENIZER"
+    if [ -n "${LITELLM_MODEL:-}" ]; then
+        echo "  litellm model:    $LITELLM_MODEL"
+        echo "  Max Workers:      ${MAX_WORKERS:-10}"
+        echo "  Max Tokens:       ${MAX_TOKENS:-512}"
+        echo "  Temperature:      ${TEMPERATURE:-0.0}"
+    else
+        echo "  Model:            ${MODEL:-}"
+        if [ -n "${TOKENIZER:-}" ]; then
+            echo "  Tokenizer:        $TOKENIZER"
+        fi
+        echo "  LoRA Rank:        ${RANK:-}"
+        echo "  Start Epoch:      ${START_EPOCH:-}"
+        echo "  Max Seq Length:   ${MAX_SEQ_LENGTH:-} tokens"
+        echo ""
+        echo "Inference Options:"
+        echo "  Use perturbs:   ${USE_PERTURBATIONS:-}"
+        echo "  Prompt type:    ${PROMPT_TYPE:-ZERO_SHOT}"
     fi
-    echo "  LoRA Rank:        $RANK"
-    echo "  Start Epoch:      $START_EPOCH"
-    echo "  Max Seq Length:   $MAX_SEQ_LENGTH tokens"
-    echo ""
-    echo "Inference Options:"
-    echo "  Use perturbs:   $USE_PERTURBATIONS"
-    echo "  Prompt type:    ${PROMPT_TYPE:-ZERO_SHOT}"
     if [ -n "$OUTPUT_DIR" ]; then
         echo "  Output Dir:       $OUTPUT_DIR"
     else
@@ -145,31 +152,48 @@ run_experiment() {
     # Show config summary
     show_experiment "$name"
 
-    # Validate data files exist
-    echo "Checking data files..."
-    local all_files_exist=true
-    for entry in "${TEST_JSON[@]}"; do
-        file="${entry%%:*}"
-        if [ ! -f "$file" ]; then
-            echo "ERROR: File not found: $file"
-            all_files_exist=false
+    # Validate data files exist (skip for litellm — Python does glob expansion)
+    if [ -z "${LITELLM_MODEL:-}" ]; then
+        echo "Checking data files..."
+        local all_files_exist=true
+        for entry in "${TEST_JSON[@]}"; do
+            file="${entry%%:*}"
+            if [ ! -f "$file" ]; then
+                echo "ERROR: File not found: $file"
+                all_files_exist=false
+            fi
+        done
+
+        if [ "$all_files_exist" = false ]; then
+            echo ""
+            echo "Please ensure all data files exist before running inference."
+            exit 1
         fi
-    done
-
-    if [ "$all_files_exist" = false ]; then
+        echo "✓ All data files found"
         echo ""
-        echo "Please ensure all data files exist before running inference."
-        exit 1
     fi
-    echo "✓ All data files found"
-    echo ""
 
-    # Build command — PEFT models use peft_inference, all others use unsloth_inference
-    if [ -n "${PEFT_MODEL_PATH:-}" ]; then
+    # Build command — litellm models use litellm_inference; PEFT models use
+    # peft_inference; all others use unsloth_inference
+    if [ -n "${LITELLM_MODEL:-}" ]; then
+        CMD="uv run python -m src.llm_finetune.litellm_inference"
+        CMD="$CMD --model ${LITELLM_MODEL}"
+        CMD="$CMD --test_json \"${TEST_JSON[0]}\""
+        CMD="$CMD --max_workers ${MAX_WORKERS:-10}"
+        CMD="$CMD --max_tokens ${MAX_TOKENS:-512}"
+        CMD="$CMD --temperature ${TEMPERATURE:-0.0}"
+        if [ -n "$OUTPUT_DIR" ]; then
+            CMD="$CMD --output_dir $OUTPUT_DIR"
+        fi
+        if [ -n "$sample_frac" ]; then
+            CMD="$CMD --sample_frac $sample_frac"
+        fi
+    elif [ -n "${PEFT_MODEL_PATH:-}" ]; then
         CMD="uv run python -m src.llm_finetune.peft_inference"
         CMD="$CMD --model_path ${PEFT_MODEL_PATH}"
         CMD="$CMD --test_json \"data/perturbed_data/test_split/*.json\""
         CMD="$CMD --max_seq_length $MAX_SEQ_LENGTH"
+        CMD="$CMD --batch_size ${BATCH_SIZE:-32}"
         if [ -n "$OUTPUT_DIR" ]; then
             CMD="$CMD --output_dir $OUTPUT_DIR"
         fi
@@ -199,6 +223,10 @@ run_experiment() {
         fi
 
         CMD="$CMD --prompt_type ${PROMPT_TYPE:-ZERO_SHOT}"
+
+        if [ -n "${EXTRA_INFERENCE_ARGS:-}" ]; then
+            CMD="$CMD ${EXTRA_INFERENCE_ARGS}"
+        fi
     fi
 
     echo "═══════════════════════════════════════════════"

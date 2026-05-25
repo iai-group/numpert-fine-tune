@@ -16,7 +16,7 @@ import os
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Optional, List, Union, Dict, Any
+from typing import Optional, List, Literal, Union, Dict, Any, cast
 from enum import Enum
 
 import torch
@@ -363,6 +363,7 @@ def finetune_peft(  # noqa: C901
     max_seq_length: int = 16384,
     use_perturbations: bool = True,
     balance_labels: bool = False,
+    balance_labels_mode: Literal["undersample", "oversample"] = "undersample",
     perturb_ratio: Optional[float] = None,
     false_perturb_t_to_f_ratio: Optional[float] = None,
     method_balance_mode: Optional[MethodBalanceMode] = None,
@@ -370,6 +371,8 @@ def finetune_peft(  # noqa: C901
     save_steps: Optional[int] = None,
     sample_percent: float = 100,
     start_epoch: int = 0,
+    save_gguf: bool = False,
+    gguf_quantization_method: str = "q4_k_m",
     debug: bool = False,
 ):
     """Fine-tune model using PEFT methods for fact-checking.
@@ -397,7 +400,7 @@ def finetune_peft(  # noqa: C901
 
     # Load base model (without 4-bit quantization for PEFT compatibility)
     device_map = "auto" if torch.cuda.is_available() else "cpu"
-    dtype = torch.float16 if torch.cuda.is_available() else torch.float32
+    dtype = torch.bfloat16 if torch.cuda.is_available() else torch.float32
 
     print(f"Loading model from: {model_name}")
     model = AutoModelForCausalLM.from_pretrained(
@@ -421,6 +424,7 @@ def finetune_peft(  # noqa: C901
         use_perturbations=use_perturbations,
         include_doc=True,
         balance_labels=balance_labels,
+        balance_labels_mode=balance_labels_mode,
         perturb_ratio=perturb_ratio,
         false_perturb_t_to_f_ratio=false_perturb_t_to_f_ratio,
         method_balance_mode=method_balance_mode,
@@ -580,6 +584,7 @@ def finetune_peft(  # noqa: C901
         max_seq_length=max_seq_length,
         use_perturbations=use_perturbations,
         balance_labels=balance_labels,
+        balance_labels_mode=balance_labels_mode,
         perturb_ratio=perturb_ratio,
         false_perturb_t_to_f_ratio=false_perturb_t_to_f_ratio,
         method_balance_mode=method_balance_mode,
@@ -702,6 +707,33 @@ def finetune_peft(  # noqa: C901
     trainer.save_model(output_dir)
     print(f"Model saved to: {output_dir}")
 
+    # Merge LoRA adapter and export to GGUF (LoRA only — prompt/prefix tuning
+    # have no weight changes to merge so GGUF would equal the base model)
+    if save_gguf and peft_method in (
+        PeftMethod.LORA,
+        PeftMethod.LORA_PROMPT,
+        PeftMethod.LORA_PREFIX,
+    ):
+        print("\nMerging LoRA adapter into base model...")
+        from src.llm_finetune.utils.training.convert_to_gguf import (
+            convert_existing_model,
+        )
+
+        merged_dir = f"{base_dir}/merged"
+        merged_model = model.merge_and_unload()
+        merged_model.save_pretrained(merged_dir)
+        tokenizer.save_pretrained(merged_dir)
+        print(f"Merged model saved to: {merged_dir}")
+
+        print(f"\nConverting to GGUF ({gguf_quantization_method})...")
+        gguf_dir = f"{base_dir}/gguf_{gguf_quantization_method}"
+        convert_existing_model(
+            model_path=merged_dir,
+            output_dir=gguf_dir,
+            quantization_method=gguf_quantization_method,
+        )
+        print(f"GGUF saved to: {gguf_dir}")
+
     # Finish wandb run
     wandb.finish()  # type: ignore
 
@@ -812,6 +844,13 @@ if __name__ == "__main__":
         help="Balance true/false label distribution",
     )
     parser.add_argument(
+        "--balance_labels_mode",
+        type=str,
+        default="oversample",
+        choices=["undersample", "oversample"],
+        help="How to balance labels: oversample or undersample.",
+    )
+    parser.add_argument(
         "--perturb_ratio",
         type=float,
         default=None,
@@ -855,6 +894,18 @@ if __name__ == "__main__":
         default=100,
         help="Percentage of training data to use (e.g., 10 for 10% sample)",
     )
+    parser.add_argument(
+        "--save_gguf",
+        action="store_true",
+        default=False,
+        help="Merge LoRA adapter and export to GGUF after training",
+    )
+    parser.add_argument(
+        "--gguf_quantization_method",
+        type=str,
+        default="q4_k_m",
+        help="GGUF quantization method (default: q4_k_m)",
+    )
 
     args = parser.parse_args()
 
@@ -875,8 +926,13 @@ if __name__ == "__main__":
         max_seq_length=args.max_seq_length,
         use_perturbations=args.use_perturbations,
         balance_labels=args.balance_labels,
+        balance_labels_mode=cast(
+            Literal["undersample", "oversample"], args.balance_labels_mode
+        ),
         perturb_ratio=args.perturb_ratio,
         eval_steps=args.eval_steps,
         save_steps=args.save_steps,
         sample_percent=args.sample_percent,
+        save_gguf=args.save_gguf,
+        gguf_quantization_method=args.gguf_quantization_method,
     )

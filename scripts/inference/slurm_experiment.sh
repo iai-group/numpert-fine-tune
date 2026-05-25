@@ -23,7 +23,7 @@
 #SBATCH --time=24:00:00
 #SBATCH --mem=100G
 #SBATCH --cpus-per-task=8
-#SBATCH --nodelist=gorina9
+#SBATCH --nodelist=gorina8
 #SBATCH --job-name=numpert_inference
 #SBATCH --output=scripts/slurm_out/peft/peft_inference_%j.out
 

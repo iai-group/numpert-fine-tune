@@ -126,6 +126,7 @@ def inference(  # noqa: C901
     require_gpu_offload: bool = False,
     resume: bool = False,
     prompt_type: PromptType = PromptType.ZERO_SHOT,
+    no_thinking: bool = False,
 ):
     """Run inference on test data."""
     time_start = datetime.now()
@@ -333,10 +334,14 @@ def inference(  # noqa: C901
             # Format via the same template used in training, then count
             # tokens with llama.cpp's own tokenizer (add_bos=False because
             # add_bos_token=False is set on the Llama instance).
+            _gguf_kwargs: dict = dict(
+                tokenize=False, add_generation_prompt=True
+            )
+            if no_thinking:
+                _gguf_kwargs["enable_thinking"] = False
             formatted = tokenizer.apply_chat_template(
                 example["conversations"][:-1],
-                tokenize=False,
-                add_generation_prompt=True,
+                **_gguf_kwargs,
             )
             token_count = len(
                 model.tokenize(formatted.encode("utf-8"), add_bos=False)
@@ -475,10 +480,15 @@ def inference(  # noqa: C901
                 # training. Use raw text completion (not
                 # create_chat_completion) so llama.cpp doesn't apply its
                 # own built-in template on top.
-                prompt_text = tokenizer.apply_chat_template(
-                    messages,
+                template_kwargs: dict = dict(
                     tokenize=False,
                     add_generation_prompt=True,
+                )
+                if no_thinking:
+                    template_kwargs["enable_thinking"] = False
+                prompt_text = tokenizer.apply_chat_template(
+                    messages,
+                    **template_kwargs,
                 )
                 response = model(
                     prompt_text,
@@ -712,6 +722,16 @@ def build_parser() -> argparse.ArgumentParser:
             "numerical perturbation examples with reasoning chains."
         ),
     )
+    parser.add_argument(
+        "--no_thinking",
+        action="store_true",
+        default=False,
+        help=(
+            "Disable Qwen3 thinking mode (passes enable_thinking=False to "
+            "apply_chat_template). Use for baseline models that were not "
+            "fine-tuned to suppress thinking tokens."
+        ),
+    )
 
     return parser
 
@@ -736,4 +756,5 @@ if __name__ == "__main__":
         require_gpu_offload=args.require_gpu_offload,
         resume=args.resume,
         prompt_type=_CLI_PROMPT_TYPE_MAP[args.prompt_type],
+        no_thinking=args.no_thinking,
     )

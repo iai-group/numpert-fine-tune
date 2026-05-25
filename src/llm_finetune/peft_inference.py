@@ -120,33 +120,8 @@ def extract_label_from_response(response_text: str) -> Optional[bool]:
     return None
 
 
-def _process_inference_sample(
-    example: dict,
-    idx: int,
-    tokenizer,
-    model,
-    max_seq_length: int,
-    track_memory: bool,
-) -> tuple[dict, Optional[dict]]:
-    """Process a single sample through inference.
-
-    Args:
-        example: Input example with claim, doc, label
-        idx: Sample index
-        tokenizer: Tokenizer for encoding
-        model: Model for generation
-        max_seq_length: Max sequence length
-        track_memory: Whether to track memory
-
-    Returns:
-        Tuple of (prediction_dict, parse_failure_dict or None)
-    """
-    # Get peak memory before
-    if track_memory and torch.cuda.is_available():
-        torch.cuda.reset_peak_memory_stats()
-
-    # Prepare input.
-    # correct claim text and perturbation applied), not raw 'claim'/'doc' fields. # noqa: E501
+def _build_prompt(example: dict, tokenizer) -> tuple[str, str, object]:
+    """Build prompt string and extract claim text and ground-truth label."""
     label_true = example.get("label", None)
     convs_raw = example.get("conversations")
     if convs_raw is not None:
@@ -155,9 +130,7 @@ def _process_inference_sample(
             if isinstance(convs_raw, str)
             else convs_raw
         )
-        # Drop the assistant turn — we only want system + user as input
         messages = [m for m in convs if m.get("role") in ("system", "user")]
-        # Extract claim text from the user message for logging
         user_content = next(
             (m["content"] for m in messages if m["role"] == "user"), ""
         )
@@ -177,57 +150,30 @@ def _process_inference_sample(
     prompt = tokenizer.apply_chat_template(
         messages, tokenize=False, add_generation_prompt=True
     )
+    return prompt, claim, label_true
 
-    # Tokenize
-    inputs = tokenizer(
-        prompt,
-        truncation=True,
-        max_length=max_seq_length,
-        padding=False,
-        return_tensors="pt",
-    )
-    device = next(model.parameters()).device
-    inputs = {k: v.to(device) for k, v in inputs.items()}
 
-    # Inference timing
-    with torch.no_grad():
-        start_time = time.time()
-        outputs = model.generate(
-            **inputs,
-            max_new_tokens=50,
-            temperature=0.7,
-            top_p=0.9,
-        )
-        inference_latency = time.time() - start_time
-
-    # Decode - only get the generated tokens (skip input)
-    input_length = inputs["input_ids"].shape[1]
-    generated_ids = outputs[0][input_length:]
-    response = tokenizer.decode(generated_ids, skip_special_tokens=True)
-
-    # Extract label
+def _make_prediction_dict(
+    example: dict,
+    idx: int,
+    claim: str,
+    label_true,
+    response: str,
+    inference_latency: float,
+    peak_memory_mb,
+) -> tuple[dict, Optional[dict]]:
+    """Build prediction and parse_failure dicts from a decoded response."""
     predicted_label = extract_label_from_response(response)
 
-    # Track memory
-    peak_memory_mb = None
-    if track_memory and torch.cuda.is_available():
-        peak_memory_mb = torch.cuda.max_memory_allocated() / 1024 / 1024
-
-    # Convert ground-truth label to JSON-format string expected by metrics.
-    # load_split() returns labels already as '{"label": true}' JSON strings.
     if label_true is None:
         label_json = None
     elif isinstance(label_true, str) and label_true.strip().startswith("{"):
-        label_json = (
-            label_true  # already '{"label": true}' or '{"label": false}'
-        )
+        label_json = label_true
     elif isinstance(label_true, str):
-        gt_bool = label_true.lower() == "true"
-        label_json = json.dumps({"label": gt_bool})
+        label_json = json.dumps({"label": label_true.lower() == "true"})
     else:
         label_json = json.dumps({"label": bool(label_true)})
 
-    # Convert prediction to JSON-format string (None = parse failure)
     prediction_json = (
         json.dumps({"label": predicted_label})
         if predicted_label is not None
@@ -246,14 +192,127 @@ def _process_inference_sample(
         "peak_memory_mb": peak_memory_mb,
     }
 
-    parse_failure = None
-    if prediction_json is None:
-        parse_failure = {
-            "claim_id": prediction["claim_id"],
-            "response": response,
-        }
-
+    parse_failure = (
+        {"claim_id": prediction["claim_id"], "response": response}
+        if prediction_json is None
+        else None
+    )
     return prediction, parse_failure
+
+
+def _process_inference_batch(
+    examples: list[dict],
+    start_idx: int,
+    tokenizer,
+    model,
+    max_seq_length: int,
+    track_memory: bool,
+) -> list[tuple[dict, Optional[dict]]]:
+    """Process a batch of samples with a single model.generate() call."""
+    if track_memory and torch.cuda.is_available():
+        torch.cuda.reset_peak_memory_stats()
+
+    prompts, claims, labels_true = zip(
+        *[_build_prompt(ex, tokenizer) for ex in examples]
+    )
+
+    # Left-padding is required for batched generation with decoder-only models.
+    tokenizer.padding_side = "left"
+    inputs = tokenizer(
+        list(prompts),
+        truncation=True,
+        max_length=max_seq_length,
+        padding=True,
+        return_tensors="pt",
+    )
+    device = next(model.parameters()).device
+    inputs = {k: v.to(device) for k, v in inputs.items()}
+    input_length = inputs["input_ids"].shape[1]
+
+    with torch.no_grad():
+        start_time = time.time()
+        outputs = model.generate(
+            **inputs,
+            max_new_tokens=2048,
+            temperature=0.7,
+            top_p=0.9,
+        )
+        batch_latency = time.time() - start_time
+
+    per_sample_latency = batch_latency / len(examples)
+    peak_memory_mb = None
+    if track_memory and torch.cuda.is_available():
+        peak_memory_mb = torch.cuda.max_memory_allocated() / 1024 / 1024
+
+    results = []
+    for i, example in enumerate(examples):
+        generated_ids = outputs[i][input_length:]
+        response = tokenizer.decode(generated_ids, skip_special_tokens=True)
+        prediction, parse_failure = _make_prediction_dict(
+            example,
+            start_idx + i,
+            claims[i],
+            labels_true[i],
+            response,
+            per_sample_latency,
+            peak_memory_mb,
+        )
+        results.append((prediction, parse_failure))
+
+    return results
+
+
+def _process_inference_sample(
+    example: dict,
+    idx: int,
+    tokenizer,
+    model,
+    max_seq_length: int,
+    track_memory: bool,
+) -> tuple[dict, Optional[dict]]:
+    """Process a single sample through inference."""
+    if track_memory and torch.cuda.is_available():
+        torch.cuda.reset_peak_memory_stats()
+
+    prompt, claim, label_true = _build_prompt(example, tokenizer)
+
+    inputs = tokenizer(
+        prompt,
+        truncation=True,
+        max_length=max_seq_length,
+        padding=False,
+        return_tensors="pt",
+    )
+    device = next(model.parameters()).device
+    inputs = {k: v.to(device) for k, v in inputs.items()}
+
+    with torch.no_grad():
+        start_time = time.time()
+        outputs = model.generate(
+            **inputs,
+            max_new_tokens=2048,
+            temperature=0.7,
+            top_p=0.9,
+        )
+        inference_latency = time.time() - start_time
+
+    input_length = inputs["input_ids"].shape[1]
+    generated_ids = outputs[0][input_length:]
+    response = tokenizer.decode(generated_ids, skip_special_tokens=True)
+
+    peak_memory_mb = None
+    if track_memory and torch.cuda.is_available():
+        peak_memory_mb = torch.cuda.max_memory_allocated() / 1024 / 1024
+
+    return _make_prediction_dict(
+        example,
+        idx,
+        claim,
+        label_true,
+        response,
+        inference_latency,
+        peak_memory_mb,
+    )
 
 
 def _save_inference_results(
@@ -406,29 +465,31 @@ def run_inference(
 
     parse_fail_count = 0
     with tqdm(total=len(test_data), unit="claim", dynamic_ncols=True) as pbar:
-        for idx, example in enumerate(test_data):
-            prediction, parse_failure = _process_inference_sample(
-                example,
-                idx,
+        for batch_start in range(0, len(test_data), batch_size):
+            batch = test_data[batch_start : batch_start + batch_size]
+            batch_results = _process_inference_batch(
+                batch,
+                batch_start,
                 tokenizer,
                 model,
                 max_seq_length,
                 track_memory,
             )
 
-            predictions.append(prediction)
-            efficiency_tracker.add_sample(
-                prediction["latency_seconds"],
-                prediction.get("peak_memory_mb"),
-            )
+            for prediction, parse_failure in batch_results:
+                predictions.append(prediction)
+                efficiency_tracker.add_sample(
+                    prediction["latency_seconds"],
+                    prediction.get("peak_memory_mb"),
+                )
+                if parse_failure:
+                    parse_failures.append(parse_failure)
+                    parse_fail_count += 1
 
-            if parse_failure:
-                parse_failures.append(parse_failure)
-                parse_fail_count += 1
-
-            pbar.update(1)
+            pbar.update(len(batch))
+            last_latency = batch_results[-1][0]["latency_seconds"]
             pbar.set_postfix(
-                latency=f"{prediction['latency_seconds']*1000:.0f}ms",  # noqa: E226 E501
+                latency=f"{last_latency*1000:.0f}ms",  # noqa: E226
                 parse_fails=parse_fail_count,
             )
 
