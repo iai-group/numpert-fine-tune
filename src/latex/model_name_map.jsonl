@@ -1,18 +1,22 @@
-{"short_label": "qwen3_baseline", "command": "\\mbase", "definition": "$\\text{M}_{\\text{Base-Zero-Shot}}$"}
-{"short_label": "qwen3_base", "command": "\\mbase", "definition": "$\\text{M}_{\\text{Base-Zero-Shot}}$"}
-{"short_label": "qwen3_base_pap", "command": "\\mbasepap", "definition": "$\\text{M}_{\\text{Base-PAP}}$"}
+{"short_label": "qwen3_baseline", "command": "\\mbase", "definition": "$\\text{M}_{\\text{Base}}$"}
 {"short_label": "qwen3_base_two_shot", "command": "\\mbasetwoshot", "definition": "$\\text{M}_{\\text{Base-Two-Shot}}$"}
-{"short_label": "qwen3_no_approx", "command": "\\mnoapproximation", "definition": "$\\text{M}_{\\text{Excl-Approximation}}$"}
-{"short_label": "qwen3_no_num", "command": "\\mnonumeration", "definition": "$\\text{M}_{\\text{Excl-Numeration}}$"}
+{"short_label": "qwen3_base_pap", "command": "\\mbasepap", "definition": "$\\text{M}_{\\text{Base-PAP}}$"}
+{"short_label": "qwen3_32b_baseline", "command": "\\mbasethirtytwo", "definition": "$\\text{M}_{\\text{32B Base}}$"}
+{"short_label": "qwen3_no_perturb_split", "command": "\\mnoperturb", "definition": "$\\text{M}_{\\text{Only-Org}}$"}
+{"short_label": "qwen3_all_perturb", "command": "\\mallperturb", "definition": "$\\text{M}_{\\text{All-Perturbs}}$"}
+{"short_label": "qwen3_4b_all_perturb", "command": "\\mallperturbfour", "definition": "$\\text{M}_{\\text{4B All-Perturbs}}$"}
+{"short_label": "qwen3_0_6b_all_perturb", "command": "\\mallperturbsix", "definition": "$\\text{M}_{\\text{0.6B-All-Perturbs}}$"}
+{"short_label": "qwen3_1_7b_all_perturb", "command": "\\mallperturbseventeen", "definition": "$\\text{M}_{\\text{1.7B All-Perturbs}}$"}
+{"short_label": "qwen3_only_perturbs", "command": "\\monlyperturbs", "definition": "$\\text{M}_{\\text{Only-Perturbs}}$"}
+{"short_label": "qwen3_approx", "command": "\\mapproximation", "definition": "$\\text{M}_{\\text{Only-Approx}}$"}
+{"short_label": "qwen3_num", "command": "\\mnumeration", "definition": "$\\text{M}_{\\text{Only-Num}}$"}
+{"short_label": "qwen3_range", "command": "\\mrange", "definition": "$\\text{M}_{\\text{Only-Range}}$"}
+{"short_label": "qwen3_negation", "command": "\\mnegation", "definition": "$\\text{M}_{\\text{Only-Negation}}$"}
+{"short_label": "qwen3_random", "command": "\\mrandom", "definition": "$\\text{M}_{\\text{Only-Random}}$"}
+{"short_label": "qwen3_masked", "command": "\\mmasked", "definition": "$\\text{M}_{\\text{Only-Masked}}$"}
+{"short_label": "qwen3_no_approx", "command": "\\mnoapproximation", "definition": "$\\text{M}_{\\text{Excl-Approx}}$"}
+{"short_label": "qwen3_no_num", "command": "\\mnonumeration", "definition": "$\\text{M}_{\\text{Excl-Num}}$"}
 {"short_label": "qwen3_no_range", "command": "\\mnorange", "definition": "$\\text{M}_{\\text{Excl-Range}}$"}
-{"short_label": "qwen3_no_perturb_split", "command": "\\mnoperturb", "definition": "$\\text{M}_{\\text{Excl-Perturb}}$"}
 {"short_label": "qwen3_no_negation", "command": "\\mnonegation", "definition": "$\\text{M}_{\\text{Excl-Negation}}$"}
 {"short_label": "qwen3_no_masked", "command": "\\mnomasked", "definition": "$\\text{M}_{\\text{Excl-Masked}}$"}
 {"short_label": "qwen3_no_random", "command": "\\mnorandom", "definition": "$\\text{M}_{\\text{Excl-Random}}$"}
-{"short_label": "qwen3_approx", "command": "\\mapproximation", "definition": "$\\text{M}_{\\text{Approximation}}$"}
-{"short_label": "qwen3_num", "command": "\\mnumeration", "definition": "$\\text{M}_{\\text{Numeration}}$"}
-{"short_label": "qwen3_range", "command": "\\mrange", "definition": "$\\text{M}_{\\text{Range}}$"}
-{"short_label": "qwen3_negation", "command": "\\mnegation", "definition": "$\\text{M}_{\\text{Negation}}$"}
-{"short_label": "qwen3_masked", "command": "\\mmasked", "definition": "$\\text{M}_{\\text{Masked}}$"}
-{"short_label": "qwen3_random", "command": "\\mrandom", "definition": "$\\text{M}_{\\text{Random}}$"}
-{"short_label": "qwen3_all_perturb", "command": "\\mallperturb", "definition": "$\\text{M}_{\\text{All-Perturb}}$"}
