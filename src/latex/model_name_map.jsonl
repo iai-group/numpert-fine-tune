@@ -1,6 +1,6 @@
 {"short_label": "qwen3_baseline", "command": "\\mbase", "definition": "$\\text{M}_{\\text{Base-Zero-Shot}}$"}
 {"short_label": "qwen3_base", "command": "\\mbase", "definition": "$\\text{M}_{\\text{Base-Zero-Shot}}$"}
-{"short_label": "qwen3_base_pap", "command": "\\mbasepap", "definition": "$\\text{M}_{\\text{Base-PAP}}$"}
+{"short_label": "qwen3_base_ncp", "command": "\\mbasencp", "definition": "$\\text{M}_{\\text{Base-NCP}}$"}
 {"short_label": "qwen3_base_two_shot", "command": "\\mbasetwoshot", "definition": "$\\text{M}_{\\text{Base-Two-Shot}}$"}
 {"short_label": "qwen3_no_approx", "command": "\\mnoapproximation", "definition": "$\\text{M}_{\\text{Excl-Approximation}}$"}
 {"short_label": "noble_no_approx", "command": "\\mptnoappox", "definition": "$\\text{M}_{\\text{PT-Excl-Approximation}}$"}

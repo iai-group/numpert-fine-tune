@@ -1,8 +1,0 @@
-model: "qwen3:32b"
-stream: false
-think: false
-options:
-  seed: 42
-  num_predict: 100
-  temperature: 0
-  num_ctx: 22000
