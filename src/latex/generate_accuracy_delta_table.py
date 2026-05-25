@@ -243,9 +243,13 @@ def extract_score(
 
     classification_report = entry.get("classification_report")
     if not isinstance(classification_report, Mapping):
-        raise ValueError(
-            "Metrics entry is missing a classification_report for class scoring"
-        )
+        # Older metrics files lack classification_report; fall back to accuracy.
+        accuracy = entry.get("accuracy")
+        if not isinstance(accuracy, (int, float)):
+            raise ValueError(
+                "Metrics entry is missing a classification_report for class scoring"  # noqa: E501
+            )
+        return float(accuracy)
 
     class_metrics = classification_report.get(class_label)
     if not isinstance(class_metrics, Mapping):
@@ -291,6 +295,8 @@ def short_model_label(  # noqa: C901
             return f"{family}_{alias}"
     if "all_perturb" in top:
         return f"{family}_all_perturb"
+    if "full_data" in top:
+        return f"{family}_full_data"
     if "base" in top:
         if "two" in top:
             return f"{family}_base_two_shot"

@@ -93,17 +93,24 @@ show_experiment() {
     echo "═══════════════════════════════════════════════"
     echo ""
     echo "Model Configuration:"
-    echo "  Model:            $MODEL"
-    if [ -n "${TOKENIZER:-}" ]; then
-        echo "  Tokenizer:        $TOKENIZER"
+    if [ -n "${LITELLM_MODEL:-}" ]; then
+        echo "  litellm model:    $LITELLM_MODEL"
+        echo "  Max Workers:      ${MAX_WORKERS:-10}"
+        echo "  Max Tokens:       ${MAX_TOKENS:-512}"
+        echo "  Temperature:      ${TEMPERATURE:-0.0}"
+    else
+        echo "  Model:            ${MODEL:-}"
+        if [ -n "${TOKENIZER:-}" ]; then
+            echo "  Tokenizer:        $TOKENIZER"
+        fi
+        echo "  LoRA Rank:        ${RANK:-}"
+        echo "  Start Epoch:      ${START_EPOCH:-}"
+        echo "  Max Seq Length:   ${MAX_SEQ_LENGTH:-} tokens"
+        echo ""
+        echo "Inference Options:"
+        echo "  Use perturbs:   ${USE_PERTURBATIONS:-}"
+        echo "  Prompt type:    ${PROMPT_TYPE:-ZERO_SHOT}"
     fi
-    echo "  LoRA Rank:        $RANK"
-    echo "  Start Epoch:      $START_EPOCH"
-    echo "  Max Seq Length:   $MAX_SEQ_LENGTH tokens"
-    echo ""
-    echo "Inference Options:"
-    echo "  Use perturbs:   $USE_PERTURBATIONS"
-    echo "  Prompt type:    ${PROMPT_TYPE:-ZERO_SHOT}"
     if [ -n "$OUTPUT_DIR" ]; then
         echo "  Output Dir:       $OUTPUT_DIR"
     else
@@ -130,6 +137,7 @@ show_experiment() {
 run_experiment() {
     local name="$1"
     local dry_run="${2:-false}"
+    local sample_frac="${3:-}"
     local func_name="experiment_${name}"
 
     if ! declare -f "$func_name" > /dev/null 2>&1; then
@@ -144,48 +152,82 @@ run_experiment() {
     # Show config summary
     show_experiment "$name"
 
-    # Validate data files exist
-    echo "Checking data files..."
-    local all_files_exist=true
-    for entry in "${TEST_JSON[@]}"; do
-        file="${entry%%:*}"
-        if [ ! -f "$file" ]; then
-            echo "ERROR: File not found: $file"
-            all_files_exist=false
+    # Validate data files exist (skip for litellm — Python does glob expansion)
+    if [ -z "${LITELLM_MODEL:-}" ]; then
+        echo "Checking data files..."
+        local all_files_exist=true
+        for entry in "${TEST_JSON[@]}"; do
+            file="${entry%%:*}"
+            if [ ! -f "$file" ]; then
+                echo "ERROR: File not found: $file"
+                all_files_exist=false
+            fi
+        done
+
+        if [ "$all_files_exist" = false ]; then
+            echo ""
+            echo "Please ensure all data files exist before running inference."
+            exit 1
         fi
-    done
-
-    if [ "$all_files_exist" = false ]; then
+        echo "✓ All data files found"
         echo ""
-        echo "Please ensure all data files exist before running inference."
-        exit 1
     fi
-    echo "✓ All data files found"
-    echo ""
 
-    # Build command
-    CMD="uv run python -m src.llm_finetune.unsloth_inference"
-    CMD="$CMD --test_json ${TEST_JSON[*]}"
-    CMD="$CMD --model ${MODEL}"
-    CMD="$CMD --rank $RANK"
-    CMD="$CMD --start_epoch $START_EPOCH"
-    CMD="$CMD --max_seq_length $MAX_SEQ_LENGTH"
-
-    if [[ "${USE_PERTURBATIONS,,}" == "true" ]]; then
-        CMD="$CMD --use_perturbations"
+    # Build command — litellm models use litellm_inference; PEFT models use
+    # peft_inference; all others use unsloth_inference
+    if [ -n "${LITELLM_MODEL:-}" ]; then
+        CMD="uv run python -m src.llm_finetune.litellm_inference"
+        CMD="$CMD --model ${LITELLM_MODEL}"
+        CMD="$CMD --test_json \"${TEST_JSON[0]}\""
+        CMD="$CMD --max_workers ${MAX_WORKERS:-10}"
+        CMD="$CMD --max_tokens ${MAX_TOKENS:-512}"
+        CMD="$CMD --temperature ${TEMPERATURE:-0.0}"
+        if [ -n "$OUTPUT_DIR" ]; then
+            CMD="$CMD --output_dir $OUTPUT_DIR"
+        fi
+        if [ -n "$sample_frac" ]; then
+            CMD="$CMD --sample_frac $sample_frac"
+        fi
+    elif [ -n "${PEFT_MODEL_PATH:-}" ]; then
+        CMD="uv run python -m src.llm_finetune.peft_inference"
+        CMD="$CMD --model_path ${PEFT_MODEL_PATH}"
+        CMD="$CMD --test_json \"data/perturbed_data/test_split/*.json\""
+        CMD="$CMD --max_seq_length $MAX_SEQ_LENGTH"
+        CMD="$CMD --batch_size ${BATCH_SIZE:-32}"
+        if [ -n "$OUTPUT_DIR" ]; then
+            CMD="$CMD --output_dir $OUTPUT_DIR"
+        fi
+        if [ -n "$sample_frac" ]; then
+            CMD="$CMD --sample_frac $sample_frac"
+        fi
     else
-        CMD="$CMD --no-use_perturbations"
-    fi
+        CMD="uv run python -m src.llm_finetune.unsloth_inference"
+        CMD="$CMD --test_json ${TEST_JSON[*]}"
+        CMD="$CMD --model ${MODEL}"
+        CMD="$CMD --rank $RANK"
+        CMD="$CMD --start_epoch $START_EPOCH"
+        CMD="$CMD --max_seq_length $MAX_SEQ_LENGTH"
 
-    if [ -n "$OUTPUT_DIR" ]; then
-        CMD="$CMD --output_dir $OUTPUT_DIR"
-    fi
+        if [[ "${USE_PERTURBATIONS,,}" == "true" ]]; then
+            CMD="$CMD --use_perturbations"
+        else
+            CMD="$CMD --no-use_perturbations"
+        fi
 
-    if [ -n "${TOKENIZER:-}" ]; then
-        CMD="$CMD --tokenizer $TOKENIZER"
-    fi
+        if [ -n "$OUTPUT_DIR" ]; then
+            CMD="$CMD --output_dir $OUTPUT_DIR"
+        fi
 
-    CMD="$CMD --prompt_type ${PROMPT_TYPE:-ZERO_SHOT}"
+        if [ -n "${TOKENIZER:-}" ]; then
+            CMD="$CMD --tokenizer $TOKENIZER"
+        fi
+
+        CMD="$CMD --prompt_type ${PROMPT_TYPE:-ZERO_SHOT}"
+
+        if [ -n "${EXTRA_INFERENCE_ARGS:-}" ]; then
+            CMD="$CMD ${EXTRA_INFERENCE_ARGS}"
+        fi
+    fi
 
     echo "═══════════════════════════════════════════════"
     echo " Command"
@@ -238,14 +280,23 @@ case "$1" in
         fi
         run_experiment "$2" true
         ;;
+    --sample|-S)
+        if [ $# -lt 3 ]; then
+            echo "ERROR: --sample requires <fraction> <experiment_name>."
+            echo "Example: $0 --sample 0.05 qwen3_8b_pt_no_numeration"
+            exit 1
+        fi
+        run_experiment "$3" false "$2"
+        ;;
     --help|-h)
-        echo "Usage: $0 [--list | --show <name> | --dry-run <name> | <name>]"
+        echo "Usage: $0 [--list | --show <name> | --dry-run <name> | --sample <frac> <name> | <name>]"
         echo ""
-        echo "  <name>          Run inference experiment (experiment_ prefix optional)"
-        echo "  --list, -l      List all available experiments"
-        echo "  --show, -s      Show config for an experiment without running"
-        echo "  --dry-run, -d   Show full command without executing"
-        echo "  --help, -h      Show this help"
+        echo "  <name>               Run inference experiment (experiment_ prefix optional)"
+        echo "  --list, -l           List all available experiments"
+        echo "  --show, -s           Show config for an experiment without running"
+        echo "  --dry-run, -d        Show full command without executing"
+        echo "  --sample, -S <frac>  Run on a fraction of test data (e.g. 0.05 for 5%%)"
+        echo "  --help, -h           Show this help"
         ;;
     -*)
         echo "ERROR: Unknown option: $1"

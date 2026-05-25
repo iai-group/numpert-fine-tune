@@ -5,7 +5,7 @@
 #SBATCH --mem=300G
 #SBATCH --job-name=unsloth_to_gguf
 #SBATCH --output=unsloth_to_gguf.out
-#SBATCH --nodelist=gorina9
+#SBATCH --nodelist=gorina8
 
 
 

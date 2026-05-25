@@ -277,6 +277,10 @@ run_experiment() {
         CMD="$CMD --resume_model $RESUME_MODEL"
     fi
 
+    if [[ "${BALANCE_LABELS:-false}" == "true" ]]; then
+        CMD="$CMD --balance_labels --balance_labels_mode ${BALANCE_LABELS_MODE:-oversample}"
+    fi
+
     if [ "$SAVE_GGUF" = true ]; then
         CMD="$CMD --save_gguf --gguf_quantization_method $GGUF_QUANT_METHOD"
     fi

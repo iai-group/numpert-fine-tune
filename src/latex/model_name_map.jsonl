@@ -3,6 +3,13 @@
 {"short_label": "qwen3_base_pap", "command": "\\mbasepap", "definition": "$\\text{M}_{\\text{Base-PAP}}$"}
 {"short_label": "qwen3_base_two_shot", "command": "\\mbasetwoshot", "definition": "$\\text{M}_{\\text{Base-Two-Shot}}$"}
 {"short_label": "qwen3_no_approx", "command": "\\mnoapproximation", "definition": "$\\text{M}_{\\text{Excl-Approximation}}$"}
+{"short_label": "noble_no_approx", "command": "\\mptnoappox", "definition": "$\\text{M}_{\\text{PT-Excl-Approximation}}$"}
+{"short_label": "wild_no_num", "command": "\\mptnonum", "definition": "$\\text{M}_{\\text{PT-Excl-Numeration}}$"}
+{"short_label": "jolly_no_range", "command": "\\mptnorange", "definition": "$\\text{M}_{\\text{PT-Excl-Range}}$"}
+{"short_label": "ancient_no_perturb_split", "command": "\\mptnoperturb", "definition": "$\\text{M}_{\\text{PT-Excl-Perturb}}$"}
+{"short_label": "wild_full_data", "command": "\\mptfulldata", "definition": "$\\text{M}_{\\text{PT-Full}}$"}
+{"short_label": "gentle_no_num", "command": "\\mptbalnonum", "definition": "$\\text{M}_{\\text{PT-Bal-Excl-Numeration}}$"}
+{"short_label": "jolly_no_approx", "command": "\\mptbalnoapprox", "definition": "$\\text{M}_{\\text{PT-Bal-Excl-Approximation}}$"}
 {"short_label": "qwen3_no_num", "command": "\\mnonumeration", "definition": "$\\text{M}_{\\text{Excl-Numeration}}$"}
 {"short_label": "qwen3_no_range", "command": "\\mnorange", "definition": "$\\text{M}_{\\text{Excl-Range}}$"}
 {"short_label": "qwen3_no_perturb_split", "command": "\\mnoperturb", "definition": "$\\text{M}_{\\text{Excl-Perturb}}$"}
@@ -16,3 +23,5 @@
 {"short_label": "qwen3_masked", "command": "\\mmasked", "definition": "$\\text{M}_{\\text{Masked}}$"}
 {"short_label": "qwen3_random", "command": "\\mrandom", "definition": "$\\text{M}_{\\text{Random}}$"}
 {"short_label": "qwen3_all_perturb", "command": "\\mallperturb", "definition": "$\\text{M}_{\\text{All-Perturb}}$"}
+{"short_label": "claude_opus_4_7", "command": "\\mclaudeopus", "definition": "$\\text{Claude Opus 4.7}$"}
+{"short_label": "gpt_5_5", "command": "\\mgptfivefive", "definition": "$\\text{GPT-5.5}$"}
