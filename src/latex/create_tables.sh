@@ -29,8 +29,8 @@
 # an empty string to keep full-length headers.
 #
 # Each split is emitted twice: the base table (e.g. true_split.tex) and a
-# *_with_avgs.tex variant that appends macro and micro average columns
-# (unweighted and sample-weighted means across non-original cells).
+# *_with_avgs.tex variant that appends a sample-weighted micro-average
+# column across non-original cells.
 #
 # Usage:
 #   bash src/latex/create_tables.sh
@@ -49,7 +49,7 @@ else
 fi
 
 PYTHON_BIN="${PYTHON_BIN:-${DEFAULT_PYTHON_BIN}}"
-RESULTS_BASE="${RESULTS_BASE:-results/inference/q4_k_m}"
+RESULTS_BASE="${RESULTS_BASE:-results/inference/unquant}"
 RESULTS_SUBDIR="${RESULTS_SUBDIR-}"
 if [ -n "${RESULTS_SUBDIR}" ]; then
     RESULTS_DIR="${RESULTS_BASE}/${RESULTS_SUBDIR}"
@@ -97,7 +97,6 @@ run_table() {
         --results-root "${RESULTS_DIR}" \
         --output "${RESULTS_DIR}/${basename}_with_avgs.tex" \
         --model-name-map "${MODEL_NAME_MAP}" \
-        --macro-average-column \
         --micro-average-column \
         "$@" \
         "${EXTRA_ARGS[@]}"

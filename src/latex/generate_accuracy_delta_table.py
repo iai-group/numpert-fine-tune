@@ -97,22 +97,30 @@ MODEL_SUBSCRIPTS: Dict[str, str] = {
 # this tuple is only consulted for short labels not present in that map.
 # Short labels not listed here fall after the listed ones, sorted by label.
 MODEL_ORDER: tuple[str, ...] = (
+    # Group 1 — base
     "qwen3_baseline",
     "qwen3_base_two_shot",
     "qwen3_base_pap",
     "qwen3_32b_baseline",
     "qwen3_no_perturb_split",
-    "qwen3_all_perturb",
-    "qwen3_4b_all_perturb",
+    # Group 2 — allperturb. qwen3_pt_full_data is reserved for the
+    # \mptfulldata model added separately; the slot keeps it positioned
+    # ahead of the all-perturb size sweep when its name_map entry lands.
+    "qwen3_pt_full_data",
     "qwen3_0_6b_all_perturb",
     "qwen3_1_7b_all_perturb",
-    "qwen3_only_perturbs",
+    "qwen3_4b_all_perturb",
+    "qwen3_all_perturb",
+    # Group 3 — only
     "qwen3_approx",
     "qwen3_num",
     "qwen3_range",
     "qwen3_negation",
-    "qwen3_random",
     "qwen3_masked",
+    "qwen3_random",
+    # Group 4 — excl. qwen3_only_perturbs (rendered as \mnooriginal)
+    # leads the excluded-data group as the "no original" variant.
+    "qwen3_only_perturbs",
     "qwen3_no_approx",
     "qwen3_no_num",
     "qwen3_no_range",
@@ -199,9 +207,10 @@ def build_parser() -> argparse.ArgumentParser:
         "--group-separators",
         action="store_true",
         help=(
-            "Add a vertical rule after the model column (l|ccc...) and a "
-            "\\midrule between row groups (base / all-perturb / only-X / "
-            "excl-X). Off by default."
+            "Add a vertical rule after the model column (l|ccc...). "
+            "Midrules and rotated row-group labels between the four model "
+            "groups (base / all-perturb / only-X / excl-X) are always "
+            "emitted."
         ),
     )
     parser.add_argument(
@@ -447,8 +456,6 @@ def short_model_label(  # noqa: C901
     if "base" in top:
         if "two" in top:
             return f"{family}_base_two_shot"
-        if "pap" in top:
-            return f"{family}_base_pap"
 
     cleaned = re.sub(r"[^a-z0-9]+", "_", top).strip("_")
     if cleaned.startswith(family + "_"):
@@ -515,16 +522,26 @@ def _model_group(short_label: str) -> str:
     """
     if short_label == "qwen3_no_perturb_split":
         return "base"
+    if short_label == "qwen3_only_perturbs":
+        return "excl"
     if short_label.startswith("qwen3_no_"):
         return "excl"
     if (
         short_label.endswith("_all_perturb")
-        or short_label == "qwen3_only_perturbs"
+        or short_label == "qwen3_pt_full_data"
     ):
         return "allperturb"
     if short_label in _ONLY_X_SHORT_LABELS:
         return "only"
     return "base"
+
+
+ROW_GROUP_LABELS: Dict[str, str] = {
+    "base": "\\grouponetable",
+    "allperturb": "\\grouptwotable",
+    "only": "\\groupthreetable",
+    "excl": "\\groupfourtable",
+}
 
 
 def _format_average_cell(
@@ -1033,90 +1050,106 @@ def render_table(  # noqa: C901
         header_cells.append("\\textbf{Parse Fail.}")
 
     lines = [
-        "% Requires \\usepackage{booktabs} and \\usepackage[table]{xcolor}",
+        "% Requires \\usepackage{booktabs}, \\usepackage[table]{xcolor},"
+        " \\usepackage{nicematrix}",
         "\\begin{table*}[ht]",
         "\\centering",
         "\\definecolor{numpertdeltaimprove}{RGB}{0,100,0}",
         "\\definecolor{numpertdeltadecline}{RGB}{180,35,24}",
         "\\small",
-        f"\\begin{{tabular}}{{{tabular_spec}}}",
+        f"\\begin{{NiceTabular}}{{{tabular_spec}}}[first-col]",
         "\\toprule",
-        "\\textbf{Model} & " + " & ".join(header_cells) + " \\\\",
+        " & \\textbf{Model} & " + " & ".join(header_cells) + " \\\\",
         "\\midrule",
     ]
 
-    previous_group: str | None = None
+    clusters: list[tuple[str, list[str]]] = []
     for model_label in ordered_models:
-        if group_separators:
-            current_group = _model_group(
-                short_model_label(model_label, results_root, dir_map)
-            )
-            if previous_group is not None and current_group != previous_group:
-                lines.append("\\midrule")
-            previous_group = current_group
-        row_cells = [_row_label(model_label)]
-        scores_for_model = model_scores[model_label]
-        own_original = scores_for_model.get(ORIGINAL_GROUP_NAME)
-        for group_name in groups:
-            score = scores_for_model.get(group_name)
-            if score is None:
-                row_cells.append("--")
-                continue
-
-            cell = format_score(score.accuracy, digits)
-            if abs(score.accuracy - best_scores[group_name]) < 1e-9:
-                cell = f"\\textbf{{{cell}}}"
-
-            delta_super = ""
-            if group_name != ORIGINAL_GROUP_NAME and own_original is not None:
-                delta_super = format_delta(
-                    own_original.accuracy,
-                    score.accuracy,
-                    digits,
-                )
-
-            parse_annotation = ""
-            if show_parse_failures and score.parse_failures and score.total:
-                pct = score.parse_failures / score.total * 100
-                parse_annotation = f"~({pct:.{digits}f}\\%)"
-
-            cell += delta_super + parse_annotation
-
-            row_cells.append(cell)
-
-        own_original_acc = (
-            own_original.accuracy if own_original is not None else None
+        grp = _model_group(
+            short_model_label(model_label, results_root, dir_map)
         )
-        if macro_average_column:
-            row_cells.append(
-                _format_average_cell(
-                    macro_by_model.get(model_label),
-                    best_macro,
-                    own_original_acc,
-                    digits,
-                )
-            )
-        if micro_average_column:
-            row_cells.append(
-                _format_average_cell(
-                    micro_by_model.get(model_label),
-                    best_micro,
-                    own_original_acc,
-                    digits,
-                )
-            )
-        if show_rate_column:
-            rate = rate_by_model.get(model_label)
-            row_cells.append(
-                f"{rate:.{digits}f}\\%" if rate is not None else "--"
-            )
+        if clusters and clusters[-1][0] == grp:
+            clusters[-1][1].append(model_label)
+        else:
+            clusters.append((grp, [model_label]))
 
-        lines.append(" & ".join(row_cells) + " \\\\")
+    for cluster_idx, (grp, members) in enumerate(clusters):
+        if cluster_idx > 0:
+            lines.append("\\midrule")
+        group_label = ROW_GROUP_LABELS.get(grp, grp)
+        for row_idx, model_label in enumerate(members):
+            if row_idx == 0:
+                first_col = (
+                    f"\\Block{{{len(members)}-1}}" f"{{\\rotate {group_label}}}"
+                )
+            else:
+                first_col = ""
+            row_cells = [first_col, _row_label(model_label)]
+            scores_for_model = model_scores[model_label]
+            own_original = scores_for_model.get(ORIGINAL_GROUP_NAME)
+            for group_name in groups:
+                score = scores_for_model.get(group_name)
+                if score is None:
+                    row_cells.append("--")
+                    continue
+
+                cell = format_score(score.accuracy, digits)
+                if abs(score.accuracy - best_scores[group_name]) < 1e-9:
+                    cell = f"\\textbf{{{cell}}}"
+
+                delta_super = ""
+                if (
+                    group_name != ORIGINAL_GROUP_NAME
+                    and own_original is not None
+                ):
+                    delta_super = format_delta(
+                        own_original.accuracy,
+                        score.accuracy,
+                        digits,
+                    )
+
+                parse_annotation = ""
+                if show_parse_failures and score.parse_failures and score.total:
+                    pct = score.parse_failures / score.total * 100
+                    parse_annotation = f"~({pct:.{digits}f}\\%)"
+
+                cell += delta_super + parse_annotation
+
+                row_cells.append(cell)
+
+            own_original_acc = (
+                own_original.accuracy if own_original is not None else None
+            )
+            if macro_average_column:
+                row_cells.append(
+                    _format_average_cell(
+                        macro_by_model.get(model_label),
+                        best_macro,
+                        own_original_acc,
+                        digits,
+                    )
+                )
+            if micro_average_column:
+                row_cells.append(
+                    _format_average_cell(
+                        micro_by_model.get(model_label),
+                        best_micro,
+                        own_original_acc,
+                        digits,
+                    )
+                )
+            if show_rate_column:
+                rate = rate_by_model.get(model_label)
+                row_cells.append(
+                    f"{rate:.{digits}f}\\%" if rate is not None else "--"
+                )
+
+            lines.append(" & ".join(row_cells) + " \\\\")
 
     lines.extend(
         [
             "\\bottomrule",
-            "\\end{tabular}",
+            "\\end{NiceTabular}",
         ]
     )
 
