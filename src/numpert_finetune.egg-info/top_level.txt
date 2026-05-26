@@ -4,4 +4,4 @@ llm_eval
 llm_finetune
 metrics
 nli_models
-numpert_prompt
+prompt

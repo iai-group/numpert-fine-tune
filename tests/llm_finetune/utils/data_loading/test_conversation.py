@@ -7,7 +7,7 @@ import pytest
 from src.llm_finetune.utils.data_loading.conversation import (
     convert_to_conversations,
 )
-from src.numpert_prompt.prompt import PromptType
+from src.prompt.prompt import PromptType
 
 
 @pytest.fixture

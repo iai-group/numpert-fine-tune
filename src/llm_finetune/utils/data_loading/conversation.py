@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Dict, List
 
-from src.numpert_prompt.prompt import (
+from src.prompt.prompt import (
     FACT_CHECK_SYSTEM_PROMPT,
     PromptType,
     get_fact_check_user_prompt,

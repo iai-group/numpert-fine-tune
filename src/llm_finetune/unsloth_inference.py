@@ -13,7 +13,7 @@ from unsloth import FastLanguageModel
 
 from src.llm_finetune.config import prefix
 from src.llm_finetune.utils.data_loading.pipeline import load_split
-from src.numpert_prompt.prompt import PromptType
+from src.prompt.prompt import PromptType
 from src.llm_finetune.utils.data_loading.perturbation_types import (
     FileLoadConfig,
     parse_file_config,
@@ -174,7 +174,7 @@ def inference(  # noqa: C901
         trained_path = (
             f"{prefix}tuned_models/epoch-{start_epoch}"
             f"/{model_name}{quant_status}"
-            f"/lora_numpert{rank_postfix}"
+            f"/lora_finetune{rank_postfix}"
         )
 
         if os.path.exists(trained_path):

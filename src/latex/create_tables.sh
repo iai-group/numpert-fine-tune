@@ -42,8 +42,8 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 
-if [ -x "${REPO_ROOT}/.numpert-fine-tune/bin/python" ]; then
-    DEFAULT_PYTHON_BIN="${REPO_ROOT}/.numpert-fine-tune/bin/python"
+if [ -x "${REPO_ROOT}/.numerical-fine-tune/bin/python" ]; then
+    DEFAULT_PYTHON_BIN="${REPO_ROOT}/.numerical-fine-tune/bin/python"
 else
     DEFAULT_PYTHON_BIN="python"
 fi

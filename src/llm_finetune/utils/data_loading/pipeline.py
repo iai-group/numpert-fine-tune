@@ -1,6 +1,6 @@
 """pipeline.py.
 
-Unified data-loading pipeline for the NumPert fine-tuning project.
+Unified data-loading pipeline for the numerical fine-tuning project.
 
 This module is the **single entry point** for loading any dataset split.
 It always routes through :mod:`dataset_balancer` as the core engine,
@@ -36,7 +36,7 @@ from src.llm_finetune.utils.data_loading.perturbation_types import (
     FileLoadConfig,
     PerturbationType,
 )
-from src.numpert_prompt.prompt import PromptType
+from src.prompt.prompt import PromptType
 
 logger = logging.getLogger(__name__)
 

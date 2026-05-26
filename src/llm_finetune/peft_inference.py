@@ -30,7 +30,7 @@ from src.llm_finetune.utils.inference.metrics import (
     print_metrics_report,
     save_metrics_report,
 )
-from src.numpert_prompt.prompt import (
+from src.prompt.prompt import (
     FACT_CHECK_SYSTEM_PROMPT,
     FACT_CHECK_USER_PROMPT,
 )

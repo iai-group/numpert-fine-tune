@@ -787,7 +787,7 @@ def finetune(  # noqa: C901
 
     # Initialize wandb
     run = wandb.init(  # type: ignore
-        project="numpert_finetune",
+        project="numerical_perturb_fine_tune",
         name=(
             f"{model_name}{quant_status}_epoch_"
             f"{start_epoch}→{target_epoch}"

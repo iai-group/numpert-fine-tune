@@ -2171,13 +2171,13 @@ class TestPromptTypeMapping:
 
     def test_zero_shot_maps_to_zero_shot_enum(self):
         from src.llm_finetune.unsloth_inference import _CLI_PROMPT_TYPE_MAP
-        from src.numpert_prompt.prompt import PromptType
+        from src.prompt.prompt import PromptType
 
         assert _CLI_PROMPT_TYPE_MAP["ZERO_SHOT"] is PromptType.ZERO_SHOT
 
     def test_few_shot_maps_to_few_shot_enum(self):
         from src.llm_finetune.unsloth_inference import _CLI_PROMPT_TYPE_MAP
-        from src.numpert_prompt.prompt import PromptType
+        from src.prompt.prompt import PromptType
 
         assert _CLI_PROMPT_TYPE_MAP["FEW_SHOT"] is PromptType.FEW_SHOT
 
@@ -2185,7 +2185,7 @@ class TestPromptTypeMapping:
         self,
     ):
         from src.llm_finetune.unsloth_inference import _CLI_PROMPT_TYPE_MAP
-        from src.numpert_prompt.prompt import PromptType
+        from src.prompt.prompt import PromptType
 
         assert (
             _CLI_PROMPT_TYPE_MAP["NEGATIVE_EXAMPLES_SYNTHETIC_WITH_REASONING"]
@@ -2195,7 +2195,7 @@ class TestPromptTypeMapping:
     def test_pap_alias_maps_to_negative_synthetic_enum(self):
         """PAP is an alias for NEGATIVE_EXAMPLES_SYNTHETIC_WITH_REASONING."""
         from src.llm_finetune.unsloth_inference import _CLI_PROMPT_TYPE_MAP
-        from src.numpert_prompt.prompt import PromptType
+        from src.prompt.prompt import PromptType
 
         assert (
             _CLI_PROMPT_TYPE_MAP["PAP"]
@@ -2221,7 +2221,7 @@ class TestInferencePromptType:
     def test_default_prompt_type_is_zero_shot(self, tmp_path):
         """Without prompt_type, load_split receives PromptType.ZERO_SHOT."""
         from src.llm_finetune.unsloth_inference import inference
-        from src.numpert_prompt.prompt import PromptType
+        from src.prompt.prompt import PromptType
 
         with _make_mock_inference_context(tmp_path) as m:
             inference(
@@ -2236,7 +2236,7 @@ class TestInferencePromptType:
     def test_few_shot_prompt_type_forwarded(self, tmp_path):
         """FEW_SHOT is passed through to load_split."""
         from src.llm_finetune.unsloth_inference import inference
-        from src.numpert_prompt.prompt import PromptType
+        from src.prompt.prompt import PromptType
 
         with _make_mock_inference_context(tmp_path) as m:
             inference(
@@ -2253,7 +2253,7 @@ class TestInferencePromptType:
         """NEGATIVE_SYNTHETIC_ALL_WITH_REASONING is passed through to
         load_split."""
         from src.llm_finetune.unsloth_inference import inference
-        from src.numpert_prompt.prompt import PromptType
+        from src.prompt.prompt import PromptType
 
         with _make_mock_inference_context(tmp_path) as m:
             inference(
@@ -2272,7 +2272,7 @@ class TestInferencePromptType:
     def test_prompt_type_does_not_affect_model_loading(self, tmp_path):
         """Changing prompt_type has no effect on how the model is loaded."""
         from src.llm_finetune.unsloth_inference import inference
-        from src.numpert_prompt.prompt import PromptType
+        from src.prompt.prompt import PromptType
 
         with _make_mock_inference_context(tmp_path) as m:
             inference(
@@ -2324,7 +2324,7 @@ class TestCLIPromptTypeArgParsing:
     def test_cli_string_maps_to_enum_via_map(self):
         """Verify round-trip: CLI string → _CLI_PROMPT_TYPE_MAP → PromptType."""
         from src.llm_finetune.unsloth_inference import _CLI_PROMPT_TYPE_MAP
-        from src.numpert_prompt.prompt import PromptType
+        from src.prompt.prompt import PromptType
 
         args = self._run_parser(["--prompt_type", "FEW_SHOT"])
         resolved = _CLI_PROMPT_TYPE_MAP[args.prompt_type]
@@ -2337,7 +2337,7 @@ class TestCLIPromptTypeArgParsing:
     def test_pap_alias_maps_to_negative_synthetic_enum(self):
         """PAP CLI arg resolves to NEGATIVE_SYNTHETIC_ALL_WITH_REASONING."""
         from src.llm_finetune.unsloth_inference import _CLI_PROMPT_TYPE_MAP
-        from src.numpert_prompt.prompt import PromptType
+        from src.prompt.prompt import PromptType
 
         args = self._run_parser(["--prompt_type", "PAP"])
         assert (

@@ -15,15 +15,6 @@ src/data_preprocessing/perturbations/utils/merge_jsonl.py
 src/data_preprocessing/raw_dataset_preprocessing/create_binary_dataset.py
 src/data_preprocessing/raw_dataset_preprocessing/process_tag_claims_spacy.py
 src/data_preprocessing/raw_dataset_preprocessing/remove_referance.py
-src/error_analysis/__init__.py
-src/error_analysis/compare_classifications_jsonl.py
-src/error_analysis/main_compare_thoughs.py
-src/llm_eval/__init__.py
-src/llm_eval/gemini_api.py
-src/llm_eval/json_to_jsonl.py
-src/llm_eval/ollama_error_analysis.py
-src/llm_eval/ollama_wrapper.py
-src/llm_eval/openAI.py
 src/llm_finetune/__init__.py
 src/llm_finetune/batch_sampler.py
 src/llm_finetune/class_balancer.py
@@ -42,9 +33,4 @@ src/metrics/token_length_gem.py
 src/nli_models/roberta/finqa_roberta.py
 src/nli_models/roberta/finqa_roberta_predict.py
 src/nli_models/roberta/run_multiple_predict_roberta.py
-src/numpert_finetune.egg-info/PKG-INFO
-src/numpert_finetune.egg-info/SOURCES.txt
-src/numpert_finetune.egg-info/dependency_links.txt
-src/numpert_finetune.egg-info/top_level.txt
-src/numpert_prompt/__init__.py
-src/numpert_prompt/prompt.py
+src/prompt/prompt.py

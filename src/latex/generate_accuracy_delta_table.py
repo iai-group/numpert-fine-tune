@@ -496,9 +496,9 @@ def format_delta(
         return ""
     is_improvement = delta > 0
     color = (
-        "numpertdeltaimprove"
+        "deltaimprove"
         if is_improvement == higher_is_better
-        else "numpertdeltadecline"
+        else "deltadecline"
     )
     sign = "+" if delta > 0 else ""
     return (
@@ -1059,8 +1059,8 @@ def render_table(  # noqa: C901
         " \\usepackage{nicematrix}",
         "\\begin{table*}[ht]",
         "\\centering",
-        "\\definecolor{numpertdeltaimprove}{RGB}{0,100,0}",
-        "\\definecolor{numpertdeltadecline}{RGB}{180,35,24}",
+        "\\definecolor{deltaimprove}{RGB}{0,100,0}",
+        "\\definecolor{deltadecline}{RGB}{180,35,24}",
         "\\small",
         f"\\begin{{NiceTabular}}{{{tabular_spec}}}[first-col]",
         "\\toprule",

@@ -608,7 +608,7 @@ def finetune_peft(  # noqa: C901
 
     # Setup wandb
     wandb.init(  # type: ignore
-        project="numpert_finetune_peft",
+        project="numerical_perturbfinetune_peft",
         name=(
             f"{model_name.split('/')[-1]}_{peft_method.value}"
             f"_epoch_{num_train_epochs}"

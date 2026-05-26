@@ -3,7 +3,7 @@
 This module tests the prompt generation functions for LLM evaluations.
 """
 
-from src.numpert_prompt.prompt import (
+from src.prompt.prompt import (
     FACT_CHECK_SYSTEM_PROMPT,
     FEW_SHOT_EXAMPLES,
     FACT_CHECK_USER_PROMPT,
