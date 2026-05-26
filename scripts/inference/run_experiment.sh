@@ -182,6 +182,9 @@ run_experiment() {
         CMD="$CMD --max_workers ${MAX_WORKERS:-10}"
         CMD="$CMD --max_tokens ${MAX_TOKENS:-512}"
         CMD="$CMD --temperature ${TEMPERATURE:-0.0}"
+        if [ -n "${LITELLM_CONFIG:-}" ]; then
+            CMD="$CMD --config ${LITELLM_CONFIG}"
+        fi
         if [ -n "$OUTPUT_DIR" ]; then
             CMD="$CMD --output_dir $OUTPUT_DIR"
         fi
@@ -223,6 +226,10 @@ run_experiment() {
         fi
 
         CMD="$CMD --prompt_type ${PROMPT_TYPE:-ZERO_SHOT}"
+
+        if [ -n "${MAX_NEW_TOKENS:-}" ]; then
+            CMD="$CMD --max_new_tokens ${MAX_NEW_TOKENS}"
+        fi
 
         if [ -n "${EXTRA_INFERENCE_ARGS:-}" ]; then
             CMD="$CMD ${EXTRA_INFERENCE_ARGS}"
