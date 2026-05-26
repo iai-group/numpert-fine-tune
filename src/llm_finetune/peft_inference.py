@@ -8,6 +8,7 @@ import argparse
 import ast
 import glob
 import json
+import re
 import time
 from pathlib import Path
 from typing import Optional, Dict
@@ -81,43 +82,26 @@ class InferenceEfficiencyTracker:
         return stats
 
 
+_LABEL_RE = re.compile(r'\{\s*"label"\s*:\s*(true|false)\s*\}', re.IGNORECASE)
+
+
 def extract_label_from_response(response_text: str) -> Optional[bool]:
     """Extract label from model response.
 
-    Expects JSON format: {"label": true} or {"label": false}
-    Returns None if unparseable.
+    Accepts {"label": true/false} anywhere in the response text, with or without
+    surrounding content (Qwen3 thinking blocks, trailing explanation).
+
+    Returns True/False, or None if no valid label found.
     """
-    # Strip Qwen3 thinking tokens if present
-    if "<think>" in response_text:
-        response_text = response_text.split("</think>")[-1]
+    if "<think>" in response_text and "</think>" in response_text:
+        response_text = re.sub(
+            r"<think>.*?</think>", "", response_text, flags=re.DOTALL
+        )
 
-    response_text = response_text.strip()
-
-    # Try to extract JSON
-    try:
-        # Find JSON object
-        start_idx = response_text.find("{")
-        end_idx = response_text.rfind("}") + 1
-
-        if start_idx == -1 or end_idx == 0:
-            return None
-
-        json_str = response_text[start_idx:end_idx]
-        parsed = json.loads(json_str)
-
-        if "label" in parsed:
-            label_val = parsed["label"]
-            if isinstance(label_val, bool):
-                return label_val
-            elif isinstance(label_val, str):
-                return label_val.lower() == "true"
-            else:
-                return bool(label_val)
-
-    except (json.JSONDecodeError, ValueError):
-        pass
-
-    return None
+    m = _LABEL_RE.search(response_text)
+    if m is None:
+        return None
+    return m.group(1).lower() == "true"
 
 
 def _build_prompt(example: dict, tokenizer) -> tuple[str, str, object]:
