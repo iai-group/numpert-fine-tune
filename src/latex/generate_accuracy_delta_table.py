@@ -100,7 +100,6 @@ MODEL_ORDER: tuple[str, ...] = (
     # Group 1 — base
     "qwen3_baseline",
     "qwen3_base_two_shot",
-    "qwen3_base_pap",
     "qwen3_32b_baseline",
     "qwen3_no_perturb_split",
     # Group 2 — allperturb. qwen3_pt_full_data is reserved for the

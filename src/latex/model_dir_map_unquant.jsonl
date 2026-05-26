@@ -1,5 +1,4 @@
 {"dir": "Qwen3-8B-base", "short_label": "qwen3_baseline"}
-{"dir": "Qwen3-8B-base-pap", "short_label": "qwen3_base_pap"}
 {"dir": "Qwen3-8b-base-two-shot", "short_label": "qwen3_base_two_shot"}
 {"dir": "Qwen3-8B-daring-ant-evolves_no_approx_no_f2f_type2", "short_label": "qwen3_no_approx"}
 {"dir": "Qwen3-8B-daring-ant-evolves_no_num_no_f2f_type2", "short_label": "qwen3_no_num"}
