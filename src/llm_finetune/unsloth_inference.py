@@ -57,48 +57,30 @@ def get_model_name_arg(model_name):
     return model_name
 
 
+_LABEL_RE = re.compile(r'\{\s*"label"\s*:\s*(true|false)\s*\}', re.IGNORECASE)
+
+
 def extract_label_from_response(text: str) -> Optional[str]:
     """Extract the predicted label from model response.
 
-    Expects JSON format: {"label": true} or {"label": false}
-    Uses strict JSON parsing - only perfectly formatted responses are accepted.
+    Accepts {"label": true/false} anywhere in the response, with or without
+    surrounding text (e.g. after a Qwen3 <think>...</think> block or followed
+    by an explanation sentence).
 
     Returns:
-        The extracted label in JSON format, or None if unparseable
+        Normalised JSON string '{"label": true}' / '{"label": false}', or None.
     """
-    original_text = text.strip()
+    # Strip Qwen3 thinking block if present (handles both complete and
+    # truncated thinking: truncated responses have no </think>, so we fall
+    # through to searching the full text).
+    if "<think>" in text and "</think>" in text:
+        text = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL)
 
-    # Strip Qwen3 thinking tokens if present
-    if "<think>" in original_text and "</think>" in original_text:
-        # Remove everything between <think> and </think>
-        text = re.sub(
-            r"<think>.*?</think>", "", original_text, flags=re.DOTALL
-        ).strip()
-    elif "<think>" in original_text:
-        # Handle case where thinking isn't closed - take content after </think>
-        text = original_text.split("</think>")[-1].strip()
-    else:
-        text = original_text
-
-    # Try to parse as JSON
-    try:
-        parsed = json.loads(text)
-
-        # Validate against schema: must have "label" key with boolean value
-        if isinstance(parsed, dict) and "label" in parsed:
-            label_value = parsed["label"]
-
-            # Ensure it's a boolean (not string "true"/"false")
-            if isinstance(label_value, bool):
-                # Return normalized JSON string format
-                return f'{{"label": {str(label_value).lower()}}}'
-
-        # If we get here, structure doesn't match schema
+    m = _LABEL_RE.search(text)
+    if m is None:
         return None
-
-    except (json.JSONDecodeError, ValueError):
-        # Could not parse as valid JSON
-        return None
+    value = m.group(1).lower()
+    return f'{{"label": {value}}}'
 
 
 _CLI_PROMPT_TYPE_MAP = {
@@ -127,6 +109,7 @@ def inference(  # noqa: C901
     resume: bool = False,
     prompt_type: PromptType = PromptType.ZERO_SHOT,
     no_thinking: bool = False,
+    max_new_tokens: int = 1024,
 ):
     """Run inference on test data."""
     time_start = datetime.now()
@@ -496,7 +479,7 @@ def inference(  # noqa: C901
                 )
                 response = model(
                     prompt_text,
-                    max_tokens=8192,
+                    max_tokens=max_new_tokens,
                     temperature=0.001,
                     stop=gguf_stop_tokens,
                 )
@@ -736,6 +719,16 @@ def build_parser() -> argparse.ArgumentParser:
             "fine-tuned to suppress thinking tokens."
         ),
     )
+    parser.add_argument(
+        "--max_new_tokens",
+        type=int,
+        default=1024,
+        help=(
+            "Maximum tokens to generate per example (default 1024). "
+            "Fine-tuned models need only ~20 tokens; raise for baseline "
+            "models that output longer reasoning chains."
+        ),
+    )
 
     return parser
 
@@ -761,4 +754,5 @@ if __name__ == "__main__":
         resume=args.resume,
         prompt_type=_CLI_PROMPT_TYPE_MAP[args.prompt_type],
         no_thinking=args.no_thinking,
+        max_new_tokens=args.max_new_tokens,
     )

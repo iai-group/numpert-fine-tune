@@ -1,0 +1,8 @@
+model_list:
+  - model_name: azure/gpt-5.4-pro
+    type: chat
+    litellm_params:
+      model: azure/gpt-5.4-pro
+      api_base: https://sponsorship-150k-resource.cognitiveservices.azure.com/
+      api_key: ${AZURE_OPENAI_API_KEY}
+      api_version: "2025-03-01-preview"
