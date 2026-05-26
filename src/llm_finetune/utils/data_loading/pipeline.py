@@ -20,7 +20,7 @@ from __future__ import annotations
 import glob
 import logging
 from pathlib import Path
-from typing import List, Optional, Union
+from typing import List, Literal, Optional, Union
 
 from datasets import Dataset
 
@@ -165,6 +165,7 @@ def load_split(
     prompt_type: PromptType = PromptType.ZERO_SHOT,
     # Balancing options
     balance_labels: bool = False,
+    balance_labels_mode: Literal["undersample", "oversample"] = "oversample",
     perturb_ratio: Optional[float] = None,
     false_perturb_t_to_f_ratio: Optional[float] = None,
     method_balance_mode: MethodBalanceMode | None = None,
@@ -232,6 +233,7 @@ def load_split(
     balanced_samples = build_balanced_dataset(
         file_paths=file_paths,
         balance_labels=balance_labels,
+        balance_labels_mode=balance_labels_mode,
         perturb_ratio=perturb_ratio,
         false_perturb_t_to_f_ratio=false_perturb_t_to_f_ratio,
         method_balance_mode=method_balance_mode,

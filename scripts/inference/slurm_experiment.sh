@@ -21,10 +21,11 @@
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:1
 #SBATCH --time=24:00:00
-#SBATCH --mem=300G
-# These are set dynamically below if possible, defaults here as fallback
+#SBATCH --mem=100G
+#SBATCH --cpus-per-task=8
+#SBATCH --nodelist=gorina8
 #SBATCH --job-name=numpert_inference
-#SBATCH --output=scripts/slurm_out/inference/infer_%j.out
+#SBATCH --output=scripts/slurm_out/peft/peft_inference_%j.out
 
 # ==============================================================================
 # PARSE EXPERIMENT NAME

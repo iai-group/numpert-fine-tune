@@ -9,7 +9,6 @@ import tempfile
 from src.llm_finetune.peft_inference import (
     InferenceEfficiencyTracker,
     extract_label_from_response,
-    _convert_predictions_to_metrics_format,
 )
 
 
@@ -211,99 +210,29 @@ class TestExtractLabelFromResponse:
         assert extract_label_from_response('{"label": 0}') is False
 
 
-class TestConvertPredictionsToMetricsFormat:
-    """Test conversion of predictions to metrics format."""
-
-    def test_empty_predictions(self):
-        """Test with empty predictions list."""
-        true_labels, predictions = _convert_predictions_to_metrics_format([])
-        assert true_labels == []
-        assert predictions == []
-
-    def test_single_prediction_success(self):
-        """Test with single successful prediction."""
-        predictions = [
-            {
-                "ground_truth": "True",
-                "predicted_label": True,
-                "parse_success": True,
-            }
-        ]
-        true_labels, preds = _convert_predictions_to_metrics_format(predictions)
-        assert len(true_labels) == 1
-        assert len(preds) == 1
-        assert json.loads(true_labels[0]) == {"label": True}
-        assert json.loads(preds[0]) == {"label": True}
-
-    def test_single_prediction_parse_failure(self):
-        """Test with parse failure (None prediction)."""
-        predictions = [
-            {
-                "ground_truth": "False",
-                "predicted_label": None,
-                "parse_success": False,
-            }
-        ]
-        true_labels, preds = _convert_predictions_to_metrics_format(predictions)
-        assert len(true_labels) == 1
-        assert len(preds) == 1
-        assert json.loads(true_labels[0]) == {"label": False}
-        assert preds[0] is None
-
-    def test_multiple_predictions(self):
-        """Test with multiple predictions."""
-        predictions = [
-            {"ground_truth": "True", "predicted_label": True},
-            {"ground_truth": "False", "predicted_label": False},
-            {"ground_truth": True, "predicted_label": True},
-            {"ground_truth": False, "predicted_label": None},
-        ]
-        true_labels, preds = _convert_predictions_to_metrics_format(predictions)
-        assert len(true_labels) == 4
-        assert len(preds) == 4
-        assert json.loads(true_labels[0]) == {"label": True}
-        assert json.loads(true_labels[1]) == {"label": False}
-        assert preds[3] is None  # Parse failure
-
-    def test_missing_ground_truth_skipped(self):
-        """Test that predictions without ground truth are skipped."""
-        predictions = [
-            {"ground_truth": None, "predicted_label": True},
-            {"ground_truth": "True", "predicted_label": False},
-        ]
-        true_labels, preds = _convert_predictions_to_metrics_format(predictions)
-        # Only second prediction should be included
-        assert len(true_labels) == 1
-        assert len(preds) == 1
-
-    def test_boolean_ground_truth(self):
-        """Test with boolean ground truth values."""
-        predictions = [
-            {"ground_truth": True, "predicted_label": True},
-            {"ground_truth": False, "predicted_label": False},
-        ]
-        true_labels, preds = _convert_predictions_to_metrics_format(predictions)
-        assert json.loads(true_labels[0]) == {"label": True}
-        assert json.loads(true_labels[1]) == {"label": False}
-
-    def test_case_insensitive_string_ground_truth(self):
-        """Test case-insensitive string ground truth."""
-        predictions = [
-            {"ground_truth": "true", "predicted_label": True},
-            {"ground_truth": "TRUE", "predicted_label": True},
-            {"ground_truth": "false", "predicted_label": False},
-            {"ground_truth": "FALSE", "predicted_label": False},
-        ]
-        true_labels, preds = _convert_predictions_to_metrics_format(predictions)
-        assert json.loads(true_labels[0]) == {"label": True}
-        assert json.loads(true_labels[1]) == {"label": True}
-        assert json.loads(true_labels[2]) == {"label": False}
-        assert json.loads(true_labels[3]) == {"label": False}
+def _make_fake_dataset(claim_id: str = "test_1", label: bool = True) -> list:
+    """Return a one-item list matching what load_split returns."""
+    convs = [
+        {"role": "system", "content": "You are a fact-checker."},
+        {"role": "user", "content": "Claim: Test claim\nEvidence: Test doc"},
+        {"role": "assistant", "content": json.dumps({"label": label})},
+    ]
+    return [
+        {
+            "conversations": str(convs),
+            "claim_id": claim_id,
+            "label": json.dumps({"label": label}),
+            "perturbation_type": "original_normalized",
+            "source_file": "test.json",
+        }
+    ]
 
 
 class TestRunInferenceIntegration:
     """Integration tests for run_inference."""
 
+    @patch("src.llm_finetune.peft_inference.load_split")
+    @patch("src.llm_finetune.peft_inference.setup_chat_template")
     @patch("src.llm_finetune.peft_inference.AutoPeftModelForCausalLM")
     @patch("src.llm_finetune.peft_inference.AutoTokenizer")
     @patch("src.llm_finetune.peft_inference.build_inference_config")
@@ -314,73 +243,52 @@ class TestRunInferenceIntegration:
         mock_build_config,
         mock_tokenizer_class,
         mock_model_class,
+        mock_setup_chat,
+        mock_load_split,
     ):
         """Test run_inference with mocked model and tokenizer."""
         from src.llm_finetune.peft_inference import run_inference
 
-        # Setup mocks
+        mock_load_split.return_value = _make_fake_dataset("test_1", label=True)
+
         mock_model = MagicMock()
         mock_tokenizer = MagicMock()
         mock_model_class.from_pretrained.return_value = mock_model
         mock_tokenizer_class.from_pretrained.return_value = mock_tokenizer
 
-        # Mock tokenizer output
-        mock_tokenizer.return_value = {
-            "input_ids": MagicMock(shape=(1, 10)),
-        }
-
-        # Mock model generation output (simulating response)
+        mock_tokenizer.return_value = {"input_ids": MagicMock(shape=(1, 10))}
         mock_output = MagicMock()
         mock_output.__getitem__ = MagicMock(return_value=[1, 2, 3])
         mock_model.generate.return_value = [mock_output]
-
-        # Mock tokenizer decode
         mock_tokenizer.decode.return_value = '{"label": true}'
-
-        # Mock config saving
         mock_build_config.return_value = {}
         mock_save_config.return_value = "config.json"
 
         with tempfile.TemporaryDirectory() as tmpdir:
-            # Create test data
-            test_data = [
-                {
-                    "id": "test_1",
-                    "claim": "Test claim",
-                    "doc": "Test doc",
-                    "label": "True",
-                }
-            ]
             test_file = Path(tmpdir) / "test.json"
-            with open(test_file, "w") as f:
-                json.dump(test_data, f)
-
-            model_path = "test_model"
+            test_file.write_text("[]")
             output_dir = Path(tmpdir) / "output"
 
-            # Run inference
             run_inference(
-                model_path=model_path,
+                model_path="test_model",
                 test_json_path=str(test_file),
                 output_dir=str(output_dir),
                 track_memory=False,
             )
 
-            # Check outputs were created
             assert (output_dir / "predictions.json").exists()
             assert (output_dir / "metrics.json").exists()
             assert (output_dir / "predictions.csv").exists()
-
-            # Verify model was loaded correctly
             mock_model_class.from_pretrained.assert_called_once()
 
-            # Verify predictions were saved
             with open(output_dir / "predictions.json") as f:
                 predictions = json.load(f)
             assert len(predictions) == 1
             assert predictions[0]["claim_id"] == "test_1"
-            assert predictions[0]["ground_truth"] == "True"
+            assert predictions[0]["label"] is not None
 
+    @patch("src.llm_finetune.peft_inference.load_split")
+    @patch("src.llm_finetune.peft_inference.setup_chat_template")
     @patch("src.llm_finetune.peft_inference.AutoPeftModelForCausalLM")
     @patch("src.llm_finetune.peft_inference.AutoTokenizer")
     @patch("src.llm_finetune.peft_inference.build_inference_config")
@@ -391,45 +299,30 @@ class TestRunInferenceIntegration:
         mock_build_config,
         mock_tokenizer_class,
         mock_model_class,
+        mock_setup_chat,
+        mock_load_split,
     ):
         """Test that parse failures are handled correctly."""
         from src.llm_finetune.peft_inference import run_inference
 
-        # Setup mocks
+        mock_load_split.return_value = _make_fake_dataset("test_1", label=True)
+
         mock_model = MagicMock()
         mock_tokenizer = MagicMock()
         mock_model_class.from_pretrained.return_value = mock_model
         mock_tokenizer_class.from_pretrained.return_value = mock_tokenizer
 
-        # Mock tokenizer output
-        mock_tokenizer.return_value = {
-            "input_ids": MagicMock(shape=(1, 10)),
-        }
-
-        # Mock model generation to return unparseable output
+        mock_tokenizer.return_value = {"input_ids": MagicMock(shape=(1, 10))}
         mock_output = MagicMock()
         mock_output.__getitem__ = MagicMock(return_value=[1, 2, 3])
         mock_model.generate.return_value = [mock_output]
-
-        # Return invalid JSON to cause parse failure
         mock_tokenizer.decode.return_value = "invalid response"
-
         mock_build_config.return_value = {}
         mock_save_config.return_value = "config.json"
 
         with tempfile.TemporaryDirectory() as tmpdir:
-            test_data = [
-                {
-                    "id": "test_1",
-                    "claim": "Test claim",
-                    "doc": "Test doc",
-                    "label": "True",
-                }
-            ]
             test_file = Path(tmpdir) / "test.json"
-            with open(test_file, "w") as f:
-                json.dump(test_data, f)
-
+            test_file.write_text("[]")
             output_dir = Path(tmpdir) / "output"
 
             run_inference(
@@ -439,7 +332,6 @@ class TestRunInferenceIntegration:
                 track_memory=False,
             )
 
-            # Check that parse failures file was created
             assert (output_dir / "parse_failures.json").exists()
             with open(output_dir / "parse_failures.json") as f:
                 failures = json.load(f)

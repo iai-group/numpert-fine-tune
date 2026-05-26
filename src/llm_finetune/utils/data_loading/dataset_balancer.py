@@ -638,6 +638,7 @@ def apply_balancing(
     rng: Optional[random.Random] = None,
     method_balance_mode: MethodBalanceMode | None = None,
     true_perturbation_fraction: float = 1 / 3,
+    balance_labels_mode: Literal["undersample", "oversample"] = "undersample",
 ) -> list[Sample]:
     """Apply all balancing constraints.
 
@@ -744,10 +745,14 @@ def apply_balancing(
         true_samples = [s for s in all_samples if s.label == "True"]
         false_samples = [s for s in all_samples if s.label == "False"]
 
-        min_count = min(len(true_samples), len(false_samples))
-
-        true_samples = _undersample_fair(true_samples, min_count, rng)
-        false_samples = _undersample_fair(false_samples, min_count, rng)
+        if balance_labels_mode == "oversample":
+            target_count = max(len(true_samples), len(false_samples))
+            true_samples = _oversample_fair(true_samples, target_count, rng)
+            false_samples = _oversample_fair(false_samples, target_count, rng)
+        else:
+            target_count = min(len(true_samples), len(false_samples))
+            true_samples = _undersample_fair(true_samples, target_count, rng)
+            false_samples = _undersample_fair(false_samples, target_count, rng)
 
         all_samples = true_samples + false_samples
 
@@ -829,6 +834,7 @@ def build_balanced_dataset(
     method_balance_mode: MethodBalanceMode | None = None,
     seed: int | None = None,
     allowed_types_by_file: dict[str, set[str]] | None = None,
+    balance_labels_mode: Literal["undersample", "oversample"] = "undersample",
 ) -> list[dict]:
     """Build a balanced, deduplicated dataset from multiple JSON files.
 
@@ -875,6 +881,7 @@ def build_balanced_dataset(
         false_perturb_t_to_f_ratio=false_perturb_t_to_f_ratio,
         true_perturbation_fraction=true_perturbation_fraction,
         method_balance_mode=method_balance_mode,
+        balance_labels_mode=balance_labels_mode,
         rng=rng,
     )
 
