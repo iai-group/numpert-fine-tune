@@ -84,6 +84,20 @@
     "reporting_source": "Facebook post"
   },
   {
+    "crawled_date": "24-8-2020",
+    "country_of_origin": "nz",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20200924204255/https://www.aap.com.au/lower-voting-age-higher-participation-rate-claims-make-it-16/",
+    "lang": "en",
+    "claim": "A greater proportion of 16 year olds vote in elections in Scotland, Wales and Austria than 18 and 20 year olds.",
+    "doc": "Q: In Austria, what is the turnout rate of 16 and 17-year-olds to elections\nA: Even though 16- to 17-year-olds exhibit somewhat lower  general  interest  in  politics  and  lower  internal  efficacy,  turnout  is  generally  higher compared to older first-time voters and similar to the electorate’s average, they follow electoral campaigns to the same extent as do other young voters, and  they  exhibit  considerably  high levels of external efficacy and satisfaction with democracy\n\nQ: In Scotland in 2017, what percentage of 16 to 17-year-olds voted compared to the 18-24-year-olds\nA: 51 per cent of 16- and 17- year-olds claim to have voted, compared with 39 per cent of those aged 18 to 24\n\nQ: In Wales, what is the turnout rate of 16 and 17-year-olds to elections?\nA: 16 and 17 year olds will be able to vote for the first time at the Senedd Elections in 2021, as part of the biggest changes to the democratic process in Wales in half a century.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_000018",
+    "speaker": "Sophie Crozier",
+    "reporting_source": ""
+  },
+  {
     "crawled_date": "23-8-2020",
     "country_of_origin": "ke",
     "label": "True",
@@ -309,6 +323,20 @@
   },
   {
     "crawled_date": "20-8-2020",
+    "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210217234105/https://misbar.com/en/factcheck/2021/02/17/biden-officiated-gay-wedding-at-naval-observatory-in-2016",
+    "lang": "en",
+    "claim": "Joe Biden officiated a gay wedding at the White House in 2016.",
+    "doc": "Q: Did Joe Biden officiate a gay wedding in 2016?\nA: Yes\n\nQ: Where is the Naval Observatory based?\nA: The Naval Observatory is based at Number One Observatory Circle on the White House grounds.\n\nQ: Is the Naval Observatory based within the White House?\nA: No",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_000055",
+    "speaker": "Jayke Townsend",
+    "reporting_source": "Twitter "
+  },
+  {
+    "crawled_date": "20-8-2020",
     "country_of_origin": "hk",
     "label": "False",
     "url": "https://web.archive.org/web/20210127081540/https://factcheck.afp.com/experts-refute-misleading-claims-about-apple-and-googles-coronavirus-contact-tracing-interface",
@@ -334,6 +362,34 @@
     "claim_id": "averitec_train_000062",
     "speaker": "nikunj shah ",
     "reporting_source": "Twitter"
+  },
+  {
+    "crawled_date": "20-8-2020",
+    "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210304070829/https://leadstories.com/hoax-alert/2020/09/fact-check-some-social-security-checks-still-do-go-through-us-postal-service.html",
+    "lang": "en",
+    "claim": "Social Security checks do not go through the U.S. postal service since 2013 because it's not secure",
+    "doc": "Q: Do any social security checks still go through the US postal service?\nA: Currently, the Social Security Administration pays approximately 71.6 million (98.8%) Social Security and SSI benefits electronically per month and mails nearly 850,000 paper checks (1.2%) per month.\n\nQ: Can you receive your social security checks via the U.S. postal service?\nA: No answer could be found.\n\nQ: How do you receive Social Security checks in the U.S.?\nA: There are two ways you can receive your benefits:\n\nInto an existing bank account via Direct Deposit or\nOnto a Direct Express® Debit Mastercard®\n\nQ: Since March 2013, has Social Security continued to mail paper checks?\nA: Pursuant to a new Federal regulation, as of March 1, 2013, the Treasury required almost all beneficiaries to receive payments through direct deposit, though paper checks are still available to some beneficiaries under limited circumstances.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_000064",
+    "speaker": "",
+    "reporting_source": "Facebook"
+  },
+  {
+    "crawled_date": "19-8-2020",
+    "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210118174531/https://www.washingtonpost.com/politics/2020/08/19/fact-checking-third-night-2020-democratic-national-convention/",
+    "lang": "en",
+    "claim": "US billionaires became $400 billion richer during the COVID-19 pandemic, while millions lost their $600 a week in extra unemployment.",
+    "doc": "Q: Did billionaires get richer or poorer during the pandemic?\nA: Cumulatively, the top 50 billionaires lost $232 billion between the market’s peak and this Tuesday. If the remaining billionaires on the Forbes list lost wealth at the same roughly 12.5% rate that the top 50 experienced, that’s another $200 billion–plus wiped out.\n\nQ: How many people lost their $600 a week in enhanced unemployment benefits?\nA: Nearly 30 million workers have lost $600 in enhanced weekly unemployment benefits",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_000067",
+    "speaker": "Former secretary of state Hillary Clinton",
+    "reporting_source": "2020 Democratic National Convention"
   },
   {
     "crawled_date": "18-8-2020",
@@ -362,6 +418,20 @@
     "claim_id": "averitec_train_000073",
     "speaker": "Attorney General Sally Yates",
     "reporting_source": "2020 Democratic National Convention"
+  },
+  {
+    "crawled_date": "17-8-2020",
+    "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210602143126/https://www.factcheck.org/2020/08/democratic-convention-opening-night/",
+    "lang": "en",
+    "claim": "Raising the US federally required minimum wage to $15 an hour would give 40 million workers a pay raise and push the wage scale up for everyone else.",
+    "doc": "Q: What is the Economic Policy Institute (EPI) in the US?\nA: The EPI is an independent, nonprofit think tank that researches the impact of economic trends and policies on working people in the United States.\n\nQ: How did the US Economic  Policy Institute analyze the impact of raising the US federal minimum wage to $15 by 2025?\nA: A total of 39.7 million workers would benefit, including:\n\n38.6 million adults ages 18 and older\n23.8 million full-time workers\n23.0 million women\n11.2 million parents\n5.4 million single parents\nThe parents of 14.4 million children\n\nQ: What is a US Congressional Budget Office (CBO) report?\nA: This Congressional Budget Office report was prepared in response to interest expressed by a\nnumber of Members of Congress. In keeping with CBO’s mandate to provide objective, impartial\nanalysis, the report contains no recommendations.\n\nQ: How did the CBO analyze the impact of raising the US federal minimum wage to $15 by 2025?\nA: In an average week in 2025, the $15 option would boost the wages of\n17 million workers who would otherwise earn less than $15 per hour. \nThe wages of many of the 10 million workers\nwhose wages would be slightly above the new federal minimum would also increase.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_000074",
+    "speaker": "Sen. Bernie Sanders",
+    "reporting_source": "C-Span"
   },
   {
     "crawled_date": "17-8-2020",
@@ -646,6 +716,20 @@
   {
     "crawled_date": "8-8-2020",
     "country_of_origin": "unknown",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210508170245/https://newsmeter.in/fact-check-yes-choluteca-bridge-withstood-hurricane-mitch-in-1998",
+    "lang": "en",
+    "claim": "Choluteca bridge was built in 1996.",
+    "doc": "Q: When was the Choluteca bridge built?\nA: The Choluteca bridge was originally constructed in 1930 however it was rebuilt in 1996",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_000137",
+    "speaker": "Nidhi Suman",
+    "reporting_source": "Facebook"
+  },
+  {
+    "crawled_date": "8-8-2020",
+    "country_of_origin": "unknown",
     "label": "True",
     "url": "https://web.archive.org/web/20210508170245/https://newsmeter.in/fact-check-yes-choluteca-bridge-withstood-hurricane-mitch-in-1998",
     "lang": "en",
@@ -836,6 +920,20 @@
     "taxonomy_label": "numerical",
     "label_original": "supported",
     "claim_id": "averitec_train_000155",
+    "speaker": "Donald Trump",
+    "reporting_source": "Axios on HBO"
+  },
+  {
+    "crawled_date": "3-8-2020",
+    "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210506145132/https://www.politifact.com/article/2020/aug/04/fact-checking-donald-trumps-axios-interview/",
+    "lang": "en",
+    "claim": "You can test too much for Covid-19.",
+    "doc": "Q: Can you overtest for COVID-19?\nA: Frequent testing of the entire population would help identify so-called hidden hidden carriers — individuals infected with SARS-CoV-2, the virus that causes Covid-19, but who have no symptoms of it. They seem to play an important role in the spread of Covid-19. Identifying these silent spreaders could help public health workers be more effective at contract tracing by identifying others who have been exposed and may require quarantine.\n\nQ: What are the downsides of overtesting for COVID-19?\nA: There are also the harms of Covid-19 testing to consider.\n\nPerhaps the biggest challenge is false negatives — tests signaling no infection in those who are indeed infected. Covid-19 testing is typically performed on samples from behind the nose or in the back of the mouth, and will be positive only if the sample happens to contain the virus. In some people, the virus may be present in high quantities only deep in the lungs. False negatives occur surprisingly often — perhaps as often as one-third of the time — which could lead to a false sense of security among those with such results.\n\nTesting those without symptoms can also lead to false alarms. PCR testing for the virus, which is the best way to identify an active infection, can detect the presence of SARS-CoV-2 — or remnants of it — for weeks, even when the infection is unlikely to be transmitted to others. Testing the entire population would undoubtedly identify a large number of such individuals, unnecessarily sidelining them from work and society.\n\nQ: When should you get tested for COVID-19?\nA: You should always get tested when you have symptoms for COVID-19.\n\nYou should also get tested when you’ve had close contact with someone who has Covid. Test 3 to 5 days after your exposure. Testing earlier to find out if you’re positive is optional.\n\nAlso get tested when asked by your school, workplace, doctor, or the Department Public of Health.\n\nTesting is a good idea before and after activities that put you or others at higher risk for Covid, like:\n\nLarge gatherings\nCrowded indoor settings\nTesting is also a good idea when you work somewhere with a higher risk of transmission, like:\n\nHomeless shelters\nJails\nPlaces where you have close contact with the public\n\nQ: What are the benefits of frequent COVID-19 testing?\nA: Frequent testing of the entire population would help identify so-called hidden hidden carriers — individuals infected with SARS-CoV-2, the virus that causes Covid-19, but who have no symptoms of it. They seem to play an important role in the spread of Covid-19. Identifying these silent spreaders could help public health workers be more effective at contract tracing by identifying others who have been exposed and may require quarantine.\n\nQ: What are the downsides of frequent COVID-19 testing?\nA: There are also the harms of Covid-19 testing to consider.\n\nPerhaps the biggest challenge is false negatives — tests signaling no infection in those who are indeed infected. Covid-19 testing is typically performed on samples from behind the nose or in the back of the mouth, and will be positive only if the sample happens to contain the virus. In some people, the virus may be present in high quantities only deep in the lungs. False negatives occur surprisingly often — perhaps as often as one-third of the time — which could lead to a false sense of security among those with such results.\n\nTesting those without symptoms can also lead to false alarms. PCR testing for the virus, which is the best way to identify an active infection, can detect the presence of SARS-CoV-2 — or remnants of it — for weeks, even when the infection is unlikely to be transmitted to others. Testing the entire population would undoubtedly identify a large number of such individuals, unnecessarily sidelining them from work and society.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_000156",
     "speaker": "Donald Trump",
     "reporting_source": "Axios on HBO"
   },
@@ -1792,6 +1890,20 @@
     "reporting_source": ""
   },
   {
+    "crawled_date": "21-7-2020",
+    "country_of_origin": "unknown",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20201016044748/https://leadstories.com/hoax-alert/2020/07/fact-check-preprint-study-did-not-find-kimchi-helped-lower-south-koreas-covid-19-fatalities-only-looked-at-europe.html",
+    "lang": "en",
+    "claim": "A study finds a diet heavy with kimchi—spiced fermented cabbage and other vegetables—helps lower South Korea's COVID-19 fatalities.",
+    "doc": "Q: Has eating kimchi, spicy fermented cabbage, and other vegetables helped lower COVID-19 fatalities in Korea?\nA: No answer could be found.\n\nQ: Has there been a study on the consumption of fermented vegetables and COVID-19 mortality?\nA: Yes\n\nQ: Is Korea mentioned in the study on the consumption of fermented vegetables and COVID-19 mortality report?\nA: No\n\nQ: Could the study be extrapolated to Korea?\nA: No\n\nQ: Could the study be extrapolated to Korea?\nA: However, other regions with low COVID-19 mortality also exhibit a large consumption of fermented foods.\nIn Asia, fermented vegetables are highly consumed (31-34).\n\nQ: Can this study be relied upon?\nA: No\n\nQ: Are there any references to Korea, Covid-19 and fermented cabbage in medical articles?\nA: Yes",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_000275",
+    "speaker": "",
+    "reporting_source": ""
+  },
+  {
     "crawled_date": "20-7-2020",
     "country_of_origin": "unknown",
     "label": "False",
@@ -2184,6 +2296,34 @@
     "reporting_source": "Facebook"
   },
   {
+    "crawled_date": "9-7-2020",
+    "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210705230519/https://www.factcheck.org/2020/07/navarro-doesnt-give-full-picture-on-hydroxychloroquine/",
+    "lang": "en",
+    "claim": "Peter Navarro said a Covid-19 study “showed an astonishing 50% reduction in the mortality rate for patients taking hydroxychloroquine,”",
+    "doc": "Q: What is hydroxychloroquine?\nA: Hydroxychloroquine belongs to the family of medicines called “antimalarials” (AMs), which are also classified as disease-modifying anti-rheumatic drugs, or DMARDs. These drugs were initially used to prevent and to treat malaria but are no longer used for those purposes and are now often used for lupus.\n\nQ: Has hydroxychloroquine been used to treat COVID-19?\nA: There was some early off-label use of hydroxychloroquine for COVID-19\n\nQ: Is there a study showing 50% reduction in the mortality rate for patients taking hydroxychloroquine?\nA: Yes\n\nQ: Does the FDA approve the use of hydroxychloroquine for COVID-19 patients?\nA: No\n\nQ: Are there other studies which show different results  of the use of hydroxychloroquine?\nA: In this observational study involving patients with Covid-19 who had been admitted \nto the hospital, hydroxychloroquine administration was not associated with either a \ngreatly lowered or an increased risk of the composite end point of intubation or \ndeath. Randomized, controlled trials of hydroxychloroquine in patients with Covid-19 \nare needed. (Funded by the National Institutes of Health.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_000352",
+    "speaker": "Peter Navarro",
+    "reporting_source": "CNN"
+  },
+  {
+    "crawled_date": "8-7-2020",
+    "country_of_origin": "gb",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20201221005355/https://theferret.scot/scottish-government-21m-kate-forbes-half-true/",
+    "lang": "en",
+    "claim": "Scottish Government got £21m from Summer economic update.",
+    "doc": "Q: Is £21m the maximum Scotland will receive?\nA: When asked whether the Scottish Government would receive just £21 million as a result of the Plan for Jobs as the Scottish Finance Minister has claimed, I said that I couldn’t see how you would arrive at such a number given the schemes just mentioned, as well as the stamp duty holiday for England and Northern Ireland. It would get much more.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_000353",
+    "speaker": "Chancellor Rishi Sunak",
+    "reporting_source": "https://www.gov.uk/government/publications/"
+  },
+  {
     "crawled_date": "8-7-2020",
     "country_of_origin": "us",
     "label": "False",
@@ -2279,6 +2419,20 @@
     "label_original": "refuted",
     "claim_id": "averitec_train_000371",
     "speaker": "Stolen Memes 2: Electric Boogaloo",
+    "reporting_source": "Facebook"
+  },
+  {
+    "crawled_date": "5-7-2020",
+    "country_of_origin": "au",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210719220303/https://factcheck.afp.com/misinformation-circulates-online-about-covid-19-government-handouts-australia",
+    "lang": "en",
+    "claim": "local government in the Australian state of Victoria has begun handing out an AUD1,500 (USD1,044) payment to “anyone who tested positive for COVID-19”.",
+    "doc": "Q: What payment is Australian state of Victoria offering to people testing positive with Covid-19?\nA: The $1500 Pandemic Leave Disaster Payment is a one-off payment to help Victorian workers who have been directed to self-isolate or quarantine for 14 days, or care for someone who has been directed to self-isolate or quarantine.\n\nQ: Is the payment available for anyone who has tested positive for Covid-19?\nA: No",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_000372",
+    "speaker": "Chef Pete Evans",
     "reporting_source": "Facebook"
   },
   {
@@ -2674,6 +2828,34 @@
     "reporting_source": "YouTube"
   },
   {
+    "crawled_date": "25-6-2020",
+    "country_of_origin": "tw",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210722152512/https://factcheck.afp.com/misinformation-about-taiwans-immigration-restrictions-hong-kong-citizens-circulates-online",
+    "lang": "en",
+    "claim": "The Taiwanese Ministry of Justice has imposed the following restrictions on Hong Kong citizens applying to emigrate to Taiwan:\n1. Only accept family reunion applications from people with immediate family in Taiwan.\n2. Only accept applications from professionals.\n3. Only accept significant investors.",
+    "doc": "Q: What has the Taiwanese Ministry of Justice said regarding this claim?\nA: a spokesperson for Taiwan’s National Immigration Agency told AFP in an email on June 30: “There’s no such information”. \n\nA spokesperson for Taiwan's Ministry of Justice also said the posts were \"false\" in an email to AFP on June 29.\n\nQ: Does the Taiwanese Ministry of Justice have rules in place for conditions that have to be met by Hong Kong nationals wanting residency in Taiwan?\nA: Yes\n\nQ: Does the Taiwanese Ministry of Justice have family reunion applications from people with immediate family in Taiwan as one of their circumstances under Article 16?\nA: Yes\n\nQ: Does the Taiwanese Ministry of Justice have resident circumstances for professionals?\nA: Yes\n\nQ: Does the Taiwanese Ministry of Justice have resident circumstances for  significant investors?\nA: Yes",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_000430",
+    "speaker": "",
+    "reporting_source": "Facebook "
+  },
+  {
+    "crawled_date": "24-6-2020",
+    "country_of_origin": "unknown",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210722102526/https://misbar.com/en/factcheck/2020/06/24/will-australia-close-its-borders-until-2021",
+    "lang": "en",
+    "claim": "Australia is going to keep its borders closed until 2021 due to coronavirus.",
+    "doc": "Q: Has Australia made an official announcement regarding Australia and closings its borders till 2021.\nA: Australia is unlikely to reopen its border to international travellers until next year but will look to relax entry rules for students and other long-term visitors, Trade Minister Simon Birmingham said on Wednesday.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_000433",
+    "speaker": "",
+    "reporting_source": ""
+  },
+  {
     "crawled_date": "24-6-2020",
     "country_of_origin": "us",
     "label": "True",
@@ -3036,6 +3218,34 @@
     "claim_id": "averitec_train_000491",
     "speaker": "TVC news",
     "reporting_source": ""
+  },
+  {
+    "crawled_date": "18-6-2020",
+    "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210121151159/https://www.covid19facts.ca/en/fact-checked/caution-is-advised-for-pregnant-women-during-the-covid-19-pandemic",
+    "lang": "en",
+    "claim": "Pregnant women are not more susceptible to COVID-19.",
+    "doc": "Q: What is this claim based on?\nA: Caring for Women Who Are Planning a Pregnancy, Pregnant, or Postpartum During the COVID-19 Pandemic\n\nQ: What does the JAMA article say about pregnant women & Covid-19?\nA: Since its recognition in China in December 2019, coronavirus disease 2019 (COVID-19), caused by severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2), has rapidly spread throughout the world and become a pandemic. Although considerable data on COVID-19 are available, much remains to be learned about its effects on pregnant women and newborns.\n\nNo data are currently available to assess whether pregnant women are more susceptible to COVID-19. Pregnant women are at risk for severe disease associated with other respiratory illnesses (eg, 2009 H1N1 influenza),1 but thus far, pregnant women with COVID-19 do not appear to be at increased risk for severe disease compared with the general population\n\nQ: What do the WHO guidelines say about the risks of Covid-19 for pregnant women?\nA: Pregnant women or recently pregnant women who are  older, overweight, and have pre-existing medical conditions such as hypertension and diabetes seem to have an increased  risk of developing severe COVID-19\nDue to changes in their bodies and immune systems, we know that pregnant women can be badly affected by some respiratory infections. It is therefore important that they take precautions to protect themselves against COVID-19, and report possible symptoms (including fever, cough or difficulty in breathing) to their healthcare provider.\n\nQ: Are pregnant women at risk of serious illness due to COVID-19?\nA: Pregnant women might be at increased risk for severe COVID-19 illness. To reduce severe COVID-19–associated illness, pregnant women should be aware of their potential risk for severe COVID-19 illness. Prevention of COVID-19 should be emphasized for pregnant women and potential barriers to adherence to these measures need to be addressed.\n\nQ: Are pregnant women at risk of serious illness due to COVID-19?\nA: The overall risk of COVID-19 to pregnant women is low. However, pregnant women who have COVID-19 appear more likely to develop respiratory complications requiring intensive care than women who aren't pregnant, according to the Centers for Disease Control and Prevention. Pregnant women are also more likely to be placed on a ventilator. In addition, pregnant women who are Black or Hispanic appear to be disproportionately affected by infection with the COVID-19 virus.\n\nRisk factors for severe COVID-19 during pregnancy include older maternal age, a high body mass index and pre-existing diabetes or hypertension.\n\nQ: Can COVID-19 be passed from mother to unborn child?\nA: We still do not know if a pregnant woman with COVID-19 can pass the virus to her fetus or baby during pregnancy or delivery. To date, the active virus has not been found in samples of fluid around the baby in the womb or breastmilk.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_000497",
+    "speaker": "Dr. Ayodola Adigun",
+    "reporting_source": "ABC News"
+  },
+  {
+    "crawled_date": "17-6-2020",
+    "country_of_origin": "ph",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210122133413/https://verafiles.org/articles/vera-files-fact-check-dexamethasone-life-saving-only-some-se",
+    "lang": "en",
+    "claim": "The low-cost steroid dexamethasone is a “life-saving” drug for COVID-19 patients.",
+    "doc": "Q: What research has been conducted into the effectiveness of dexamethosone as a COVID-19 treatment?\nA: The British Government clinical trial tested six treatment options as part of its RECOVERY trial. One of these was dexamethosone.\n\nQ: What did the government's RECOVERY trial find out about the effectiveness of dexamethosone as a COVID-19 treatment?\nA: Dexamethasone reduced deaths by one-third in ventilated patients (rate ratio 0.65 [95% confidence interval 0.48 to 0.88]; p=0.0003) and by one fifth in other patients receiving oxygen only (0.80 [0.67 to 0.96]; p=0.0021). There was no benefit among those patients who did not require respiratory support (1.22 [0.86 to 1.75]; p=0.14).\n\nBased on these results, 1 death would be prevented by treatment of around 8 ventilated patients or around 25 patients requiring oxygen alone.\n\nQ: What have medical professionals said about the use of dexamethasone against the coronavirus?\nA: Department of Health on Wednesday advised the public to be cautious in interpreting the preliminary study findings that steroid drug dexamethasone can reduce the risk of the sickest patients dying from coronavirus disease.\n\nDOH expressed concern that this discovery might lead people to ‘think it is a magic pill for COVID-19.’\n\nQ: When was the claim made?\nA: 17/06/2020\n\nQ: Is there an FDA-approved cure for COVID-19 as of June 17, 2020?\nA: No\n\nQ: What is dexamethasone used for?\nA: As an anti-inflammatory medication.  \n\nDexamethasone relieves inflammation in various parts of the body.  It is used specifically to decrease swelling (edema), associated with tumors of the spine and brain, and to treat eye inflammation.\n\nTo treat or prevent allergic reactions.\n\nAs treatment of certain kinds of autoimmune diseases, skin conditions, asthma and other lung conditions.\n\nAs treatment for a variety of cancers, such as leukemia, lymphoma, and multiple myeloma.  \n\nTo treat nausea and vomiting associated with some chemotherapy drugs.\n\nUsed to stimulate appetite in cancer patients with severe appetite problems. \n\nAlso used to replace steroids in conditions of adrenal insufficiency (low production of needed steroids produced by the adrenal glands).\n\nQ: Can dexamethasone be used to treat COVID-19?\nA: Dexamethasone is the first drug to be shown to improve survival in COVID-19. This is an extremely welcome result. The survival benefit is clear and large in those patients who are sick enough to require oxygen treatment, so dexamethasone should now become standard of care in these patients. Dexamethasone is inexpensive, on the shelf, and can be used immediately to save lives worldwide.\n\nQ: Is dexamethasone a low-cost drug?\nA: Yes",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_000500",
+    "speaker": "Thoughtskoto (jbsolis.com)",
+    "reporting_source": "Facebook"
   },
   {
     "crawled_date": "17-6-2020",
@@ -3568,6 +3778,20 @@
     "claim_id": "averitec_train_000579",
     "speaker": "Monica Wallace",
     "reporting_source": "Buffalo news"
+  },
+  {
+    "crawled_date": "7-6-2020",
+    "country_of_origin": "in",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210116020229/https://newsmeter.in/fact-check-nehrus-interview-published-in-playboy-magazine-is-partly-true/",
+    "lang": "en",
+    "claim": "The first Prime Minister of India, Pt. Jawaharlal Nehru gave an interview to Playboy magazine and the article was published in 1963.",
+    "doc": "Q: According to Forbes magazine, who has had interviews published in Playboy?\nA: ...landing interviews with some of the world’s most prominent figures, including Malcom X, Fidel Castro, The Beatles, Martin Luther King Jr., Jimmy Hoffa, George Wallace, Henry Miller and Cassisus Clay. This was just in the first three years. The magazine would go on to interview President Jimmy Carter, among many others.\n\nQ: Was Jawaharlal Nehru, India’s first prime minister included in the list of interviewees?\nA: But many will be surprised to learn that the first head-of-state to appear in Playboy’s controversial pages was not Castro or Carter, but Jawaharlal Nehru, India’s first prime minister and most prominent founding father alongside Mahatma Gandhi.\n\nQ: What was the subsequent retraction in the same issue of Playboy about this interview?\nA: The same issue of the magazine carried an “editor’s note” on Page 3, which stated, “after the rest of the magazine had gone to press, we received word from the Indian Embassy in Washington that our interview with PM Nehru was not, in fact, the result of an exclusive, personal conversation with the head of the Indian state, but simply a gathering together of public pronouncements made by the Prime Minister in various speeches, statements, etc., over the past several years.”\n\nQ: What was the final assessment in the same editor’s note?\nA: Although disputing the Indian Embassy’s assertion the editor's note concluded:\n\n...an official refutation from the Indian Government must be respected, and since our attempts to reach the supposed interviewer for further clarification have proved unsuccessful, editorial integrity requires that we print this statement.\n\nQ: Was there ever any verification that a personal interview actually took place?\nA: More than 50 years later, no definitive investigation has ever been undertaken to determine whether the interview was actually ever conducted.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_000582",
+    "speaker": "Mukesh Ambani (Parody Account)",
+    "reporting_source": "Twitter"
   },
   {
     "crawled_date": "7-6-2020",
@@ -4270,6 +4494,20 @@
     "reporting_source": "WISN-TV \"Upfront\" show."
   },
   {
+    "crawled_date": "24-5-2020",
+    "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210119121240/https://www.politifact.com/factchecks/2020/may/28/donald-trump/are-coronavirus-cases-going-down-all-over-us/",
+    "lang": "en",
+    "claim": "In May 2020 cases, numbers and deaths of COVID-19 were in decline, all over America.",
+    "doc": "Q: Were Covid-10 cases & deaths in the US declining in May 2020?\nA: Cases, generally were declining\n\nQ: Were Covid-10 cases & deaths in the US declining in May 2020?\nA: Deaths generally were declining.\n\nQ: Is the general decline in Covid-19 cases and deaths evident in all US states?\nA: No",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_000679",
+    "speaker": "Donald Trump",
+    "reporting_source": "Twitter"
+  },
+  {
     "crawled_date": "22-5-2020",
     "country_of_origin": "gb",
     "label": "False",
@@ -4742,6 +4980,20 @@
     "taxonomy_label": "numerical",
     "label_original": "refuted",
     "claim_id": "averitec_train_000752",
+    "speaker": "",
+    "reporting_source": ""
+  },
+  {
+    "crawled_date": "9-5-2020",
+    "country_of_origin": "unknown",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210126121745/https://factcheck.afp.com/some-viral-diseases-listed-post-were-first-reported-elsewhere-world-studies-show",
+    "lang": "en",
+    "claim": "A list of notable viral outbreaks between 1950 and 2019 purported to have “originated in China”",
+    "doc": "Q: viral outbreaks that have spread internationally between 1950 and 2019 mostly originated in china\nA: China a hotbed for pandemics historically\n\nQ: Are there examples of viral outbreaks mentioned in the claim that did not start in China?\nA: In February 1957, a new influenza A (H2N2) virus emerged in East Asia, triggering a pandemic (“Asian Flu”). This H2N2 virus was comprised of three different genes from an H2N2 virus that originated from an avian influenza A virus, including the H2 hemagglutinin and the N2 neuraminidase genes. It was first reported in Singapore in February 1957, Hong Kong in April 1957, and in coastal cities in the United States in summer 1957\n\nQ: Are there examples of viral outbreaks mentioned in the claim that did not start in China?\nA: Swine flu - The 2009 H1N1 influenza virus (referred to as “swine flu” early on) was first detected in people in the United States in April 2009.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_000753",
     "speaker": "",
     "reporting_source": ""
   },
@@ -5882,6 +6134,20 @@
   {
     "crawled_date": "8-4-2020",
     "country_of_origin": "ng",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210719201019/https://africacheck.org/fact-checks/reports/covid-19-pandemic-fact-checking-former-nigeria-vp-abubakars-claims-about",
+    "lang": "en",
+    "claim": "The price of oil was lower when president Obasanjo and Abubakar assumed office on 29 May 1999 than it is today yet they paid off Nigeria’s entire foreign debt.",
+    "doc": "Q: What was the price of oil in May 1999 in Nigeria?\nA: 16.94 per barrel\n\nQ: What was the price of oil in 2020?\nA: 25.89 per barrel\n\nQ: Did Nigeria pay off its entire debt in 2007?\nA: No",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_000925",
+    "speaker": "Atiku Abubakar",
+    "reporting_source": "Daily Vanguard News paper"
+  },
+  {
+    "crawled_date": "8-4-2020",
+    "country_of_origin": "ng",
     "label": "False",
     "url": "https://web.archive.org/web/20210123141548/https://factcheck.afp.com/claim-nigeria-spent-1-billion-naira-covid-19-text-messages-came-fabricated-tweet",
     "lang": "en",
@@ -6231,6 +6497,20 @@
   },
   {
     "crawled_date": "1-4-2020",
+    "country_of_origin": "mg",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20201130230737/https://namibiafactcheck.org.na/report/madagascan-remedy-is-not-a-proven-covid-19-cure/",
+    "lang": "en",
+    "claim": "A Madagascan herbal drink called Covid-Organics, is a treatment or a cure, for COVID-19.",
+    "doc": "Q: What are the main ingredients of Covid-Organics?\nA: The Covid-Organics is composed of 62% Artemisia and other medicinal plants with antiseptic properties, bronchial thinner used in the composition of traditional remedies for years.\n(Google Translate)\n\nQ: What does World Health Organisation (WHO) say about the use of Artemisia to treat COVID-19?\nA: Medicinal plants such as Artemisia annua are being considered as possible treatments for COVID-19 and should be tested for efficacy and adverse side effects.\n\nQ: Has any testing of the use of Artemisia been carried out to treat COVID-19?\nA: The Max Planck Institute of Colloids and Interfaces, Potsdam (Germany) will collaborate with ArtemiLife Inc., a US based company and medical researchers in Denmark and Germany to test Artemisia annua plant extract and artemisinin derivatives in laboratory cell studies against the novel coronavirus Sars-CoV-2.\n\nQ: Have any results been published on the testing?\nA: Research conducted after the claim date:\n\nCan Artemisia herba-alba Be Useful for Managing COVID-19 and Comorbidities? {Molecules 2022, 27(2), 492; https://doi.org/10.3390/molecules27020492\nReceived: 17 November 2021 / Revised: 10 January 2022 / Accepted: 10 January 2022 / Published: 13 January 2022\n(This article belongs to the Special Issue Bioactivities and In Silico Study of Phytochemicals)}\n\nWe show that various phytochemicals of Artemisia herba-alba can be useful against COVID-19 (in silico)...there is no sufficient clinical research evidence based on these compounds for the treatment of SARS-CoV-2. Therefore, after the validation of anti-SARS-CoV-2 activity in in vitro and in vivo research models, these potential bioactive phyto-compounds can prove to be an alternative therapeutic option for SARS-CoV-2 treatment. To conclude, this study connects how the ethnic usages of a given medicinal plant coupled with pharmacological activity reports and the in silico screening of its phytochemicals can lead to the better management of COVID-19, which is extremely important for dealing with COVID-19 and its associated comorbidities.\n\nQ: At the claim date, what published results are available to verify that artemisia can be used successfully to treat COVID-19?\nA: No answer could be found.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_000968",
+    "speaker": "Nelly Nelyzo",
+    "reporting_source": "Facebook"
+  },
+  {
+    "crawled_date": "1-4-2020",
     "country_of_origin": "unknown",
     "label": "False",
     "url": "https://web.archive.org/web/20210304064248/https://leadstories.com/hoax-alert/2020/04/Fact-Check-NO-Evidence-COVID-19-Is-Massive-Conspiracy.html",
@@ -6284,6 +6564,20 @@
     "claim_id": "averitec_train_000978",
     "speaker": "StopSerbiaDogWalkingBan ",
     "reporting_source": "twitter"
+  },
+  {
+    "crawled_date": "30-3-2020",
+    "country_of_origin": "th",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210308145926/https://factcheck.afp.com/health-experts-refute-misleading-claim-wearing-shoes-indoors-main-reason-hike-covid-19-infections",
+    "lang": "en",
+    "claim": "COVID-19 virus could be spread from shoes.",
+    "doc": "Q: How is COVID-19 primarily spread?\nA: The\ndisease can spread from person to person through small droplets from\nthe nose or mouth which are spread when a person with COVID-19\ncoughs or exhales. These droplets land on objects and surfaces around\nthe person. Other people then catch COVID-19 by touching these\nobjects or surfaces, then touching their eyes, nose or mouth. People\ncan also catch COVID-19 if they breathe in droplets from a person\nwith COVID-19 who coughs out or exhales droplets.\n\nQ: Can clothing, like shoes, transmit COVID-19?\nA: No\n\nQ: Can clothing, like shoes, transmit COVID-19?\nA: Yes",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_000979",
+    "speaker": "",
+    "reporting_source": "Kapook"
   },
   {
     "crawled_date": "30-3-2020",
@@ -6423,6 +6717,20 @@
     "label_original": "refuted",
     "claim_id": "averitec_train_000990",
     "speaker": "Charlie Kirk",
+    "reporting_source": "Facebook"
+  },
+  {
+    "crawled_date": "29-3-2020",
+    "country_of_origin": "in",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20201206162240/https://thelogicalindian.com/fact-check/kalongi-seeds-honey-covid-19-hydroxychloroquine-20663",
+    "lang": "en",
+    "claim": "Taking Nigella Sativa (Kalonji) seeds with honey can prevent infection from Covid-19.",
+    "doc": "Q: What anti-covid properties does Nigella Sativa have?\nA: COVID-19 pandemic has become a serious public\nhealth concern with high transmission rate affecting\nmillions of lives worldwide. NS is a potential antiviral\ntherapy for combating COVID-19 infection. Molecular\ndocking studies have indicated that nigellidine and\nα-hederin are major compounds in NS which have\ncapability to constrain COVID-19 infection. NS extract has\npotential to increase IL-8 levels and alter the expression of\nTRP genes during coronavirus infection. NS seed extracts\nalso has potential to block cytokine storm and oxidative\nstress produced during COVID-19 infection. These\nencouraging and supportive results provided an approach\nto further perform in vitro and in vivo research.\n\nQ: Does there need to be more clinical trial of Nigella Sativa, before conclusions can be drawn?\nA: Future clinical trials conducted using TQ will unravel how exactly we can use it in the current COVID-19 pandemic state.\n\nQ: Can Kalonji Seeds In Combination With Honey Cure COVID-19?\nA: The seeds have a compound in them that can \"constrain\" Covid-19, but clinical trials need to be done before this evidence can be proven",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_000991",
+    "speaker": "Zahra Baho",
     "reporting_source": "Facebook"
   },
   {
@@ -6568,6 +6876,20 @@
   {
     "crawled_date": "24-3-2020",
     "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20200928151543/https://www.politifact.com/factchecks/2020/mar/27/duey-stroebel/has-gov-tony-evers-banned-family-dinners-amid-wisc/",
+    "lang": "en",
+    "claim": "Under order from Gov. Tony Evers, US Senator Duey Stroebel can't legally have dinner with his 8 children, during the COVID-19 pandemic.",
+    "doc": "Q: Do Duey Stroebels Children live with him?\nA: Not all of them.\n\nQ: Does EMERGENCY ORDER #12\nSAFER AT HOME ORDER prohibit meeting other house holds?\nA: Yes,  All public and private gatherings of any number\nof people that are not part of a single household or living unit are\nprohibited",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_001013",
+    "speaker": "Sen. Duey Stroebel",
+    "reporting_source": "twitter"
+  },
+  {
+    "crawled_date": "24-3-2020",
+    "country_of_origin": "us",
     "label": "False",
     "url": "https://web.archive.org/web/20210308134253/https://www.indiatoday.in/fact-check/story/viral-post-china-whistleblower-doctor-tea-cures-coronavirus-1659303-2020-03-24",
     "lang": "en",
@@ -6690,6 +7012,20 @@
     "claim_id": "averitec_train_001027",
     "speaker": "Sunita Pradhan (@SunitaP22163768)",
     "reporting_source": "Twitter"
+  },
+  {
+    "crawled_date": "22-3-2020",
+    "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210712105400/https://www.factcheck.org/2020/03/posts-distort-facts-on-coronavirus-air-transmission-masks/",
+    "lang": "en",
+    "claim": "Novel coronavirus is an airbourne virus and remains infectious in the air for 8 hours.",
+    "doc": "Q: Is Corona virus an \"airbourne\" Virus?\nA: Yes, When an infected person coughs, sneezes, or talks, droplets or tiny particles called aerosols carry the virus into the air from their nose or mouth. Anyone who is within 6 feet of that person can breathe it into their lungs. Airborne transmission. Research shows that the virus can live in the air for up to 3 hours.\n\nQ: Is Corona virus an \"airbourne\" Virus?\nA: Yes,\n\nQ: How long does corona virus last in the air?\nA: Upto 3 hours.\n\nQ: How long does corona virus last in the air?\nA: Up to 3 hours.\n\nQ: Can Corona virus be caught in any other ways than being airbourne?\nA: Yes it can be caught by touching infected surfaces.\n\nSARS-CoV-2 was more stable on plastic and stainless steel than on copper and cardboard, and viable virus was detected up to 72 hours after application to these surfaces (Figure 1A), although the virus titer was greatly reduced (from 103.7 to 100.6 TCID50 per milliliter of medium after 72 hours on plastic and from 103.7 to 100.6 TCID50 per milliliter after 48 hours on stainless steel). The stability kinetics of SARS-CoV-1 were similar (from 103.4 to 100.7 TCID50 per milliliter after 72 hours on plastic and from 103.6 to 100.6 TCID50 per milliliter after 48 hours on stainless steel). On copper, no viable SARS-CoV-2 was measured after 4 hours and no viable SARS-CoV-1 was measured after 8 hours. On cardboard, no viable SARS-CoV-2 was measured after 24 hours and no viable SARS-CoV-1 was measured after 8 hours (Figure 1A).",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_001028",
+    "speaker": "Social Media Users",
+    "reporting_source": "Facebook"
   },
   {
     "crawled_date": "22-3-2020",
@@ -7099,6 +7435,20 @@
   },
   {
     "crawled_date": "15-3-2020",
+    "country_of_origin": "unknown",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210302055039/https://www.politifact.com/article/2020/mar/16/fact-checking-sanders-biden-primary-debate/",
+    "lang": "en",
+    "claim": "\"Part of that was bailing out the automobile industry — saving thousands of jobs, tens of thousands of jobs over time. (Sanders) voted against that as well.\"",
+    "doc": "Q: Which bailout was Biden referring to?\nA: \"In October 2008, Congress approved the $700 billion Troubled Asset Relief Program (TARP).\"\n\nQ: Which bailout was Biden referring to?\nA: In December 2008, Congress tried to pass a separate $14 billion bailout program specifically for the auto industry but the measure failed in the Senate.\n\nQ: Did Sanders vote in support of the TARP?\nA: No\n\nQ: Did Sanders vote in support of the December 2008 bailout proposal?\nA: Yes",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_001085",
+    "speaker": "Joe Biden",
+    "reporting_source": "CNN"
+  },
+  {
+    "crawled_date": "15-3-2020",
     "country_of_origin": "us",
     "label": "True",
     "url": "https://web.archive.org/web/20210302055039/https://www.politifact.com/article/2020/mar/16/fact-checking-sanders-biden-primary-debate/",
@@ -7375,6 +7725,20 @@
     "label_original": "refuted",
     "claim_id": "averitec_train_001130",
     "speaker": "",
+    "reporting_source": "Facebook"
+  },
+  {
+    "crawled_date": "10-3-2020",
+    "country_of_origin": "unknown",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210308150610/https://www.politifact.com/factchecks/2020/mar/11/viral-image/epidemiologist-projects-40-70-adults-could-catch-c/",
+    "lang": "en",
+    "claim": "The coronavirus is spreading so fast that it will infect 70% of humanity in 2020.",
+    "doc": "Q: Did COVID 19 projections vary?\nA: Yes\n\nQ: Did COVID 19 projections vary?\nA: Yes\n\nQ: Were these projections based on the virus not being controlled?\nA: Yes\n\nQ: What measures did countries introduce controls to stop the spread of COVID?\nA: Towns and cities have been locked down and large gatherings banned.\nRestrictions have been imposed on travellers from hard-hit areas, such as China, Italy and Iran.\nMajor sporting events, carnivals and events have been postponed or cancelled.\n\nQ: What was the world's estimated population in 2020?\nA: Around 7.6 billion people",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_001135",
+    "speaker": "Facts Verse ",
     "reporting_source": "Facebook"
   },
   {
@@ -7882,6 +8246,20 @@
     "reporting_source": "White House news conference"
   },
   {
+    "crawled_date": "26-2-2020",
+    "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20200930231040/https://www.politifact.com/factchecks/2020/mar/02/amy-klobuchar/Klobuchar-misfires-Wisconsin-voter-claim/",
+    "lang": "en",
+    "claim": "US Senator Amy Klobuchar said While we are all sitting here debating, Wisconsin has kicked hundreds of thousands of people off of their voting rolls",
+    "doc": "Q: Did the US state of Wisconsin purge hundreds of thousands of people off of their voting rolls in 2020\nA: Wisconsin appeals court rules voters targeted for purge will remain on the rolls\n\nQ: Why did the Wisconsin Election Commission send letters to 234,000 voters warning them they may be removed from polls in 2021?\nA: The Wisconsin Elections Commission last month sent letters to voters who it believes may have moved. The letters told the recipients to update their voter registrations with their new addresses if they have moved or to notify the commission if they have not moved.\n\nThose who don't act on the letters will have their voter registrations suspended after April 2021, according to the commission.\n\nQ: What did the Wisconsin court rule about the election commission?\nA: A Wisconsin appeals court Friday struck down an Ozaukee County judge's ruling that thousands of people had to be quickly removed from the state's voter rolls because they are believed to have moved.\n\nThe appeals judges also unanimously overturned a finding that state election officials were in contempt of court for not taking people off the rolls.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_001209",
+    "speaker": "Amy Klobuchar",
+    "reporting_source": "Debate"
+  },
+  {
     "crawled_date": "24-2-2020",
     "country_of_origin": "in",
     "label": "False",
@@ -8107,6 +8485,20 @@
   },
   {
     "crawled_date": "13-2-2020",
+    "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210306230503/https://africacheck.org/fact-checks/reports/south-africas-state-nation-address-2016-2019-review",
+    "lang": "en",
+    "claim": "Government is actively involved in the property sector, having provided more than 4 million houses since 1994.",
+    "doc": "Q: Which country does the claim refer to?\nA: South Africa.\n\nQ: When was the claim made?\nA: 13th Febuary 2020.\n\nQ: How many homes have been provided by the South African Government from 1994 till 2020?\nA: 3,030,824 housing units were delivered from 1994/1995 to 2015/16\n\nQ: How many houses were delivered in 2016/17?\nA: A total of 90,692 houses were built in the 2016/17 financial year\n\nQ: How many houses were delivered in 2017/18?\nA: 86,048 in 2017/18\n\nQ: How many houses were delivered in 2028/19?\nA: 77,584 in 2018/19.\n\nQ: What do all the years between 1994 and 2020 add up to?\nA: 3,285,148.\n\nQ: Do the figures shown from the department of human settlements show all housing supplied by the government of SA?\nA: These numbers do not include what is called 'serviced sites'\n\nQ: When 'serviced sites' are included in the housing numbers what is the total provided housing?\nA: 4.7 million.\n\nQ: Are there any concerns over the figures provided by the 'department of human settlements'?\nA: professor Aly Karam warns that the department’s housing statistics “have not been independently verified and should be read with caution, as indicative rather than entirely conclusive”.\n\nQ: What is a service site?\nA: Sites that have the potential to become homes, but are not yet developed.\n\nQ: Are serviced sites considered houses when referring to the housing data?\nA: Housing units and serviced sites are counted separately.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_001247",
+    "speaker": "Jacob Zuma",
+    "reporting_source": ""
+  },
+  {
+    "crawled_date": "13-2-2020",
     "country_of_origin": "za",
     "label": "False",
     "url": "https://web.archive.org/web/20210306230503/https://africacheck.org/fact-checks/reports/south-africas-state-nation-address-2016-2019-review",
@@ -8118,6 +8510,20 @@
     "claim_id": "averitec_train_001248",
     "speaker": "Jacob Zuma",
     "reporting_source": ""
+  },
+  {
+    "crawled_date": "13-2-2020",
+    "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210227073809/https://www.politifact.com/factchecks/2020/mar/04/robin-vos/wisconsin-assembly-speakers-prison-claim-falls-sho/",
+    "lang": "en",
+    "claim": "Gov. Tony Evers wants to release half of the prison population.\"",
+    "doc": "Q: Did Tony Evers pledge to reduce the prison population?\nA: Evers has said for years he wants to address overcrowding in Wisconsin’s prison system. But he and his administration have also expressed the need to do it carefully and gradually.\n\nQ: Did he claim he would release prisoners?\nA: During the 2018 campaign, Evers told the Milwaukee Journal Sentinel he would consider releasing some inmates early, overhauling truth-in-sentencing and treating 17-year-olds as juveniles instead of adults, among other policies. He also said, during a Democratic debate, that cutting the prison population in half is \"a goal that’s worth accomplishing.\"\n\nQ: Does Tony Evers plan on reducing prison population\nA: State Schools Superintendent Tony Evers said Wisconsin needs to follow the example of states like Texas that have cut parole revocations and expanded drug courts. He said he would consider releasing some inmates early; providing more drug treatment behind bars; treating 17-year-olds as juveniles instead of adults for criminal charges; and overhauling truth-in-sentencing so prisoners could be released for good behavior.\n\n“The fact that we as a state spend more on corrections than (the University of Wisconsin) System tells me the last thing we need is to build a brand-new prison,” he said in an emailed statement.\n\nQ: Does he plan on reducing half of the prison population\nA: He only said he would want to release some prisoners early and didn't give a specific number of prisoners he intends on releasing",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_001249",
+    "speaker": "Robin Vos",
+    "reporting_source": "newsletter:"
   },
   {
     "crawled_date": "13-2-2020",
@@ -8694,6 +9100,20 @@
     "reporting_source": "Hard News TV"
   },
   {
+    "crawled_date": "16-1-2020",
+    "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210603195214/https://www.politifact.com/factchecks/2020/feb/28/mark-pocan/pocan-money-lagging-wages-claim/",
+    "lang": "en",
+    "claim": "US Rep Mark Pocan stated on January 16, 2020 in a tweet:\n“There’s an Amazon distribution center that was advertising, last time I was there, up to $12.75 an hour. Your parents made that three decades ago.”",
+    "doc": "Q: What is the purchasing power of the average hourly wage in the US compared to the 1970s\nA: After adjusting for inflation, however, today’s average hourly wage has just about the same purchasing power it did in 1978, following a long slide in the 1980s and early 1990s and bumpy, inconsistent growth since then.\n\nQ: Was the US rep Mark Pocan's tweet on the difference in wages correct\nA: From a narrow perspective, Pocan is off — an offer of $12.75 does not equate to hourly wages from 30 years ago, as a straight comparison or with inflation factored in. \n\nHe fares much better when considering the larger point being made: That wage growth has been largely stagnant.\n\nQ: What was the average wage in the 1990's?\nA: $10.43",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_001352",
+    "speaker": "Rep Mark Pocan",
+    "reporting_source": "Twitter"
+  },
+  {
     "crawled_date": "14-1-2020",
     "country_of_origin": "us",
     "label": "False",
@@ -8850,20 +9270,6 @@
   {
     "crawled_date": "3-1-2020",
     "country_of_origin": "us",
-    "label": "False",
-    "url": "https://web.archive.org/web/20200417073632/https://leadstories.com/hoax-alert/2020/01/fake-news-ilhan-omar-time-for-violence-is-now.html",
-    "lang": "en",
-    "claim": "Iihan Omar tweeted \"There is no way to overstate how ASHAMED I am to be called an 'American'. We need every world leader to rise up and demand that someone stops Trump from starting a catastrophic war with Iran.\" THE TIME FOR VIOLENCE IS NOW! #NoWarWithIran",
-    "doc": "Q: Did Iihan Omar tweet There is no way to overstate how ASHAMED I am to be called an 'American'. We need every world leader to rise up and demand that someone stops Trump from starting a catastrophic war with Iran. THE TIME FOR VIOLENCE IS NOW! #NoWarWithIran on the 3rd Jan 2020?\nA: No\n\nQ: Who post this fake tweet claim?\nA: A fake Twitter account pretending to be Fox News posted a fake tweet from \n@IlhanMN (Ilhan Omar)",
-    "taxonomy_label": "numerical",
-    "label_original": "refuted",
-    "claim_id": "averitec_train_001391",
-    "speaker": " Ilhan Omar",
-    "reporting_source": "Instagram"
-  },
-  {
-    "crawled_date": "3-1-2020",
-    "country_of_origin": "us",
     "label": "True",
     "url": "https://web.archive.org/web/20210226034403/https://www.politifact.com/article/2020/jan/23/stump-speech-analyzer-amy-klobuchar/",
     "lang": "en",
@@ -8988,6 +9394,20 @@
     "reporting_source": "Twitter"
   },
   {
+    "crawled_date": "29-12-2019",
+    "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210122011529/https://www.politifact.com/factchecks/2020/jan/09/facebook-posts/did-trump-dot-secretary-elaine-chao-use-grant-help/",
+    "lang": "en",
+    "claim": "U.S President Donald Trump's transportation secretary, Elaine Chao, sent a 97 million dollar contract to help her husband, Mitch McConnell's re-election bid.",
+    "doc": "Q: When was this claim made?\nA: 29/12/2019\n\nQ: Who is Mitch McConnell?\nA: Senator of Kentucky\n\nQ: Did Kentucky get a $97 million contract from the US government?\nA: June 8, 2018\nWASHINGTON, D.C. – U.S. Senate Majority Leader Mitch McConnell announced today that the U.S. Department of Transportation awarded a $67 million federal grant to the Kentucky Transportation Cabinet (KYTC) to fund much-needed improvements to Interstate 75 (I-75)/ Interstate 71 (I-71) in Boone County. Senator McConnell contacted the department to support his constituent’s application to the Infrastructure for Rebuilding America (INFRA) competitive federal grant program.\n\nQ: When did McConnell announce his re-election bid?\nA: 06/08/2018\nMcConnell formally announced Saturday his plans to seek a seventh term, speaking at a Republican breakfast in western Kentucky ahead of the Fancy Farm picnic, which is the bipartisan political event of the year in the commonwealth.\n\n“I’m going to be running for re-election in 2020,” McConnell said. “I don’t like starting late.”\n\nQ: How much grant did the Department of transportation send to Kentucky\nA: Northern Kentucky will get $67.4 million from the federal government to address traffic problems on Interstate 75.\n\nNo, it’s not for the Brent Spence Bridge, that’ll require $2.5 billion, but a little further south in Boone County.\n\nKentucky was given the money Friday to rebuild two I-75/I-71 interchanges in Boone County as part of President Donald Trump's pledge to rebuild America's infrastructure.\n\nQ: When did Mitch McConnell announce his re-election plan\nA: McConnell formally announced Saturday his plans to seek a seventh term, speaking at a Republican breakfast in western Kentucky ahead of the Fancy Farm picnic, which is the bipartisan political event of the year in the commonwealth.\n\n“I’m going to be running for re-election in 2020,” McConnell said. “I don’t like starting late.”\n\nThe McConnell announcement was not exactly a surprise.\n\nQ: How was the grant tied to his re-election\nA: Chao’s designation of Inman as a special intermediary for Kentucky — a privilege other states did not enjoy — gave a special advantage to projects favored by her husband, which could in turn benefit his political interests. In such situations, ethicists say, each member of a couple benefits personally from the success of the other.\n\n“Where a Cabinet secretary is doing things that are going to help her husband get reelected, that starts to rise to the level of feeling more like corruption to the average American. … I do think there are people who will see that as sort of ‘swamp behavior,’” said John Hudak, a Brookings Institution scholar who has studied political influence in federal grant-making.\n\nIn fact, days after launching his 2020 reelection campaign McConnell asked Owensboro’s mayor to set up a luncheon with business and political leaders at which the senator claimed credit for delivering the grant.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_001415",
+    "speaker": "Farron Cousins",
+    "reporting_source": "Ring of Fire Show on YouTube"
+  },
+  {
     "crawled_date": "25-12-2019",
     "country_of_origin": "us",
     "label": "False",
@@ -9000,6 +9420,20 @@
     "claim_id": "averitec_train_001416",
     "speaker": "@Jennife73830809",
     "reporting_source": "Twitter"
+  },
+  {
+    "crawled_date": "22-12-2019",
+    "country_of_origin": "in",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210213044547/https://www.boomlive.in/politics/pm-modis-claim-of-no-discussion-by-govt-on-nrc-since-2014-is-false-6392",
+    "lang": "en",
+    "claim": "Prime Minister Modi’s government has not mentioned the National Record of Citizenship (NRC) since his government came to power in 2014 and any implementation of the NRC was limited only to Assam post the Supreme Court directive.",
+    "doc": "Q: When did  Narendra Modi become prime minister of India?\nA: May 20, 2014\n\nQ: Has the prime minister of India talked about  India's National Record of Citizenship (NRC) since 2014?\nA: NRC is an exercise undertaken by prime minister Narendra Modi’s government in Assam between February 2015 and August 2019\n\nQ: Has the National Record of Citizenship (NRC) been extended to any areas in India, other than Assam?\nA: India’s home minister Amit Shah has only hinted at the possibility of a nationwide NRC.\n\nQ: Has the government hinted at the possibility of a nationwide NRC, and in doing so, actually mentioned the NRC since 2014?\nA: It appears that the government may have mentioned NRC since 2014, but not made changes or suggested extending the scheme.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_001420",
+    "speaker": "Narendra Modi",
+    "reporting_source": ""
   },
   {
     "crawled_date": "21-12-2019",
@@ -9101,17 +9535,17 @@
   },
   {
     "crawled_date": "19-12-2019",
-    "country_of_origin": "us",
-    "label": "False",
-    "url": "https://web.archive.org/web/20210720032035/https://leadstories.com/hoax-alert/2020/01/fake-news-Failed-Senate-impeachment-conviction-does-NOT-mean-Trump-can-run-2-more-times.html",
+    "country_of_origin": "ru",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210123171853/https://www.polygraph.info/a/fact-check-putin-presser-internet/30334648.html",
     "lang": "en",
-    "claim": "Failed Senate Impeachment Conviction Means Trump Can Run Two More Times",
-    "doc": "Q: Can someone run for president more than 2 terms?\nA: No, a President can not serve a third term whether the terms are consecutive or not. The 22nd Amendment of the United States Constitution enacted after Franklin D. Roosevelt (FDR) was elected president for a fourth term, imposes a two-term limit on presidential candidates and was established to formalize a tradition George Washington started by refusing to run for a third term in 1796.\n\nQ: How many terms can a U.S. president serve?\nA: No more than two",
+    "claim": "Russian Authorities are not moving toward closing off the Russian internet from the global internet using the \"Sovereign Internet law\" which came into effect on November 1st 2019.",
+    "doc": "Q: What is the Russian Sovereign Internet law?\nA: The law requires internet service providers to install network equipment - known as deep packet inspection (DPI) - capable of identifying the source of traffic and filter content. In practice, this will allow the country's telecommunications watchdog Roskomnadzor to be more effective at blocking sites.\n\nQ: What will the law allow the authorities to do ?\nA: It gives the Kremlin the possibility to switch off connections within Russia or completely to the worldwide web \"in an emergency\". It is up to the government to decide what constitutes a threat and what actions should be taken.\n\nRussia is seeking to route the country's web traffic and data through state-controlled points, reducing reliance on foreign servers over which it has less control.\n\nQ: Could the law be used to block global internet from Russian users?\nA: Yes, Campaigners say the law, which was signed by President Vladimir Putin earlier this year, is an attempt to increase censorship, building on the internet legislation that already curtails freedom of expression and privacy.\n\n\"Now the government can directly censor content or even turn Russia's internet into a closed system without telling the public what they are doing or why,\" said Rachel Denber, Human Rights Watch's deputy Europe and Central Asia director.\n\nThe law, observers say, allows the government to block content without judicial consent and leaves users unaware about what information is being blocked and why.\n\nChristian Mihr, from the group Reporters Without Borders, said: \"[The law] proves that the Russian leadership is ready to bring the entire network infrastructure under political control in order to cut off the digital information flow whenever needed.\"\n\nQ: What actions have been made, after the law came into place?\nA: As a test, the russian government cut off a part of the access to the global internet.",
     "taxonomy_label": "numerical",
-    "label_original": "refuted",
-    "claim_id": "averitec_train_001438",
-    "speaker": "Daryl E. Grant",
-    "reporting_source": "Facebook"
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_001437",
+    "speaker": "Vladimir Putin",
+    "reporting_source": "The Moscow Times"
   },
   {
     "crawled_date": "18-12-2019",
@@ -9352,6 +9786,20 @@
     "reporting_source": "Press"
   },
   {
+    "crawled_date": "3-12-2019",
+    "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210122164055/https://www.polygraph.info/a/fact-check-russia-us-nato-bill/30330452.html",
+    "lang": "en",
+    "claim": "There's a titanic battle between American nationalism and American liberal globalism. Donald Trump embodies the first camp, and half of the Americans support him on this issue, believing that the U.S. spends too much [in terms of] manpower and resources on foreign policy.",
+    "doc": "Q: How many Americans think that USA spends too much manpower and resources on foreign policy?\nA: 69%\n\nQ: What percentage of Americans say that NATO membership is good for the USA?\nA: 77%\n\nQ: How does Trump represent American nationalism?\nA: He would like to withdraw from NATO, as he feels other countries are not spending enough of their GDP on defense.\n\nQ: Is the battle for pro-NATO bill really titanic?\nA: No, he bill was passed unanimously by both Republicans and democrats",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_001471",
+    "speaker": "Vladimir Batyuk",
+    "reporting_source": "Russia Today"
+  },
+  {
     "crawled_date": "2-12-2019",
     "country_of_origin": "us",
     "label": "True",
@@ -9504,6 +9952,20 @@
     "claim_id": "averitec_train_001499",
     "speaker": "Nigel Farage ",
     "reporting_source": "The Telegraph"
+  },
+  {
+    "crawled_date": "20-11-2019",
+    "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210530163825/https://www.politifact.com/factchecks/2019/nov/21/joe-biden/do-160-million-americans-like-their-health-insur/",
+    "lang": "en",
+    "claim": "In US \"160 million people like their private insurance.\"",
+    "doc": "Q: What do surveys and polls reveal about the attitude of people in the US towards their medical healthcare situations?\nA: Most people with employer-sponsored insurance (ESI) are generally satisfied with their health plans, and large shares say they feel “grateful” and “content” about their insurance while fewer say they are “angry” or “frustrated.”\n\nQ: What do surveys and polls reveal about the attitude of people in the US towards their medical healthcare situations?\nA: Four in ten report that their family has had either problems paying medical bills or difficulty affording premiums or out-of-pocket medical costs, and about half say someone in their household skipped or postponed some type of medical care or prescription drugs in the past year because of the cost. Seventeen percent say they’ve had to make what they feel are difficult sacrifices in order to pay health care or insurance costs\n\nQ: What do surveys and polls reveal about the attitude of people in the US towards their medical healthcare situations?\nA: A Gallop poll conducted in January 2019 results indicated that 70 per cent of Americans describe the current U.S. healthcare system as being in a state of crisis or having major problems.\n\nQ: What is the proportion of US people contributing to employer-sponsored health cover?\nA: In 2017, about 156 million people had employer-based coverage, representing almost half the total U.S. population and 60 percent of non-elderly adults.\n\nQ: Of the people in the US with employer-sponsored healthcare cover, how many are estimated to be underinsured?\nA: Twenty-eight percent of U.S. adults who have health insurance through their employer were underinsured in 2018.\n\nQ: How many people with private health insurance were underinsured in 2018?\nA: Of people who bought plans on their own, 42 percent reported a lack of adequate coverage in 2018.\n\nQ: What is the adults ages 19 to 64 population of the US\nA: Approximately 193.9 million U.S. adults ages 19 to 64 in 2018.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_001501",
+    "speaker": "Joe Biden",
+    "reporting_source": "Democratic Primary"
   },
   {
     "crawled_date": "20-11-2019",
@@ -10586,6 +11048,20 @@
   {
     "crawled_date": "10-10-2019",
     "country_of_origin": "ng",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210127230319/https://africacheck.org/fact-checks/reports/fact-checked-al-jazeeras-claims-about-nigerias-mental-health-problem",
+    "lang": "en",
+    "claim": "(Nigeria has an estimated physician-patient ratio of one doctor to every 4,000 to 5,000 patients.) ...[This is] six times smaller than the physician-patient ratio (one physician to every 600 doctors) recommended by WHO.",
+    "doc": "Q: How many patients do Nigerian doctors take care of?\nA: In Nigeria, we have 40,000 doctors taking care of 200 million people.\n\nQ: What is the estimated physician-patient ratio in Nigeria?\nA: Between 1:4,800 and 1:5,000\n\nQ: What is the ideal ratio of a healthcare worker to a population according to the World Health Organisation?\nA: The agency had not prescribed any ideal ratio of healthcare workers to population.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_001669",
+    "speaker": " Socrates Mbamalu",
+    "reporting_source": "Al Jazeera report"
+  },
+  {
+    "crawled_date": "10-10-2019",
+    "country_of_origin": "ng",
     "label": "False",
     "url": "https://web.archive.org/web/20210127230319/https://africacheck.org/fact-checks/reports/fact-checked-al-jazeeras-claims-about-nigerias-mental-health-problem",
     "lang": "en",
@@ -10707,6 +11183,20 @@
     "label_original": "refuted",
     "claim_id": "averitec_train_001693",
     "speaker": "Wenzile Madonsela Msimang",
+    "reporting_source": "Twitter"
+  },
+  {
+    "crawled_date": "6-10-2019",
+    "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210119121441/https://fullfact.org/health/food-poisoning-US-UK/",
+    "lang": "en",
+    "claim": "1 in 6 in the US get food poisoning each year but only 1 in 66 in the UK.",
+    "doc": "Q: Where does the 1 in 66 estimate come from?\nA: The estimate that one in 66 people in the UK gets food poisoning is based on a 2011 FSA report. It estimated that in the UK a million people a year suffer a foodborne illness. The population of the UK today is around 66 million, which the original claimant seems to have used to get one in 66.\n\nQ: Is this an accurate statistic?\nA: No\n\nQ: Where does the one in 6 figure come from?\nA: The figure of one in six for the US comes from the Center for Disease Control and Prevention (CDC), which estimates that “each year roughly 1 in 6 Americans (or 48 million people)” get sick as a result of foodborne diseases\n\nQ: Is this an accurate figure?\nA: The CDC told us this came from a paper published in 2011, but that the estimates are a “fairly accurate representation of the burden of [foodborne] diseases in the US.”\n\nQ: Is the data between the two countries comparable?\nA: the data between the two countries isn’t comparable and varies considerably in how and when it was collected, and there are differences in the methodology behind the estimates. Real world factors, like access to medical care which differs widely between the two countries, can also affect the comparison.\n\nQ: What is the estimated population in the UK that falls sick due to food poisoning?\nA: around a million people suffer a foodborne illness\n\nQ: What was the UK's population in 2018?\nA: 66,435,600\n\nQ: When was this claim made?\nA: 06/10/2019\n\nQ: What is the estimated population in the U.S. that falls sick due to food poisoning?\nA: CDC estimates that each year roughly 1 in 6 Americans (or 48 million people) gets sick\n\nQ: What was the population of the United States in 2018?\nA: 332,140,037",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_001694",
+    "speaker": "Jolyon Maugham QC",
     "reporting_source": "Twitter"
   },
   {
@@ -11018,20 +11508,6 @@
     "reporting_source": ""
   },
   {
-    "crawled_date": "5-9-2019",
-    "country_of_origin": "ph",
-    "label": "False",
-    "url": "https://web.archive.org/web/20200530023212/https://factcheck.afp.com/doctors-refute-misleading-online-claim-epidural-injections-are-dangerous-and-sometimes-compulsory",
-    "lang": "en",
-    "claim": "Epidural injections given during childbirth are one of the worst and dangerous injections in the world resulting in chronic back pain.",
-    "doc": "Q: What are the side effects of Epidural injections ?\nA: Epidurals are very safe; serious complications are extremely rare. However, as with all medications and medical procedures, there are potential side effects:\n\n    Decrease in blood pressure – The medication may lower your blood pressure, which may slow your baby’s heart rate. To make this less likely, you will be given extra fluids through a tube in your arm (IV), and you may need to lie on your side. Sometimes, your anesthesiologist will give you a medication to maintain your blood pressure.\n    Sore back – Your lower back may be sore where the needle was inserted to deliver the medication. This soreness should last no more than a few days. There is no evidence that an epidural can cause permanent back pain.\n    Headache – On rare occasions, the needle pierces the covering of the spinal cord, which can cause a headache that may last for a few days if left untreated. If this situation arises, discuss the treatment options with your anesthesiologist.\n\nQ: Does epidural injections work on every pregnant woman?\nA: No answer could be found.\n\nQ: What percentage of women use an epidural injection when giving birth in hospitals ?\nA: More than 50% of women giving birth at hospitals use epidural anesthesia.\n\nQ: What is an epidural?\nA: Epidural anesthesia is regional anesthesia that blocks pain in a particular region of the body. The goal of an epidural is to provide analgesia, or pain relief, rather than anesthesia, which leads to a total lack of feeling. Epidurals block the nerve impulses from the lower spinal segments. This results in decreased sensation in the lower half of the body.\n\nQ: How Long Does an Epidural Last?\nA: Once the catheter is in place, the anaesthetist can set up an epidural pump. The pump feeds the epidural solution into the catheter continuously, providing pain relief for as long as needed.\n\nThe type, amount and strength of the anaesthetic can be adjusted, as necessary. You might also be given the option of having control of the medication pump. This is called patient controlled analgesia. The amount of painkiller is still regulated, so you can’t accidentally overdose.\n\nYou can have the dose lowered for second stage pushing, but it takes some time for the pain relief and numbness to wear off, so if this is important to you, discuss it with your care provider early on.",
-    "taxonomy_label": "numerical",
-    "label_original": "refuted",
-    "claim_id": "averitec_train_001769",
-    "speaker": "Alrhus Rts",
-    "reporting_source": "Facebook"
-  },
-  {
     "crawled_date": "4-9-2019",
     "country_of_origin": "za",
     "label": "False",
@@ -11142,6 +11618,20 @@
     "claim_id": "averitec_train_001806",
     "speaker": "Dekh Bhai",
     "reporting_source": "Facebook"
+  },
+  {
+    "crawled_date": "25-8-2019",
+    "country_of_origin": "in",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20201128112443/https://factly.in/childline-1098-helpline-was-started-nearly-two-decades-ago-not-recently-by-pm-modi/",
+    "lang": "en",
+    "claim": "PM Modi announced a child helpline (1098) for the benefit of children in various crisis situations.",
+    "doc": "Q: What is the nature of the helpline\nA: On the website, it can be found that “CHILDLINE 1098 is a 24-hour a day, 365 days a year, free, emergency phone service for children in need of aid and assistance”. In the ‘Our Story’ section, it can be read that the helpline was started nearly two decades ago as a field action project of the Department of Family and Child Welfare, Tata Institute of Social Sciences (TISS). Formed in 1999, CHILDLINE India Foundation was granted the exclusive ‘Nodal Mother NGO’ status, in 2006-07, by the Ministry of Woman and Child Development to set up CHILDLINE services across the country. So, an already existing helpline is being promoted as something Modi has recently announced.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_001807",
+    "speaker": "",
+    "reporting_source": ""
   },
   {
     "crawled_date": "23-8-2019",
@@ -11310,6 +11800,20 @@
     "claim_id": "averitec_train_001834",
     "speaker": "Work For Unity ",
     "reporting_source": "Facebook"
+  },
+  {
+    "crawled_date": "12-8-2019",
+    "country_of_origin": "gb",
+    "label": "True",
+    "url": "https://web.archive.org/web/20210307093558/https://fullfact.org/economy/4-billion-brexit-stockpiling-claim-flawed/",
+    "lang": "en",
+    "claim": "Britons have spent £4bn stockpiling goods in case of no-deal Brexit.",
+    "doc": "Q: what is the total population of the UK\nA: total adult population of the UK being just over 52 million.\n\nQ: Did Britons stockpile supplies in anticipation of a no deal Brexit?\nA: Yes\n\nQ: How much did Brits spend stockpiling before Brexit?\nA: Brits spent over £4.6 billion at Brexit stockpiling peaks\n\nQ: Were any adverse effects due to stockpiling noted?\nA: Brexit-related stockpiling was also hitting cashflow, according to Premium Credit, which was increasing pressure on businesses and households to rely more on credit to make purchases.\n\nQ: Can the 4.6 billion be accurately attributed to stockpiling?\nA: A survey carried out by finance provider Premium Credit shows that 17% of the country has started hoarding food, drink and medicine – with about 2.4 million people having spent more than £500 stockpiling.\n\nA further 6.1 million have spent up to £500 while one in five, or 19%, have spent over £1,000 on hoarding.\n\nQ: What is the population of the UK at the time of the claim?\nA: 66,778,659",
+    "taxonomy_label": "numerical",
+    "label_original": "supported",
+    "claim_id": "averitec_train_001838",
+    "speaker": "",
+    "reporting_source": "Guardian "
   },
   {
     "crawled_date": "8-8-2019",
@@ -11690,6 +12194,20 @@
     "reporting_source": "Mueller Hearings"
   },
   {
+    "crawled_date": "24-7-2019",
+    "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210119181232/https://www.factcheck.org/2019/07/factchecking-the-mueller-hearings/",
+    "lang": "en",
+    "claim": "Paul Manafort case recovers between forty two and forty six million U.S dollars meaning the cost to taxpayers approaches zero in investigation into Russian interference in the 2016 U.S election.",
+    "doc": "Q: What financial gains were made as a direct result of the Paul Manafort case during special counsel Robert Mueller’s investigation into Russian interference in the 2016 U.S election?\nA: Mueller may have paid for his own investigation - because, as part of his plea deal with the special counsel, Manafort agreed to forfeit real estate and cash estimated to be worth between $42 million and $46 million.\n\nQ: What was the cost of Robert Mueller’s Russian investigation at the time of the claim?\nA: The nearly two-year special counsel investigation of Russian election interference led by Robert Mueller cost nearly $32 million in total, a new filing shows - the special counsel’s fourth and final expenditures as reported by the Justice Department.\n\nQ: What was the cost of Robert Mueller’s Russian investigation at the time of the claim?\nA: The special counsel investigation into Russian election interference led by Robert Mueller cost nearly $32 million in total.\n\nQ: What was the cost to taxpayers for the investigation into Russian interference in the 2016 U.S election?\nA: According to Jerrold Nadler the cost of the Russian investigation the cost to the US taxpayer approaches zero as a result of the $42 million recovered by Mueller.\n\nQ: Did the investigation recover any money?\nA: It recovered real estate and cash estimated to be worth between $42 million and $46 million from a Paul Manafort who agreed to forfeit it.\n\nQ: Does the recovered money go towards covering the cost of the investigation?\nA: A Justice Department official said that the money will not go directly to funding the Russia investigation..",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_001902",
+    "speaker": "Jerry Nadler",
+    "reporting_source": "Mueller Hearings"
+  },
+  {
     "crawled_date": "23-7-2019",
     "country_of_origin": "gb",
     "label": "True",
@@ -11785,6 +12303,20 @@
     "label_original": "refuted",
     "claim_id": "averitec_train_001919",
     "speaker": "",
+    "reporting_source": ""
+  },
+  {
+    "crawled_date": "18-7-2019",
+    "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210122101946/https://www.washingtonpost.com/politics/2019/08/15/trumps-claim-his-deregulatory-moves-are-saving-american-households-year/",
+    "lang": "en",
+    "claim": "Trump claims his deregulatory actions are saving American households $3,000 a year.",
+    "doc": "Q: Where did Trump get the $3,000 a year saving figure from?\nA: The Economic Effects of Federal Deregulation since January 2017: An \nInterim Report by The Council of Economic Advisers\nJune 2019\n\nQ: What does the report 'The Economic Effects of Federal Deregulation since January 2017: An Interim Report' say about the $3,000 saving as a result of deregulations?\nA: The Council of Economic \nAdvisers (CEA) estimates that after 5 to 10 years, this new approach to Federal regulation will \nhave raised real incomes by $3,100 per household per year.\n\nQ: Are the many figures used in the report reliable?\nA: The figures are estimates and have been refuted by numerous sources such as the Office of Management and Budget (OMB) which argued that the 'Stream Protection Rule' had less effect than the CEA argued it did.\n\nQ: Does the $3100 take some time before it is realized\nA: The Council of Economic\nAdvisers (CEA) estimates that after 5 to 10 years, this new approach to Federal regulation will\nhave raised real incomes by $3,100 per household per year.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_001921",
+    "speaker": "Donald Trump",
     "reporting_source": ""
   },
   {
@@ -12010,6 +12542,20 @@
     "claim_id": "averitec_train_001972",
     "speaker": "Fired Writer",
     "reporting_source": "Taters Gonna Tate"
+  },
+  {
+    "crawled_date": "3-7-2019",
+    "country_of_origin": "za",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210719185109/https://africacheck.org/fact-checks/reports/do-1-4-south-african-employees-have-depression",
+    "lang": "en",
+    "claim": "One in four South African employees have been diagnosed with depression.",
+    "doc": "Q: How common is depression in South Africa?\nA: Depression is one of the most common mental disorders in South Africa, with an estimated 9·8% lifetime prevalence for major depressive disorder in adults.\n\nQ: How common is depression in South African Employees?\nA: A single study in 2016, showed one in four workers reported depression but the study in question was only for employees who worked in advertising or market research.\n\nQ: Is this study enough to generalise to workforces in South Africa as a whole?\nA: No\n\nQ: What are the limitations of this study?\nA: The results from this study all rely on subjective responses to an\nonline questionnaire. Anonymity supports the reliability of the data,\nhowever, the design of this study does not allow for diagnosis of\ndepression to be verified.\n\nQ: What are the limitations of this study?\nA: Another limitation is the\nsample size, which although it is in line with a previous study using\nthe IDEA instrument [27], may still have not been large enough to\ngive clearer results on the impact of absenteeism in the work place in\nSouth Africa\n\nQ: What are the limitations of this study?\nA: Also a limitation of the study was Recall bias by study\nparticipants regarding events or experiences from the past.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_001974",
+    "speaker": "Fin24",
+    "reporting_source": "Website"
   },
   {
     "crawled_date": "1-7-2019",
@@ -12462,6 +13008,20 @@
   {
     "crawled_date": "27-6-2019",
     "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210607201908/https://www.factcheck.org/2019/06/factchecking-round-two-of-the-democratic-debate/",
+    "lang": "en",
+    "claim": "83% of the benefits from the Republican tax law go to the top 1% of income earners in the United States.",
+    "doc": "Q: For the period of the claim what percentage of benefits from the 'Republican tax law' go to the top 1% of income earners in the United States?\nA: In December 2017 the Tax Policy Center estimated that under the 'Tax  Cuts Act' the top 1% of income earners would get 20.5% share of the tax cut benefits in 2018 and the projection was for a 25.3% share in 2025.\n\nQ: Under what if any circumstances could 83% of the benefits from the 'Republican tax law' go to the top 1% of income earners in the United States under the then proposed 'Tax  Cuts Act'?\nA: In December 2017  estimated projections from the Tax Policy Center, report that the top 1% of income earners would get 82.8% share of the tax cut benefits in 2027.\n\nQ: Under what if any circumstances could 83% of the benefits from the 'Republican tax law' go to the top 1% of income earners in the United States under the then proposed 'Tax  Cuts Act'?\nA: One key policy in Senate  'Republican tax law' overhaul is that tax cuts for individuals will expire within 10 years, which will shift a higher percentage of tax benefits to the top 1%, while those for corporations will be permanent. Senate Republicans say that their intention is for Congress to extend these individual tax cuts too, so the effect of their expiration shouldn't be included in analysis of the bill.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002020",
+    "speaker": "Bernie Sanders",
+    "reporting_source": "Night two of the primary election debates"
+  },
+  {
+    "crawled_date": "27-6-2019",
+    "country_of_origin": "us",
     "label": "True",
     "url": "https://web.archive.org/web/20210118045305/https://www.politifact.com/factchecks/2019/jul/02/donald-trump/cory-booker-and-drug-maker-campaign-cash-numbers/",
     "lang": "en",
@@ -12490,6 +13050,20 @@
   {
     "crawled_date": "27-6-2019",
     "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20190629175959/https://www.washingtonpost.com/politics/2019/06/27/fact-checking-first-democratic-debate/?utm_term=.ddd70311fcde",
+    "lang": "en",
+    "claim": "Many of America's 2.3 million prisoners are incarcerated for nonviolent drug crimes",
+    "doc": "Q: What is the prison population of the USA?\nA: 2 121 600\n\nQ: How many of those are incarcerated for non-violent drug crime?\nA: But the simple truth is that, at a minimum, 55 percent of those in state prison have been convicted of a violent crime — and more than half of these people, or nearly 30 percent of the total prison population, have been found guilty of murder, manslaughter, rape or sexual assault, according to the Bureau of Justice Statistics. Slightly less than 15 percent are incarcerated for drug crimes, even though most Americans believe the figure to be about 50 percent. (Drugs play a bigger role in the federal prison system, but that holds only about 10 percent of all prisoners; most incarcerated people are in state prison.)",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002029",
+    "speaker": "Beto O'Rourke",
+    "reporting_source": ""
+  },
+  {
+    "crawled_date": "27-6-2019",
+    "country_of_origin": "us",
     "label": "True",
     "url": "https://web.archive.org/web/20190629175959/https://www.washingtonpost.com/politics/2019/06/27/fact-checking-first-democratic-debate/?utm_term=.ddd70311fcde",
     "lang": "en",
@@ -12504,6 +13078,20 @@
   {
     "crawled_date": "27-6-2019",
     "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210607201908/https://www.factcheck.org/2019/06/factchecking-round-two-of-the-democratic-debate/",
+    "lang": "en",
+    "claim": "President Donald Trump has thrown 32 million people off their health care that they have.",
+    "doc": "Q: Where did the figure 32 million come from?\nA: In 2017 the Congressional Budget Office estimated the Obamacare Repeal Reconciliation Act of 2017, a bill that would fit that description,  would increase the number of uninsured by 32 million people over 10 years.\n\nQ: Would all these people likely be thrown off their insurance?\nA: No\n\nQ: Did Donald trump plan a bill that would throw people of their health plans?\nA: Yes\n\nQ: What did the affordable care act offer?\nA: The law aimed to extend health coverage to uninsured Americans, estimated at the time the bill was passed to number around 47 million",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002031",
+    "speaker": "Bernie Sanders",
+    "reporting_source": "Night two of the primary election debates"
+  },
+  {
+    "crawled_date": "27-6-2019",
+    "country_of_origin": "us",
     "label": "False",
     "url": "https://web.archive.org/web/20190629175959/https://www.washingtonpost.com/politics/2019/06/27/fact-checking-first-democratic-debate/?utm_term=.ddd70311fcde",
     "lang": "en",
@@ -12513,6 +13101,20 @@
     "label_original": "refuted",
     "claim_id": "averitec_train_002032",
     "speaker": "Tim Ryan",
+    "reporting_source": ""
+  },
+  {
+    "crawled_date": "27-6-2019",
+    "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20190629175959/https://www.washingtonpost.com/politics/2019/06/27/fact-checking-first-democratic-debate/?utm_term=.ddd70311fcde",
+    "lang": "en",
+    "claim": "Number one reason for why American families go broke is the cost of healthcare",
+    "doc": "Q: Is healthcare the number one reason for personal bankruptcy in America\nA: Our findings suggest that medical factors play a much smaller role in causing U.S. bankruptcies than has previously been claimed. Overemphasizing 'medical bankruptcies' may distract from understanding the true nature of economic hardship arising from high-cost health problems,” wrote researchers of the 2018 study\n\nQ: Can medical debt lead to personal bankruptcy\nA: The fact that, according to a 2014 report from the Consumer Financial Protection Bureau, about 20% of Americans have substantial medical debt yet in a given year less than 1% of Americans file for personal bankruptcy suggests that this assumption is problematic. Clearly, many people face medical debt but do not go bankrupt. Even after correcting for overly broad definitions of “medical” expenses,3 the existing, widely cited evidence on medical bankruptcy is built on the fallacy that when two things occur together there is necessarily a causal relationship between them.\n\nQ: Are medical bills the main reason why people in the United States file for bankruptcy?\nA: A study published in the New England Journal of Medicine in 2018 indicated that while hospital costs had an impact on bankruptcy, they were frequently just one of many contributing factors.\n\n\"...our findings suggest that medical factors play a much smaller role in causing U.S. bankruptcies than has previously been claimed. Overemphasizing “medical bankruptcies” may distract from understanding the true nature of economic hardship arising from high-cost health problems.\"\n\nQ: Are medical bills the main reason why people in the United States file for bankruptcy?\nA: According to the Kaiser Family Foundation (KFF), more than a quarter of U.S. adults struggle to pay their medical bills. This includes folks who have insurance, whether independently or through an employer. In fact, medical debt is the No. 1 source of personal bankruptcy filings in the U.S.\n\nQ: What are the common causes of bankruptcies in the United States?\nA: The common causes of bankruptcy include:\n\nDivorce\n\nExpensive Medical Bills caused by a disability or illness\n\nPoor Financial Management related to student loans, purchasing a car or home, etc.\n\nReduced income or job loss\n\nUnexpected emergencies, such as a car breaking down or catastrophic damage to your property\n\nQ: What is the percentage of bankruptcies caused by medical bills?\nA: More than 60 percent of bankruptcies are linked to medical bills\n\nQ: What is the percentage of bankruptcies caused by medical bills?\nA: Three-quarters of people with a medically-related bankruptcy had health insurance\n\nQ: What is the percentage of bankruptcies caused by medical bills?\nA: in 2014, an estimated 40% of Americans racked up debt resulting from a medical issue.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002033",
+    "speaker": "Elizabeth Warren",
     "reporting_source": ""
   },
   {
@@ -12560,6 +13162,20 @@
   {
     "crawled_date": "26-6-2019",
     "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210301141507/https://www.factcheck.org/2019/06/factchecking-the-first-2020-democratic-debate/",
+    "lang": "en",
+    "claim": "The US-Iran nuclear deal pushed back a nuclear breakout by 10–20 years.",
+    "doc": "Q: What is the US-Iran nuclear deal?\nA: The Iran nuclear deal effectively shuts Iran’s pathways to nuclear weapons while preserving its legal right to civilian nuclear energy. The deal substantially lengthens the time Iran would need to enrich enough uranium for nuclear weapons, putting eyes on the program to detect any activity toward overt weaponization and drastically increasing the chance of detecting any so-called secret “sneakout.”\n\nQ: What is the US-Iran nuclear deal?\nA: Known as the Joint Comprehensive Plan of Action, this deal:\n\n• Cuts off all of Iran’s pathways to a nuclear weapon,\nincluding a covert pathway\n\n• Puts in place vigorous, intrusive, and unprecedented\ntransparency measures that are necessary to verify that\nIran cannot pursue a weapon\n\n• Ensures sanctions can be snapped backinto place if Iran\nviolates the deal\n\nQ: Is the Iran nuclear deal delaying a nuclear breakout?\nA: The deal extends the time Iran would need to produce an atomic bomb from two or\nthree months to at least one year, which would give the United States and its allies an\nopportunity to react if the Iranians broke the agreement.\n\nQ: Does the Iran nuclear deal limit Iran's ability to produce nuclear weapons?\nA: It puts strong, verifiable limits on Iran’s ability to develop a nuclear weapon for at least the next 10 to 15 years and is potentially one of the most consequential accords in recent diplomatic history, with the ability not just to keep\nIran from obtaining a nuclear weapon but also to reshape Middle East politics.\n\nQ: Does the Iran nuclear deal limit Iran's ability to produce nuclear weapons?\nA: Under these limits, “breakout time” at Natanz over the next\ndecade would be extended to roughly a year, from the current\nestimated breakout time of 2 to 3 months.\n4\n From year 11 to year\n15, breakout time at Natanz will decline as Iran is permitted to\nreplace its first-generation centrifuges with limited numbers of\nadvanced models, although the restrictions on enriched uranium stocks and enrichment level continue through year 15.\nEstimating breakout time during years 11 to 15 is difficult. The\nnumber and type of advanced centrifuges that Iran is permitted\nto deploy during this period is not public, and the performance\nof advanced centrifuge models under development is uncertain.\n\nQ: Will Iran be able to produce nuclear weapons once the limits are lifted?\nA: After 15 years, all physical constraints on enrichment imposed\nby the agreement will be lifted. At that point, Iran could build an enrichment plant large enough to produce low-enriched uranium to fuel a nuclear power reactor within a matter of years.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002037",
+    "speaker": "Cory Booker",
+    "reporting_source": "NBC"
+  },
+  {
+    "crawled_date": "26-6-2019",
+    "country_of_origin": "us",
     "label": "True",
     "url": "https://web.archive.org/web/20210531021913/https://www.politifact.com/factchecks/2019/jul/03/bernie-sanders/bernie-sanders-target-saying-3-richest-have-much-w/",
     "lang": "en",
@@ -12582,6 +13198,48 @@
     "taxonomy_label": "numerical",
     "label_original": "supported",
     "claim_id": "averitec_train_002040",
+    "speaker": "",
+    "reporting_source": ""
+  },
+  {
+    "crawled_date": "26-6-2019",
+    "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210301141507/https://www.factcheck.org/2019/06/factchecking-the-first-2020-democratic-debate/",
+    "lang": "en",
+    "claim": "About 30% of LGBTQ kids do not go to school because of fear.",
+    "doc": "Q: Did the Iran nucleur deal push back a nucleur breakout 10/20 yrs as claimed by Booker ?\nA: “First and foremost, it was a mistake to pull out of that deal,” Cory said. “And one of the reasons why we are seeing this hostility now is because Donald Trump is marching us toward a far more dangerous situation. Literally, he took us out of a deal that gave us transparency into their nuclear program and pushed back a nuclear breakout 10-20 years, and now we see Iran threatening to go further and we are being pulled further and further into this crisis.\n\nQ: Is Tim Ryan correct in saying that the bottom 60% of American households are not getting raises ?\nA: This is incorrect. The bottom 60% have seen their income rise since 1980. \n\nIt’s unclear where Ryan is pulling this statistic from, but a 2018 report from the Congressional Budget Office says that the bottom 60% saw an increase in household income of 32% -- adjusted for inflation -- from 1979 to 2015. \n\nMeanwhile the top 1% saw their income rise by 233%.\n\nQ: Was Booker correct in saying that the private insurance overhead was 15 percent while Medicare’s was only at 2 percent ?\nA: It’s true that the most recent Trustees Report of the Medicare system puts total “administrative expenses” at $9.9 billion last year. That’s actually 1.3 percent of total Medicare expenditures for the year — even less than the 2 percent figure Booker cited. So far, so good. Our conclusion: Booker and others using this and similar claims have a point — Medicare does spend less on administration than private insurers. But it’s not so simple as they would have you believe.\n\nQ: Did the permit-to-purchase gun law reduced 40 percent drops in gun violence and 15 percent drops in suicides \n as claimed by Booker ?\nA: Booker’s claims about the effect of the permit-to-purchase law passed in Connecticut in 1995 come from two studies. The first, published in the American Journal of Public Health in 2015 concluded that “the law was associated with a 40% reduction in Connecticut’s firearm homicide rates during the first 10 years that the law was in place.” The second, published in Preventive Medicine in 2015, found a 15.4% reduction in suicide rates associated with Connecticut’s law\n\nQ: Was Beto O’Rourke correct in saying that Purdue Pharma had paid no consequences in connection to the opioid crisis ?.\nA: This claim is incorrect.\nIn 2007, the company and three executives pleaded guilty in federal court to charges relating to “misbranding” OxyContin. Collectively, they agreed to pay more than $634 million in fines and other payments — what was described by the New York Times as “one of the largest amounts ever paid by a drug company in such a case.”\n\nStates also have recently taken action against the company: In March, the Oklahoma Attorney General’s Office reached a $270 million settlement with Purdue after alleging the company and others were to blame for the state’s opioid epidemic.\n\nQ: Is Booker correct in saying that about 30 % of LGBTQ kids do not goto school because of fear ?\nA: More specifically, the CDC survey found that 12.5% of LGB students missed one day of school or more because they felt they would be unsafe at school or on their way to or from school, compared with 5.6% of all students, 4.6% of heterosexual students and 10.8% of students who weren’t sure.\n\nQ: What is the percentage of LGBTQ students missing one or more days of school due to feeling unsafe at school?\nA: The 2017 GLSEN National School Climate Survey found that 35 percent of LGBTQ students said they missed at least one day of school in the month prior to taking the survey due to feeling unsafe at school.\n\nQ: How many students identified as LGBTQ+ in the 2017 GLSEN National School Climate Survey?\nA: This latest report surveyed 23,001 lesbian, gay, bisexual, transgender and queer students between the ages of 13 and 21. Respondents hailed from all 50 states, D.C. and U.S. territories.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002041",
+    "speaker": "Cory Booker",
+    "reporting_source": ""
+  },
+  {
+    "crawled_date": "26-6-2019",
+    "country_of_origin": "unknown",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210301141507/https://www.factcheck.org/2019/06/factchecking-the-first-2020-democratic-debate/",
+    "lang": "en",
+    "claim": "Sen. Cory Booker claimed the Iran nuclear deal “pushed back a nuclear breakout 10, 20 years.” during the 2020 U.S presidential debate",
+    "doc": "Q: Was there a nuclear deal with Iran?\nA: Sen. Cory Booker claimed the Iran nuclear deal “pushed back a nuclear breakout 10, 20 years.” The deal pushed back the breakout time from two or three months to one year for at least 10 years.\n\nQ: How long did the Iran agreement delay the breakout time?\nA: The deal extends the time Iran would need to produce an atomic bomb from two or\nthree months to at least one year, which would give the United States and its allies an\nopportunity to react if the Iranians broke the agreement.\n\nQ: How long did the Iran agreement delay the breakout time?\nA: Some contributors to this report believe that breakout time\nby year 15 could be comparable to what it is today—a few\nmonths—while others believe it could be reduced to a few\nweeks. In any event, Iran is unlikely to attempt breakout at\nNatanz during this period because detection would be swift and the risk of provoking a military attack would be high. Since all enrichment will be limited to Natanz for 15 years under the\nJCPOA, Iran’s nuclear program would be vulnerable to military\nattack.\n\nQ: What is the Iran agreement?\nA: Known as the Joint Comprehensive Plan of Action, this deal:\n\nCuts off all of Iran’s pathways to a nuclear weapon, including a covert pathway\n\nPuts in place vigorous, intrusive, and unprecedented\ntransparency measures that are necessary to verify that Iran cannot pursue a weapon\n\nEnsures sanctions can be snapped back into place if Iran violates the deal\n\nQ: Will the physical constraints on enrichment imposed by the agreement be eventually lifted?\nA: Yes",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002042",
+    "speaker": "",
+    "reporting_source": ""
+  },
+  {
+    "crawled_date": "26-6-2019",
+    "country_of_origin": "unknown",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210301141507/https://www.factcheck.org/2019/06/factchecking-the-first-2020-democratic-debate/",
+    "lang": "en",
+    "claim": "Sen. Cory Booker claimed private insurance overhead was 15 percent, while Medicare’s was “only at 2 percent.”",
+    "doc": "Q: What were Medicare's admin expenses as a percentage of total expenses in 2018?\nA: 1.3%\n\nQ: What were Medicare's admin expenses as a percentage of total expenses in 2018?\nA: he most recent Trustees Report of the Medicare system puts total “administrative expenses” at $9.9 billion last year. That’s actually 1.3 percent of total Medicare expenditures for the year — even less than the 2 percent figure Booker cited.\n\nQ: How does the overhead charge for healthcare compare to the admin cost of healthcare?\nA: Comparing data for the public Medicare with private Medicare, we show that the administrative expenses percentage of benefits for the public system is much lower.\nThe definitions are incompatible and not reconcilable between the systems.\nWe expand the focus to more financial data. Per-member income and benefits are larger for the public Medicare and grew faster than Medicare Part C, reversing earlier trends. The public Medicare is not solvent in many years, whereas the insurers’ Medicare has an 85% loss ratio.\n\nQ: Are there other reasons that these numbers are incomparable.\nA: Yes\n\nQ: Did Sen. Cory Booker actually claim this?\nA: Yes",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002043",
     "speaker": "",
     "reporting_source": ""
   },
@@ -12640,6 +13298,20 @@
     "claim_id": "averitec_train_002058",
     "speaker": "Indian National Congress - West Bengal",
     "reporting_source": "Facebook"
+  },
+  {
+    "crawled_date": "18-6-2019",
+    "country_of_origin": "unknown",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210628105018/https://fullfact.org/education/its-time-stop-saying-there-are-19million-more-children-good-or-outstanding-schools/",
+    "lang": "en",
+    "claim": "1.9 million more children are in good and outstanding schools.",
+    "doc": "Q: Where countries schools does the claim refer to?\nA: England, U.K.\n\nQ: Who rates schools performance  in the U.K?\nA: The Office for Standards in Education, Children’s Services and Skills (Ofsted) inspects and regulates services that care for children and young people and services that provide education and skills for learners of all ages.\n\nQ: do 1.9 million children attend a school rated good or outstanding by Ofsted in the U.K?\nA: Yes\n\nQ: How many children are in schools that havn't been rated by Ofsted?\nA: 580,000 pupils were in schools that hadn’t even been inspected since 2010.\n\nQ: Does the 1.9 million figure give an accurate impression of how schools in the U.K work for their pupils?\nA: It’s factually accurate, The problem is that it fails an important test of any statistic – it does not show the user what the\nproducer believes it shows. In this case, it does not adequately demonstrate that standards in\nschools have improved since 2010, at least not to the extent that a quarter of all pupils are in\nsignificantly better schools because of any policy intervention",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002063",
+    "speaker": "Michael Gove",
+    "reporting_source": "BBC leadership debate"
   },
   {
     "crawled_date": "17-6-2019",
@@ -12909,20 +13581,6 @@
   },
   {
     "crawled_date": "12-6-2019",
-    "country_of_origin": "ng",
-    "label": "False",
-    "url": "https://web.archive.org/web/20210303161244/https://dubawa.org/ex-president-jonathans-claims-on-nigerias-fdi-inflation-rate-under-him-misleading/",
-    "lang": "en",
-    "claim": "Nigeria was the number one destination for foreign direct investment during the tenure of President Jonathon.",
-    "doc": "Q: Who was the number one destination for foreign direct investment from May 5th 2010 to May 29th 2015?\nA: Nigeria topped all other African countries in Mr Jonathan’s first two years with respective earnings of $8.84 and $7.07 billion. A drop to $5.5 and $4.65 billion in his subsequent two years in charge blew Nigeria off the top spot to the third spot in Africa. By his last year in office, the nation’s FDI had shrunk to $3.14 billion, placing Nigeria as Africa’s 7th destination for FDI.",
-    "taxonomy_label": "numerical",
-    "label_original": "refuted",
-    "claim_id": "averitec_train_002102",
-    "speaker": "Goodluck Jonathan",
-    "reporting_source": "Permium Times"
-  },
-  {
-    "crawled_date": "12-6-2019",
     "country_of_origin": "us",
     "label": "True",
     "url": "https://web.archive.org/web/20210302210034/https://www.politifact.com/factchecks/2019/jul/18/bernie-sanders/checking-bernie-sanders-life-expectancy-wva-virgin/",
@@ -12948,6 +13606,20 @@
     "claim_id": "averitec_train_002109",
     "speaker": "David Perdue - US Senator ",
     "reporting_source": "The Washington post"
+  },
+  {
+    "crawled_date": "11-6-2019",
+    "country_of_origin": "gb",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210711112128/https://fullfact.org/health/cost-tv-hospital-prison/",
+    "lang": "en",
+    "claim": "It costs £8 per day to watch TV in hospital if you’re 82.",
+    "doc": "Q: What companies provide TV systems to hospitals?\nA: Some hospitals use TV systems provided by companies like HTS or Hospedia.\n\nQ: Does Hospedia provide free TV services?\nA: Yes\n\nQ: How much do you have to pay to watch TV in a hospital?\nA: For instance, as of April 2018 at the County Durham and Darlington NHS Trust, TV was free on channels one to five in the mornings, with prices ranging from £7.90 per day for the \"1 Day TV Bundle\" to the most expensive rate at £24.90 per day for the \"3 Day TV & Movies Bundle.\"\n\nQ: Do some hospitals provide TV services free of charge?\nA: James Paget University Hospitals NHS Foundation Trust, provide TV free of charge on some wards.\n\nQ: How much are 82-year-olds charged to watch TV in hospitals?\nA: No answer could be found.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002110",
+    "speaker": "Kelly Jenkinson",
+    "reporting_source": "Twitter"
   },
   {
     "crawled_date": "11-6-2019",
@@ -13036,6 +13708,20 @@
   {
     "crawled_date": "1-6-2019",
     "country_of_origin": "gb",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210416095030/https://fullfact.org/online/vegan-food-facts/",
+    "lang": "en",
+    "claim": "Being vegan for a year saves 365 animals.",
+    "doc": "Q: Are there any sources for how many animals are saved by adopting a vegan diet?\nA: The Vegan Society estimates 37 animals per year would be saved.\n1 pig, 16 fish, 19 birds and 1 laying hen.\n\nQ: Are there any sources for how many animals are saved by adopting a vegan diet?\nA: PETA conducted a study that estimated 198 animals would be saved per year.\n130 shellfish, 40 fish, 26 chickens, 1 turkey, half a pig and one tenth of a cow.\n\nQ: Are there any sources for how many animals are saved by adopting a vegan diet?\nA: Vegancalculator.com says that 1 animal would be saved per day.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002124",
+    "speaker": "planetbasednews",
+    "reporting_source": "Social Media"
+  },
+  {
+    "crawled_date": "1-6-2019",
+    "country_of_origin": "gb",
     "label": "False",
     "url": "https://web.archive.org/web/20210416095030/https://fullfact.org/online/vegan-food-facts/",
     "lang": "en",
@@ -13102,6 +13788,34 @@
     "claim_id": "averitec_train_002140",
     "speaker": "Doug Edwards",
     "reporting_source": "Facebook"
+  },
+  {
+    "crawled_date": "28-5-2019",
+    "country_of_origin": "gb",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20201128231146/https://fullfact.org/online/eu-election-results-leave-and-remain/",
+    "lang": "en",
+    "claim": "In the 2019 EU parliamentary election, the \"total leave vote\" was 57.8% and the \"total remain vote\" was 41.5%.",
+    "doc": "Q: What was the total percentage of votes cast to leave in the EU parliamentary elections?\nA: 58%\n\nQ: What was the total percentage of votes cast to remain in the EU parliamentary elections?\nA: 41.5%\n\nQ: How many \"leave\" votes by The Labour Party were cast?\nA: Total 14.1%\n\nQ: How many \"leave\" votes by The Brexit Party were cast?\nA: Total 31.6%",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002142",
+    "speaker": "Message from the People",
+    "reporting_source": "Facebook"
+  },
+  {
+    "crawled_date": "28-5-2019",
+    "country_of_origin": "gb",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210119115958/https://fullfact.org/europe/did-one-third-support-no-deal-brexit/",
+    "lang": "en",
+    "claim": "12% of the electorate voted for no deal in the 2019 EU parliamentary elections",
+    "doc": "Q: What was the 2019 Eu Parliamentary elections for?\nA: Elections to the European Parliament take place every five years by universal adult suffrage to vote European parliament members,\n\nQ: What is \"no deal\"?\nA: A no-deal Brexit (also clean break Brexit) was the potential withdrawal of the UK from the European Union (EU) without a withdrawal agreement\n\nQ: How many parties supported the No Deal?\nA: Two parties standing in the 2019 EU parliamentary elections in Great Britain seem to support a no deal Brexit as their preferred outcome: the Brexit Party and UKIP.\n\nQ: What percentage of votes did these parties get?\nA: These two parties won 35% of the vote in Great Britain between them (the Brexit Party got 31.6% and UKIP got 3.3%).\n\nQ: What percentage of eligible voters cast a vote for a no deal party?\nA: 34% of all UK voters who voted in the EU parliamentary elections voted for a party that seems to favour no deal, meaning about 13% of the total UK electorate voted for a no deal party.\n\nQ: Was everyone who voted for a no deal party, necessarily preferring a no deal brexit?\nA: a poll by Lord Ashcroft taken just after the election found 67% of those reporting they had voted for the Brexit party said they thought the best Brexit outcome would be leaving the EU with no deal. 23% thought the best outcome would be some form of deal, but not the one negotiated by the government.\n\nQ: How do Northern Ireland elections work?\nA: Single Transferable Vote (STV)\n Under STV, voters rank candidates in order of preference by marking 1, 2, 3 and so on next to the names of candidates on a ballot paper. A voter can rank as many or as few candidates as they like or just vote for one candidate.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002143",
+    "speaker": "Anna Soubry",
+    "reporting_source": "TWITTER"
   },
   {
     "crawled_date": "23-5-2019",
@@ -13200,6 +13914,20 @@
     "claim_id": "averitec_train_002163",
     "speaker": "Andrew Mar",
     "reporting_source": ""
+  },
+  {
+    "crawled_date": "19-5-2019",
+    "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210716210121/https://www.washingtonpost.com/politics/2019/05/23/fact-checking-president-trumps-wild-jabs-joe-biden/",
+    "lang": "en",
+    "claim": "Joe Biden told Ukrainian government leaders that if they did not sack the prosecutor going after his son then they would not give them a $2 billion loan.",
+    "doc": "Q: Did  the Ukrainian government investigate  Burisma Holdings?\nA: Since May 7, 2014 GPO has been investigating case No42014000000000375 of alleged criminal activity of subsidiaries of Burisma in Ukraine,\n\nQ: Who was the lead investigator in Ukraine investigation of Burisma?\nA: Prosecutor General Viktor Shokin\n\nQ: Did Vice President Joe Biden tell the Ukrainian government that if they did not sack the prosecutor investigating Burisma then they would not give them a loan?\nA: n his own words, Biden described how he threatened Ukrainian President Petro Poroshenko in March 2016 that the Obama administration would pull U.S. loan guarantees,  if it did not fire Prosecutor General Viktor Shokin\n\nQ: How much was the loan being threatened to e removed?\nA: $1 billion in U.S\n\nQ: Who is Joe Biden's Son?\nA: younger son, Hunter Biden.\n\nQ: Was Hunter Biden connected with the Burisma company being investigated in Ukraine?\nA: Burisma Holdings employed Biden’s younger son, Hunter, as a board member.\n\nQ: Did Vice president Joe Biden acknowledge his sons role at Burisma before asking for the prosecutor in Ukraine be fired?\nA: Biden’s office was quoted, on the record, acknowledging Hunter Biden’s role in Burisma in a New York Times article about the general prosecutor’s Burisma case that appeared four months before Biden forced the firing of Shokin. The vice president’s office suggested in that article that Hunter Biden was a lawyer free to pursue his own private business deals.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002164",
+    "speaker": "Donald Trump",
+    "reporting_source": "Fox News"
   },
   {
     "crawled_date": "19-5-2019",
@@ -13776,6 +14504,20 @@
     "reporting_source": "Timeslive"
   },
   {
+    "crawled_date": "16-4-2019",
+    "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210121021525/https://www.politifact.com/factchecks/2019/apr/23/dan-patrick/dan-patrick-migrant-deaths-remains-fact-check/",
+    "lang": "en",
+    "claim": "Since 2011, there has been documentation of 1,671 dead bodies recovered in Texas, many in Brooks County on the US Mexico border.",
+    "doc": "Q: Are official figures of deaths published by US Government?\nA: Yes\n\nQ: Are more deaths reported in  Brooks county than other areas of Texas?\nA: in 2012 Texas surpassed Arizona in deaths, with the majority occurring in the Rio Grande Valley and more specifically in Brooks, County, Texas (USBP, 2012).\n\nQ: what is the number of dead immgrants found in the usa-meico border\nA: No comprehensive estimates exist on the number of injuries or deaths that occur along the border but  As of April 15, 2011, 145 bodies had been recovered in the graves, as families throughout Mexico wait to find out if their loved ones are among the dead.[",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002259",
+    "speaker": "Dan Patrick (Lieutenant Governor of Texas) ",
+    "reporting_source": "Press Conference"
+  },
+  {
     "crawled_date": "15-4-2019",
     "country_of_origin": "il",
     "label": "True",
@@ -13788,6 +14530,20 @@
     "claim_id": "averitec_train_002263",
     "speaker": "Bernie Sanders",
     "reporting_source": "FOX NEWS"
+  },
+  {
+    "crawled_date": "15-4-2019",
+    "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210225102515/https://www.politifact.com/article/2019/apr/17/fact-checking-bernie-sanders-town-hall-fox-news/",
+    "lang": "en",
+    "claim": "Since Trump took office, 7 million more people lack health insurance that used to have it.",
+    "doc": "Q: How many people have lost insurance in the U.S. in 2018?\nA: Seven million adults without health insurance in 2018.\n\nQ: When was the lowest report of people losing their insurance in the U.S.?\nA: 2016 reached a low point of 10.9% of U.S. adults without health insurance, between 2008-2018.\n\nQ: What was the percentage of U.S. adults without health insurance in 2018?\nA: 13.7%\n\nQ: Were there other reports on the rise of people in the U.S. without insurance?\nA: Yes\n\nQ: What was the percentage of U.S. adults without health insurance in 2017?\nA: 12.2% at 12 December 2017",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002264",
+    "speaker": "Bernie Sanders",
+    "reporting_source": "Fox News"
   },
   {
     "crawled_date": "15-4-2019",
@@ -13860,6 +14616,34 @@
     "reporting_source": "Fox News"
   },
   {
+    "crawled_date": "15-4-2019",
+    "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210225102515/https://www.politifact.com/article/2019/apr/17/fact-checking-bernie-sanders-town-hall-fox-news/",
+    "lang": "en",
+    "claim": "In the Republican tax bill, 83% of the benefits went to the top 1%.",
+    "doc": "Q: In the Republican tax bill, did the 83% of the benefits went to the top 1%?\nA: There’s no question that the top 5 percent do the best by far under the 2017 Tax Cuts and Jobs Act. But in the early years, about half of the tax breaks go to the bottom 90 percent of taxpayers. It’s only later that the picture skews as hard toward the wealthiest, as Sanders said.\n\nQ: In the Republican tax bill, did the 83% of the benefits went to the top 1%?\nA: about half of the tax breaks go to the bottom 90 percent of taxpayers.\n\nQ: Who benefits most from tax break benefits?\nA: the benefits of the law would be heavily concentrated among the upper-middle and upper-class Americans, with nearly two-thirds of the benefit going to the richest fifth of Americans in 2018.\n\nQ: Who were the most tax cuts aimed at?\nA: corporate rate cuts mostly\n\nQ: Do lower earners benefit much from corporate tax cuts?\nA: corporate rate cuts mostly help Americans rich enough to own stock, that means that in 2027, poor and middle-class Americans would see a very mild tax increase on average:",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002272",
+    "speaker": "Bernie Sanders",
+    "reporting_source": "Fox News"
+  },
+  {
+    "crawled_date": "15-4-2019",
+    "country_of_origin": "il",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210225102515/https://www.politifact.com/article/2019/apr/17/fact-checking-bernie-sanders-town-hall-fox-news/",
+    "lang": "en",
+    "claim": "Since Trump took office, 7 million more people lack health insurance that used to have it.",
+    "doc": "Q: Where are Sanders' numbers from?\nA: The January 2019 Gallup estimate\n\nQ: Where are Sanders' numbers from?\nA: The January 2019 Gallup estimate\n\nQ: What does the Gallup estimate to be the amount of people who lost insurance in 2019?\nA: 2.8 percentage points from its low in 2016. Gallup ran the numbers and converted that rise into 7 million people who lost insurance.\n\nQ: What number did the government survey say?\nA: About 1.3 million people.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002273",
+    "speaker": "Bernie Sanders",
+    "reporting_source": "Fox News"
+  },
+  {
     "crawled_date": "14-4-2019",
     "country_of_origin": "unknown",
     "label": "False",
@@ -13886,6 +14670,20 @@
     "claim_id": "averitec_train_002276",
     "speaker": "Eric swalwell",
     "reporting_source": ""
+  },
+  {
+    "crawled_date": "10-4-2019",
+    "country_of_origin": "ke",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210118134705/https://africacheck.org/fact-checks/reports/fact-checking-5-claims-kenyas-deputy-president-ruto-including-corruption-and",
+    "lang": "en",
+    "claim": "The Kenyan Government asked six ministers to step aside in its last term in 2015.",
+    "doc": "Q: Were members of the 2015 Kenyan Government asked to step aside?\nA: Yes\n\nQ: Were any ministers suspended?\nA: Yes\n\nQ: Did any members step aside?\nA: Yes\n\nQ: Were these five removed from the Cabinet?\nA: Yes\n\nQ: Did anyone else leave the government?\nA: Yes",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002279",
+    "speaker": " Kenyan deputy president William Ruto",
+    "reporting_source": "Citizen TV"
   },
   {
     "crawled_date": "10-4-2019",
@@ -13998,6 +14796,20 @@
     "claim_id": "averitec_train_002287",
     "speaker": "Kirsten Gillibrand",
     "reporting_source": "CNN"
+  },
+  {
+    "crawled_date": "10-4-2019",
+    "country_of_origin": "ke",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210118134705/https://africacheck.org/fact-checks/reports/fact-checking-5-claims-kenyas-deputy-president-ruto-including-corruption-and",
+    "lang": "en",
+    "claim": "Kenyan deputy president William Ruto asked six ministers in the last term (2015 to 2019) to step aside.",
+    "doc": "Q: Were any Kenyan ministers asked to step aside in the 2015-19 term of office?\nA: Yes\n\nQ: Were any government officials suspended?\nA: Yes\n\nQ: Were any government officials suspended?\nA: Yes\n\nQ: Did any other government officials leave government?\nA: Yes",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002289",
+    "speaker": "William Ruto",
+    "reporting_source": "Citizen TV"
   },
   {
     "crawled_date": "10-4-2019",
@@ -14688,6 +15500,20 @@
   {
     "crawled_date": "4-4-2019",
     "country_of_origin": "ke",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210719170145/https://africacheck.org/fact-checks/reports/state-nation-2019-did-kenyatta-get-his-facts-right",
+    "lang": "en",
+    "claim": "In 2018, provisional estimates show the Kenya economy grew by 6.1%.",
+    "doc": "Q: Did provisional estimates in 2018 show that the Kenyan economy had grown by 6.1% in the year to September?\nA: The estimates were provisional based on future growth for the year being 6.4% and existing figures showing the economy grew 5.8% in the first three months of 2018, 6.2% in the second quarter and 6% in the third quarter of the year.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002351",
+    "speaker": "Uhuru Kenyatta, C.G.H., President Of The Republic Of Kenya",
+    "reporting_source": "State of the Nation address 2019"
+  },
+  {
+    "crawled_date": "4-4-2019",
+    "country_of_origin": "ke",
     "label": "False",
     "url": "https://web.archive.org/web/20210719170145/https://africacheck.org/fact-checks/reports/state-nation-2019-did-kenyatta-get-his-facts-right",
     "lang": "en",
@@ -14896,6 +15722,20 @@
     "reporting_source": ""
   },
   {
+    "crawled_date": "4-4-2019",
+    "country_of_origin": "ke",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210719170145/https://africacheck.org/fact-checks/reports/state-nation-2019-did-kenyatta-get-his-facts-right",
+    "lang": "en",
+    "claim": "In 2018, provisional estimates show the Kenyan economy grew by 6.1%.",
+    "doc": "Q: What is the provisional estimate for Kenya's economy in 2018?\nA: Provisional estimates of gross domestic product indicate that the economy expanded by 6.0 per cent during the third quarter of 2018\n\nQ: What is the provisional estimate for Kenya's economy in 2018?\nA: growth resumed in the last five years reaching 5.7% in 2018\n\nQ: What is the provisional estimate for Kenya's economy in 2018?\nA: Kenya’s economic growth rate has averaged 5 – 6% over the past decade, implying\nchallenges in the country’s productive capacity. In a 2018 study by the PBO, it was established\nthat Kenya’s potential output is at 5% on average which implies that the country’s economic\nperformance may have peaked in the past decade4\n. Actual economic growth has coalesced at\napproximately the same level as potential GDP (figure xx), and unless there is a significant change\nin policy direction and budget execution to scale up the country’s productive capacity, it will be difficult\nfor the economy to achieve a growth rate that is significantly higher than 6 %. It is worth noting that\npolicy documents target a higher economic growth of 7 – 10%.\n\nQ: What is Kenya's expected economic growth for 2018?\nA: Provisional estimates of gross domestic product indicate that the economy expanded\nby 6.0 per cent during the third quarter of 2018\n\nQ: What is Kenya's expected economic growth for 2018?\nA: . With provisional estimates of economic growth at 6.0 percent for 2018, the Kenyan economy\nhas been on a steady recovery path - but this growth should be interpreted with caution.\n\nQ: What is Kenya's expected economic growth for 2018?\nA: A 5.8% predicted growth for 2018",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002370",
+    "speaker": "Uhuru Kenyatta",
+    "reporting_source": "Republic of Kenya"
+  },
+  {
     "crawled_date": "3-4-2019",
     "country_of_origin": "in",
     "label": "True",
@@ -14920,6 +15760,20 @@
     "taxonomy_label": "numerical",
     "label_original": "supported",
     "claim_id": "averitec_train_002377",
+    "speaker": "Ministry of Health & Family Welfare (MoHFW), Government of India",
+    "reporting_source": "https://pmsma.nhp.gov.in/about-scheme/"
+  },
+  {
+    "crawled_date": "3-4-2019",
+    "country_of_origin": "in",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20201030020837/https://factly.in/fact-checking-government-claims-about-welfare-benefits-to-pregnant-women/",
+    "lang": "en",
+    "claim": "more than 50 lakh pregnant women expected to benefit every year with cash incentive of 6000 rupees",
+    "doc": "Q: Are 50 lakh pregnant women expected to benefit every year with a cash incentive of 6000 rupees?\nA: The Government have said - Under the scheme Rs.5,000/- are provided to the eligible beneficiary in three installments. The eligible beneficiary also receives the remaining cash incentive as per approved norms towards maternity benefit under Janani Suraksha Yojana (JSY) after institutional delivery so that on an average, a woman gets Rs.6,000/-.\n\nQ: How many women got paid the money?\nA: 46 Lakh (46,54,956) so not the 50 lakh in the claim.\n\nQ: Who is providing the benefit?\nA: The Indian Government\n\nQ: What is the name of the programme?\nA: Pradhan Mantri Matru Vandana Yojana (PMMVY)",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002378",
     "speaker": "Ministry of Health & Family Welfare (MoHFW), Government of India",
     "reporting_source": "https://pmsma.nhp.gov.in/about-scheme/"
   },
@@ -15050,6 +15904,34 @@
     "reporting_source": "React365"
   },
   {
+    "crawled_date": "31-3-2019",
+    "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210302192024/https://www.factcheck.org/2019/04/the-preexisting-conditions-debate-isnt-over/",
+    "lang": "en",
+    "claim": "President Donald Trump wants to change the  Affordable Care Act (ACA) protections, abolishing health insurance for kids who are 26 years of age or younger who are currently on their parents plans, which will throw 32 million Americans off their current health insurance.",
+    "doc": "Q: Does Trump want to abolish the ACA ?\nA: He asked the federal courts to find the ACA unconstitutional and nullify the entire law\n\nQ: Does trump plan to offer a replacement if the ACA is removed?\nA: They would plan to offer an unspecified alternative at a later date should ACA be removed.\n\nQ: Where does the 32 million figure come from?\nA: The 32 million figure is based on a Congressional Budget Office estimate of the impact of the Obamacare Repeal Reconciliation Act of 2017, which would have repealed the ACA altogether and replaced it with an unnamed replacement at a later date. According to the CBO, the plan would increase the number of uninsured by 32 million individuals over ten years.\n\nQ: Why would the number of uninsured people increase?\nA: In the nongroup market, some people would choose not to have insurance partly because\nthey choose to be covered by insurance under current law to avoid paying the penalty.\nAnd, under this legislation, without the mandate penalty, some people would forgo\ninsurance in response to the higher premiums that CBO and JCT project would be\ncharged. Insurers would still be required to provide coverage to any applicant, and they\nwould not be able to vary premiums to reflect enrollees’ health status or to limit coverage\nof preexisting medical conditions.\n\nQ: Would young adults up to the age of 26 be able to stay on their parents' insurance plans under the GOP?\nA: Yes\n\nQ: What is the name of the bill plan that the Trump administration has put forward?\nA: GOP health plan",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002395",
+    "speaker": "Bernie Sanders (Senator)",
+    "reporting_source": "CBS News 'Face The Nation Show'"
+  },
+  {
+    "crawled_date": "30-3-2019",
+    "country_of_origin": "gb",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210126035157/https://fullfact.org/economy/do-labour-councils-cost-you-less/",
+    "lang": "en",
+    "claim": "People living in Labour councils pay on average £351 less council tax than those living in Tory councils.",
+    "doc": "Q: Is it true that Labour council is fee £351 lesser than Tory councils ?\nA: A major issue with Labour’s calculation is that you often pay council tax to more than one body, which can be run by different political parties. This means that often no single party is responsible for every penny you pay: you can live in a Labour-run council and actually pay most of your bill to a Conservative-run body.\n\nQ: What is the date of the claim?\nA: 30th March 2019.\n\nQ: What was the average council tax for majority labour council areas in England in 2019?\nA: £1,168 in councils with a majority Labour council,\n\nQ: What was the average council tax for majority Tory council areas in England in 2019?\nA: £1,519 in collecting councils with a majority Conservative council.\n\nQ: Do councils set their own council tax for their elected area?\nA: No",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002398",
+    "speaker": "The Labour party ",
+    "reporting_source": "Twitter"
+  },
+  {
     "crawled_date": "29-3-2019",
     "country_of_origin": "gb",
     "label": "False",
@@ -15090,6 +15972,20 @@
     "claim_id": "averitec_train_002401",
     "speaker": "",
     "reporting_source": "Facebook"
+  },
+  {
+    "crawled_date": "28-3-2019",
+    "country_of_origin": "in",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20201030140421/https://factly.in/fact-checking-government-claims-on-agreements-enabling-legislations-to-curb-corruption/",
+    "lang": "en",
+    "claim": "A double taxation avoidance agreement was signed between India and three new countries, which are: Mauritius, Cyprus, and Singapore.",
+    "doc": "Q: Which countries have signed the Double taxation avoidance agreement?\nA: India had completed DTAA renegotiations with 23 countries, including Switzerland.\n\nQ: When did Mauritius sign the  double taxation avoidance agreement?\nA: Signed in 1983\n\nQ: When did Cyprus sign the  double taxation avoidance agreement?\nA: 18th of November 2016\n\nQ: When did Singapore sign the double taxation avoidance agreement?\nA: 24th January, 1994",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002402",
+    "speaker": "",
+    "reporting_source": ""
   },
   {
     "crawled_date": "28-3-2019",
@@ -15164,6 +16060,20 @@
   {
     "crawled_date": "28-3-2019",
     "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20201108023324/https://www.politifact.com/article/2019/mar/29/fact-checking-donald-trumps-grand-rapids-rally-aft/",
+    "lang": "en",
+    "claim": "In the last two years The U.S. Immigration and Customs Enforcement officers have made 266,000 arrests of criminal aliens…including those charged or convicted of nearly 100,000 assaults, 30,000 sex crimes, 4,000 kidnappings, and 4,000 murders.",
+    "doc": "Q: Can a singular person be charged with multiple crimes and convictions by ICE officers (Immigration and Customs Enforcement) in the United States?\nA: Yes\n\nQ: Does ICE (Immigration and Customs Enforcement) account for individuals whom have multiple convictions and criminal charges?\nA: No\n\nQ: How many arrests did Immigration and Customs Enforcement officers make between 2016-2018 in the United States?\nA: 266,109\n\nQ: Does a criminal charge mean you are guilty of a crime?\nA: No\n\nQ: What was the total offense number of assaults recorded by ICE (Immigration and Customs Enforcement)\nin 2018?\nA: Assault \n-20,766 criminal charges \n-29,987 criminal convictions \n\nTotal Offenses = 50,753\n\nQ: What was the total offense number of assaults recorded by ICE (Immigration and Customs Enforcement)\nin 2017?\nA: 48,454",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002413",
+    "speaker": "US President Donald Trump",
+    "reporting_source": "Grand Rapids, Michigan political rally"
+  },
+  {
+    "crawled_date": "28-3-2019",
+    "country_of_origin": "us",
     "label": "True",
     "url": "https://web.archive.org/web/20201108023324/https://www.politifact.com/article/2019/mar/29/fact-checking-donald-trumps-grand-rapids-rally-aft/",
     "lang": "en",
@@ -15174,6 +16084,20 @@
     "claim_id": "averitec_train_002414",
     "speaker": "US President Donald Trump ",
     "reporting_source": "Grand Rapids, Michigan political rally"
+  },
+  {
+    "crawled_date": "28-3-2019",
+    "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210723125452/https://www.washingtonpost.com/politics/2019/04/15/guide-democratic-talking-points-not-far-off-mark/",
+    "lang": "en",
+    "claim": "A generation ago, 37 cents out of every US food dollar went into a farmer’s pocket. Today, it’s 15 cents.",
+    "doc": "Q: What is a food dollar?\nA: The food dollar series measures annual expenditures by U.S. consumers on domestically produced food.\n\nQ: What was the farmers share of the food dollar in the 1970-1980 period ?\nA: A 2015 Congressional Research Service report, combining several data sets, indicates that the farm share was about 37 cents in the 1970-1980 period\n\nQ: What is the current farmers share of the food dollar?\nA: 14.6 cents however Under this metric, farm production receives only 7.8 cents of the dollar. The gap between 14.6 cents and 7.8 cents indicates that farms spent 6.8 cents of the money they earned to purchase products from the other industry groups. (After all, even farmers may eat at McDonald’s.) Since Warren used the phrasing about how much of the agriculture dollars “went into a farmer’s pocket,” the lower number of 7.8 cents may be more appropriate than 15 cents. (Even this figure, however, does not account for 1.4 cents that must go to hire labor, so the amount going into “the farmer’s pocket” is even lower.)",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002415",
+    "speaker": "Elizabeth Warren",
+    "reporting_source": "Twitter"
   },
   {
     "crawled_date": "28-3-2019",
@@ -15554,6 +16478,20 @@
     "reporting_source": ""
   },
   {
+    "crawled_date": "14-3-2019",
+    "country_of_origin": "unknown",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210302055432/https://africacheck.org/fact-checks/reports/what-waste-fact-checking-four-claims-about-nigerias-garbage-problem",
+    "lang": "en",
+    "claim": "Lagos has an estimated 21 million inhabitants",
+    "doc": "Q: What was the population of Lagos city in Nigeria in 2019?\nA: One population forecast put the population for Lagos in 2019 around, 24,187,400\n\nQ: IS there a accurate figure for Lagos's population in 2019?\nA: No\n\nQ: Is there a reliable figure for the population of Lagos?\nA: No",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002464",
+    "speaker": "",
+    "reporting_source": "Guardian"
+  },
+  {
     "crawled_date": "12-3-2019",
     "country_of_origin": "us",
     "label": "False",
@@ -15666,6 +16604,20 @@
     "reporting_source": "blog"
   },
   {
+    "crawled_date": "4-3-2019",
+    "country_of_origin": "in",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20200711205858/https://factly.in/fact-checking-government-claims-on-direct-benefit-transfer/",
+    "lang": "en",
+    "claim": "3,65,996 crore rupees were directly transferred into bank account of beneficiaries of PAHAL, India's Direct Benefit Transfer for LPG, 431consumer schemes",
+    "doc": "Q: How much money was paid to PAHAL beneficiaries by India's DBT in 2019?\nA: 2,61,71,50,93,600 rupees\n\nQ: How many different schemes were  beneficiaries of DBT in 2019?\nA: 318",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002490",
+    "speaker": "BJP government",
+    "reporting_source": "48months"
+  },
+  {
     "crawled_date": "3-3-2019",
     "country_of_origin": "au",
     "label": "False",
@@ -15748,6 +16700,20 @@
     "claim_id": "averitec_train_002506",
     "speaker": "Donald Trump",
     "reporting_source": "Conservative Political Action Conference"
+  },
+  {
+    "crawled_date": "2-3-2019",
+    "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210509012842/https://www.politifact.com/article/2019/mar/04/fact-checking-donald-trump-two-hour-speech/",
+    "lang": "en",
+    "claim": "Medicare for All would result in massive tax increases like never before as well as the loss of private coverage for over 180 million Americans.",
+    "doc": "Q: What is Medicare for All?\nA: Sanders’ idea of Medicare for All would be a single, national health insurance program that would cover everyone who lives in the United States. In the bill he introduced in 2017, it would pay for every medically necessary service, from routine doctor visits to surgery to mental health to prescription drugs. Dental and vision care are part of the package, too. The details on long-term care might vary between the Senate and House versions, but broadly speaking, nursing home and related care grow under both proposals.\n\nThe government would set payment rates for services, drugs and medical equipment. Each year, the secretary of Health and Human Services would determine a national budget for all covered services and spending would be limited by that cap. For individuals, there would be no costs — no deductibles, no copays or coinsurance. The two exceptions would be for some prescription drugs — though that would be limited to $200 a year — and possibly for long-term care.\n\nIt would replace all other insurance, with limited exceptions, such as cosmetic surgery. Employer-provided insurance, Medicaid and ultimately Medicare would all disappear.\n\nQ: Will taxes rise to pay for Medicare for All?\nA: To that, he would raise taxes on income over $250,000, reaching a 52 percent marginal rate on income over $10 million. He suggested a wealth tax on the top 0.1 percent of households.\n\nQ: Will Medicare take private coverage away from over 180 million Americans?\nA: it would mean that the roughly 180 million Americans who have private insurance would see their plans canceled.\n\nQ: Is Medicare for All preferable to the current system of private insurance?\nA: Medicare for All is much more generous than the current Medicare program. Right now, the Medicare program is for Americans 65 and over; they receive care, but they’re also responsible for part of the costs. Unlike traditional Medicare, Sanders’ Medicare for All would cover medical bills completely, with no burden on the patient. There would be no Medigap insurance or Medicare Advantage.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002507",
+    "speaker": "Donald trump",
+    "reporting_source": ""
   },
   {
     "crawled_date": "2-3-2019",
@@ -15860,6 +16826,20 @@
     "claim_id": "averitec_train_002522",
     "speaker": "Bernie Sanders",
     "reporting_source": ""
+  },
+  {
+    "crawled_date": "23-2-2019",
+    "country_of_origin": "za",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210609113104/https://africacheck.org/fact-checks/reports/one-south-africa-all-fact-checking-das-2019-election-manifesto",
+    "lang": "en",
+    "claim": "50% of all new jobs in South Africa, in the past year, were created in the Western Cape.",
+    "doc": "Q: How many jobs in Western Cape were created between quarter 3 2017 and quarter 3 2018?\nA: 95,000 which equals 50.5%.\n\nQ: How many jobs in Western Cape were created between quarter 4 2017 and quarter 4 2018?\nA: 29,000 which equals 8.1%.\n\nQ: When was the 4th quarter data released?\nA: 12 February 2019.\n\nQ: When was the manifesto released?\nA: 23 February 2019.\n\nQ: Did the DA use the older data rather than the new data released in February 12th 2019?\nA: Yes",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002526",
+    "speaker": "Democratic Alliance Party",
+    "reporting_source": "PDF"
   },
   {
     "crawled_date": "22-2-2019",
@@ -16044,6 +17024,20 @@
     "reporting_source": ""
   },
   {
+    "crawled_date": "18-2-2019",
+    "country_of_origin": "in",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210310232210/https://factly.in/fact-checking-government-claims-about-various-agriculture-related-funds-schemes/",
+    "lang": "en",
+    "claim": "Rs. 2000 crore for agri-market infrastructure fund set up",
+    "doc": "Q: What is agri-market infrastructure?\nA: in order to improve market accessibility and to facilitate the farmers to directly sell their produce to the consumer to get better price realization for their produce, the Government has announced in Union Budget 2018-19, to develop and upgrade existing 22000 rural haats into Gramin Agricultural Markets (GrAMs). In these GrAMs, physical infrastructure will be strengthened using Government Schemes such as MGNREGA (Mahatma Gandhi National Rural Employment Guarantee Act). These GrAMs are to be exempted from regulations of Agriculture Produce Marketing Committee (APMCs) and linked to e-NAM to provide farmers with better market accessibility and facilities to sell their produce at remunerative prices’.\n\nQ: How much is put aside for agri-market infrastructure fund set up.\nA: An Agri-Market Infrastructure Fund with a corpus of Rs. 2000 crore is targeted to be set up for developing and upgrading agricultural marketing infrastructure in the 22000 GrAMs including 585 Agriculture Produce Marketing Committees (APMCs). The cabinet approved for the Agri-Market Infrastructure fund recently in February 2019. The budgetary allocation to the fund is however not clear and the Rs. 2000 crore is not the government’s budgetary support.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002557",
+    "speaker": "",
+    "reporting_source": ""
+  },
+  {
     "crawled_date": "15-2-2019",
     "country_of_origin": "us",
     "label": "True",
@@ -16126,6 +17120,20 @@
     "claim_id": "averitec_train_002578",
     "speaker": "Donald Trump",
     "reporting_source": "Rose Garden at the White House "
+  },
+  {
+    "crawled_date": "15-2-2019",
+    "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210702112300/https://www.politifact.com/article/2019/feb/15/donald-trumps-news-conference-about-national-emerg/",
+    "lang": "en",
+    "claim": "US chain migration allows a bad person to come into the US, and bring 22 or 23 or 35 of his family members because he has his mother, his grandmother, sister, cousin, uncle.",
+    "doc": "Q: Can you bring relatives into the US?\nA: Neither U.S. citizens nor lawful permanent residents can directly petition for an aunt, uncle, cousin, niece, nephew, in-law relative or grandparent to come to the United States.\n\nQ: Are there restrictions on what relatives you can bring into the US?\nA: U.S. citizens and lawful permanent residents (green card holders) can bring certain family members to the United States to live here permanently.\n\nBut there are restrictions. No one can directly petition for an aunt, uncle, cousin, niece, nephew, in-law relative or grandparent, according to USCIS.\n\nQ: Are there situations where for example an aunt or uncle could be allowed into the US?\nA: Theoretically, one immigrant’s arrival in the United States could lead to the immigration of an aunt or uncle — if the first immigrant becomes a U.S. citizen and petitioned a parent, that parent could eventually become a U.S. citizen and petition his or her siblings.\n\nQ: At what point does an immigrant bring in realtives to the united states\nA: when the person becomes a citizen",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002579",
+    "speaker": "US President Donald Trump",
+    "reporting_source": "Press conference at the White House Rose Garden. ."
   },
   {
     "crawled_date": "15-2-2019",
@@ -16269,6 +17277,20 @@
   },
   {
     "crawled_date": "8-2-2019",
+    "country_of_origin": "ke",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210719202020/https://africacheck.org/fact-checks/reports/kenyas-ruto-chatham-house-verifying-deputy-presidents-london-speech",
+    "lang": "en",
+    "claim": "The Kenyan government has built a standard-gauge railway of 600 kilometres between 2014 and 2019.",
+    "doc": "Q: What is the route length of the standard-gauge railway (SGR)?\nA: ...a route length of 472kms.\n\nQ: What is the track length of the standard-gauge railway (SGR)?\nA: The railway will have a total track length of 609 km.\n\nQ: Why is there a difference between the route length and track length?\nA: The difference is because there are areas on the main line with multiple tracks. These include two main stations and seven intermediate stations.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002601",
+    "speaker": "William Ruto",
+    "reporting_source": ""
+  },
+  {
+    "crawled_date": "8-2-2019",
     "country_of_origin": "gb",
     "label": "True",
     "url": "https://web.archive.org/web/20210719202020/https://africacheck.org/fact-checks/reports/kenyas-ruto-chatham-house-verifying-deputy-presidents-london-speech",
@@ -16343,6 +17365,20 @@
     "label": "False",
     "url": "https://web.archive.org/web/20210719202020/https://africacheck.org/fact-checks/reports/kenyas-ruto-chatham-house-verifying-deputy-presidents-london-speech",
     "lang": "en",
+    "claim": "Diaspora remittances contributed upwards of KSh290.",
+    "doc": "Q: What are Diaspora remittances?\nA: Kenya’s central bank defines it as “money sent by a person in a foreign land to his or her home country” –\n\nQ: Who collects the data on diaspora remittances?\nA: The Central Bank of Kenya collects data on diaspora remittances. Each month it surveys the flow of money into the country through formal channels such as commercial banks and other authorised remittance service providers.\n\nQ: What were the remittances in 2018?\nA: In 2018 remittances were at US$2.697 billion. Using the central bank’s exchange rate for 8 February 2019, when Ruto made the claim, this works out to KSh270.1 billion. Nearly half was from North America.",
+    "taxonomy_label": "numerical",
+    "label_original": "refuted",
+    "claim_id": "averitec_train_002611",
+    "speaker": "William Ruto",
+    "reporting_source": ""
+  },
+  {
+    "crawled_date": "8-2-2019",
+    "country_of_origin": "gb",
+    "label": "False",
+    "url": "https://web.archive.org/web/20210719202020/https://africacheck.org/fact-checks/reports/kenyas-ruto-chatham-house-verifying-deputy-presidents-london-speech",
+    "lang": "en",
     "claim": "The Kenyan government connected 6.9 million people to electricity supply, in the period 2014 to 2019.",
     "doc": "Q: When did the current administration come into office?\nA: In June 2013\n\nQ: How many people were connected to electricity in 2013?\nA: In June 2013, a month after the current administration came into office, there were 2.33 million customers.\n\nQ: How many customers were connected by june 2018?\nA: Some 6.76 million customers were connected to the electricity grid by 30 June 2018, according to the latest report by national utility Kenya Power.\n\nQ: How many customers were therefore added to the national grid?\nA: in those five years some 4.43 million more customers - not 6.9 million - were added to the national grid.",
     "taxonomy_label": "numerical",
@@ -16350,6 +17386,20 @@
     "claim_id": "averitec_train_002612",
     "speaker": "Deputy president William Ruto",
     "reporting_source": "speech"
+  },
+  {
+    "crawled_date": "8-2-2019",
+    "country_of_origin": "ke",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210719202020/https://africacheck.org/fact-checks/reports/kenyas-ruto-chatham-house-verifying-deputy-presidents-london-speech",
+    "lang": "en",
+    "claim": "The current Kenyan government has constructed 7,000 kilometres of tarmac in the last five years – 12,000 kilometres were constructed in 50 years.",
+    "doc": "Q: When was the claim made?\nA: 8th February 2019\n\nQ: How much tarmac road did Kenya have in 2013?\nA: Kenya had 11,230 kilometres of bitumen roads in 2013.\n\nQ: How much tarmac road did Kenya have in 2018?\nA: The most recent figures published in the 2018 Economic Survey show that Kenya had 20,600 km of bitumen roads in 2017.\n\nQ: How much tarmac road did Kenya have in 2018?\nA: Kenyatta’s 2017 election manifesto says his administration built 1,950 kilometres of paved road from 2013 to 2017, for a total of 13,180 kilometres.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002614",
+    "speaker": "Kenyan Deputy President, William Ruto",
+    "reporting_source": "Chatham House speech"
   },
   {
     "crawled_date": "8-2-2019",
@@ -17250,6 +18300,20 @@
   {
     "crawled_date": "7-2-2019",
     "country_of_origin": "za",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210226001653/https://africacheck.org/fact-checks/reports/state-facts-verifying-cyril-ramaphosas-sona2019-claims",
+    "lang": "en",
+    "claim": "Over 700,000 children [accessed] early childhood education in the last financial year",
+    "doc": "Q: Did Cyril Ramaphosa  underestimate the number of children in early childhood development facilities in South Africa?\nA: yes. Ramaphosa put the number at “nearly one million children” in 2018. Then in 2019,  his figure was “over 700,000”. Both figures are an underestimate.\n\nQ: Is Ramaphosa's statement of \"over\" 700,000 technically correct, whilst being inaccurate?\nA: Yes\n\nQ: Is Ramaphosa's statement of \"over\" 700,000 technically correct, whilst being inaccurate?\nA: The statement is technically correct as he stated \"over\" 700,000 children. But it is inaccurate and a very low estimate, as the 2017 general household survey reported that just over 2 million children under the age of four were attending a “day care centre, crèche, early childhood development centre (ECD) playgroup, nursery school or preprimary school”.\n\nQ: How many children were in some kind of pre-school in South Africa in 2016?\nA: 2,409,953 children were in some kind of pre-school in 2016. (Note: These were children who were younger than eight at the start of 2016.)\n\nQ: What has been said about Cyril Ramaphosas's claims on children's education numbers in 2018?\nA: They have been labelled as incorrect. He suggested that 1 million children had access to early childhood education, which is an underestimate\n\nQ: How many children were in some kind of pre-school in South Africa in 2017?\nA: No answer could be found.\n\nQ: How many children were in some kind of pre-school in South Africa in 2011?\nA: 1 013 229",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002703",
+    "speaker": "Cyril Ramaphosa",
+    "reporting_source": ""
+  },
+  {
+    "crawled_date": "7-2-2019",
+    "country_of_origin": "za",
     "label": "False",
     "url": "https://web.archive.org/web/20210226001653/https://africacheck.org/fact-checks/reports/state-facts-verifying-cyril-ramaphosas-sona2019-claims",
     "lang": "en",
@@ -17260,6 +18324,20 @@
     "claim_id": "averitec_train_002704",
     "speaker": "Cyril Ramaphosa",
     "reporting_source": "CNBC"
+  },
+  {
+    "crawled_date": "7-2-2019",
+    "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210227102547/https://www.factcheck.org/2019/02/sanders-fact-check-video-distorts-facts/",
+    "lang": "en",
+    "claim": "Over 20 percent of Americans between the ages of 25-54 do not have a job, which is higher than was the case 19 years ago.",
+    "doc": "Q: what is the unemployment rate in the US\nA: The U.S. jobless rate dropped to 3.7 percent in September — the lowest since 1969, though the economy added a lower-than-expected 134,000 jobs, the Bureau of Labor Statistics said.\n\nQ: what is the unemployment rate in the US\nA: Unemployment rate - Not Seasonally Adjusted\nBaltimore city, MD\nUnited States\n1950\n1955\n1960\n1965\n1970\n1975\n1980\n1985\n1990\n1995\n2000\n2005\n2010\n2015\n2020\n0%\n2%\n4%\n6%\n8%\n10%\n12%\n14%\n16%\n195019551960196519701975198019851990199520002005201020152020\n\nQ: is the unemployment rate in the US higher now (2019) than it was 20 years ago?\nA: No\n\nQ: What percent of Americans between the ages of 25-54 did not have a job in 2019?\nA: 79.9 percent of the 25-to-54 population was working in January, So 20.1 percent was not working.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002705",
+    "speaker": "Warren Gunnels",
+    "reporting_source": "Bernie Sanders' Twitter"
   },
   {
     "crawled_date": "7-2-2019",
@@ -17710,6 +18788,20 @@
     "reporting_source": "Public Meeting"
   },
   {
+    "crawled_date": "2-2-2019",
+    "country_of_origin": "ng",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210720180153/https://africacheck.org/fact-checks/reports/battle-titans-fact-checking-arch-rivals-race-nigerias-presidency",
+    "lang": "en",
+    "claim": "Nigeria's capital expenditure in 2016 was N1.2 trillion and in 2017 was N1.5 trillion.",
+    "doc": "Q: What was Nigeria's capital expenditure in 2016?\nA: - Capital Expenditure (excluding Share of\nCapital in Statutory Transfers) = N1.59 trillion\n- Capital Expenditure (including share of\ncapital expenditure in Statutory Transfer) = N1.75 trillion\n\nQ: What was Nigeria's capital expenditure in 2016?\nA: N1.2 trillion\n\nQ: What was Nigeria's capital expenditure in 2017?\nA: The total capital expenditure was N2,178 trillion in 2017.\n\nQ: What was Nigeria's capital expenditure in 2017?\nA: The Federal Government has announced that a total of N1.6 trillion (N1,580,270,755,084.44) capital cost was released to Ministries, Departments and Agencies for the 2017 federal budget.\n\nQ: What was the recorded as Nigeria's Capital expenditure in 2016\nA: – Capital Expenditure (excluding Share of\nCapital in Statutory Transfers) = N1.59 trillion\n– Capital Expenditure (including share of\ncapital expenditure in Statutory Transfer) = N1.75 trillion\n\nQ: What was the recorded as Nigeria's Capital expenditure in 2016\nA: The federal government releasedd a total of 1.2 trillion naira for capital expenses according to the Minister of Finance for 2016\n\nQ: How much was recorded as Nigeria's capital expenditure in 2017\nA: TOTAL CAPITAL EXPENDITURE 2,177,866,775,867\n\nQ: How much was recorded as Nigeria's capital expenditure in 2017\nA: The Federal Government has announced that a total of N1.6 trillion (N1,580,270,755,084.44) capital cost was released to Ministries, Departments and Agencies for the 2017 federal budget.\n\nThe Minister of Finance, Kemi Adeosun, made this known in Abuja on Tuesday.\n\nThe N1.6 trillion total capital releases for 2017 is remarkably higher than the N1.2 trillion (N1,219,471,747,443.00) total capital releases for 2016.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002752",
+    "speaker": "Peter Obi ",
+    "reporting_source": "Public meeting"
+  },
+  {
     "crawled_date": "1-2-2019",
     "country_of_origin": "za",
     "label": "True",
@@ -17848,6 +18940,20 @@
     "claim_id": "averitec_train_002772",
     "speaker": "African National Congress",
     "reporting_source": "ANC manifesto for the 2019"
+  },
+  {
+    "crawled_date": "12-1-2019",
+    "country_of_origin": "za",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210302051737/https://africacheck.org/fact-checks/reports/better-life-all-fact-checking-ancs-2019-election-manifesto",
+    "lang": "en",
+    "claim": "Since 1994, over 4.7 million free houses have been built, benefiting over 14 million people.",
+    "doc": "Q: How many houses have been built in South Africa from 1994 to 2018?\nA: 3 263 331.\n\nQ: How many people benefitted from the \n3 263 331 homes built in South Africa?\nA: No answer could be found.\n\nQ: What was  President Kgalema statement on the construction of free houses\nA: President Kgalema Motlanthe said: \"Government's social programmes have improved the asset base of the poor, in the form of housing with 2.6-million subsidised houses provided.\"",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002774",
+    "speaker": "African National Congress",
+    "reporting_source": "African National Congress manifesto"
   },
   {
     "crawled_date": "11-1-2019",
@@ -18029,6 +19135,20 @@
     "label_original": "refuted",
     "claim_id": "averitec_train_002807",
     "speaker": "Deonna Minix",
+    "reporting_source": "Facebook"
+  },
+  {
+    "crawled_date": "18-9-2018",
+    "country_of_origin": "us",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210413074606/https://www.usatoday.com/story/news/factcheck/2021/03/10/fact-check-ted-cruzs-campaign-mailers-complied-fec-standards/6925569002/",
+    "lang": "en",
+    "claim": "Sen. Ted Cruz's 2018 campaign tried to trick elderly Texans with suspicious mailers",
+    "doc": "Q: Was there anything controversial about any campaign letters sent out by Senator Ted Cruz in 2018?\nA: Ted Cruz’s Senate re-election campaign has been sending voters in Texas a fund-raising letter in an envelope labeled “summons enclosed,” drawing criticism from some who called it misleading and raising questions about whether such a practice was legal.\n\nConfusion arises not just from the letter itself but from the envelope it arrives in.\n\nThe fund-raising appeal comes in an envelope with the words “SUMMONS ENCLOSED — OPEN IMMEDIATELY” written across it in large capital letters. In the upper left-hand corner are three lines of text: “Official Travis County Summons, Voter Enrollment Campaign Division, Ted Cruz for Senate 2018.”\n\nQ: Were the 2018 campaign letters sent out by Ted Cruz in envelopes labelled “summons enclosed”, directly targeting elderly Texans?\nA: No\n\nQ: Were the 2018 campaign letters sent out by Ted Cruz in envelopes labelled “summons enclosed”, illegal?\nA: No\n\nQ: Did the 2018 campaign letters sent out by Ted Cruz in envelopes labelled “summons enclosed” raise any ethical concerns?\nA: Yes",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002812",
+    "speaker": "Ted Cruz",
     "reporting_source": "Facebook"
   },
   {
@@ -18552,6 +19672,20 @@
   {
     "crawled_date": "1-11-2016",
     "country_of_origin": "gb",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210719183043/https://fullfact.org/online/burning-poppies-mosque-bacon/",
+    "lang": "en",
+    "claim": "A man, Emdadur Choudhury, who burned poppies on Remembrance Day 2011 as a counter protest and was fined £50 under the Public Order Act, paid the fine by using his benefits.",
+    "doc": "Q: On Remembrance Day 2011, did a man named Emdadur Choudhury burn poppies?\nA: Yes\n\nQ: Was Emdadur Choudhury fined £50 for burning the poppies on Remembrance Day 2011?\nA: Yes\n\nQ: How did Emdadur Choudhury pay for his £50 fine?\nA: The extremist told how radical Muslim cleric Anjem Choudary had offered to foot the bill\n\nQ: Was Emdadur Choudhury on state benefits?\nA: Yes",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002896",
+    "speaker": "Albert Gorman",
+    "reporting_source": "Facebook"
+  },
+  {
+    "crawled_date": "1-11-2016",
+    "country_of_origin": "gb",
     "label": "True",
     "url": "https://web.archive.org/web/20210719183043/https://fullfact.org/online/burning-poppies-mosque-bacon/",
     "lang": "en",
@@ -18814,6 +19948,20 @@
     "claim_id": "averitec_train_002939",
     "speaker": "Gen. Muhammadu Buhari",
     "reporting_source": "Press"
+  },
+  {
+    "crawled_date": "20-3-2014",
+    "country_of_origin": "unknown",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210310023248/https://healthfeedback.org/claimreview/chemical-in-garlic-eliminates-certain-bacterial-cells-faster-than-two-common-antibiotics-but-not-by-100-times/",
+    "lang": "en",
+    "claim": "Garlic has proven 100 times more effective than antibiotics.",
+    "doc": "Q: What is the report on garlic being proven to be 100 times more effective than antibiotics?\nA: WSU researchers recently reported that diallyl sulfide, a compound found in garlic, is 100 times more effective than the antibiotics erythromycin and ciprofloxacin in killing the toxic bacteria Campylobacter jejuni.\n\nQ: How does the garlic compound diallyl sulfide kill bacteria?\nA: The garlic compound diallyl sulfide is able to dissolve the biofilm and kill the cowering bacteria underneath 'Campylobacter jejuni' which is hard to kill because it produces a slimy protective biofilm that helps it repels antibiotics and stick to surfaces. \n\nCampylobacter jejuni is the most common cause of food poisoning in the United States. Food poisoning strikes over 2.4 million Americans each year and symptoms include stomach pains, cramping, diarrhea and fever.\n\nDiallyl sulfide combines with a sulfur containing enzyme in the bacteria.  This changes the enzyme’s function and shuts down cell metabolism; killing bacteria better and faster than antibiotics!\n\nQ: Have there been other studies investigating whether garlic has antiviral properties?\nA: Yes\n\nQ: Did the \"Garlic for the Common Cold\" study find garlic to have antiviral properties?\nA: The study was inconclusive.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002941",
+    "speaker": "",
+    "reporting_source": ""
   },
   {
     "crawled_date": "14-1-2014",
@@ -19083,6 +20231,20 @@
   },
   {
     "crawled_date": null,
+    "country_of_origin": "nz",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20201126103144/https://fullfact.org/online/mp-pay-rise-uk-new-zealand/",
+    "lang": "en",
+    "claim": "New Zealand’s MPs took a 20% pay cut during this pandemic.",
+    "doc": "Q: Did the New Zealand government announce a 20% cut in pay?\nA: Yes\n\nQ: What was the pay cut percentage for MP's?\nA: 10 per cent for MPs",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002975",
+    "speaker": "Steve Howard",
+    "reporting_source": "Facebook"
+  },
+  {
+    "crawled_date": null,
     "country_of_origin": "us",
     "label": "False",
     "url": "https://web.archive.org/web/20210708140929/https://www.washingtonpost.com/politics/2019/09/27/quick-guide-trumps-false-claims-about-ukraine-bidens/",
@@ -19237,6 +20399,20 @@
   },
   {
     "crawled_date": null,
+    "country_of_origin": "unknown",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210616041324/https://fullfact.org/online/wuhan-5g-coronavirus/",
+    "lang": "en",
+    "claim": "Wuhan is where 5G was rolled out first.",
+    "doc": "Q: Was Wuhan one of the first places to get 5G?\nA: Wuhan, capital of Hubei, is one of the first pilot cities of the 5G network in China.\n\nQ: Were there other areas that had the 5G pilot trails in them ?\nA: China Mobile, the world’s largest mobile operator in terms of subscribers, had plans to carry out external field test in the cities of Hangzhou, Shanghai, Guangzhou, Suzhou, and Wuhan and deploy more than 100 base stations in these locations. China Mobile also has said it would conduct 5G network application demonstrations in 12 cities including Beijing, Chengdu, and Shenzhen.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_002998",
+    "speaker": "",
+    "reporting_source": "Facebook"
+  },
+  {
+    "crawled_date": null,
     "country_of_origin": "gb",
     "label": "False",
     "url": "https://web.archive.org/web/20210626164543/https://fullfact.org/health/vaccine-covid-fertility/",
@@ -19344,6 +20520,20 @@
     "taxonomy_label": "numerical",
     "label_original": "refuted",
     "claim_id": "averitec_train_003014",
+    "speaker": "Social Media Users",
+    "reporting_source": "Social Media"
+  },
+  {
+    "crawled_date": null,
+    "country_of_origin": "gb",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20201112003927/https://fullfact.org/online/more-context-needed-these-facts-about-immigration/",
+    "lang": "en",
+    "claim": "Immigrants are 60% less likely to claim benefits than a British-born person.",
+    "doc": "Q: Are immigrants to Britain less likely to claim State Benefits than British born natives in 2022?\nA: They are more likely to claim in-work benefits like tax credits, according to research from the Migration Observatory\n\nQ: Are they more likely to claim out-of-work benefits than British born citizens?\nA: Migrants are generally less likely to claim out-of-work benefits compared to UK-born people",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_003015",
     "speaker": "Social Media Users",
     "reporting_source": "Social Media"
   },
@@ -19556,6 +20746,20 @@
     "claim_id": "averitec_train_003043",
     "speaker": "The Daily Politik",
     "reporting_source": "Facebook"
+  },
+  {
+    "crawled_date": null,
+    "country_of_origin": "unknown",
+    "label": "Conflicting",
+    "url": "https://web.archive.org/web/20210510213056/https://misbar.com/en/factcheck/2020/12/15/dogs-can-smell-covid-19",
+    "lang": "en",
+    "claim": "Dogs can smell COVID-19 on humans.",
+    "doc": "Q: Can sniffer dogs be used to detect Covid-19?\nA: Yes\n\nQ: Where have Covid 19 sniffer dogs been trialled?\nA: Helsinki, Finland\n\nQ: Where have Covid 19 sniffer dogs been trialled?\nA: Italy.\n\nQ: Are sniffer dogs being used to detect Covid-19?\nA: There is variation in how well individual dogs perform, trial groups need to boost their sample sizes before the wider scientific community can evaluate how useful the dogs might be.\n\nQ: What have studies found about sniffer dogs detecting COVID-19?\nA: A group in France, led by veterinary scientist Dominique Grandjean at the National Veterinary School of Alfort near Paris, posted its work3 on the preprint server bioRxiv in June. The researchers, who included Sarkis, trained 8 dogs to detect COVID-19 in 198 sweat samples, around half of which were from people with the disease. When these were hidden in a row of negative samples, the dogs identified the positive samples 83–100% of the time. The paper does not say how well the dogs identified negative test results. The research is now under review at a journal, but Grandjean says the process has not been easy. “To publish papers on detection dogs is very difficult because most reviewers do not know anything about working dogs,” he says.\n\nThe data in that study look promising, says Fyodor Urnov, a gene-editing scientist who is working on COVID testing at the University of California, Berkeley. But he would like to see larger data sets on how well dogs identify positive and negative samples. He also notes that there is variation in how well individual dogs perform. In Grandjean’s study, for example, 2 dogs identified 68 out of 68 positive samples, whereas one missed 10 out of 57 cases.\n\nQ: Do the studies find that using sniffer dogs to detect COVID-19 is useful?\nA: Groups need to boost their sample sizes before the wider scientific community can evaluate how useful the dogs might be, agrees James Logan, an infectious-disease researcher at the London School of Hygiene & Tropical Medicine who is training and studying COVID-19 dogs, including Storm, Maple and Asher. “It’s important not to go out too early with grand claims and small data sets,” he says.",
+    "taxonomy_label": "numerical",
+    "label_original": "conflicting evidence/cherrypicking",
+    "claim_id": "averitec_train_003049",
+    "speaker": "Social Media Users",
+    "reporting_source": ""
   },
   {
     "crawled_date": null,
