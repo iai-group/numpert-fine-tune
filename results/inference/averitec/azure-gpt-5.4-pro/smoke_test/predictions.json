@@ -1,0 +1,22 @@
+[
+  {
+    "claim_id": "averitec_dev_000055",
+    "claim": "Given the claim and evidence provided, classify the claim as {\"label\": true} if it is true, and {\"label\": false} if it is false.\n    \n    Claim: For a cumulative thirty-two of Nigeria's sixty-five yea",
+    "label": "{\"label\": false}",
+    "prediction": "{\"label\": false}",
+    "perturbation_type": "perturb_type2",
+    "source_file": "numeration_True.json",
+    "raw_response": "{\"label\": false}",
+    "latency_seconds": 12.775
+  },
+  {
+    "claim_id": "averitec_dev_000030",
+    "claim": "Given the claim and evidence provided, classify the claim as {\"label\": true} if it is true, and {\"label\": false} if it is false.\n    \n    Claim: Because of a so-called trade war with China, America lo",
+    "label": "{\"label\": true}",
+    "prediction": "{\"label\": false}",
+    "perturbation_type": "original_normalized",
+    "source_file": "numeration_True.json",
+    "raw_response": "{\"label\": false}",
+    "latency_seconds": 5.846
+  }
+]

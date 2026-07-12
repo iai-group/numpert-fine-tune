@@ -1,0 +1,87 @@
+{
+  "timestamp": "2026-05-23T09:20:44.614491",
+  "model": {
+    "name": ".models/gguf/Qwen3-8B-daring-ant-evolves_no_approx_no_f2f_type2_q4_k_m/merged_model_r32-q4_k_m.gguf",
+    "path": ".models/gguf/Qwen3-8B-daring-ant-evolves_no_approx_no_f2f_type2_q4_k_m/merged_model_r32-q4_k_m.gguf",
+    "lora_rank": 32,
+    "start_epoch": 0
+  },
+  "inference": {
+    "max_seq_length": 16384
+  },
+  "data": {
+    "use_perturbations": true,
+    "test_files": [
+      {
+        "path": "data/averitec/perturbed/dev_split/numeration_True.json",
+        "perturb_types": [
+          "perturb_type1",
+          "perturb_type2"
+        ]
+      },
+      {
+        "path": "data/averitec/perturbed/dev_split/numeration_False.json",
+        "perturb_types": [
+          "perturb_type1",
+          "perturb_type2"
+        ]
+      },
+      {
+        "path": "data/averitec/perturbed/dev_split/approximation_True.json",
+        "perturb_types": [
+          "perturb_type1",
+          "perturb_type2"
+        ]
+      },
+      {
+        "path": "data/averitec/perturbed/dev_split/approximation_False.json",
+        "perturb_types": [
+          "perturb_type1",
+          "perturb_type2"
+        ]
+      },
+      {
+        "path": "data/averitec/perturbed/dev_split/range_True.json",
+        "perturb_types": [
+          "perturb_type1",
+          "perturb_type2"
+        ]
+      },
+      {
+        "path": "data/averitec/perturbed/dev_split/range_False.json",
+        "perturb_types": [
+          "perturb_type1",
+          "perturb_type2"
+        ]
+      },
+      {
+        "path": "data/averitec/perturbed/dev_split/negative_True.json",
+        "perturb_types": [
+          "perturb_type2"
+        ]
+      },
+      {
+        "path": "data/averitec/perturbed/dev_split/negative_False.json",
+        "perturb_types": [
+          "perturb_type2"
+        ]
+      },
+      {
+        "path": "data/averitec/perturbed/dev_split/obfuscation_True.json",
+        "perturb_types": [
+          "perturb_type3_random"
+        ]
+      },
+      {
+        "path": "data/averitec/perturbed/dev_split/obfuscation_False.json",
+        "perturb_types": [
+          "perturb_type3_random"
+        ]
+      }
+    ],
+    "test_stats": {
+      "size": 750
+    }
+  },
+  "training_provenance": null
+}
