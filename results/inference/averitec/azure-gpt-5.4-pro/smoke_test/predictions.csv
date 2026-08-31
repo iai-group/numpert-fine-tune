@@ -1,0 +1,3 @@
+claim_id,perturbation_type,source_file,label,prediction,parsed_successfully,raw_response
+averitec_dev_000055,perturb_type2,numeration_True.json,"{""label"": false}","{""label"": false}",True,"{""label"": false}"
+averitec_dev_000030,original_normalized,numeration_True.json,"{""label"": true}","{""label"": false}",True,"{""label"": false}"

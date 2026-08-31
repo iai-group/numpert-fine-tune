@@ -1,0 +1,1397 @@
+{
+  "overall": {
+    "group_name": "overall",
+    "accuracy": 0.936,
+    "f1_macro": 0.9,
+    "f1_weighted": 0.9363,
+    "precision_macro": 0.8961,
+    "recall_macro": 0.9041,
+    "total": 750,
+    "valid": 750,
+    "correct": 702,
+    "parse_failures": 0,
+    "classification_report": {
+      "true": {
+        "precision": 0.8289,
+        "recall": 0.8514,
+        "f1-score": 0.84,
+        "support": 148.0
+      },
+      "false": {
+        "precision": 0.9632,
+        "recall": 0.9568,
+        "f1-score": 0.96,
+        "support": 602.0
+      },
+      "accuracy": 0.936,
+      "macro avg": {
+        "precision": 0.8961,
+        "recall": 0.9041,
+        "f1-score": 0.9,
+        "support": 750.0
+      },
+      "weighted avg": {
+        "precision": 0.9367,
+        "recall": 0.936,
+        "f1-score": 0.9363,
+        "support": 750.0
+      }
+    }
+  },
+  "per_perturbation_type": {
+    "original_normalized": {
+      "group_name": "perturbation_type=original_normalized",
+      "description": "Baseline (unperturbed)",
+      "accuracy": 0.916,
+      "f1_macro": 0.9114,
+      "f1_weighted": 0.915,
+      "precision_macro": 0.9241,
+      "recall_macro": 0.9041,
+      "total": 119,
+      "valid": 119,
+      "correct": 109,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 0.9535,
+          "recall": 0.8367,
+          "f1-score": 0.8913,
+          "support": 49.0
+        },
+        "false": {
+          "precision": 0.8947,
+          "recall": 0.9714,
+          "f1-score": 0.9315,
+          "support": 70.0
+        },
+        "accuracy": 0.916,
+        "macro avg": {
+          "precision": 0.9241,
+          "recall": 0.9041,
+          "f1-score": 0.9114,
+          "support": 119.0
+        },
+        "weighted avg": {
+          "precision": 0.9189,
+          "recall": 0.916,
+          "f1-score": 0.915,
+          "support": 119.0
+        }
+      }
+    },
+    "perturb_type1": {
+      "group_name": "perturbation_type=perturb_type1",
+      "description": "Structure-preserving (label unchanged)",
+      "accuracy": 0.917,
+      "f1_macro": 0.9117,
+      "f1_weighted": 0.9164,
+      "precision_macro": 0.9185,
+      "recall_macro": 0.9066,
+      "total": 253,
+      "valid": 253,
+      "correct": 232,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 0.9239,
+          "recall": 0.8586,
+          "f1-score": 0.8901,
+          "support": 99.0
+        },
+        "false": {
+          "precision": 0.913,
+          "recall": 0.9545,
+          "f1-score": 0.9333,
+          "support": 154.0
+        },
+        "accuracy": 0.917,
+        "macro avg": {
+          "precision": 0.9185,
+          "recall": 0.9066,
+          "f1-score": 0.9117,
+          "support": 253.0
+        },
+        "weighted avg": {
+          "precision": 0.9173,
+          "recall": 0.917,
+          "f1-score": 0.9164,
+          "support": 253.0
+        }
+      }
+    },
+    "perturb_type2": {
+      "group_name": "perturbation_type=perturb_type2",
+      "description": "Value-modifying (always False)",
+      "accuracy": 0.9446,
+      "f1_macro": 0.4858,
+      "f1_weighted": 0.9715,
+      "precision_macro": 0.5,
+      "recall_macro": 0.4723,
+      "total": 271,
+      "valid": 271,
+      "correct": 256,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 0.0
+        },
+        "false": {
+          "precision": 1.0,
+          "recall": 0.9446,
+          "f1-score": 0.9715,
+          "support": 271.0
+        },
+        "accuracy": 0.9446,
+        "macro avg": {
+          "precision": 0.5,
+          "recall": 0.4723,
+          "f1-score": 0.4858,
+          "support": 271.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 0.9446,
+          "f1-score": 0.9715,
+          "support": 271.0
+        }
+      }
+    },
+    "perturb_type3_random": {
+      "group_name": "perturbation_type=perturb_type3_random",
+      "description": "Obfuscation: random digits (always False)",
+      "accuracy": 0.9813,
+      "f1_macro": 0.4953,
+      "f1_weighted": 0.9906,
+      "precision_macro": 0.5,
+      "recall_macro": 0.4907,
+      "total": 107,
+      "valid": 107,
+      "correct": 105,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 0.0
+        },
+        "false": {
+          "precision": 1.0,
+          "recall": 0.9813,
+          "f1-score": 0.9906,
+          "support": 107.0
+        },
+        "accuracy": 0.9813,
+        "macro avg": {
+          "precision": 0.5,
+          "recall": 0.4907,
+          "f1-score": 0.4953,
+          "support": 107.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 0.9813,
+          "f1-score": 0.9906,
+          "support": 107.0
+        }
+      }
+    }
+  },
+  "per_source_file": {
+    "approximation_False.json": {
+      "group_name": "source_file=approximation_False.json",
+      "accuracy": 0.9556,
+      "f1_macro": 0.4886,
+      "f1_weighted": 0.9773,
+      "precision_macro": 0.5,
+      "recall_macro": 0.4778,
+      "total": 90,
+      "valid": 90,
+      "correct": 86,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 0.0
+        },
+        "false": {
+          "precision": 1.0,
+          "recall": 0.9556,
+          "f1-score": 0.9773,
+          "support": 90.0
+        },
+        "accuracy": 0.9556,
+        "macro avg": {
+          "precision": 0.5,
+          "recall": 0.4778,
+          "f1-score": 0.4886,
+          "support": 90.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 0.9556,
+          "f1-score": 0.9773,
+          "support": 90.0
+        }
+      }
+    },
+    "approximation_True.json": {
+      "group_name": "source_file=approximation_True.json",
+      "accuracy": 0.8594,
+      "f1_macro": 0.8585,
+      "f1_weighted": 0.8592,
+      "precision_macro": 0.8596,
+      "recall_macro": 0.8578,
+      "total": 64,
+      "valid": 64,
+      "correct": 55,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 0.8621,
+          "recall": 0.8333,
+          "f1-score": 0.8475,
+          "support": 30.0
+        },
+        "false": {
+          "precision": 0.8571,
+          "recall": 0.8824,
+          "f1-score": 0.8696,
+          "support": 34.0
+        },
+        "accuracy": 0.8594,
+        "macro avg": {
+          "precision": 0.8596,
+          "recall": 0.8578,
+          "f1-score": 0.8585,
+          "support": 64.0
+        },
+        "weighted avg": {
+          "precision": 0.8595,
+          "recall": 0.8594,
+          "f1-score": 0.8592,
+          "support": 64.0
+        }
+      }
+    },
+    "negative_False.json": {
+      "group_name": "source_file=negative_False.json",
+      "accuracy": 1.0,
+      "f1_macro": 1.0,
+      "f1_weighted": 1.0,
+      "precision_macro": 1.0,
+      "recall_macro": 1.0,
+      "total": 9,
+      "valid": 9,
+      "correct": 9,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 0.0
+        },
+        "false": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 9.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 0.5,
+          "recall": 0.5,
+          "f1-score": 0.5,
+          "support": 9.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 9.0
+        }
+      }
+    },
+    "negative_True.json": {
+      "group_name": "source_file=negative_True.json",
+      "accuracy": 1.0,
+      "f1_macro": 1.0,
+      "f1_weighted": 1.0,
+      "precision_macro": 1.0,
+      "recall_macro": 1.0,
+      "total": 5,
+      "valid": 5,
+      "correct": 5,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 0.0
+        },
+        "false": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 5.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 0.5,
+          "recall": 0.5,
+          "f1-score": 0.5,
+          "support": 5.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 5.0
+        }
+      }
+    },
+    "numeration_False.json": {
+      "group_name": "source_file=numeration_False.json",
+      "accuracy": 0.9785,
+      "f1_macro": 0.4946,
+      "f1_weighted": 0.9891,
+      "precision_macro": 0.5,
+      "recall_macro": 0.4892,
+      "total": 186,
+      "valid": 186,
+      "correct": 182,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 0.0
+        },
+        "false": {
+          "precision": 1.0,
+          "recall": 0.9785,
+          "f1-score": 0.9891,
+          "support": 186.0
+        },
+        "accuracy": 0.9785,
+        "macro avg": {
+          "precision": 0.5,
+          "recall": 0.4892,
+          "f1-score": 0.4946,
+          "support": 186.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 0.9785,
+          "f1-score": 0.9891,
+          "support": 186.0
+        }
+      }
+    },
+    "numeration_True.json": {
+      "group_name": "source_file=numeration_True.json",
+      "accuracy": 0.8655,
+      "f1_macro": 0.8528,
+      "f1_weighted": 0.8692,
+      "precision_macro": 0.8409,
+      "recall_macro": 0.8802,
+      "total": 119,
+      "valid": 119,
+      "correct": 103,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 0.9583,
+          "recall": 0.8415,
+          "f1-score": 0.8961,
+          "support": 82.0
+        },
+        "false": {
+          "precision": 0.7234,
+          "recall": 0.9189,
+          "f1-score": 0.8095,
+          "support": 37.0
+        },
+        "accuracy": 0.8655,
+        "macro avg": {
+          "precision": 0.8409,
+          "recall": 0.8802,
+          "f1-score": 0.8528,
+          "support": 119.0
+        },
+        "weighted avg": {
+          "precision": 0.8853,
+          "recall": 0.8655,
+          "f1-score": 0.8692,
+          "support": 119.0
+        }
+      }
+    },
+    "obfuscation_False.json": {
+      "group_name": "source_file=obfuscation_False.json",
+      "accuracy": 0.9839,
+      "f1_macro": 0.4959,
+      "f1_weighted": 0.9919,
+      "precision_macro": 0.5,
+      "recall_macro": 0.4919,
+      "total": 62,
+      "valid": 62,
+      "correct": 61,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 0.0
+        },
+        "false": {
+          "precision": 1.0,
+          "recall": 0.9839,
+          "f1-score": 0.9919,
+          "support": 62.0
+        },
+        "accuracy": 0.9839,
+        "macro avg": {
+          "precision": 0.5,
+          "recall": 0.4919,
+          "f1-score": 0.4959,
+          "support": 62.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 0.9839,
+          "f1-score": 0.9919,
+          "support": 62.0
+        }
+      }
+    },
+    "obfuscation_True.json": {
+      "group_name": "source_file=obfuscation_True.json",
+      "accuracy": 0.9778,
+      "f1_macro": 0.4944,
+      "f1_weighted": 0.9888,
+      "precision_macro": 0.5,
+      "recall_macro": 0.4889,
+      "total": 45,
+      "valid": 45,
+      "correct": 44,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 0.0
+        },
+        "false": {
+          "precision": 1.0,
+          "recall": 0.9778,
+          "f1-score": 0.9888,
+          "support": 45.0
+        },
+        "accuracy": 0.9778,
+        "macro avg": {
+          "precision": 0.5,
+          "recall": 0.4889,
+          "f1-score": 0.4944,
+          "support": 45.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 0.9778,
+          "f1-score": 0.9888,
+          "support": 45.0
+        }
+      }
+    },
+    "range_False.json": {
+      "group_name": "source_file=range_False.json",
+      "accuracy": 0.9412,
+      "f1_macro": 0.4848,
+      "f1_weighted": 0.9697,
+      "precision_macro": 0.5,
+      "recall_macro": 0.4706,
+      "total": 102,
+      "valid": 102,
+      "correct": 96,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 0.0
+        },
+        "false": {
+          "precision": 1.0,
+          "recall": 0.9412,
+          "f1-score": 0.9697,
+          "support": 102.0
+        },
+        "accuracy": 0.9412,
+        "macro avg": {
+          "precision": 0.5,
+          "recall": 0.4706,
+          "f1-score": 0.4848,
+          "support": 102.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 0.9412,
+          "f1-score": 0.9697,
+          "support": 102.0
+        }
+      }
+    },
+    "range_True.json": {
+      "group_name": "source_file=range_True.json",
+      "accuracy": 0.8971,
+      "f1_macro": 0.8969,
+      "f1_weighted": 0.8971,
+      "precision_macro": 0.8965,
+      "recall_macro": 0.8976,
+      "total": 68,
+      "valid": 68,
+      "correct": 61,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 0.9143,
+          "recall": 0.8889,
+          "f1-score": 0.9014,
+          "support": 36.0
+        },
+        "false": {
+          "precision": 0.8788,
+          "recall": 0.9062,
+          "f1-score": 0.8923,
+          "support": 32.0
+        },
+        "accuracy": 0.8971,
+        "macro avg": {
+          "precision": 0.8965,
+          "recall": 0.8976,
+          "f1-score": 0.8969,
+          "support": 68.0
+        },
+        "weighted avg": {
+          "precision": 0.8976,
+          "recall": 0.8971,
+          "f1-score": 0.8971,
+          "support": 68.0
+        }
+      }
+    }
+  },
+  "per_file_and_type": {
+    "approximation_False.json | perturb_type1": {
+      "group_name": "approximation_False.json | perturb_type1",
+      "description": "False \u2192 False \u2014 Structure-preserving (label unchanged)",
+      "accuracy": 0.9556,
+      "f1_macro": 0.4886,
+      "f1_weighted": 0.9773,
+      "precision_macro": 0.5,
+      "recall_macro": 0.4778,
+      "total": 45,
+      "valid": 45,
+      "correct": 43,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 0.0
+        },
+        "false": {
+          "precision": 1.0,
+          "recall": 0.9556,
+          "f1-score": 0.9773,
+          "support": 45.0
+        },
+        "accuracy": 0.9556,
+        "macro avg": {
+          "precision": 0.5,
+          "recall": 0.4778,
+          "f1-score": 0.4886,
+          "support": 45.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 0.9556,
+          "f1-score": 0.9773,
+          "support": 45.0
+        }
+      }
+    },
+    "approximation_False.json | perturb_type2": {
+      "group_name": "approximation_False.json | perturb_type2",
+      "description": "False \u2192 False \u2014 Value-modifying (always False)",
+      "accuracy": 0.9556,
+      "f1_macro": 0.4886,
+      "f1_weighted": 0.9773,
+      "precision_macro": 0.5,
+      "recall_macro": 0.4778,
+      "total": 45,
+      "valid": 45,
+      "correct": 43,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 0.0
+        },
+        "false": {
+          "precision": 1.0,
+          "recall": 0.9556,
+          "f1-score": 0.9773,
+          "support": 45.0
+        },
+        "accuracy": 0.9556,
+        "macro avg": {
+          "precision": 0.5,
+          "recall": 0.4778,
+          "f1-score": 0.4886,
+          "support": 45.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 0.9556,
+          "f1-score": 0.9773,
+          "support": 45.0
+        }
+      }
+    },
+    "approximation_True.json | perturb_type1": {
+      "group_name": "approximation_True.json | perturb_type1",
+      "description": "True \u2192 True \u2014 Structure-preserving (label unchanged)",
+      "accuracy": 0.8333,
+      "f1_macro": 0.4545,
+      "f1_weighted": 0.9091,
+      "precision_macro": 0.5,
+      "recall_macro": 0.4167,
+      "total": 30,
+      "valid": 30,
+      "correct": 25,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 1.0,
+          "recall": 0.8333,
+          "f1-score": 0.9091,
+          "support": 30.0
+        },
+        "false": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 0.0
+        },
+        "accuracy": 0.8333,
+        "macro avg": {
+          "precision": 0.5,
+          "recall": 0.4167,
+          "f1-score": 0.4545,
+          "support": 30.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 0.8333,
+          "f1-score": 0.9091,
+          "support": 30.0
+        }
+      }
+    },
+    "approximation_True.json | perturb_type2": {
+      "group_name": "approximation_True.json | perturb_type2",
+      "description": "True \u2192 False \u2014 Value-modifying (always False)",
+      "accuracy": 0.8824,
+      "f1_macro": 0.4688,
+      "f1_weighted": 0.9375,
+      "precision_macro": 0.5,
+      "recall_macro": 0.4412,
+      "total": 34,
+      "valid": 34,
+      "correct": 30,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 0.0
+        },
+        "false": {
+          "precision": 1.0,
+          "recall": 0.8824,
+          "f1-score": 0.9375,
+          "support": 34.0
+        },
+        "accuracy": 0.8824,
+        "macro avg": {
+          "precision": 0.5,
+          "recall": 0.4412,
+          "f1-score": 0.4688,
+          "support": 34.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 0.8824,
+          "f1-score": 0.9375,
+          "support": 34.0
+        }
+      }
+    },
+    "negative_False.json | perturb_type2": {
+      "group_name": "negative_False.json | perturb_type2",
+      "description": "False \u2192 False \u2014 Value-modifying (always False)",
+      "accuracy": 1.0,
+      "f1_macro": 1.0,
+      "f1_weighted": 1.0,
+      "precision_macro": 1.0,
+      "recall_macro": 1.0,
+      "total": 9,
+      "valid": 9,
+      "correct": 9,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 0.0
+        },
+        "false": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 9.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 0.5,
+          "recall": 0.5,
+          "f1-score": 0.5,
+          "support": 9.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 9.0
+        }
+      }
+    },
+    "negative_True.json | perturb_type2": {
+      "group_name": "negative_True.json | perturb_type2",
+      "description": "True \u2192 False \u2014 Value-modifying (always False)",
+      "accuracy": 1.0,
+      "f1_macro": 1.0,
+      "f1_weighted": 1.0,
+      "precision_macro": 1.0,
+      "recall_macro": 1.0,
+      "total": 5,
+      "valid": 5,
+      "correct": 5,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 0.0
+        },
+        "false": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 5.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 0.5,
+          "recall": 0.5,
+          "f1-score": 0.5,
+          "support": 5.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 5.0
+        }
+      }
+    },
+    "numeration_False.json | original_normalized": {
+      "group_name": "numeration_False.json | original_normalized",
+      "description": "False \u2192 False \u2014 Baseline (unperturbed)",
+      "accuracy": 0.9677,
+      "f1_macro": 0.4918,
+      "f1_weighted": 0.9836,
+      "precision_macro": 0.5,
+      "recall_macro": 0.4839,
+      "total": 62,
+      "valid": 62,
+      "correct": 60,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 0.0
+        },
+        "false": {
+          "precision": 1.0,
+          "recall": 0.9677,
+          "f1-score": 0.9836,
+          "support": 62.0
+        },
+        "accuracy": 0.9677,
+        "macro avg": {
+          "precision": 0.5,
+          "recall": 0.4839,
+          "f1-score": 0.4918,
+          "support": 62.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 0.9677,
+          "f1-score": 0.9836,
+          "support": 62.0
+        }
+      }
+    },
+    "numeration_False.json | perturb_type1": {
+      "group_name": "numeration_False.json | perturb_type1",
+      "description": "False \u2192 False \u2014 Structure-preserving (label unchanged)",
+      "accuracy": 0.9677,
+      "f1_macro": 0.4918,
+      "f1_weighted": 0.9836,
+      "precision_macro": 0.5,
+      "recall_macro": 0.4839,
+      "total": 62,
+      "valid": 62,
+      "correct": 60,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 0.0
+        },
+        "false": {
+          "precision": 1.0,
+          "recall": 0.9677,
+          "f1-score": 0.9836,
+          "support": 62.0
+        },
+        "accuracy": 0.9677,
+        "macro avg": {
+          "precision": 0.5,
+          "recall": 0.4839,
+          "f1-score": 0.4918,
+          "support": 62.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 0.9677,
+          "f1-score": 0.9836,
+          "support": 62.0
+        }
+      }
+    },
+    "numeration_False.json | perturb_type2": {
+      "group_name": "numeration_False.json | perturb_type2",
+      "description": "False \u2192 False \u2014 Value-modifying (always False)",
+      "accuracy": 1.0,
+      "f1_macro": 1.0,
+      "f1_weighted": 1.0,
+      "precision_macro": 1.0,
+      "recall_macro": 1.0,
+      "total": 62,
+      "valid": 62,
+      "correct": 62,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 0.0
+        },
+        "false": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 62.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 0.5,
+          "recall": 0.5,
+          "f1-score": 0.5,
+          "support": 62.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 62.0
+        }
+      }
+    },
+    "numeration_True.json | original_normalized": {
+      "group_name": "numeration_True.json | original_normalized",
+      "description": "True \u2192 True \u2014 Baseline (unperturbed)",
+      "accuracy": 0.8222,
+      "f1_macro": 0.4512,
+      "f1_weighted": 0.9024,
+      "precision_macro": 0.5,
+      "recall_macro": 0.4111,
+      "total": 45,
+      "valid": 45,
+      "correct": 37,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 1.0,
+          "recall": 0.8222,
+          "f1-score": 0.9024,
+          "support": 45.0
+        },
+        "false": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 0.0
+        },
+        "accuracy": 0.8222,
+        "macro avg": {
+          "precision": 0.5,
+          "recall": 0.4111,
+          "f1-score": 0.4512,
+          "support": 45.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 0.8222,
+          "f1-score": 0.9024,
+          "support": 45.0
+        }
+      }
+    },
+    "numeration_True.json | perturb_type1": {
+      "group_name": "numeration_True.json | perturb_type1",
+      "description": "True \u2192 True \u2014 Structure-preserving (label unchanged)",
+      "accuracy": 0.8649,
+      "f1_macro": 0.4638,
+      "f1_weighted": 0.9275,
+      "precision_macro": 0.5,
+      "recall_macro": 0.4324,
+      "total": 37,
+      "valid": 37,
+      "correct": 32,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 1.0,
+          "recall": 0.8649,
+          "f1-score": 0.9275,
+          "support": 37.0
+        },
+        "false": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 0.0
+        },
+        "accuracy": 0.8649,
+        "macro avg": {
+          "precision": 0.5,
+          "recall": 0.4324,
+          "f1-score": 0.4638,
+          "support": 37.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 0.8649,
+          "f1-score": 0.9275,
+          "support": 37.0
+        }
+      }
+    },
+    "numeration_True.json | perturb_type2": {
+      "group_name": "numeration_True.json | perturb_type2",
+      "description": "True \u2192 False \u2014 Value-modifying (always False)",
+      "accuracy": 0.9189,
+      "f1_macro": 0.4789,
+      "f1_weighted": 0.9577,
+      "precision_macro": 0.5,
+      "recall_macro": 0.4595,
+      "total": 37,
+      "valid": 37,
+      "correct": 34,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 0.0
+        },
+        "false": {
+          "precision": 1.0,
+          "recall": 0.9189,
+          "f1-score": 0.9577,
+          "support": 37.0
+        },
+        "accuracy": 0.9189,
+        "macro avg": {
+          "precision": 0.5,
+          "recall": 0.4595,
+          "f1-score": 0.4789,
+          "support": 37.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 0.9189,
+          "f1-score": 0.9577,
+          "support": 37.0
+        }
+      }
+    },
+    "obfuscation_False.json | perturb_type3_random": {
+      "group_name": "obfuscation_False.json | perturb_type3_random",
+      "description": "False \u2192 False \u2014 Obfuscation: random digits (always False)",
+      "accuracy": 0.9839,
+      "f1_macro": 0.4959,
+      "f1_weighted": 0.9919,
+      "precision_macro": 0.5,
+      "recall_macro": 0.4919,
+      "total": 62,
+      "valid": 62,
+      "correct": 61,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 0.0
+        },
+        "false": {
+          "precision": 1.0,
+          "recall": 0.9839,
+          "f1-score": 0.9919,
+          "support": 62.0
+        },
+        "accuracy": 0.9839,
+        "macro avg": {
+          "precision": 0.5,
+          "recall": 0.4919,
+          "f1-score": 0.4959,
+          "support": 62.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 0.9839,
+          "f1-score": 0.9919,
+          "support": 62.0
+        }
+      }
+    },
+    "obfuscation_True.json | perturb_type3_random": {
+      "group_name": "obfuscation_True.json | perturb_type3_random",
+      "description": "True \u2192 False \u2014 Obfuscation: random digits (always False)",
+      "accuracy": 0.9778,
+      "f1_macro": 0.4944,
+      "f1_weighted": 0.9888,
+      "precision_macro": 0.5,
+      "recall_macro": 0.4889,
+      "total": 45,
+      "valid": 45,
+      "correct": 44,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 0.0
+        },
+        "false": {
+          "precision": 1.0,
+          "recall": 0.9778,
+          "f1-score": 0.9888,
+          "support": 45.0
+        },
+        "accuracy": 0.9778,
+        "macro avg": {
+          "precision": 0.5,
+          "recall": 0.4889,
+          "f1-score": 0.4944,
+          "support": 45.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 0.9778,
+          "f1-score": 0.9888,
+          "support": 45.0
+        }
+      }
+    },
+    "range_False.json | original_normalized": {
+      "group_name": "range_False.json | original_normalized",
+      "description": "False \u2192 False \u2014 Baseline (unperturbed)",
+      "accuracy": 1.0,
+      "f1_macro": 1.0,
+      "f1_weighted": 1.0,
+      "precision_macro": 1.0,
+      "recall_macro": 1.0,
+      "total": 8,
+      "valid": 8,
+      "correct": 8,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 0.0
+        },
+        "false": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 8.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 0.5,
+          "recall": 0.5,
+          "f1-score": 0.5,
+          "support": 8.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 8.0
+        }
+      }
+    },
+    "range_False.json | perturb_type1": {
+      "group_name": "range_False.json | perturb_type1",
+      "description": "False \u2192 False \u2014 Structure-preserving (label unchanged)",
+      "accuracy": 0.9362,
+      "f1_macro": 0.4835,
+      "f1_weighted": 0.967,
+      "precision_macro": 0.5,
+      "recall_macro": 0.4681,
+      "total": 47,
+      "valid": 47,
+      "correct": 44,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 0.0
+        },
+        "false": {
+          "precision": 1.0,
+          "recall": 0.9362,
+          "f1-score": 0.967,
+          "support": 47.0
+        },
+        "accuracy": 0.9362,
+        "macro avg": {
+          "precision": 0.5,
+          "recall": 0.4681,
+          "f1-score": 0.4835,
+          "support": 47.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 0.9362,
+          "f1-score": 0.967,
+          "support": 47.0
+        }
+      }
+    },
+    "range_False.json | perturb_type2": {
+      "group_name": "range_False.json | perturb_type2",
+      "description": "False \u2192 False \u2014 Value-modifying (always False)",
+      "accuracy": 0.9362,
+      "f1_macro": 0.4835,
+      "f1_weighted": 0.967,
+      "precision_macro": 0.5,
+      "recall_macro": 0.4681,
+      "total": 47,
+      "valid": 47,
+      "correct": 44,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 0.0
+        },
+        "false": {
+          "precision": 1.0,
+          "recall": 0.9362,
+          "f1-score": 0.967,
+          "support": 47.0
+        },
+        "accuracy": 0.9362,
+        "macro avg": {
+          "precision": 0.5,
+          "recall": 0.4681,
+          "f1-score": 0.4835,
+          "support": 47.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 0.9362,
+          "f1-score": 0.967,
+          "support": 47.0
+        }
+      }
+    },
+    "range_True.json | original_normalized": {
+      "group_name": "range_True.json | original_normalized",
+      "description": "True \u2192 True \u2014 Baseline (unperturbed)",
+      "accuracy": 1.0,
+      "f1_macro": 1.0,
+      "f1_weighted": 1.0,
+      "precision_macro": 1.0,
+      "recall_macro": 1.0,
+      "total": 4,
+      "valid": 4,
+      "correct": 4,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 4.0
+        },
+        "false": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 0.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 0.5,
+          "recall": 0.5,
+          "f1-score": 0.5,
+          "support": 4.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 4.0
+        }
+      }
+    },
+    "range_True.json | perturb_type1": {
+      "group_name": "range_True.json | perturb_type1",
+      "description": "True \u2192 True \u2014 Structure-preserving (label unchanged)",
+      "accuracy": 0.875,
+      "f1_macro": 0.4667,
+      "f1_weighted": 0.9333,
+      "precision_macro": 0.5,
+      "recall_macro": 0.4375,
+      "total": 32,
+      "valid": 32,
+      "correct": 28,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 1.0,
+          "recall": 0.875,
+          "f1-score": 0.9333,
+          "support": 32.0
+        },
+        "false": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 0.0
+        },
+        "accuracy": 0.875,
+        "macro avg": {
+          "precision": 0.5,
+          "recall": 0.4375,
+          "f1-score": 0.4667,
+          "support": 32.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 0.875,
+          "f1-score": 0.9333,
+          "support": 32.0
+        }
+      }
+    },
+    "range_True.json | perturb_type2": {
+      "group_name": "range_True.json | perturb_type2",
+      "description": "True \u2192 False \u2014 Value-modifying (always False)",
+      "accuracy": 0.9062,
+      "f1_macro": 0.4754,
+      "f1_weighted": 0.9508,
+      "precision_macro": 0.5,
+      "recall_macro": 0.4531,
+      "total": 32,
+      "valid": 32,
+      "correct": 29,
+      "parse_failures": 0,
+      "classification_report": {
+        "true": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 0.0
+        },
+        "false": {
+          "precision": 1.0,
+          "recall": 0.9062,
+          "f1-score": 0.9508,
+          "support": 32.0
+        },
+        "accuracy": 0.9062,
+        "macro avg": {
+          "precision": 0.5,
+          "recall": 0.4531,
+          "f1-score": 0.4754,
+          "support": 32.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 0.9062,
+          "f1-score": 0.9508,
+          "support": 32.0
+        }
+      }
+    }
+  }
+}
