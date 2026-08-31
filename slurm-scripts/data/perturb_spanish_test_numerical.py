@@ -25,7 +25,7 @@ from pathlib import Path
 
 import spacy
 
-from src.data_preprocessing.perturbations.main_perturb_all import (
+from src.data_preprocessing.perturbations_engine.main_perturb_all import (
     run_perturbations,
 )
 from src.data_preprocessing.raw_dataset_preprocessing.process_tag_claims_spacy import (

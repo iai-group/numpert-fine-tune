@@ -1,31 +1,32 @@
 """
-End-to-end perturbation pipeline for the Spanish numerical dataset.
+End-to-end perturbation pipeline for the Arabic numerical dataset.
 
 Steps
 -----
-1. Load val_spanish_claims.json
-2. Filter: keep True/False labels, remove Conflicting
-3. Apply manual REJECT list (non-numerical claims identified by manual review)
-4. Remove records without doc
+1. Load val_arabic_claim.json
+2. Filter: keep only digit-containing claims (Western and Arabic-Indic digits)
+3. Remove records without doc
+4. Apply manual REJECT list (non-numerical claims identified by manual review)
 5. Convert to QuanTemp schema with claim_id
 6. Normalize number words to digits (reuses normalize_w2n)
-7. Tag tokens with spaCy NER (en_core_web_sm)
+7. Tag tokens with spaCy NER (en_core_web_sm detects digits as CARDINAL)
 8. Split into True / False files
 9. Run all six perturbation types (reuses run_perturbations)
-10. Write results to data/spanish/perturbed/val_split/
+10. Write results to data/arabic/perturbed/val_split/
 
 Usage
 -----
-    uv run --active python scripts/data/perturb_spanish_numerical.py
+    uv run --active python scripts/data/perturb_arabic_numerical.py
 """
 
 import json
+import re
 import warnings
 from pathlib import Path
 
 import spacy
 
-from src.data_preprocessing.perturbations.main_perturb_all import (
+from src.data_preprocessing.perturbations_engine.main_perturb_all import (
     run_perturbations,
 )
 from src.data_preprocessing.raw_dataset_preprocessing.process_tag_claims_spacy import (
@@ -35,111 +36,204 @@ from src.data_preprocessing.raw_dataset_preprocessing.process_tag_claims_spacy i
 
 warnings.filterwarnings("ignore")
 
-SPANISH_DIR = Path("data/spanish")
-TAGGED_DIR = SPANISH_DIR / "spacy_tagged"
-PERTURBED_DIR = SPANISH_DIR / "perturbed"
+ARABIC_DIR = Path("data/arabic")
+TAGGED_DIR = ARABIC_DIR / "spacy_tagged"
+PERTURBED_DIR = ARABIC_DIR / "perturbed"
 
-# Indices within the label-filtered list (329 records after removing Conflicting)
-# that were identified as non-numerical by manual review.
+DIGIT_RE = re.compile(r"\b\d[\d,\.]*\b|[٠١٢٣٤٥٦٧٨٩]")
+
+# Indices within the digit-filtered list (508 records) that were identified as
+# non-numerical by manual review. Reasons: year-only, date-only, age-as-identifier,
+# competition-year label, channel/model identifier, birth date, phone number, etc.
 REJECT_INDICES = {
-    0,
     1,
+    3,
     4,
-    5,
-    9,
-    10,
-    11,
-    12,
+    13,
+    15,
+    16,
     17,
-    19,
-    22,
+    18,
+    20,
     23,
-    24,
-    29,
+    25,
+    27,
+    30,
+    31,
     33,
-    39,
-    42,
+    34,
+    36,
+    40,
+    41,
     43,
-    51,
-    54,
+    45,
+    53,
     55,
-    56,
-    58,
+    57,
+    60,
     62,
-    69,
+    63,
     71,
+    75,
+    76,
+    77,
+    80,
     81,
-    86,
-    87,
+    83,
+    85,
+    88,
+    91,
     92,
-    93,
+    94,
     95,
-    97,
-    101,
+    99,
     102,
-    110,
-    111,
+    103,
+    105,
+    109,
     113,
-    115,
-    124,
+    114,
+    116,
+    117,
+    127,
+    128,
     130,
-    134,
+    131,
+    135,
+    137,
     139,
-    142,
-    146,
-    147,
-    152,
+    143,
+    145,
+    148,
+    149,
+    150,
     154,
     156,
-    159,
     161,
-    162,
     164,
     167,
-    168,
+    169,
+    170,
     171,
+    173,
     177,
     178,
     179,
+    181,
+    183,
+    185,
+    186,
     187,
-    190,
-    198,
+    191,
+    195,
     199,
-    207,
-    211,
-    213,
+    206,
+    208,
+    209,
     214,
     215,
     216,
     225,
-    226,
-    231,
-    238,
+    227,
+    228,
+    230,
+    233,
+    236,
     239,
-    240,
-    246,
-    248,
-    250,
+    243,
+    245,
+    251,
+    254,
     260,
-    265,
     266,
     268,
+    270,
+    271,
+    272,
     273,
-    274,
+    276,
+    278,
     285,
-    288,
+    286,
+    289,
     290,
     291,
     292,
-    294,
+    293,
+    295,
+    296,
+    297,
     306,
     308,
-    315,
-    318,
+    310,
+    312,
+    319,
+    320,
+    322,
     323,
-    326,
     327,
-    328,
+    339,
+    345,
+    348,
+    349,
+    350,
+    351,
+    356,
+    357,
+    366,
+    367,
+    368,
+    371,
+    372,
+    374,
+    375,
+    377,
+    380,
+    381,
+    384,
+    388,
+    389,
+    392,
+    393,
+    394,
+    397,
+    401,
+    406,
+    413,
+    415,
+    419,
+    421,
+    426,
+    427,
+    428,
+    430,
+    431,
+    433,
+    434,
+    436,
+    437,
+    441,
+    443,
+    448,
+    452,
+    457,
+    459,
+    462,
+    467,
+    476,
+    479,
+    481,
+    484,
+    487,
+    492,
+    493,
+    494,
+    496,
+    498,
+    501,
+    505,
+    506,
+    507,
 }
 
 
@@ -151,18 +245,19 @@ def load_nlp() -> spacy.language.Language:
 
 
 def load_and_filter() -> list:
-    src = SPANISH_DIR / "val_spanish_claims.json"
+    src = ARABIC_DIR / "val_arabic_claim.json"
     if not src.exists():
         raise SystemExit(f"{src} not found")
 
     records = json.loads(src.read_text())
-    # Keep only True/False labels
-    label_filtered = [r for r in records if r.get("label") in ("True", "False")]
-    print(f"  After label filter (drop Conflicting): {len(label_filtered)}")
 
-    # Apply manual reject list and remove empty doc
+    # Step 1: digit filter
+    digit_filtered = [r for r in records if DIGIT_RE.search(r.get("claim", ""))]
+    print(f"  After digit filter: {len(digit_filtered)}")
+
+    # Step 2 & 3: apply reject list and remove empty doc
     kept = []
-    for i, r in enumerate(label_filtered):
+    for i, r in enumerate(digit_filtered):
         if i in REJECT_INDICES:
             continue
         if not r.get("doc", "").strip():
@@ -173,6 +268,11 @@ def load_and_filter() -> list:
     true_count = sum(1 for r in kept if r["label"] == "True")
     false_count = sum(1 for r in kept if r["label"] == "False")
     print(f"  True: {true_count}, False: {false_count}")
+    if true_count < 10:
+        print(
+            f"  WARNING: only {true_count} True records — Arabic dataset lacks evidence "
+            "text for most True claims; perturbation results will be skewed."
+        )
     return kept
 
 
@@ -181,18 +281,20 @@ def to_quanTemp_schema(records: list) -> list:
     for i, r in enumerate(records):
         out.append(
             {
-                "crawled_date": r.get("crawled_date", ""),
+                "crawled_date": r.get("crawled_date", r.get("date_stated", "")),
                 "country_of_origin": r.get("country_of_origin", "unknown"),
                 "label": r["label"],
                 "url": r.get("url", ""),
-                "lang": r.get("lang", "es"),
+                "lang": r.get("lang", "ar"),
                 "claim": r["claim"],
                 "doc": r["doc"],
                 "taxonomy_label": "numerical",
-                "label_original": r.get("label", "").lower(),
-                "claim_id": f"spanish_val_{i:06d}",
-                "speaker": "",
-                "reporting_source": "",
+                "label_original": r.get(
+                    "label_original", r.get("label", "").lower()
+                ),
+                "claim_id": f"arabic_val_{i:06d}",
+                "speaker": r.get("speaker", ""),
+                "reporting_source": r.get("publisher_name", ""),
             }
         )
     return out
@@ -219,14 +321,14 @@ def main() -> None:
     print("Loading spaCy model (en_core_web_sm)...")
     nlp = load_nlp()
 
-    print("\nLoading and filtering Spanish data...")
+    print("\nLoading and filtering Arabic data...")
     records = load_and_filter()
 
     print("\nConverting to QuanTemp schema...")
     records = to_quanTemp_schema(records)
 
     # Save intermediate numerical file
-    num_path = SPANISH_DIR / "spanish_numerical.json"
+    num_path = ARABIC_DIR / "arabic_numerical.json"
     num_path.parent.mkdir(parents=True, exist_ok=True)
     num_path.write_text(json.dumps(records, indent=2, ensure_ascii=False))
     print(f"  Saved {len(records)} records -> {num_path}")
