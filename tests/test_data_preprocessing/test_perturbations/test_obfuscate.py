@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 """Tests for the obfuscate perturbation module."""
 
-from src.data_preprocessing.perturbations.obfuscate import (
+from src.data_preprocessing.perturbations_engine.obfuscate import (
     replace_digits_with_new_sequence,
     random_replacement,
     masking,
@@ -384,7 +384,7 @@ class TestProcessJson:
     ):
         """Tests for the obfuscate perturbation module."""
 
-        from src.data_preprocessing.perturbations.obfuscate import (
+        from src.data_preprocessing.perturbations_engine.obfuscate import (
             replace_digits_with_new_sequence,
             random_replacement,
             masking,

@@ -2,7 +2,7 @@
 
 from unittest.mock import patch
 
-from src.data_preprocessing.perturbations.negative import (
+from src.data_preprocessing.perturbations_engine.negative import (
     negative_number_perturbation,
     process_json,
 )

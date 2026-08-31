@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, call, patch
 
 import pytest
 
-from src.data_preprocessing.perturbations.main_perturb_all import (
+from src.data_preprocessing.perturbations_engine.main_perturb_all import (
     INPUT_FALSE,
     INPUT_TRUE,
     OUTPUT_DIR,

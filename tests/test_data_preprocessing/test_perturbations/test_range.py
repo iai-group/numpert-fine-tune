@@ -1,7 +1,7 @@
 """Test suite for range perturbations in numerical claims preprocessing."""
 
 import pytest
-from src.data_preprocessing.perturbations import range as rng
+from src.data_preprocessing.perturbations_engine import range as rng
 
 
 def test_process_json_adds_perturbation_method():

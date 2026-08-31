@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from src.latex.generate_accuracy_delta_table import (
+from src.misc.latex.generate_accuracy_delta_table import (
     ORIGINAL_GROUP_NAME,
     ORIGINAL_PERTURBATION_TYPE,
     GroupScore,

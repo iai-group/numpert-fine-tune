@@ -3,7 +3,7 @@
 import json
 from unittest.mock import patch
 
-from src.data_preprocessing.perturbations.approximation import (
+from src.data_preprocessing.perturbations_engine.approximation import (
     approximate_number,
     apply_numeric_spans,
     build_token_char_map,

@@ -2,7 +2,7 @@
 
 from unittest.mock import patch
 
-from src.data_preprocessing.perturbations.numeration import (
+from src.data_preprocessing.perturbations_engine.numeration import (
     modify_number,
     numeration_perturbation,
     adjust_entity_bounds,
