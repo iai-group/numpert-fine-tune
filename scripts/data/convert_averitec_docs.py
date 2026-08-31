@@ -7,8 +7,11 @@ from pathlib import Path
 import litellm
 
 DATA_ROOT = Path(__file__).parent.parent.parent / "data" / "averitec"
+
 DEV_NUMERICAL = DATA_ROOT / "averitec_dev_numerical.json"
+TRAIN_NUMERICAL = DATA_ROOT / "averitec_train_numerical.json"
 PERTURBED_DEV = DATA_ROOT / "perturbed" / "dev_split"
+PERTURBED_TRAIN = DATA_ROOT / "perturbed" / "train_split"
 
 # Same model as before (Claude Haiku 4.5), served via OpenRouter.
 # Requires the OPENROUTER_API_KEY environment variable.
@@ -26,6 +29,9 @@ Convert the following Q&A evidence into a single fluent, abstractive passage tha
 {qa}
 
 Output only the passage."""
+
+# LABELS_TO_PROCESS = ["Conflicting", "True", "False"]
+LABELS_TO_PROCESS = ["Conflicting"]
 
 
 def convert_doc(qa_text: str) -> str:
@@ -51,10 +57,27 @@ def convert_doc(qa_text: str) -> str:
 def main() -> None:
     """Converts all dev docs and patches dev + perturbed files in-place."""
     # Build claim_id → original doc mapping from dev numerical file
-    with open(DEV_NUMERICAL) as f:
+    process_data("dev")
+    # process_data("train")
+
+
+def process_data(split):
+    file = None
+    if split == "dev":
+        file = DEV_NUMERICAL
+    elif split == "train":
+        file = TRAIN_NUMERICAL
+    if file is None or not file.exists():
+        print(f"File not found for split '{split}': {file}")
+        return
+    with open(file) as f:
         dev_records = json.load(f)
 
-    id_to_doc: dict[str, str] = {r["claim_id"]: r["doc"] for r in dev_records}
+    id_to_doc: dict[str, str] = {
+        r["claim_id"]: r["doc"]
+        for r in dev_records
+        if r["label"] in LABELS_TO_PROCESS
+    }
     print(f"Converting {len(id_to_doc)} unique docs...")
 
     id_to_new_doc: dict[str, str] = {}
@@ -68,7 +91,8 @@ def main() -> None:
 
     # Patch dev numerical file
     for r in dev_records:
-        r["doc"] = id_to_new_doc[r["claim_id"]]
+        if r["label"] in LABELS_TO_PROCESS:
+            r["doc"] = id_to_new_doc[r["claim_id"]]
     with open(DEV_NUMERICAL, "w") as f:
         json.dump(dev_records, f, indent=2, ensure_ascii=False)
     print(f"Updated {DEV_NUMERICAL}")
@@ -80,7 +104,7 @@ def main() -> None:
         updated = 0
         for r in records:
             cid = r.get("claim_id", "")
-            if cid in id_to_new_doc:
+            if cid in id_to_new_doc and r.get("label", "") in LABELS_TO_PROCESS:
                 r["doc"] = id_to_new_doc[cid]
                 updated += 1
         with open(perturbed_file, "w") as f:
