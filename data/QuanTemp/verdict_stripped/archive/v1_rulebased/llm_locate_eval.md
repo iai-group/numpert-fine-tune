@@ -1,0 +1,91 @@
+# LLM verdict-locate feasibility spike
+
+- eval records: 80 (errors: 0)
+- cohorts: recall: 15, clean_control: 25, control_norule: 40
+- verbatim-hit rate: 1.00
+- audit-cleared (phrase): 0.60
+- audit-cleared (sentence): 0.40
+- false-positive rate (clean controls): 0.04
+
+## Records
+
+- id=0 politifact.com [recall] has_verdict=True located=1 phrase_cleared=True sentence_cleared=True
+- id=1 politifact.com [clean_control] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=2 factcheck.afp.com [recall] has_verdict=False located=0 phrase_cleared=False sentence_cleared=False
+- id=3 africacheck.org [recall] has_verdict=True located=1 phrase_cleared=True sentence_cleared=False
+- id=12 politifact.com [clean_control] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=13 politifact.com [clean_control] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=14 politifact.com [clean_control] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=15 politifact.com [recall] has_verdict=False located=0 phrase_cleared=False sentence_cleared=False
+- id=17 africacheck.org [clean_control] has_verdict=True located=2 phrase_cleared=True sentence_cleared=False
+- id=19 politifact.com [clean_control] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=20 africacheck.org [recall] has_verdict=True located=6 phrase_cleared=True sentence_cleared=False
+- id=21 politifact.com [clean_control] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=25 politifact.com [clean_control] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=27 checkyourfact.com [clean_control] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=34 politifact.com [clean_control] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=35 politifact.com [clean_control] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=38 indiatoday.in [recall] has_verdict=True located=5 phrase_cleared=True sentence_cleared=True
+- id=39 politifact.com [clean_control] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=40 africacheck.org [recall] has_verdict=True located=4 phrase_cleared=True sentence_cleared=False
+- id=43 politifact.com [recall] has_verdict=True located=2 phrase_cleared=True sentence_cleared=True
+- id=50 politifact.com [recall] has_verdict=True located=1 phrase_cleared=True sentence_cleared=True
+- id=52 politifact.com [recall] has_verdict=False located=0 phrase_cleared=False sentence_cleared=False
+- id=54 politifact.com [clean_control] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=56 politifact.com [recall] has_verdict=True located=1 phrase_cleared=True sentence_cleared=True
+- id=57 snopes.com [clean_control] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=58 politifact.com [clean_control] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=59 politifact.com [clean_control] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=61 aap.com.au [clean_control] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=62 snopes.com [clean_control] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=64 politifact.com [clean_control] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=66 politifact.com [clean_control] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=68 politifact.com [recall] has_verdict=False located=0 phrase_cleared=False sentence_cleared=False
+- id=70 politifact.com [clean_control] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=74 politifact.com [recall] has_verdict=False located=0 phrase_cleared=False sentence_cleared=False
+- id=77 politifact.com [clean_control] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=78 aap.com.au [recall] has_verdict=True located=2 phrase_cleared=True sentence_cleared=True
+- id=79 politifact.com [recall] has_verdict=False located=0 phrase_cleared=False sentence_cleared=False
+- id=82 politifact.com [clean_control] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=86 politifact.com [clean_control] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=88 politifact.com [clean_control] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=4 snopes.com [control_norule] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=5 fullfact.org [control_norule] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=6 vishvasnews.com [control_norule] has_verdict=True located=2 phrase_cleared=False sentence_cleared=True
+- id=7 politifact.com [control_norule] has_verdict=True located=1 phrase_cleared=True sentence_cleared=True
+- id=8 reuters.com [control_norule] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=9 snopes.com [control_norule] has_verdict=True located=1 phrase_cleared=True sentence_cleared=True
+- id=10 snopes.com [control_norule] has_verdict=True located=1 phrase_cleared=True sentence_cleared=True
+- id=11 politifact.com [control_norule] has_verdict=True located=1 phrase_cleared=True sentence_cleared=True
+- id=16 snopes.com [control_norule] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=18 vishvasnews.com [control_norule] has_verdict=True located=2 phrase_cleared=False sentence_cleared=False
+- id=22 politifact.com [control_norule] has_verdict=True located=1 phrase_cleared=True sentence_cleared=True
+- id=23 boomlive.in [control_norule] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=24 politifact.com [control_norule] has_verdict=True located=1 phrase_cleared=False sentence_cleared=True
+- id=26 politifact.com [control_norule] has_verdict=True located=1 phrase_cleared=True sentence_cleared=True
+- id=28 fullfact.org [control_norule] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=29 thequint.com [control_norule] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=30 politifact.com [control_norule] has_verdict=True located=2 phrase_cleared=True sentence_cleared=True
+- id=31 snopes.com [control_norule] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=32 thip.media [control_norule] has_verdict=True located=1 phrase_cleared=True sentence_cleared=True
+- id=33 snopes.com [control_norule] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=36 thequint.com [control_norule] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=37 africacheck.org [control_norule] has_verdict=True located=2 phrase_cleared=True sentence_cleared=True
+- id=41 factcheck.afp.com [control_norule] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=42 thedispatch.com [control_norule] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=44 leadstories.com [control_norule] has_verdict=True located=2 phrase_cleared=True sentence_cleared=True
+- id=45 snopes.com [control_norule] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=46 leadstories.com [control_norule] has_verdict=True located=2 phrase_cleared=True sentence_cleared=True
+- id=47 thequint.com [control_norule] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=48 factcheck.afp.com [control_norule] has_verdict=False located=0 phrase_cleared=False sentence_cleared=False
+- id=49 factly.in [control_norule] has_verdict=True located=1 phrase_cleared=False sentence_cleared=False
+- id=51 leadstories.com [control_norule] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=53 fullfact.org [control_norule] has_verdict=True located=1 phrase_cleared=True sentence_cleared=True
+- id=55 snopes.com [control_norule] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=60 politifact.com [control_norule] has_verdict=True located=1 phrase_cleared=True sentence_cleared=True
+- id=63 thequint.com [control_norule] has_verdict=True located=1 phrase_cleared=True sentence_cleared=True
+- id=65 snopes.com [control_norule] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True
+- id=67 politifact.com [control_norule] has_verdict=True located=5 phrase_cleared=False sentence_cleared=True
+- id=69 politifact.com [control_norule] has_verdict=True located=1 phrase_cleared=True sentence_cleared=True
+- id=71 factcheck.afp.com [control_norule] has_verdict=True located=1 phrase_cleared=True sentence_cleared=True
+- id=72 snopes.com [control_norule] has_verdict=False located=0 phrase_cleared=True sentence_cleared=True

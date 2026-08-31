@@ -1,0 +1,2097 @@
+{
+  "n_eval": 80,
+  "n_errors": 0,
+  "cohorts": {
+    "recall": 10,
+    "clean_control": 30,
+    "control_norule": 40
+  },
+  "verbatim_hit_rate": 1.0,
+  "audit_cleared": {
+    "phrase": 0.9,
+    "sentence": 0.7
+  },
+  "false_positive_rate": 0.03333333333333333,
+  "records": [
+    {
+      "id": 0,
+      "domain": "politifact.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "recall",
+      "initial_still_has_verdict": true,
+      "has_verdict": true,
+      "variants": {
+        "phrase": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 189,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 299,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": true
+    },
+    {
+      "id": 1,
+      "domain": "politifact.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "clean_control",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 2,
+      "domain": "factcheck.afp.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "clean_control",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 3,
+      "domain": "africacheck.org",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "recall",
+      "initial_still_has_verdict": true,
+      "has_verdict": true,
+      "variants": {
+        "phrase": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 23,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 654,
+          "post_still_has_verdict": true,
+          "post_removed_real_evidence": true
+        }
+      },
+      "locatable_any": true
+    },
+    {
+      "id": 12,
+      "domain": "politifact.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "clean_control",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 13,
+      "domain": "politifact.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "clean_control",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 14,
+      "domain": "politifact.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "clean_control",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 15,
+      "domain": "politifact.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "clean_control",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 17,
+      "domain": "africacheck.org",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "recall",
+      "initial_still_has_verdict": true,
+      "has_verdict": true,
+      "variants": {
+        "phrase": {
+          "located_count": 2,
+          "unlocatable_count": 0,
+          "char_delta": 36,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 2,
+          "unlocatable_count": 0,
+          "char_delta": 261,
+          "post_still_has_verdict": true,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": true
+    },
+    {
+      "id": 19,
+      "domain": "politifact.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "clean_control",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 20,
+      "domain": "africacheck.org",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "recall",
+      "initial_still_has_verdict": true,
+      "has_verdict": true,
+      "variants": {
+        "phrase": {
+          "located_count": 6,
+          "unlocatable_count": 0,
+          "char_delta": 239,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 6,
+          "unlocatable_count": 0,
+          "char_delta": 2844,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": true
+        }
+      },
+      "locatable_any": true
+    },
+    {
+      "id": 21,
+      "domain": "politifact.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "clean_control",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 25,
+      "domain": "politifact.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "clean_control",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 27,
+      "domain": "checkyourfact.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "clean_control",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 34,
+      "domain": "politifact.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "clean_control",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 35,
+      "domain": "politifact.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "clean_control",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 38,
+      "domain": "indiatoday.in",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "recall",
+      "initial_still_has_verdict": true,
+      "has_verdict": true,
+      "variants": {
+        "phrase": {
+          "located_count": 5,
+          "unlocatable_count": 0,
+          "char_delta": 206,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 3,
+          "unlocatable_count": 0,
+          "char_delta": 206,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": true
+    },
+    {
+      "id": 39,
+      "domain": "politifact.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "clean_control",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 40,
+      "domain": "africacheck.org",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "recall",
+      "initial_still_has_verdict": true,
+      "has_verdict": true,
+      "variants": {
+        "phrase": {
+          "located_count": 4,
+          "unlocatable_count": 0,
+          "char_delta": 180,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 4,
+          "unlocatable_count": 0,
+          "char_delta": 5946,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": true
+        }
+      },
+      "locatable_any": true
+    },
+    {
+      "id": 43,
+      "domain": "politifact.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "recall",
+      "initial_still_has_verdict": true,
+      "has_verdict": true,
+      "variants": {
+        "phrase": {
+          "located_count": 2,
+          "unlocatable_count": 0,
+          "char_delta": 42,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 2,
+          "unlocatable_count": 0,
+          "char_delta": 42,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": true
+    },
+    {
+      "id": 50,
+      "domain": "politifact.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "recall",
+      "initial_still_has_verdict": true,
+      "has_verdict": true,
+      "variants": {
+        "phrase": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 33,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 33,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": true
+    },
+    {
+      "id": 52,
+      "domain": "politifact.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "clean_control",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 54,
+      "domain": "politifact.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "clean_control",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 56,
+      "domain": "politifact.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "clean_control",
+      "initial_still_has_verdict": false,
+      "has_verdict": true,
+      "variants": {
+        "phrase": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 52,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 239,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": true
+        }
+      },
+      "locatable_any": true
+    },
+    {
+      "id": 57,
+      "domain": "snopes.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "clean_control",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 58,
+      "domain": "politifact.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "clean_control",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 59,
+      "domain": "politifact.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "clean_control",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 61,
+      "domain": "aap.com.au",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "clean_control",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 10,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 10,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 62,
+      "domain": "snopes.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "clean_control",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 64,
+      "domain": "politifact.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "clean_control",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 66,
+      "domain": "politifact.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "clean_control",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 68,
+      "domain": "politifact.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "clean_control",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 70,
+      "domain": "politifact.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "clean_control",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 74,
+      "domain": "politifact.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "clean_control",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 77,
+      "domain": "politifact.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "recall",
+      "initial_still_has_verdict": true,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": true,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": true,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 78,
+      "domain": "aap.com.au",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "recall",
+      "initial_still_has_verdict": true,
+      "has_verdict": true,
+      "variants": {
+        "phrase": {
+          "located_count": 2,
+          "unlocatable_count": 0,
+          "char_delta": 50,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 2,
+          "unlocatable_count": 0,
+          "char_delta": 118,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": true
+        }
+      },
+      "locatable_any": true
+    },
+    {
+      "id": 79,
+      "domain": "politifact.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "clean_control",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 82,
+      "domain": "politifact.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "clean_control",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 86,
+      "domain": "politifact.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "clean_control",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 1,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 1,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 88,
+      "domain": "politifact.com",
+      "cohort": "changed",
+      "error": null,
+      "cohort_resolved": "clean_control",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 4,
+      "domain": "snopes.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 5,
+      "domain": "fullfact.org",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 4,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 4,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 6,
+      "domain": "vishvasnews.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": true,
+      "has_verdict": true,
+      "variants": {
+        "phrase": {
+          "located_count": 2,
+          "unlocatable_count": 0,
+          "char_delta": 92,
+          "post_still_has_verdict": true,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 2,
+          "unlocatable_count": 0,
+          "char_delta": 316,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": true
+    },
+    {
+      "id": 7,
+      "domain": "politifact.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": true,
+      "has_verdict": true,
+      "variants": {
+        "phrase": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 21,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 21,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": true
+    },
+    {
+      "id": 8,
+      "domain": "reuters.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 9,
+      "domain": "snopes.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": true,
+      "has_verdict": true,
+      "variants": {
+        "phrase": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 35,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 35,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": true
+    },
+    {
+      "id": 10,
+      "domain": "snopes.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": true,
+      "has_verdict": true,
+      "variants": {
+        "phrase": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 70,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 292,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": true
+    },
+    {
+      "id": 11,
+      "domain": "politifact.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": false,
+      "has_verdict": true,
+      "variants": {
+        "phrase": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 29,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 29,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": true
+    },
+    {
+      "id": 16,
+      "domain": "snopes.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 18,
+      "domain": "vishvasnews.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": true,
+      "has_verdict": true,
+      "variants": {
+        "phrase": {
+          "located_count": 2,
+          "unlocatable_count": 0,
+          "char_delta": 92,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 2,
+          "unlocatable_count": 0,
+          "char_delta": 321,
+          "post_still_has_verdict": true,
+          "post_removed_real_evidence": true
+        }
+      },
+      "locatable_any": true
+    },
+    {
+      "id": 22,
+      "domain": "politifact.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": false,
+      "has_verdict": true,
+      "variants": {
+        "phrase": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 52,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 52,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": true
+    },
+    {
+      "id": 23,
+      "domain": "boomlive.in",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 1,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 1,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 24,
+      "domain": "politifact.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": true,
+      "has_verdict": true,
+      "variants": {
+        "phrase": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 6,
+          "post_still_has_verdict": true,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 1909,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": true
+        }
+      },
+      "locatable_any": true
+    },
+    {
+      "id": 26,
+      "domain": "politifact.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": true,
+      "has_verdict": true,
+      "variants": {
+        "phrase": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 32,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 32,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": true
+    },
+    {
+      "id": 28,
+      "domain": "fullfact.org",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": true,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 1,
+          "post_still_has_verdict": true,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 1,
+          "post_still_has_verdict": true,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 29,
+      "domain": "thequint.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 30,
+      "domain": "politifact.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": true,
+      "has_verdict": true,
+      "variants": {
+        "phrase": {
+          "located_count": 2,
+          "unlocatable_count": 0,
+          "char_delta": 105,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 105,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": true
+    },
+    {
+      "id": 31,
+      "domain": "snopes.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 32,
+      "domain": "thip.media",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": true,
+      "has_verdict": true,
+      "variants": {
+        "phrase": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 50,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 516,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": true
+    },
+    {
+      "id": 33,
+      "domain": "snopes.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 36,
+      "domain": "thequint.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 37,
+      "domain": "africacheck.org",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": true,
+      "has_verdict": true,
+      "variants": {
+        "phrase": {
+          "located_count": 2,
+          "unlocatable_count": 0,
+          "char_delta": 76,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 2,
+          "unlocatable_count": 0,
+          "char_delta": 76,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": true
+    },
+    {
+      "id": 41,
+      "domain": "factcheck.afp.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 42,
+      "domain": "thedispatch.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 44,
+      "domain": "leadstories.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": true,
+      "has_verdict": true,
+      "variants": {
+        "phrase": {
+          "located_count": 2,
+          "unlocatable_count": 0,
+          "char_delta": 35,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 194,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": true
+        }
+      },
+      "locatable_any": true
+    },
+    {
+      "id": 45,
+      "domain": "snopes.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 1,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 1,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 46,
+      "domain": "leadstories.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": true,
+      "has_verdict": true,
+      "variants": {
+        "phrase": {
+          "located_count": 2,
+          "unlocatable_count": 0,
+          "char_delta": 48,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 2,
+          "unlocatable_count": 0,
+          "char_delta": 213,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": true
+        }
+      },
+      "locatable_any": true
+    },
+    {
+      "id": 47,
+      "domain": "thequint.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 2,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 2,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 48,
+      "domain": "factcheck.afp.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 49,
+      "domain": "factly.in",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": true,
+      "has_verdict": true,
+      "variants": {
+        "phrase": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 44,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 44,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": true
+    },
+    {
+      "id": 51,
+      "domain": "leadstories.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 53,
+      "domain": "fullfact.org",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": false,
+      "has_verdict": true,
+      "variants": {
+        "phrase": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 28,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": true
+        },
+        "sentence": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 28,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": true
+        }
+      },
+      "locatable_any": true
+    },
+    {
+      "id": 55,
+      "domain": "snopes.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 60,
+      "domain": "politifact.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": true,
+      "has_verdict": true,
+      "variants": {
+        "phrase": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 34,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 34,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": true
+    },
+    {
+      "id": 63,
+      "domain": "thequint.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": true,
+      "has_verdict": true,
+      "variants": {
+        "phrase": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 20,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 22,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": true
+    },
+    {
+      "id": 65,
+      "domain": "snopes.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 1,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 1,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    },
+    {
+      "id": 67,
+      "domain": "politifact.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": true,
+      "has_verdict": true,
+      "variants": {
+        "phrase": {
+          "located_count": 5,
+          "unlocatable_count": 0,
+          "char_delta": 154,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 5,
+          "unlocatable_count": 0,
+          "char_delta": 957,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": true
+    },
+    {
+      "id": 69,
+      "domain": "politifact.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": false,
+      "has_verdict": true,
+      "variants": {
+        "phrase": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 38,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 780,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": true
+        }
+      },
+      "locatable_any": true
+    },
+    {
+      "id": 71,
+      "domain": "factcheck.afp.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": true,
+      "has_verdict": true,
+      "variants": {
+        "phrase": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 35,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 1,
+          "unlocatable_count": 0,
+          "char_delta": 35,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": true
+    },
+    {
+      "id": 72,
+      "domain": "snopes.com",
+      "cohort": "control_norule",
+      "error": null,
+      "cohort_resolved": "control_norule",
+      "initial_still_has_verdict": false,
+      "has_verdict": false,
+      "variants": {
+        "phrase": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        },
+        "sentence": {
+          "located_count": 0,
+          "unlocatable_count": 0,
+          "char_delta": 0,
+          "post_still_has_verdict": false,
+          "post_removed_real_evidence": false
+        }
+      },
+      "locatable_any": false
+    }
+  ]
+}
