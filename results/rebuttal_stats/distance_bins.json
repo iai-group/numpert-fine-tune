@@ -1,0 +1,56 @@
+{
+  "0 (value preserved)": {
+    "n": 1373.0,
+    "baseline_valid": 1210.0,
+    "baseline_correct": 1091.0,
+    "baseline_eff_correct": 1091.0,
+    "all_perturb_valid": 1373.0,
+    "all_perturb_correct": 1319.0,
+    "all_perturb_eff_correct": 1319.0
+  },
+  "(0, 10%]": {
+    "n": 399.0,
+    "baseline_valid": 333.0,
+    "baseline_correct": 293.0,
+    "baseline_eff_correct": 293.0,
+    "all_perturb_valid": 399.0,
+    "all_perturb_correct": 381.0,
+    "all_perturb_eff_correct": 381.0
+  },
+  "(10%, 25%]": {
+    "n": 345.0,
+    "baseline_valid": 283.0,
+    "baseline_correct": 255.0,
+    "baseline_eff_correct": 255.0,
+    "all_perturb_valid": 345.0,
+    "all_perturb_correct": 340.0,
+    "all_perturb_eff_correct": 340.0
+  },
+  "(25%, 50%]": {
+    "n": 661.0,
+    "baseline_valid": 546.0,
+    "baseline_correct": 514.0,
+    "baseline_eff_correct": 514.0,
+    "all_perturb_valid": 661.0,
+    "all_perturb_correct": 657.0,
+    "all_perturb_eff_correct": 657.0
+  },
+  "(50%, 100%]": {
+    "n": 513.0,
+    "baseline_valid": 421.0,
+    "baseline_correct": 396.0,
+    "baseline_eff_correct": 396.0,
+    "all_perturb_valid": 513.0,
+    "all_perturb_correct": 507.0,
+    "all_perturb_eff_correct": 507.0
+  },
+  "> 100%": {
+    "n": 503.0,
+    "baseline_valid": 423.0,
+    "baseline_correct": 409.0,
+    "baseline_eff_correct": 409.0,
+    "all_perturb_valid": 503.0,
+    "all_perturb_correct": 501.0,
+    "all_perturb_eff_correct": 501.0
+  }
+}
