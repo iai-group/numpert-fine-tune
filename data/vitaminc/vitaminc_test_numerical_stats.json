@@ -1,0 +1,22 @@
+{
+  "source_instances": 55197,
+  "source_by_revision_type": {
+    "real": 34481,
+    "synthetic": 20716
+  },
+  "source_by_label": {
+    "NOT ENOUGH INFO": 7268,
+    "REFUTES": 20265,
+    "SUPPORTS": 27664
+  },
+  "selected_instances": 11887,
+  "selected_by_label": {
+    "False": 5237,
+    "True": 6650
+  },
+  "unique_claims": 6602,
+  "unique_cases": 3701,
+  "evidence_words_median": 26,
+  "evidence_words_mean": 28.4,
+  "claim_words_median": 15
+}
