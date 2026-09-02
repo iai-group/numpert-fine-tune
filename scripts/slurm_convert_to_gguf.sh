@@ -37,6 +37,10 @@
 #SBATCH --job-name=gguf-convert
 #SBATCH --output=scripts/slurm_out/gguf-convert_%j.out
 
+# uv is not on PATH in non-interactive batch environments; without this the
+# conversion step silently fails with "uv: command not found".
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+
 # ==============================================================================
 # PARSE ARGUMENTS
 # ==============================================================================
@@ -123,18 +127,35 @@ echo "==========================================================================
 # SETUP & EXECUTE
 # ==============================================================================
 
-echo ""
-echo "Setting up llama.cpp..."
-./scripts/setup_llamacpp.sh
+# Only build llama.cpp when the tools it provides are missing. Re-running
+# the setup pulls the latest upstream commit, whose build has broken here
+# before (cpp-httplib/OpenSSL), which would otherwise destroy a working
+# toolchain on every conversion.
+CONVERTER="external/llama.cpp/convert_hf_to_gguf.py"
+QUANTIZER="external/llama.cpp/build/bin/llama-quantize"
+if [ -f "$CONVERTER" ] && [ -x "$QUANTIZER" ]; then
+    echo ""
+    echo "llama.cpp tools already present; skipping rebuild."
+else
+    echo ""
+    echo "Setting up llama.cpp..."
+    ./scripts/setup_llamacpp.sh
+fi
 
 echo ""
 echo "Starting GGUF conversion..."
 echo "================================================================================"
 
-uv run python -m src.llm_finetune.utils.training.convert_to_gguf \
+# Propagate failure: this script previously printed success unconditionally,
+# so a failed conversion looked like a completed one.
+if ! uv run python -m src.llm_finetune.utils.training.convert_to_gguf \
     --model_path "$MODEL_PATH" \
     --output_dir "$OUTPUT_DIR" \
-    --quantization_method "$QUANTIZATION_METHOD"
+    --quantization_method "$QUANTIZATION_METHOD"; then
+    echo "================================================================================"
+    echo "ERROR: GGUF conversion FAILED"
+    exit 1
+fi
 
 echo "================================================================================"
 echo "GGUF conversion completed!"

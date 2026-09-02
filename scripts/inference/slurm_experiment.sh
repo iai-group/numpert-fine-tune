@@ -43,6 +43,22 @@ fi
 
 
 # ==============================================================================
+# ENVIRONMENT OVERRIDES
+# ==============================================================================
+# uv is not on PATH in non-interactive batch environments.
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+# Some GPU nodes here mix A100 and H100 devices. Without PCI ordering, NVML
+# and CUDA can disagree on device indices and the job dies at import with
+# "Unsloth cannot find any torch accelerator?" — so set it unconditionally.
+export CUDA_DEVICE_ORDER=PCI_BUS_ID
+
+# Optional GPU pinning: submit with --export=ALL,FORCE_CUDA_DEVICES=<ids>.
+if [ -n "${FORCE_CUDA_DEVICES:-}" ]; then
+    export CUDA_VISIBLE_DEVICES="$FORCE_CUDA_DEVICES"
+    echo "Pinned CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES"
+fi
+
+# ==============================================================================
 # JOB INFO
 # ==============================================================================
 echo "=========================================="
