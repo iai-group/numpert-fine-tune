@@ -90,6 +90,7 @@ def build_training_config(
     use_perturbations: bool = True,
     balance_labels: bool = False,
     balance_labels_mode: str = "oversample",
+    dedup_mode: str = "text",
     perturb_ratio: Optional[float] = None,
     false_perturb_t_to_f_ratio: Optional[float] = None,
     method_balance_mode: Optional[str] = None,
@@ -122,6 +123,9 @@ def build_training_config(
         learning_rate: Optimizer learning rate.
         use_perturbations: Whether perturbation expansion is enabled.
         balance_labels: Whether label balancing is applied.
+        dedup_mode: Which key counts as a duplicate sample:
+            ``"text"``, ``"text_label"`` (keeps contrastive pairs such
+            as VitaminC's), or ``"none"``.
         perturb_ratio: Ratio of perturbed to original examples.
         false_perturb_t_to_f_ratio: Among *False* perturbed examples,
             the proportion that are True→False flips (e.g. ``0.67``
@@ -163,6 +167,7 @@ def build_training_config(
             "use_perturbations": use_perturbations,
             "balance_labels": balance_labels,
             "balance_labels_mode": balance_labels_mode,
+            "dedup_mode": dedup_mode,
             "perturb_ratio": perturb_ratio,
             "false_perturb_t_to_f_ratio": false_perturb_t_to_f_ratio,
             "method_balance_mode": method_balance_mode,

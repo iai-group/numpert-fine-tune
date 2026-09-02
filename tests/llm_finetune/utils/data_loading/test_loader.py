@@ -370,6 +370,8 @@ class TestLoadSplitBalanced:
             method_balance_mode="undersample",
             seed=42,
             allowed_types_by_file=None,
+            balance_labels_mode="oversample",
+            dedup_mode="text",
         )
 
     def test_convert_to_conversations_receives_split_and_include_doc(self):

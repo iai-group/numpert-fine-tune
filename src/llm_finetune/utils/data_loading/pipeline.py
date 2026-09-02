@@ -28,6 +28,7 @@ from src.llm_finetune.utils.data_loading.conversation import (
     convert_to_conversations,
 )
 from src.llm_finetune.utils.data_loading.dataset_balancer import (
+    DedupMode,
     MethodBalanceMode,
     build_balanced_dataset,
     load_files as _load_raw_json_files,
@@ -170,6 +171,7 @@ def load_split(
     false_perturb_t_to_f_ratio: Optional[float] = None,
     method_balance_mode: MethodBalanceMode | None = None,
     seed: int = 3407,
+    dedup_mode: DedupMode = "text",
 ) -> Dataset:
     """Load a dataset split through a single unified pipeline.
 
@@ -204,6 +206,14 @@ def load_split(
         method_balance_mode: How to balance perturbation methods
             (``"undersample"``, ``"oversample"``, ``"none"``, or ``None``).
         seed: Random seed for deterministic output.
+        dedup_mode: Which key counts as a duplicate. ``"text"`` (the
+            default) drops samples whose claim text was already seen.
+            ``"text_label"`` drops only samples that repeat both text
+            and gold label, preserving contrastive pairs: datasets such
+            as VitaminC pair one claim text with a supporting and a
+            refuting evidence document, and text-level deduplication
+            would silently delete one member of every pair.
+            ``"none"`` disables deduplication entirely.
 
     Returns:
         HuggingFace :class:`~datasets.Dataset` ready for SFTTrainer.
@@ -239,6 +249,7 @@ def load_split(
         method_balance_mode=method_balance_mode,
         seed=seed,
         allowed_types_by_file=allowed_types,
+        dedup_mode=dedup_mode,
     )
 
     logger.info(

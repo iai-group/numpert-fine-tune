@@ -25,6 +25,8 @@ PERTURB_FIELD_PATTERN = re.compile(
 EXCLUDED_METHODS = frozenset({"removed"})
 VALID_METHOD_BALANCE_MODES = frozenset({"none", "undersample", "oversample"})
 MethodBalanceMode = Literal["none", "undersample", "oversample"]
+VALID_DEDUP_MODES = frozenset({"text", "text_label", "none"})
+DedupMode = Literal["text", "text_label", "none"]
 
 
 @dataclass
@@ -268,20 +270,54 @@ def flatten_samples(
     return samples
 
 
-def deduplicate(samples: list[Sample]) -> list[Sample]:
-    """Remove samples with duplicate text.
+def deduplicate(
+    samples: list[Sample],
+    mode: DedupMode = "text",
+) -> list[Sample]:
+    """Removes duplicate samples under the requested duplicate key.
 
-    Keeps first occurrence. Coupling rule is enforced separately.
+    Keeps the first occurrence of each key. The coupling rule is
+    enforced separately, so originals dropped here can still be
+    re-added later.
+
+    Args:
+        samples: Flattened samples to deduplicate.
+        mode: Which key counts as a duplicate.
+            ``"text"`` considers two samples duplicates when their
+            claim texts match, regardless of gold label.
+            ``"text_label"`` considers them duplicates only when both
+            the text and the gold label match; this keeps contrastive
+            pairs — the same claim text paired with a supporting and a
+            refuting evidence document (e.g. VitaminC) — which are
+            genuinely different training signals rather than
+            duplicates, while still removing true repetitions.
+            ``"none"`` performs no deduplication and returns a copy of
+            the input list.
+
+    Returns:
+        The deduplicated samples, in input order.
+
+    Raises:
+        ValueError: If ``mode`` is not one of the valid dedup modes.
     """
-    seen_texts: set[str] = set()
+    if mode not in VALID_DEDUP_MODES:
+        valid_modes = ", ".join(sorted(VALID_DEDUP_MODES))
+        raise ValueError(f"mode must be one of: {valid_modes}")
+
+    if mode == "none":
+        return list(samples)
+
+    seen_keys: set[tuple[str, ...]] = set()
     result = []
     for sample in samples:
-        if sample.text not in seen_texts:
-            seen_texts.add(sample.text)
+        key = (sample.text,) if mode == "text" else (sample.text, sample.label)
+        if key not in seen_keys:
+            seen_keys.add(key)
             result.append(sample)
         else:
             logger.debug(
-                "Dedup: removed duplicate text from claim %s",
+                "Dedup: removed duplicate (%s) from claim %s",
+                mode,
                 sample.source_claim_id,
             )
     return result
@@ -835,6 +871,7 @@ def build_balanced_dataset(
     seed: int | None = None,
     allowed_types_by_file: dict[str, set[str]] | None = None,
     balance_labels_mode: Literal["undersample", "oversample"] = "undersample",
+    dedup_mode: DedupMode = "text",
 ) -> list[dict]:
     """Build a balanced, deduplicated dataset from multiple JSON files.
 
@@ -855,11 +892,26 @@ def build_balanced_dataset(
         allowed_types_by_file: Optional mapping of source filename
             (e.g. ``Path(path).name``) to the set of perturbation type
             keys allowed for that file.  ``None`` keeps all types.
+        balance_labels_mode: Whether label balancing under- or
+            oversamples the majority/minority label.
+        dedup_mode: Which key counts as a duplicate: ``"text"``
+            (default, claim text only), ``"text_label"`` (claim text
+            and gold label, keeping contrastive pairs such as
+            VitaminC's supporting/refuting evidence for one claim), or
+            ``"none"`` (no deduplication).
 
     Returns:
         List of sample dicts with keys: text, label, source_claim_id,
         type, perturbation_method, is_perturbed, source_file.
+
+    Raises:
+        ValueError: If ``dedup_mode`` is not one of the valid dedup
+            modes.
     """
+    if dedup_mode not in VALID_DEDUP_MODES:
+        valid_modes = ", ".join(sorted(VALID_DEDUP_MODES))
+        raise ValueError(f"dedup_mode must be one of: {valid_modes}")
+
     rng = random.Random(seed)
 
     # 1. Load
@@ -870,8 +922,8 @@ def build_balanced_dataset(
         file_data, allowed_types_by_file=allowed_types_by_file
     )
 
-    # 3. Deduplicate
-    deduped = deduplicate(all_samples)
+    # 3. Deduplicate (key configurable for contrastive datasets)
+    deduped = deduplicate(all_samples, mode=dedup_mode)
 
     # 4. Balance
     balanced = apply_balancing(

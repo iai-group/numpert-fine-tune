@@ -364,6 +364,54 @@ class TestDeduplicate:
         result = deduplicate(samples)
         assert len(result) == 3
 
+    def test_text_mode_collapses_opposite_labels(self):
+        samples = [
+            _make_sample(text="A", label="True", claim_id="c1"),
+            _make_sample(text="A", label="False", claim_id="c2"),
+        ]
+        result = deduplicate(samples, mode="text")
+        assert len(result) == 1
+        assert result[0].source_claim_id == "c1"
+
+    def test_text_label_mode_keeps_contrastive_pair(self):
+        samples = [
+            _make_sample(text="A", label="True", claim_id="c1"),
+            _make_sample(text="A", label="False", claim_id="c2"),
+        ]
+        result = deduplicate(samples, mode="text_label")
+        assert len(result) == 2
+        assert [s.label for s in result] == ["True", "False"]
+
+    def test_text_label_mode_still_removes_same_label_repeats(self):
+        samples = [
+            _make_sample(text="A", label="True", claim_id="c1"),
+            _make_sample(text="A", label="True", claim_id="c2"),
+            _make_sample(text="A", label="False", claim_id="c3"),
+        ]
+        result = deduplicate(samples, mode="text_label")
+        assert len(result) == 2
+        assert [s.source_claim_id for s in result] == ["c1", "c3"]
+
+    def test_none_mode_keeps_everything(self):
+        samples = [
+            _make_sample(text="A", label="True", claim_id="c1"),
+            _make_sample(text="A", label="True", claim_id="c2"),
+        ]
+        result = deduplicate(samples, mode="none")
+        assert len(result) == 2
+        assert result is not samples
+
+    def test_default_mode_is_text(self):
+        samples = [
+            _make_sample(text="A", label="True"),
+            _make_sample(text="A", label="False"),
+        ]
+        assert deduplicate(samples) == deduplicate(samples, mode="text")
+
+    def test_invalid_mode_raises(self):
+        with pytest.raises(ValueError, match="mode must be one of"):
+            deduplicate([_make_sample()], mode="claim_id")
+
 
 # ── _undersample_fair ───────────────────────────────────────────
 
