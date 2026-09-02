@@ -164,6 +164,25 @@ OUTPUT_SCHEMA = {
 }
 
 
+STRUCTURED_COT_INSTRUCTIONS = """
+Follow this procedure step by step before giving your verdict:
+1. Extract every numerical quantity from the claim, with its unit and what it measures.
+2. Extract the corresponding quantities from the evidence.
+3. Normalize the values so they are comparable: convert word forms to digits, align units and scales (percent, thousand, million, etc.), and resolve ranges and approximations.
+4. Compare each claim quantity against the corresponding evidence quantity and state whether it matches, respecting explicit hedges such as "about", "more than", or "between".
+5. If every quantity in the claim is supported by the evidence, the claim is true; if any quantity contradicts the evidence or cannot be matched, the claim is false.
+Write out steps 1-5 explicitly but keep each step to one or two short sentences, then give the final verdict on the last line as exactly {"label": true} or {"label": false}.
+"""  # noqa: E501
+
+
+THRESHOLD_COMPARISON_INSTRUCTIONS = """
+Many claims state a bound rather than an exact value, using wording such as "more than", "over", "at least", "less than", "under", "fewer than", or "up to". Such a claim is true only if the evidence value actually satisfies that comparison. A value that is merely close to the bound does not satisfy it.
+Before answering, identify the quantity the claim refers to, the comparison word attached to it, and the corresponding value in the evidence. Then check whether the evidence value satisfies the stated comparison, rather than whether the two numbers are approximately equal.
+For instance, "more than 500 employees" is false when the evidence says 498, and "fewer than 30 games" is false when the evidence says 31, even though the numbers are close in both cases.
+Give the verdict as exactly {"label": true} or {"label": false}.
+"""  # noqa: E501
+
+
 class PromptType(Enum):
     ZERO_SHOT = "zero_shot"
     FEW_SHOT = "few_shot"
@@ -178,6 +197,8 @@ class PromptType(Enum):
     PERTURB_NEGATION = "negative_number"
     PERTURB_RANDOM = "random_replacement"
     PERTURB_MASKING = "masking"
+    STRUCTURED_COT = "structured_cot"
+    THRESHOLD_COMPARISON = "threshold_comparison"
 
 
 def get_output_schema() -> dict:
@@ -210,6 +231,10 @@ prompt_map = {
     PromptType.PERTURB_NEGATION: NEGATION_NEGATIVE_EXAMPLES_SYNTHETIC,
     PromptType.PERTURB_RANDOM: RANDOM_NEGATIVE_EXAMPLES_SYNTHETIC,
     PromptType.PERTURB_MASKING: MASKING_NEGATIVE_EXAMPLES_SYNTHETIC,
+    PromptType.STRUCTURED_COT: STRUCTURED_COT_INSTRUCTIONS,
+    PromptType.THRESHOLD_COMPARISON: (
+        THRESHOLD_COMPARISON_INSTRUCTIONS
+    ),
 }
 
 
