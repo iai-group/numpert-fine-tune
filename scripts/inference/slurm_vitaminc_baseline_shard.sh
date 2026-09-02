@@ -73,6 +73,26 @@ if [ ! -f "$TEST_JSON" ]; then
     exit 1
 fi
 
+# ==============================================================================
+# PRE-FLIGHT: usable GPU
+# Some GPUs on these nodes are allocatable by SLURM but cannot be opened
+# by CUDA, which kills the job at "import unsloth" ~20s in -- and, because
+# the failure is not propagated, SLURM records it as COMPLETED. Detect it
+# here and requeue onto a fresh allocation instead.
+# ==============================================================================
+if ! uv run python -c "import torch, sys; sys.exit(0 if torch.cuda.is_available() else 1)" >/dev/null 2>&1; then
+    echo "ERROR: no usable CUDA device in this allocation (node ${SLURMD_NODENAME:-unknown})."
+    if [ "${SLURM_RESTART_COUNT:-0}" -lt 3 ] && [ -n "${SLURM_JOB_ID:-}" ]; then
+        echo "Requeueing job ${SLURM_JOB_ID} (restart ${SLURM_RESTART_COUNT:-0})."
+        scontrol requeue "$SLURM_JOB_ID" || true
+        sleep 30
+        exit 0
+    fi
+    echo "Giving up after ${SLURM_RESTART_COUNT:-0} restarts."
+    exit 1
+fi
+echo "Pre-flight: CUDA device visible."
+
 echo "=========================================="
 echo "Job ID:   ${SLURM_JOB_ID:-local}"
 echo "Node:     ${SLURM_NODELIST:-local}"
