@@ -23,6 +23,7 @@ from src.llm_finetune.config import prefix
 
 from src.llm_finetune.utils.data_loading.pipeline import load_split
 from src.llm_finetune.utils.data_loading.dataset_balancer import (
+    DedupMode,
     MethodBalanceMode,
 )
 from src.llm_finetune.utils.data_loading.perturbation_types import (
@@ -46,6 +47,10 @@ from src.llm_finetune.utils.training.dataset_distribution_report import (
     format_distribution_report,
     save_distribution_report,
 )
+
+# Training seed, overridable for multi-seed replication runs
+# (e.g. NUMPERT_SEED=1234 bash scripts/train/run_experiment.sh ...).
+TRAINING_SEED = int(os.environ.get("NUMPERT_SEED", "3407"))
 
 
 def resolve_step_interval(
@@ -199,6 +204,7 @@ def finetune(  # noqa: C901
     max_seq_length: int = 16384,
     use_perturbations: bool = True,
     balance_labels: bool = False,
+    dedup_mode: DedupMode = "text",
     perturb_ratio: Optional[float] = None,
     false_perturb_t_to_f_ratio: Optional[float] = None,
     method_balance_mode: Optional[MethodBalanceMode] = None,
@@ -229,6 +235,7 @@ def finetune(  # noqa: C901
     print(f"Max sequence length: {max_seq_length:,} tokens")
     print(f"Use perturbations: {use_perturbations}")
     print(f"Balance labels: {balance_labels}")
+    print(f"Deduplication mode: {dedup_mode}")
     print(f"Perturb ratio: {perturb_ratio}")
     print(f"False perturb T→F share: {false_perturb_t_to_f_ratio}")
     print(f"Method balance mode: {method_balance_mode}")
@@ -300,7 +307,7 @@ def finetune(  # noqa: C901
         lora_dropout=0,
         bias="none",
         use_gradient_checkpointing="unsloth",
-        random_state=3407,
+        random_state=TRAINING_SEED,
         use_rslora=False,
         loftq_config=None,
     )
@@ -435,7 +442,8 @@ def finetune(  # noqa: C901
         perturb_ratio=perturb_ratio,
         false_perturb_t_to_f_ratio=false_perturb_t_to_f_ratio,
         method_balance_mode=method_balance_mode,
-        seed=3407 + start_epoch,
+        dedup_mode=dedup_mode,
+        seed=TRAINING_SEED + start_epoch,
     )
     val_data = load_split(
         file_configs=val_file_configs,
@@ -446,9 +454,14 @@ def finetune(  # noqa: C901
         balance_labels=False,
         perturb_ratio=None,
         false_perturb_t_to_f_ratio=None,
-        seed=3407 + start_epoch,
+        dedup_mode=dedup_mode,
+        seed=TRAINING_SEED + start_epoch,
     )
 
+    print(
+        f"Training seed: {TRAINING_SEED} "
+        "(base 3407, NUMPERT_SEED to override)"
+    )
     print(f"Loaded train dataset size: {len(train_data)}")
     print(f"Loaded validation dataset size: {len(val_data)}")
 
@@ -688,7 +701,7 @@ def finetune(  # noqa: C901
             ensure_original_in_batch=ensure_original_in_batch,
             ensure_perturbed_in_batch=ensure_perturbed_in_batch,
             shuffle=True,
-            seed=3407 + start_epoch,
+            seed=TRAINING_SEED + start_epoch,
             drop_last=False,
         )
         print(
@@ -760,6 +773,7 @@ def finetune(  # noqa: C901
         max_seq_length=max_seq_length,
         use_perturbations=use_perturbations,
         balance_labels=balance_labels,
+        dedup_mode=dedup_mode,
         perturb_ratio=perturb_ratio,
         false_perturb_t_to_f_ratio=false_perturb_t_to_f_ratio,
         method_balance_mode=method_balance_mode,
@@ -861,7 +875,7 @@ def finetune(  # noqa: C901
         optim="adamw_8bit",
         weight_decay=0.01,
         lr_scheduler_type="cosine",
-        seed=3407 + start_epoch,
+        seed=TRAINING_SEED + start_epoch,
         output_dir=output_dir,
         eval_strategy="steps",
         eval_steps=eval_steps,
@@ -1045,6 +1059,19 @@ if __name__ == "__main__":
         ),
     )
     parser.add_argument(
+        "--dedup_mode",
+        choices=["text", "text_label", "none"],
+        default="text",
+        help=(
+            "Which key counts as a duplicate sample. 'text' (default) "
+            "deduplicates by claim text; 'text_label' deduplicates by "
+            "(claim text, gold label), which keeps contrastive datasets "
+            "such as VitaminC intact, where the same claim is paired with "
+            "a supporting and a refuting evidence document; 'none' "
+            "disables deduplication."
+        ),
+    )
+    parser.add_argument(
         "--balance_labels",
         action="store_true",
         help="Balance True/False label distribution",
@@ -1171,6 +1198,7 @@ if __name__ == "__main__":
         max_seq_length=args.max_seq_length,
         use_perturbations=args.use_perturbations,
         balance_labels=args.balance_labels,
+        dedup_mode=args.dedup_mode,
         perturb_ratio=args.perturb_ratio,
         false_perturb_t_to_f_ratio=args.false_perturb_t_to_f_ratio,
         method_balance_mode=args.method_balance_mode,

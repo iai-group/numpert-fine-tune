@@ -12,6 +12,7 @@ from tqdm import tqdm
 from unsloth import FastLanguageModel
 
 from src.llm_finetune.config import prefix
+from src.llm_finetune.utils.data_loading.dataset_balancer import DedupMode
 from src.llm_finetune.utils.data_loading.pipeline import load_split
 from src.numpert_prompt.prompt import PromptType
 from src.llm_finetune.utils.data_loading.perturbation_types import (
@@ -90,6 +91,8 @@ _CLI_PROMPT_TYPE_MAP = {
         PromptType.NEGATIVE_SYNTHETIC_ALL_WITH_REASONING
     ),
     "PAP": PromptType.NEGATIVE_SYNTHETIC_ALL_WITH_REASONING,
+    "STRUCTURED_COT": PromptType.STRUCTURED_COT,
+    "THRESHOLD_COMPARISON": PromptType.THRESHOLD_COMPARISON,
 }
 
 
@@ -110,6 +113,7 @@ def inference(  # noqa: C901
     prompt_type: PromptType = PromptType.ZERO_SHOT,
     no_thinking: bool = False,
     max_new_tokens: int = 1024,
+    dedup_mode: DedupMode = "text",
 ):
     """Run inference on test data."""
     time_start = datetime.now()
@@ -296,6 +300,7 @@ def inference(  # noqa: C901
         use_perturbations=use_perturbations,
         include_doc=True,
         prompt_type=prompt_type,
+        dedup_mode=dedup_mode,
     )
 
     if inference_unperturbed_claims:
@@ -656,6 +661,19 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
+        "--dedup_mode",
+        choices=["text", "text_label", "none"],
+        default="text",
+        help=(
+            "Which key counts as a duplicate sample. 'text' (default) "
+            "deduplicates by claim text; 'text_label' deduplicates by "
+            "(claim text, gold label), which keeps contrastive datasets "
+            "such as VitaminC intact, where the same claim is paired with "
+            "a supporting and a refuting evidence document; 'none' "
+            "disables deduplication."
+        ),
+    )
+    parser.add_argument(
         "--inference_unperturbed_claims",
         action="store_true",
         default=False,
@@ -755,4 +773,5 @@ if __name__ == "__main__":
         prompt_type=_CLI_PROMPT_TYPE_MAP[args.prompt_type],
         no_thinking=args.no_thinking,
         max_new_tokens=args.max_new_tokens,
+        dedup_mode=args.dedup_mode,
     )
