@@ -1,0 +1,25 @@
+{
+  "timestamp": "2026-08-27T12:39:45.275068",
+  "model": {
+    "name": ".models/Qwen3-8B/gguf/Qwen3-8B-baseline_q4_k_m/baseline-q4_k_m.gguf",
+    "path": ".models/Qwen3-8B/gguf/Qwen3-8B-baseline_q4_k_m/baseline-q4_k_m.gguf",
+    "lora_rank": 32,
+    "start_epoch": 0
+  },
+  "inference": {
+    "max_seq_length": 16384
+  },
+  "data": {
+    "use_perturbations": false,
+    "test_files": [
+      {
+        "path": "data/vitaminc/shards/vitaminc_test_numerical_shard0.json",
+        "perturb_types": null
+      }
+    ],
+    "test_stats": {
+      "size": 2999
+    }
+  },
+  "training_provenance": null
+}

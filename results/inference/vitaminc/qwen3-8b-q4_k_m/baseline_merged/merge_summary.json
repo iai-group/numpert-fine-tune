@@ -1,0 +1,11 @@
+{
+  "output": "results/inference/vitaminc/qwen3-8b-q4_k_m/baseline_merged/predictions.csv",
+  "total_rows": 11887,
+  "per_shard": {
+    "baseline_shard0": 2999,
+    "baseline_shard1": 2932,
+    "baseline_shard2": 2926,
+    "baseline_shard3": 3030
+  },
+  "coverage_verified": true
+}
