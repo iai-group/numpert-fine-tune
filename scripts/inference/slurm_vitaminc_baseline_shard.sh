@@ -30,8 +30,18 @@ set -euo pipefail
 SHARD="${1:-}"
 if [ -z "$SHARD" ]; then
     echo "ERROR: no shard index given."
-    echo "Usage: sbatch $0 <shard_index>"
+    echo "Usage: sbatch $0 <shard_index> [prompt_type]"
     exit 1
+fi
+
+# Prompt type for the baseline. ZERO_SHOT is the default; the stronger
+# reasoning baselines (STRUCTURED_COT, PAP) are selected by passing the
+# name, which also suffixes the output directory so runs do not collide.
+PROMPT_TYPE="${2:-ZERO_SHOT}"
+if [ "$PROMPT_TYPE" = "ZERO_SHOT" ]; then
+    RUN_SUFFIX=""
+else
+    RUN_SUFFIX="_$(echo "$PROMPT_TYPE" | tr "[:upper:]" "[:lower:]")"
 fi
 
 # SLURM copies this script into its spool directory, so BASH_SOURCE does
@@ -55,7 +65,7 @@ if [ -n "$CUDNN_LIB" ] && [ -d "$CUDNN_LIB" ]; then
 fi
 
 TEST_JSON="data/vitaminc/shards/vitaminc_test_numerical_shard${SHARD}.json"
-OUTPUT_DIR="results/inference/vitaminc/qwen3-8b-q4_k_m/baseline_shard${SHARD}"
+OUTPUT_DIR="results/inference/vitaminc/qwen3-8b-q4_k_m/baseline${RUN_SUFFIX}_shard${SHARD}"
 MODEL=".models/Qwen3-8B/gguf/Qwen3-8B-baseline_q4_k_m/baseline-q4_k_m.gguf"
 
 if [ ! -f "$TEST_JSON" ]; then
@@ -67,6 +77,7 @@ echo "=========================================="
 echo "Job ID:   ${SLURM_JOB_ID:-local}"
 echo "Node:     ${SLURM_NODELIST:-local}"
 echo "Shard:    $SHARD"
+echo "Prompt:   $PROMPT_TYPE"
 echo "Data:     $TEST_JSON"
 echo "Output:   $OUTPUT_DIR"
 echo "Start:    $(date)"
@@ -83,7 +94,7 @@ uv run python -m src.llm_finetune.unsloth_inference \
     --no-use_perturbations \
     --output_dir "$OUTPUT_DIR" \
     --tokenizer "unsloth/Qwen3-8B" \
-    --prompt_type ZERO_SHOT \
+    --prompt_type "$PROMPT_TYPE" \
     --no_thinking \
     --dedup_mode none
 

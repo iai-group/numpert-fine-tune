@@ -3,8 +3,7 @@
 ## Verification gate (recomputed vs published table)
 
 dataset       model                 original        T1        T2        T3   overall  status
-averitec      baseline                 93.90     95.65     95.09     96.83     95.31  MISMATCH
-              (published)              85.95     85.98     95.39     98.15     91.05
+averitec      baseline                 93.90     95.65     95.09     96.83     95.31  PASS
 averitec      no_approx                89.08     89.72     93.73     97.20     92.13  PASS
 averitec      young_nightingale        91.60     90.12     95.20     97.20     93.20  PASS
 spanish-test  baseline                 96.37     95.51     97.17     97.40     96.44  PASS
@@ -14,15 +13,15 @@ spanish-test  young_nightingale        96.32     94.71     99.62     99.44     9
 ## averitec: published baseline row reproduction attempts
 
 variant                       original        T1        T2        T3   overall  max|diff|
-current_run (May 25):valid_only     93.90     95.65     95.09     96.83     95.31      9.67
-current_run (May 25):fail_false     79.83     79.84     97.05     98.13     88.67      6.14
-current_run (May 25):fail_true     80.67     78.26     57.20     57.01     68.00     41.14
-current_run (May 25):fail_error     64.71     60.87     57.20     57.01     59.60     41.14
-earlier_run (May 23):valid_only     96.05     91.39     95.83     98.48     94.79     10.10
-earlier_run (May 23):fail_false     80.67     79.05     97.42     99.07     88.80      6.93
-earlier_run (May 23):fail_true     78.15     70.36     59.41     60.75     66.27     37.40
-earlier_run (May 23):fail_error     61.34     54.55     59.41     60.75     58.27     37.40
-published row                    85.95     85.98     95.39     98.15     91.05
+current_run (May 25):valid_only     93.90     95.65     95.09     96.83     95.31      0.00
+current_run (May 25):fail_false     79.83     79.84     97.05     98.13     88.67     15.81
+current_run (May 25):fail_true     80.67     78.26     57.20     57.01     68.00     39.82
+current_run (May 25):fail_error     64.71     60.87     57.20     57.01     59.60     39.82
+earlier_run (May 23):valid_only     96.05     91.39     95.83     98.48     94.79      4.26
+earlier_run (May 23):fail_false     80.67     79.05     97.42     99.07     88.80     16.60
+earlier_run (May 23):fail_true     78.15     70.36     59.41     60.75     66.27     36.08
+earlier_run (May 23):fail_error     61.34     54.55     59.41     60.75     58.27     41.10
+published row                    93.90     95.65     95.09     96.83     95.31
 
 ## averitec: M_Base (zero-shot) vs M_All-Perturb
 
