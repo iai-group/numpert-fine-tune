@@ -43,3 +43,4 @@ external/llama.cpp/
 .claude/settings.local.json
 # Claude local settings (machine-specific)
 .claude/
+.codegraph/
