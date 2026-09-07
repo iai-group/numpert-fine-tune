@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-05-25T16:02:27.550106",
+  "model": {
+    "name": "azure/gpt-5.4-pro",
+    "path": "azure/gpt-5.4-pro",
+    "lora_rank": 32,
+    "start_epoch": 0
+  },
+  "inference": {
+    "max_seq_length": 512
+  },
+  "data": {
+    "use_perturbations": true,
+    "test_files": []
+  },
+  "training_provenance": null
+}
