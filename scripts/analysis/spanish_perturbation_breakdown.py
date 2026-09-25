@@ -34,6 +34,9 @@ logger = logging.getLogger(__name__)
 
 RUN_ROOT = Path("results/inference/spanish-test/qwen3-8b-q4_k_m")
 
+# Perturbation type marking an unperturbed claim.
+ORIGINAL_TYPE = "original_normalized"
+
 MODELS: List[Tuple[str, str]] = [
     ("baseline", r"\mbase"),
     ("no_approx", r"\mnoapproximation"),
@@ -142,13 +145,29 @@ def accuracy(rows: List[Dict[str, str]]) -> Tuple[Optional[float], int, int]:
 
 
 def load_runs() -> Dict[str, List[Dict[str, str]]]:
-    """Loads every model's Spanish predictions."""
+    """Loads every model's Spanish predictions, excluding originals.
+
+    Unperturbed rows carry the perturbation type
+    ``original_normalized`` but keep the source file of the method they
+    were drawn from, so leaving them in would count each original claim
+    under whichever method sampled it and inflate the Numeration and
+    Range columns. This table reports perturbed instances only; the
+    originals are reported separately by the cross-dataset table.
+
+    Returns:
+        Each model's perturbed prediction rows, keyed by subdirectory.
+    """
     runs = {}
     for subdir, _ in MODELS:
         path = find_predictions(subdir)
         with path.open(newline="", encoding="utf-8") as handle:
-            runs[subdir] = list(csv.DictReader(handle))
-        logger.info("%s: %d rows from %s", subdir, len(runs[subdir]), path)
+            rows = [
+                row
+                for row in csv.DictReader(handle)
+                if row["perturbation_type"] != ORIGINAL_TYPE
+            ]
+        runs[subdir] = rows
+        logger.info("%s: %d perturbed rows from %s", subdir, len(rows), path)
     return runs
 
 
