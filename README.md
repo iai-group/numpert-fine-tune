@@ -608,6 +608,69 @@ predictions/<timestamp>/<model>-epoch-<N>/
 
 ---
 
+## Published Results (`results/inference/`)
+
+The inference runs behind the published tables are committed under
+`results/inference/<dataset>/<model-family>/<run>/`.
+
+### Run directories are hidden
+
+Each run's outputs sit in a directory whose name begins with a dot, e.g.
+`.models-Qwen3-8B-gguf-...-q4_k_m.gguf_r32-epoch-0/`. A plain `ls` therefore
+shows the model folder as empty. Use `ls -a`, or ask git:
+
+```bash
+ls -a results/inference/spanish-test/qwen3-8b-q4_k_m/*/
+git ls-files results/inference/spanish-test
+```
+
+This is worth remembering when checking what is committed: hidden directories
+are easy to miss, and the CLEF Spanish test split went untracked for some time
+without anyone noticing.
+
+### Which run backs which result
+
+| Path | Used for |
+| --- | --- |
+| `averitec/qwen3-8b-q4_k_m/` | AVeriTeC rows of the cross-dataset and significance tables |
+| `spanish-test/qwen3-8b-q4_k_m/` | All published CLEF 2025 Spanish numbers: the cross-dataset row, the per-class and per-perturbation breakdowns, and the significance table |
+| `spanish/qwen3-8b-q4_k_m/` | CLEF Spanish **dev** split (not the published split) |
+| `qwen3-*[-q4_k_m]/` | QuanTemp per-direction tables across model sizes and training regimes |
+
+Each run directory holds three files that together reproduce every published
+number: `predictions.csv` (per-instance gold label, prediction and
+`raw_response`), `metrics.json` (the reported scores) and
+`inference_config.json` (run provenance).
+
+To check a run against the paper:
+
+```bash
+python3 -c "import json, glob
+for d in ('baseline', 'no_approx', 'young_nightingale'):
+    p = glob.glob(f'results/inference/spanish-test/qwen3-8b-q4_k_m/{d}/.models-*/metrics.json')[0]
+    print(d, round(json.load(open(p))['overall']['accuracy'] * 100, 2))"
+# baseline 96.44, no_approx 97.48, young_nightingale 97.36
+```
+
+### Raw dumps are not always committed
+
+`inference_details.jsonl` and `parse_failures.json` are omitted for the larger
+runs. They exceed GitHub's 100 MB per-file limit (the Spanish test baseline
+detail file alone is 122 MB) and this repository has no git-lfs configuration.
+
+Nothing needed for analysis is lost: `predictions.csv` carries the same
+`raw_response` text, and parse-failure counts recompute from it — the Spanish
+test baseline yields 7,370, matching its `metrics.json`.
+
+### Runs not yet committed
+
+`control/`, `multiseed/`, `qwen3-8b-prompt-tuning/`, `smoke_test/`,
+`vitaminc/` and `vitaminc-dev/` exist on disk but are untracked. The VitaminC
+runs back the cross-dataset VitaminC table, so results depending on them are
+not reproducible from a clone.
+
+---
+
 ## Metrics (`utils/inference/metrics.py`)
 
 The metrics module computes and reports classification scores with breakdowns at multiple levels of granularity. It is separated from the inference script so that metrics can be recomputed, extended, or consumed independently.
