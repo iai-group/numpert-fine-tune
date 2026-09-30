@@ -201,7 +201,7 @@ def render(runs: Dict[str, List[Dict[str, str]]]) -> str:
         "\\toprule",
         "\\textbf{Model} & "
         + " & ".join(label for _, label in METHODS)
-        + " & \\textbf{M. Avg.} \\\\",
+        + " & \\textbf{Micro Avg.} \\\\",
     ]
     for key, pretty in DIRECTIONS:
         lines.append("\\midrule")
